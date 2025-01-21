@@ -7,38 +7,29 @@
     class Comercio extends Model {
         use HasFactory;
 
-        protected $table = 'comercio';
-
         protected $fillable = [
-            'name',
-            'email',
+            'id',
+            'nombre',
             'phone',
+            'phone_verified_at',
+            'email',
+            'email_verified_at',
             'password',
-            'street_address',
+            'calle_num',
             'ciudad',
             'provincia',
-            'codigo_postal',
-            'numero_planta',
-            'numero_puerta',
-            'categorias_generales',
+            'cp',
+            'num_planta',
+            'num_puerta',
+            'categoria_general_id',
             'descripcion',
             'gestion_stock',
             'puntaje_medio',
+            'imagenes',
+            'horario',
         ];
 
-        public function cliente() {
-            return $this->belongsTo(Cliente::class, 'id_cliente');
-        }
-
         public function categoriaGeneral() {
-            return $this->belongsTo(CategoriaGeneral::class, 'categorias_generales');
-        }
-
-        public function imagenes() {
-            return $this->hasMany(ImagenLocal::class, 'id_comercio');
-        }
-
-        public function horarios() {
-            return $this->hasMany(HorarioLocal::class, 'id_comercio');
+            return $this->belongsTo(CategoriaGeneral::class, 'categoria_general_id');
         }
     }

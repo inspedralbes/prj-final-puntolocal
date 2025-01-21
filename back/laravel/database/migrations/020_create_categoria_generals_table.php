@@ -3,16 +3,19 @@
     use Illuminate\Database\Schema\Blueprint;
     use Illuminate\Support\Facades\Schema;
 
-    return new class extends Migration {
-        public function up(): void {
+    class CreateCategoriaGeneralsTable extends Migration
+    {
+        public function up()
+        {
             Schema::create('categorias_generales', function (Blueprint $table) {
                 $table->id();
-                $table->string('categoria');
+                $table->string('categoriaID');
                 $table->timestamps();
             });
         }
 
-        public function down(): void {
+        public function down()
+        {
             Schema::dropIfExists('categorias_generales');
         }
-    };
+    }

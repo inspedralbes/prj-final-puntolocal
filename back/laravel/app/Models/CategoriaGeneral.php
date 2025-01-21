@@ -7,18 +7,12 @@
     class CategoriaGeneral extends Model {
         use HasFactory;
 
-        protected $table = 'categorias_generales';
-
         protected $fillable = [
             'id',
-            'categoria',
+            'categoriaID',
         ];
 
-        public function clientes() {
-            return $this->hasMany(Cliente::class, 'categorias_generales');
-        }
-
         public function comercios() {
-            return $this->hasMany(Comercio::class, 'categorias_generales');
+            return $this->hasMany(Comercio::class, 'categoria_general_id');
         }
     }
