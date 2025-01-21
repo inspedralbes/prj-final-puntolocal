@@ -14,3 +14,6 @@ Un cop comenceu heu de canviar aquesta explicació amb la corresponent al vostre
  * Adreça del prototip gràfic del projecte (Penpot, figma, moqups...)
  * URL de producció (quan la tingueu)
  * Estat: (explicació d'en quin punt està)
+
+# Excalidraw de les tecnologies del programa
+https://excalidraw.com/#room=cc9f8399db7bda737c09,EkyMfmmqpZspMoP2fBeGeg
