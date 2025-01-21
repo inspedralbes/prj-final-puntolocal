@@ -2,6 +2,7 @@
     use Illuminate\Http\Request;
     use Illuminate\Support\Facades\Route;
     use App\Http\Controllers\UserController;
+    use App\Http\Controllers\ClienteController;
 
     Route::get('/user', function (Request $request) {
         return $request->user();
@@ -9,6 +10,7 @@
 
 
     // ==== USUARIOS ===================
-    Route::post('register', [UserController::class, 'RegistrarUsuario']);
-
-    Route::post('login', [UserController::class, 'login']);
+    Route::prefix('auth')->group(function () {
+        Route::post('register', [ClienteController::class, 'RegistrarCliente']);
+        Route::post('login', [ClienteController::class, 'login']);
+    });

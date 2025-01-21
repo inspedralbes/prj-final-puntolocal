@@ -12,15 +12,8 @@
             $validator = Validator::make($request->all(), [
                 'name' => 'required|string|max:255',
                 'apellidos' => 'required|string|max:255',
-                'email' => 'required|email|unique:clientes,email',
-                'phone' => 'required|string|max:15',
+                'email' => 'required|email|unique:cliente,email',
                 'password' => 'required|string|min:8|confirmed',
-                'street_address' => 'required|string|max:255',
-                'ciudad' => 'required|string|max:255',
-                'provincia' => 'required|string|max:255',
-                'codigo_postal' => 'required|integer',
-                'numero_planta' => 'required|integer',
-                'numero_puerta' => 'required|integer',
             ]);
 
             if ($validator->fails()) {
@@ -45,10 +38,10 @@
 
             $verificationUrl = route('verification.verify', ['id' => $cliente->id, 'hash' => sha1($cliente->email)]);
 
-            Mail::send('emails.verify', ['verificationUrl' => $verificationUrl], function ($message) use ($cliente) {
-                $message->to($cliente->email)
-                        ->subject('Verificación de email | ·LOCAL');
-            });
+            // Mail::send('emails.verify', ['verificationUrl' => $verificationUrl], function ($message) use ($cliente) {
+            //     $message->to($cliente->email)
+            //             ->subject('Verificación de email | ·LOCAL');
+            // });
 
             return response()->json([
                 'message' => 'Cliente creado exitosamente. Por favor, verifica tu correo electrónico.',
