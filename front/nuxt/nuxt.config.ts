@@ -4,8 +4,8 @@ export default defineNuxtConfig({
   devtools: { enabled: true },
   modules: ['@nuxtjs/tailwindcss'],
 
-  // devServer: {
-  //   host: '0.0.0.0', // Asegura que escuche todas las interfaces
-  //   port: 3000, // Cambia este puerto si lo necesitas
-  // },
+  devServer: {
+    host: '0.0.0.0', // Asegura que escuche todas las interfaces
+    port: 3000, // Cambia este puerto si lo necesitas
+  },
 })
