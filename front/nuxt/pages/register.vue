@@ -30,7 +30,7 @@ async function register() {
     }
 
     // Verificar que la contraseña tenga al menos 8 caracteres
-    if (formData.password_confirmation.length < 8) {
+    if (formData.password.length < 8) {
         console.error('La contrasenya ha de tenir mínim 8 caràcters');
         return;
     }
@@ -43,8 +43,6 @@ async function register() {
     console.log($communicationManager)
     // Llamar al plugin communicationManager para registrar
     const response = await $communicationManager.register(formData); // Usar la instancia de communicationManager
-
-    console.log(response); // Ver la respuesta
 }
 
 </script>

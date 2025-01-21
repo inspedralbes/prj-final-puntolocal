@@ -75,16 +75,17 @@
                 ], 401);
             }
 
-            if ($cliente->email_verified_at === null) {
-                return response()->json([
-                    'error' => 'Por favor, verifica tu correo electrónico antes de iniciar sesión.'
-                ], 400);
-            }
-
+            // if ($cliente->email_verified_at === null) {
+            //     return response()->json([
+            //         'error' => 'Por favor, verifica tu correo electrónico antes de iniciar sesión.'
+            //     ], 400);
+            // }
+            
             $token = $cliente->createToken('API Token')->plainTextToken;
 
             return response()->json([
                 'message' => 'Inicio de sesión exitoso.',
+                'user' => $cliente,
                 'token' => $token,
             ], 200);
         }
