@@ -1,5 +1,5 @@
 <template>
-    <div class="product-card" style="margin-top: 30px;">
+    <div class="product-card" style="margin-top: 10px;">
         <!-- Encabezado -->
         <div class="header">
             <button class="back-button">←</button>
@@ -40,7 +40,7 @@
 
         <!-- Información del producto -->
         <div class="details">
-            <p><strong>Valoración:</strong> ★ {{ producto.valoracion }}</p>
+            <p><strong>Valoración: </strong>  {{ producto.valoracion }} ★</p>
             <p class="product-description">{{ producto.descripcion }}</p>
 
             <div class="options">
@@ -72,9 +72,8 @@
             </div>
         </div>
 
-        <!-- Precio y botón -->
         <div class="footer">
-            <p class="price">€{{ producto.precio.toFixed(2) }}</p>
+            <p class="price">{{ producto.precio.toFixed(2) }}€</p>
             <ButtonBasketComp />
         </div>
     </div>
@@ -89,7 +88,7 @@ export default {
     },
     data() {
         return {
-            currentImage: 0, // Índice de la imagen actual
+            currentImage: 0,
             producto: {
                 id: 1,
                 nombre: "Camiseta de Algodón",
