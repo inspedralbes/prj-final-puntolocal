@@ -8,14 +8,14 @@
         use HasFactory;
 
         protected $table = 'productos';
+        
         protected $fillable = [
-            'id',
             'id_categoria_concreta',
             'id_comercio',
             'nombre',
             'descripcion',
             'precio',
-            'imagenes'
+            'imagenes',
         ];
 
         public function categoriaConcreta() {
@@ -24,5 +24,13 @@
 
         public function comercio() {
             return $this->belongsTo(Comercio::class, 'id_comercio');
+        }
+
+        public function getImagenesAttribute($value) {
+            return json_decode($value, true);
+        }
+
+        public function setImagenesAttribute($value) {
+            $this->attributes['imagenes'] = json_encode($value);
         }
     }

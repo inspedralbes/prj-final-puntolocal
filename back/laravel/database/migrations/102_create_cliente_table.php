@@ -25,7 +25,7 @@
                 $table->integer('numero_puerta')->nullable();       // Numero puerta
 
                 $table->integer('puntos')->nullable();
-
+                $table->integer('rol');                             // 0 - cliente / 1 - tienda
                 $table->rememberToken();
                 $table->timestamps();
             });

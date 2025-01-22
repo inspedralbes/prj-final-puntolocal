@@ -7,9 +7,11 @@
         public function up() {
             Schema::create('categorias_concretas', function (Blueprint $table) {
                 $table->id();
+                $table->string('nombre');
+
                 $table->unsignedBigInteger('id_categoria_general');
                 $table->foreign('id_categoria_general')->references('id')->on('categorias_generales')->onDelete('cascade');
-                $table->string('nombre');
+                
                 $table->timestamps();
             });
         }

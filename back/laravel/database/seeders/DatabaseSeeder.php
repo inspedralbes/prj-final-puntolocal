@@ -1,18 +1,14 @@
 <?php
+    namespace Database\Seeders;
 
-namespace Database\Seeders;
+    use App\Models\User;
+    // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+    use Illuminate\Database\Seeder;
+    use Database\Seeders\CategoriasConcretasSeeder;
 
-use App\Models\User;
-// use Illuminate\Database\Console\Seeds\WithoutModelEvents;
-use Illuminate\Database\Seeder;
-
-class DatabaseSeeder extends Seeder
-{
-    /**
-     * Seed the application's database.
-     */
-    public function run(): void
-    {
-
+    class DatabaseSeeder extends Seeder {
+        public function run() {
+            $this->call(CategoriasConcretasSeeder::class);
+        }
+        
     }
-}

@@ -8,10 +8,11 @@
         use HasFactory;
 
         protected $table = 'categorias_concretas';
+
         protected $fillable = [
             'id',
             'id_categoria_general',
-            'nombre'
+            'nombre',
         ];
 
         public function categoriaGeneral() {

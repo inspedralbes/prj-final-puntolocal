@@ -6,19 +6,12 @@ use App\Models\CategoriaConcreta;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
-class CategoriaConcretaController extends Controller
-{
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
-    {
+class CategoriaConcretaController extends Controller {
+
+    public function index() { //MOSTRAR TODAS LAS CATEGORIAS
         //
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
         //
