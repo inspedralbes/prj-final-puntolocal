@@ -1,7 +1,14 @@
 <script setup>
+import { navigateTo } from '#app';
+// Import reactive and onMounted from 'vue' instead of '#app'
+import { reactive, onMounted } from 'vue';
+import { useAuthStore } from '@/stores/authStore';
 definePageMeta({
     layout: 'authentication',
 });
+
+
+const authStore = useAuthStore();
 
 const formData = reactive({
     email: '',
@@ -22,10 +29,23 @@ async function login() {
         console.error('La contrasenya ha de tenir mínim 8 caràcters');
         return;
     }
-    console.log('llego aqui')
     // Llamar al plugin communicationManager para registrar
-    const response = await $communicationManager.login(formData); // Usar la instancia de communicationManager
+    const response = await $communicationManager.login(formData);
+
+    if (response) {
+        console.log('Ha iniciat sessió correctament');
+        authStore.login(response.user, response.token);
+        navigateTo('/');
+    } else {
+        console.log('Hi ha hagut algun error, revisi les seves dades');
+    }
 }
+
+onMounted(() => {
+    if (authStore.isAuthenticated) {
+        navigateTo('/');
+    }
+});
 </script>
 
 <template>

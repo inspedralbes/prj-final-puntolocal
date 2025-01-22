@@ -17,7 +17,6 @@ export default defineNuxtPlugin(nuxtApp => {
 
           if (response.ok) {
             const json = await response.json();
-            console.log(json)
             return json;
           } else {
             console.error(`Error en la petición: ${response.status} ${response.statusText}`)
@@ -31,7 +30,6 @@ export default defineNuxtPlugin(nuxtApp => {
       },
 
       async login(json) {
-        console.log("AAA", json)
         try {
           const response = await fetch(Host + '/auth/login', {
             method: 'POST',

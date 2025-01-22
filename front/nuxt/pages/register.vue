@@ -1,5 +1,5 @@
 <script setup>
-import { useNuxtApp } from '#app';
+import { useNuxtApp, navigateTo } from '#app';
 
 definePageMeta({
     layout: 'authentication',
@@ -21,7 +21,7 @@ const formData = reactive({
 });
 
 async function register() {
-    const { $communicationManager } = useNuxtApp(); // Acceder al communicationManager
+    const { $communicationManager } = useNuxtApp(); 
 
     // Verificar si los campos están vacíos
     if (!formData.name || !formData.apellidos || !formData.email || !formData.password || !formData.password_confirmation) {
@@ -40,9 +40,17 @@ async function register() {
         console.error('Les contrasenyes no coincideixen');
         return;
     }
-    console.log($communicationManager)
+    
     // Llamar al plugin communicationManager para registrar
-    const response = await $communicationManager.register(formData); // Usar la instancia de communicationManager
+    const response = await $communicationManager.register(formData); 
+
+    if(response){
+        console.log(`S'ha registrat correctament`)
+        navigateTo('/login')
+    }else{
+        console.log('Hi ha hagut algun error, comprovi les seves dades');
+    }
+
 }
 
 </script>
