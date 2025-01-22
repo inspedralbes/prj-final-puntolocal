@@ -1,0 +1,3 @@
+<template>
+    Perfil
+</template>

@@ -10,6 +10,9 @@
                     </path>
                 </svg>
             </span>
+            <span id="contain-nom">
+                <h3>{{ comercio }}</h3>
+            </span>
         </div>
         <h3 id="title">{{ title }}</h3>
         <h2 id="price">{{ price }}€</h2>
@@ -43,6 +46,7 @@
     height: 160px;
     position: relative;
     display: flex;
+    justify-content: center;
     align-items: center;
     overflow: hidden;
     border-radius: 10px;
@@ -50,8 +54,10 @@
 }
 
 img {
-    object-fit: contain;
-    object-position: center;
+    max-width: 100%; /* Limita el ancho al tamaño del contenedor */
+    max-height: 100%; /* Limita la altura al tamaño del contenedor */
+    object-fit: contain; /* Mantiene la proporción de la imagen */
+    object-position: center; /* Centra la imagen dentro del contenedor */
 }
 
 #contain-fav {
@@ -62,6 +68,23 @@ img {
     height: 30px;
     background-color: #dde0e2;
     border-radius: 8px;
+}
+
+#contain-nom {
+    position: absolute;
+    bottom: 10px;
+    left: 10px;
+    background-color: #276BF2;
+    border-radius: 3px;
+    color: white;
+    padding: 2px 5px;
+    max-width: 150px;
+}
+
+#contain-nom h3{
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 </style>
 
@@ -83,5 +106,9 @@ const props = defineProps({
         type: String,
         // required: true,
     },
+    comercio: {
+        type: String,
+        // required: true,
+    }
 });
 </script>

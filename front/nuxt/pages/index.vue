@@ -24,10 +24,10 @@
     <div id="contain-productos">
         <h1 class="titulo-productos">Ultimes tendències</h1>
         <div id="productos">
-            <productoComp img="https://catalogosparaempresas.com/wp-content/uploads/2022/07/ice2-1.jpg" title="Zapatilla deportiva negra" price="24,99"></productoComp>
-            <productoComp img="https://static.carrefour.es/hd_510x_/crs/cdn_static/catalog/hd/424728_00_1.jpg" title="iPhone 13 128GB Apple - Blanco estrella" price="539,00"></productoComp>
-            <productoComp img="https://www.markamania.es/1017148-large_default/pantalon-deportivo-de-corte-recto-roly-new-astun.jpg" title="Pantalon Jean Negro Ajustado Elastico" price="19,99" ></productoComp>
-            <productoComp img="https://www.shutterstock.com/image-photo/big-diamond-solitaire-necklace-chain-600nw-2083887445.jpg" title="Collar de diamante para dama" price="69,99"></productoComp>
+            <productoComp img="https://catalogosparaempresas.com/wp-content/uploads/2022/07/ice2-1.jpg" title="Zapatilla deportiva negra" price="24,99" comercio="WhyNot?"></productoComp>
+            <productoComp img="https://static.carrefour.es/hd_510x_/crs/cdn_static/catalog/hd/424728_00_1.jpg" title="iPhone 13 128GB Apple - Blanco estrella" price="539,00" comercio="K-Tuin Castelldefels Anec Blau"></productoComp>
+            <productoComp img="https://www.markamania.es/1017148-large_default/pantalon-deportivo-de-corte-recto-roly-new-astun.jpg" title="Pantalon Jean Negro Ajustado Elastico" price="19,99" comercio="JD Esports"></productoComp>
+            <productoComp img="https://www.shutterstock.com/image-photo/big-diamond-solitaire-necklace-chain-600nw-2083887445.jpg" title="Collar de diamante para dama" price="69,99" comercio="Joyeria Poppins"></productoComp>
         </div>
     </div>
 </template>
