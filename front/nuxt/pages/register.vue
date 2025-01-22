@@ -1,5 +1,6 @@
 <script setup>
-import { useNuxtApp } from '#app';
+import { useNuxtApp, navigateTo } from '#app';
+import { useAuthStore } from '@/stores/authStore';
 
 definePageMeta({
     layout: 'authentication',
@@ -21,7 +22,7 @@ const formData = reactive({
 });
 
 async function register() {
-    const { $communicationManager } = useNuxtApp(); // Acceder al communicationManager
+    const { $communicationManager } = useNuxtApp(); 
 
     // Verificar si los campos están vacíos
     if (!formData.name || !formData.apellidos || !formData.email || !formData.password || !formData.password_confirmation) {
@@ -30,7 +31,7 @@ async function register() {
     }
 
     // Verificar que la contraseña tenga al menos 8 caracteres
-    if (formData.password_confirmation.length < 8) {
+    if (formData.password.length < 8) {
         console.error('La contrasenya ha de tenir mínim 8 caràcters');
         return;
     }
@@ -40,12 +41,25 @@ async function register() {
         console.error('Les contrasenyes no coincideixen');
         return;
     }
-    console.log($communicationManager)
+    
     // Llamar al plugin communicationManager para registrar
-    const response = await $communicationManager.register(formData); // Usar la instancia de communicationManager
+    const response = await $communicationManager.register(formData); 
 
-    console.log(response); // Ver la respuesta
+    if(response){
+        console.log(`S'ha registrat correctament`)
+        navigateTo('/login')
+    }else{
+        console.log('Hi ha hagut algun error, comprovi les seves dades');
+    }
+
 }
+
+onMounted(() => {
+    const authStore = useAuthStore();
+    if (authStore.isAuthenticated) {
+        navigateTo('/');
+    }
+});
 
 </script>
 

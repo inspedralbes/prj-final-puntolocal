@@ -1,14 +1,49 @@
 <script setup>
+import { navigateTo } from '#app';
+import { useAuthStore } from '@/stores/authStore';
 definePageMeta({
     layout: 'authentication',
 });
 
-const emailUser = ref();
-const password = ref();
 
-function login() {
-    alert("Hacer lógica de inicio de sesión");
+const authStore = useAuthStore();
+
+const formData = reactive({
+    email: '',
+    password: '',
+});
+
+async function login() {
+    const { $communicationManager } = useNuxtApp(); // Acceder al communicationManager
+
+    // Verificar si los campos están vacíos
+    if (!formData.email || !formData.password) {
+        console.error('És necessari completar tots els camps');
+        return;
+    }
+
+    // Verificar que la contraseña tenga al menos 8 caracteres
+    if (formData.password.length < 8) {
+        console.error('La contrasenya ha de tenir mínim 8 caràcters');
+        return;
+    }
+    // Llamar al plugin communicationManager para registrar
+    const response = await $communicationManager.login(formData);
+
+    if (response) {
+        console.log('Ha iniciat sessió correctament');
+        authStore.login(response.user, response.token);
+        navigateTo('/');
+    } else {
+        console.log('Hi ha hagut algun error, revisi les seves dades');
+    }
 }
+
+onMounted(() => {
+    if (authStore.isAuthenticated) {
+        navigateTo('/');
+    }
+});
 </script>
 
 <template>
@@ -27,15 +62,16 @@ function login() {
                                 electrònic /
                                 Usuari</label>
                             <div class="mt-1">
-                                <input id="email" v-model="emailUser" type="text" data-testid="username" required=""
+                                <input id="email" v-model="formData.email" type="text" data-testid="username"
+                                    required=""
                                     class="block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm">
                             </div>
                         </div>
                         <div>
                             <label for="password" class="block text-sm font-medium text-gray-700">Contrasenya</label>
                             <div class="mt-1">
-                                <input id="password" name="password" v-model="password" type="password" data-testid="password"
-                                    autocomplete="current-password" required=""
+                                <input id="password" name="password" v-model="formData.password" type="password"
+                                    data-testid="password" autocomplete="current-password" required=""
                                     class="block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm">
                             </div>
                         </div>
@@ -46,11 +82,12 @@ function login() {
                                 <label for="remember_me" class="ml-2 block text-sm text-gray-900">Recorda'm</label>
                             </div>
                             <div class="text-sm">
-                                <NuxtLink to="/reset" class="font-medium text-indigo-400 hover:text-indigo-500">Has oblidat la teva contrasenya?</NuxtLink>
+                                <NuxtLink to="/reset" class="font-medium text-indigo-400 hover:text-indigo-500">Has
+                                    oblidat la teva contrasenya?</NuxtLink>
                             </div>
                         </div>
                         <div>
-                            <ButtonComp test-id="login">
+                            <ButtonComp test-id="login" @submit.prevent="login">
                                 Iniciar sessió
                             </ButtonComp>
                         </div>
