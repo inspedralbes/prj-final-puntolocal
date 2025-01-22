@@ -1,6 +1,6 @@
 <template>
     <div>
-        <header class="bg-white">
+        <header class="sticky top-0 left-0 w-full bg-white z-10">
             <div class="mx-auto flex max-w-7xl items-center justify-between p-2 py-6 lg:px-8 border-b-2 border-black-500"
                 aria-label="Global">
                 <div class="w-full mx-auto bg-white flex justify-around items-center">
@@ -17,7 +17,7 @@
         <main>
             <slot />
         </main>
-        <footer class="fixed bottom-0 left-0 w-full">
+        <footer class="sticky bottom-0 left-0 w-full">
             <nav class="flex justify-around">
                 <a href="#" class="flex flex-col items-center text-gray-300 hover:text-white">
                     <svg class="w-6 h-6 mb-1" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
