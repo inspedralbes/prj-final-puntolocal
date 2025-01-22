@@ -3,7 +3,7 @@
     use Illuminate\Database\Schema\Blueprint;
     use Illuminate\Support\Facades\Schema;
 
-    class CreateCategoriaGeneralsTable extends Migration {
+    return new class extends Migration {
         public function up() {
             Schema::create('categorias_generales', function (Blueprint $table) {
                 $table->id();
@@ -15,4 +15,4 @@
         public function down() {
             Schema::dropIfExists('categorias_generales');
         }
-    }
+    };

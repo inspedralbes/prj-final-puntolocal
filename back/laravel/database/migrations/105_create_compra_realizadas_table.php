@@ -3,7 +3,7 @@
     use Illuminate\Database\Schema\Blueprint;
     use Illuminate\Support\Facades\Schema;
 
-    class CreateComprasRealizadasTable extends Migration {
+    return new class extends Migration {
         public function up() {
             Schema::create('compras_realizadas', function (Blueprint $table) {
                 $table->id();
@@ -21,4 +21,4 @@
         public function down() {
             Schema::dropIfExists('compras_realizadas');
         }
-    }
+    };
