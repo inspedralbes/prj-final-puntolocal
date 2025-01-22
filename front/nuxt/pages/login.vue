@@ -1,4 +1,5 @@
 <script setup>
+import { navigateTo } from '#app';
 definePageMeta({
     layout: 'authentication',
 });
@@ -7,7 +8,7 @@ const emailUser = ref();
 const password = ref();
 
 function login() {
-    alert("Hacer lógica de inicio de sesión");
+    navigateTo('');
 }
 </script>
 
