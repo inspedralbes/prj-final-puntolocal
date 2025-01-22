@@ -1,5 +1,6 @@
 <script setup>
 import { useNuxtApp, navigateTo } from '#app';
+import { useAuthStore } from '@/stores/authStore';
 
 definePageMeta({
     layout: 'authentication',
@@ -52,6 +53,13 @@ async function register() {
     }
 
 }
+
+onMounted(() => {
+    const authStore = useAuthStore();
+    if (authStore.isAuthenticated) {
+        navigateTo('/');
+    }
+});
 
 </script>
 

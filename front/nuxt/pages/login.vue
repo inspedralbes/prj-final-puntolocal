@@ -1,7 +1,5 @@
 <script setup>
 import { navigateTo } from '#app';
-// Import reactive and onMounted from 'vue' instead of '#app'
-import { reactive, onMounted } from 'vue';
 import { useAuthStore } from '@/stores/authStore';
 definePageMeta({
     layout: 'authentication',
