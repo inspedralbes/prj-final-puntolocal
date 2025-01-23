@@ -24,6 +24,6 @@
     });
 
     // ==== CATEGORIAS GENERALES ===================
-    Route::prefix('categoriasGenerales')->group(function () {
+    Route::middleware('auth:sanctum')->prefix('categoriasGenerales')->group(function () {
         Route::get('getCategoriasGenerales', [CategoriaGeneralController::class, 'getCategoriasGenerales']);
     });

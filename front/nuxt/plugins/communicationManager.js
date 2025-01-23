@@ -11,7 +11,14 @@ export default defineNuxtPlugin(nuxtApp => {
       ///////////////////////////// GET  //////////////////////////////////
       async getCategoriasGenerales() {
         try {
-          const response = await fetch(Host + '/categoriasGenerales/getCategoriasGenerales');
+          const response = await fetch(Host + '/categoriasGenerales/getCategoriasGenerales',{
+            method: 'GET',
+            headers: {
+              'Accept': 'application/json',
+              'Content-Type': 'application/json',
+              'Authorization': authStore.token ? `Bearer ${authStore.token}` : ''
+            },
+          });
           if (response.ok) {
             const json = await response.json();
             return json;
@@ -73,7 +80,33 @@ export default defineNuxtPlugin(nuxtApp => {
           console.error('Error al realizar la petición:', error);
           return null;
         }
-      }
+      },
+
+      async registerStore(json) {
+        try {
+          const response = await fetch(Host + '/comercios/registerComercio', {
+            method: 'POST',
+            headers: {
+              'Accept': 'application/json',
+              'Content-Type': 'application/json',
+              'Authorization': authStore.token ? `Bearer ${authStore.token}` : ''
+            },
+            body: JSON.stringify(json)
+          });
+
+          if (response.ok) {
+            const json = await response.json();
+            return json;
+          } else {
+            console.error(`Error en la petición: ${response.status} ${response.statusText}`)
+            return null;
+          }
+
+        } catch (error) {
+          console.error('Error al realizar la petición:', error);
+          return null;
+        }
+      },
         
     };
   

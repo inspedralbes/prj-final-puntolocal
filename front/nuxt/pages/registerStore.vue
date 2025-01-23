@@ -6,70 +6,64 @@ definePageMeta({
     layout: 'authentication',
 });
 
+const authStore = useAuthStore();
+
 const formData = reactive({
     name: '',
     email: '',
     phone: '',
-    password: '',
-    password_confirmation: '',
     street_address: '',
     ciudad: '',
     provincia: '',
-    codigo_postal: '',
-    numero_planta: '',
-    numero_puerta: '',
+    codigo_postal: null,
+    numero_planta: null,
+    numero_puerta: null,
     descripcion: '',
+    categoria: null,
+    idUser: null,
     gestion_stock: 0,
-    puntaje_medio: 0,
 });
 
 const categorias = ref('')
 
 
 
-async function getCategoriasGenerales(){
+async function getCategoriasGenerales() {
     const { $communicationManager } = useNuxtApp();
     categorias.value = await $communicationManager.getCategoriasGenerales();
-    console.log(categorias.value)
 }
 
 async function register() {
 
-    // const { $communicationManager } = useNuxtApp();
+    const { $communicationManager } = useNuxtApp();
 
-    // // Verificar si los campos están vacíos
-    // for (const key in formData) {
-    //     if (!formData[key]) {
-    //         console.error(`És necessari completar el camp: ${key}`);
-    //         return;
-    //     }
-    // }
+    // Verificar si los campos están vacíos
+    for (const key in formData) {
+        if (formData[key] === null || formData[key] === undefined || formData[key] === '') {
+            console.error(`És necessari completar el camp: ${key}`);
+            return;
+        }
+    }
 
-    // // Verificar que la contraseña tenga al menos 8 caracteres
-    // if (formData.password.length < 8) {
-    //     console.error('La contrasenya ha de tenir mínim 8 caràcters');
-    //     return;
-    // }
+    // Convertir valores necesarios a enteros
+    formData.codigo_postal = parseInt(formData.codigo_postal) || null;
+    formData.numero_planta = parseInt(formData.numero_planta) || null;
+    formData.numero_puerta = parseInt(formData.numero_puerta) || null;
 
-    // // Verificar que las contraseñas coincidan
-    // if (formData.password !== formData.password_confirmation) {
-    //     console.error('Les contrasenyes no coincideixen');
-    //     return;
-    // }
+    // Llamar al plugin communicationManager para registrar
+    const response = await $communicationManager.registerStore(formData);
 
-    // // Llamar al plugin communicationManager para registrar
-    // const response = await $communicationManager.register(formData);
-
-    // if (response) {
-    //     console.log(`S'ha registrat correctament`)
-    //     navigateTo('/login')
-    // } else {
-    //     console.log('Hi ha hagut algun error, comprovi les seves dades');
-    // }
+    if (response) {
+        console.log(`S'ha registrat correctament`)
+        navigateTo('/login')
+    } else {
+        console.log('Hi ha hagut algun error, comprovi les seves dades');
+    }
 }
 
 onMounted(() => {
     getCategoriasGenerales();
+    formData.idUser = authStore.user.id;
 });
 
 </script>
@@ -107,25 +101,6 @@ onMounted(() => {
                                 <label for="phone" class="block text-sm font-medium text-gray-700">Telèfon</label>
                                 <div class="mt-1">
                                     <input id="phone" v-model="formData.phone" type="text" data-testid="phone"
-                                        required=""
-                                        class="block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm">
-                                </div>
-                            </div>
-                            <div>
-                                <label for="password"
-                                    class="block text-sm font-medium text-gray-700">Contrasenya</label>
-                                <div class="mt-1">
-                                    <input id="password" name="password" v-model="formData.password" type="password"
-                                        data-testid="password" required=""
-                                        class="block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm">
-                                </div>
-                            </div>
-                            <div>
-                                <label for="password-repeat" class="block text-sm font-medium text-gray-700">Repetir
-                                    contrasenya</label>
-                                <div class="mt-1">
-                                    <input id="password-repeat" name="password-repeat" type="password"
-                                        v-model="formData.password_confirmation" data-testid="password-repeat"
                                         required=""
                                         class="block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm">
                                 </div>
@@ -183,9 +158,11 @@ onMounted(() => {
                                 </div>
                             </div>
                             <div>
-                                <label for="gestion_stock" class="block text-sm font-medium text-gray-700">Gestionar Stock</label>
+                                <label for="gestion_stock" class="block text-sm font-medium text-gray-700">Gestionar
+                                    Stock</label>
                                 <div class="mt-1">
-                                    <select id="gestion_stock" v-model="formData.gestion_stock" data-testid="gestion_stock" required=""
+                                    <select id="gestion_stock" v-model="formData.gestion_stock"
+                                        data-testid="gestion_stock" required=""
                                         class="block w-full bg-white appearance-none rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm">
                                         <option value="0">No</option>
                                         <option value="1">Sí</option>
