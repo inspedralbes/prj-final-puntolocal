@@ -7,6 +7,8 @@
     class CategoriaGeneral extends Model {
         use HasFactory;
 
+        protected $table = 'categorias_generales';
+
         protected $fillable = [
             'id',
             'categoriaID',
