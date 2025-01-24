@@ -1,67 +1,50 @@
 <?php
-    use App\Http\Controllers\ProductoController;
-    use Illuminate\Http\Request;
-    use Illuminate\Support\Facades\Route;
-    use App\Http\Controllers\ClienteController;
-    use App\Http\Controllers\CategoriaGeneralController;
-    use App\Http\Controllers\ComercioController;
+use App\Http\Controllers\ProductoController;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\ClienteController;
+use App\Http\Controllers\CategoriaController;
+use App\Http\Controllers\ComercioController;
 
-    Route::get('/user', function (Request $request) {
-        return $request->user();
-    })->middleware('auth:sanctum');
-
-
-    // ==== USUARIOS ===================
-    Route::prefix('auth')->group(function () {
-        Route::post('register', [ClienteController::class, 'RegistrarCliente']);
-        Route::post('login', [ClienteController::class, 'login']);
-    });
-
-    // ==== COMERCIOS ===================
-
-    Route::middleware('auth:sanctum')->prefix('comercios')->group(function () {
-        Route::post('/', [ComercioController::class, 'RegistrarComercio']);
-        Route::get('/', [ComercioController::class, 'getComercios']);
-        Route::get('/{id}', [ComercioController::class, 'getComercio']); 
-    });
-
-    // ==== CATEGORIAS ===================
-    Route::middleware('auth:sanctum')->prefix('categoriasGenerales')->group(function () {
-        Route::get('/', [CategoriaGeneralController::class, 'getCategoriasGenerales']);
-    });
+Route::get('/user', function (Request $request) {
+    return $request->user();
+})->middleware('auth:sanctum');
 
 
-    Route::middleware('auth:sanctum')->prefix('producto')->group(function () {
-        // Obtener todos los productos
-        Route::get('/', [ProductoController::class, 'index']);
-        
-        // Crear un nuevo producto
-        Route::post('/', [ProductoController::class, 'store']);
-        
-        // Obtener un producto específico
-        Route::get('{id}', [ProductoController::class, 'show']);
-        
-        // Actualizar un producto específico
-        Route::put('{id}', [ProductoController::class, 'update']);
-        
-        // Eliminar un producto específico
-        Route::delete('{id}', [ProductoController::class, 'destroy']);
-    });
+// ==== USUARIOS ===================
+Route::prefix('auth')->group(function () {
+    Route::post('register', [ClienteController::class, 'RegistrarCliente']);
+    Route::post('login', [ClienteController::class, 'login']);
+});
+
+// ==== COMERCIOS ===================
+
+Route::middleware('auth:sanctum')->prefix('comercios')->group(function () {
+    Route::post('/', [ComercioController::class, 'RegistrarComercio']);
+    Route::get('/', [ComercioController::class, 'getComercios']);
+    Route::get('/{id}', [ComercioController::class, 'getComercio']);
+});
+
+// ==== CATEGORIAS ===================
+Route::middleware('auth:sanctum')->prefix('categoriasGenerales')->group(function () {
+    Route::get('/', [CategoriaController::class, 'index']);
+});
 
 
-    Route::middleware('auth:sanctum')->prefix('producto')->group(function () {
-        // Obtener todos los productos
-        Route::get('/', [ProductoController::class, 'index']);
-        
-        // Crear un nuevo producto
-        Route::post('/', [ProductoController::class, 'store']);
-        
-        // Obtener un producto específico
-        Route::get('{id}', [ProductoController::class, 'show']);
-        
-        // Actualizar un producto específico
-        Route::put('{id}', [ProductoController::class, 'update']);
-        
-        // Eliminar un producto específico
-        Route::delete('{id}', [ProductoController::class, 'destroy']);
-    });
+Route::middleware('auth:sanctum')->prefix('producto')->group(function () {
+    // Obtener todos los productos
+    Route::get('/', [ProductoController::class, 'index']);
+
+    // Crear un nuevo producto
+    Route::post('/', [ProductoController::class, 'store']);
+
+    // Obtener un producto específico
+    Route::get('{id}', [ProductoController::class, 'show']);
+
+    // Actualizar un producto específico
+    Route::put('{id}', [ProductoController::class, 'update']);
+
+    // Eliminar un producto específico
+    Route::delete('{id}', [ProductoController::class, 'destroy']);
+});
+
