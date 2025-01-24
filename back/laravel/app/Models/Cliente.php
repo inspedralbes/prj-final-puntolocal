@@ -12,7 +12,7 @@
         protected $table = 'cliente';
 
         protected $fillable = [
-            'name', 'apellidos', 'email', 'phone',
+            'nombre', 'apellidos', 'email', 'phone',
             'password', 'street_address', 'ciudad', 'provincia',
             'codigo_postal', 'numero_planta', 'numero_puerta', 'puntos',
         ];
@@ -24,11 +24,7 @@
             'phone_verified_at' => 'datetime',
         ];
 
-        public function categoriaGeneral() {
-            return $this->belongsTo(CategoriaGeneral::class, 'categorias_generales');
-        }
-
         public function comercios() {
-            return $this->hasMany(Comercio::class, 'id_cliente');
+            return $this->hasMany(Comercio::class, 'cliente_id');
         }
     }

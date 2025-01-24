@@ -10,10 +10,17 @@
     class ClienteController extends Controller {
         public function RegistrarCliente(Request $request) {
             $validator = Validator::make($request->all(), [
-                'name' => 'required|string|max:255',
+                'nombre' => 'required|string|max:255',
                 'apellidos' => 'required|string|max:255',
                 'email' => 'required|email|unique:cliente,email',
+                'phone' => 'integer | digits:9',
                 'password' => 'required|string|min:8|confirmed',
+                'streed_address' => 'string|max:255',
+                'ciudad' => 'string|max:100',
+                'provincia' => 'string|max:100',
+                'codigo_postal' => 'integer',
+                'numero_planta' => 'integer',
+                'numero_puerta' => 'string'
             ]);
 
             if ($validator->fails()) {
@@ -23,7 +30,7 @@
             }
 
             $cliente = Cliente::create([
-                'name' => $request->name,
+                'nombre' => $request->name,
                 'apellidos' => $request->apellidos,
                 'email' => $request->email,
                 'phone' => $request->phone,

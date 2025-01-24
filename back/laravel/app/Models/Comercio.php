@@ -8,20 +8,14 @@
         use HasFactory;
 
         protected $fillable = [
-            'id',
             'nombre',
             'phone',
-            'phone_verified_at',
             'email',
-            'email_verified_at',
-            'password',
             'calle_num',
             'ciudad',
             'provincia',
             'cp',
-            'num_planta',
-            'num_puerta',
-            'categoria_general_id',
+            'categoria_id',
             'descripcion',
             'gestion_stock',
             'puntaje_medio',
@@ -29,7 +23,7 @@
             'horario',
         ];
 
-        public function categoriaGeneral() {
-            return $this->belongsTo(CategoriaGeneral::class, 'categoria_general_id');
+        public function categoria() {
+            return $this->belongsTo(Categoria::class, 'categoria_id', 'id');
         }
     }
