@@ -2,11 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\CompraRealizada;
-use App\Http\Controllers\Controller;
+use App\Models\Categoria;
 use Illuminate\Http\Request;
 
-class CompraRealizadaController extends Controller
+class CategoriaController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -35,7 +34,7 @@ class CompraRealizadaController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(CompraRealizada $compraRealizada)
+    public function show(Categoria $categoria)
     {
         //
     }
@@ -43,7 +42,7 @@ class CompraRealizadaController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(CompraRealizada $compraRealizada)
+    public function edit(Categoria $categoria)
     {
         //
     }
@@ -51,7 +50,7 @@ class CompraRealizadaController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, CompraRealizada $compraRealizada)
+    public function update(Request $request, Categoria $categoria)
     {
         //
     }
@@ -59,7 +58,7 @@ class CompraRealizadaController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(CompraRealizada $compraRealizada)
+    public function destroy(Categoria $categoria)
     {
         //
     }

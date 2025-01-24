@@ -1,7 +1,7 @@
 <?php
+    use App\Http\Controllers\ProductoController;
     use Illuminate\Http\Request;
     use Illuminate\Support\Facades\Route;
-    use App\Http\Controllers\UserController;
     use App\Http\Controllers\ClienteController;
     use App\Http\Controllers\CategoriaGeneralController;
     use App\Http\Controllers\ComercioController;
@@ -25,7 +25,43 @@
         Route::get('/{id}', [ComercioController::class, 'getComercio']); 
     });
 
-    // ==== CATEGORIAS GENERALES ===================
+    // ==== CATEGORIAS ===================
     Route::middleware('auth:sanctum')->prefix('categoriasGenerales')->group(function () {
         Route::get('/', [CategoriaGeneralController::class, 'getCategoriasGenerales']);
+    });
+
+
+    Route::middleware('auth:sanctum')->prefix('producto')->group(function () {
+        // Obtener todos los productos
+        Route::get('/', [ProductoController::class, 'index']);
+        
+        // Crear un nuevo producto
+        Route::post('/', [ProductoController::class, 'store']);
+        
+        // Obtener un producto específico
+        Route::get('{id}', [ProductoController::class, 'show']);
+        
+        // Actualizar un producto específico
+        Route::put('{id}', [ProductoController::class, 'update']);
+        
+        // Eliminar un producto específico
+        Route::delete('{id}', [ProductoController::class, 'destroy']);
+    });
+
+
+    Route::middleware('auth:sanctum')->prefix('producto')->group(function () {
+        // Obtener todos los productos
+        Route::get('/', [ProductoController::class, 'index']);
+        
+        // Crear un nuevo producto
+        Route::post('/', [ProductoController::class, 'store']);
+        
+        // Obtener un producto específico
+        Route::get('{id}', [ProductoController::class, 'show']);
+        
+        // Actualizar un producto específico
+        Route::put('{id}', [ProductoController::class, 'update']);
+        
+        // Eliminar un producto específico
+        Route::delete('{id}', [ProductoController::class, 'destroy']);
     });

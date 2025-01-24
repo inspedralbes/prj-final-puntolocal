@@ -17,18 +17,18 @@ class ComercioController extends Controller
     //
     public function RegistrarComercio(Request $request) {
         $validator = Validator::make($request->all(), [
-            'name' => 'required|string|max:255',
+            'nombre' => 'required|string|max:255',
+            'idUser' => 'required|integer',
             'email' => 'required|email',
             'phone' => 'required|string|max:15',
             'street_address' => 'required|string|max:255',
             'ciudad' => 'required|string|max:255',
             'provincia' => 'required|string|max:255',
             'codigo_postal' => 'required|integer',
-            'numero_planta' => 'required|integer',
-            'numero_puerta' => 'required|integer',
+            'num_planta' => 'required|integer',
+            'num_puerta' => 'required|integer',
             'descripcion' => 'required|string|max:500',
             'categoria' => 'required|integer',
-            'idUser' => 'required|integer',
             'gestion_stock' => 'required|integer',
         ]);
 
@@ -39,7 +39,8 @@ class ComercioController extends Controller
         }
 
         $cliente = Comercio::create([
-            'nombre' => $request->name,
+            'nombre' => $request->nombre,
+            'idUser' => $request->idUser,
             'email' => $request->email,
             'phone' => $request->phone,
             'calle_num' => $request->street_address,
@@ -48,8 +49,7 @@ class ComercioController extends Controller
             'cp' => $request->codigo_postal,
             'num_planta' => $request->numero_planta,
             'num_puerta' => $request->numero_puerta,
-            'categoria_general_id' => $request->categoria,
-            'idUser' => $request->idUser,
+            'categoria_id' => $request->categoria,
             'descripcion' => $request->descripcion,
             'gestion_stock' => $request->gestion_stock,
             'puntaje_medio' => 0,

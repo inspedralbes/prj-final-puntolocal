@@ -2,11 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\CategoriaConcreta;
-use App\Http\Controllers\Controller;
+use App\Models\Order;
 use Illuminate\Http\Request;
 
-class CategoriaConcretaController extends Controller
+class OrderController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -35,7 +34,7 @@ class CategoriaConcretaController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(CategoriaConcreta $categoriaConcreta)
+    public function show(Order $order)
     {
         //
     }
@@ -43,7 +42,7 @@ class CategoriaConcretaController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(CategoriaConcreta $categoriaConcreta)
+    public function edit(Order $order)
     {
         //
     }
@@ -51,7 +50,7 @@ class CategoriaConcretaController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, CategoriaConcreta $categoriaConcreta)
+    public function update(Request $request, Order $order)
     {
         //
     }
@@ -59,7 +58,7 @@ class CategoriaConcretaController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(CategoriaConcreta $categoriaConcreta)
+    public function destroy(Order $order)
     {
         //
     }

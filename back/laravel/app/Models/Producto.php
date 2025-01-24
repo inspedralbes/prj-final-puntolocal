@@ -7,22 +7,23 @@
     class Producto extends Model {
         use HasFactory;
 
-        protected $table = 'productos';
+        // protected $table = 'productos';
+        public $timestamps = false;
+
         protected $fillable = [
-            'id',
-            'id_categoria_concreta',
-            'id_comercio',
+            'subcategoria_id',
+            'comercio_id',
             'nombre',
             'descripcion',
             'precio',
-            'imagenes'
+            'imagenes',
         ];
 
-        public function categoriaConcreta() {
-            return $this->belongsTo(CategoriaConcreta::class, 'id_categoria_concreta');
+        public function subcategoria() {
+            return $this->belongsTo(Subcategoria::class, 'subcategoria_id');
         }
 
         public function comercio() {
-            return $this->belongsTo(Comercio::class, 'id_comercio');
+            return $this->belongsTo(Comercio::class, 'comercio_id');
         }
     }
