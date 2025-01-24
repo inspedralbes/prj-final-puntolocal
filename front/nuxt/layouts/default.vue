@@ -14,9 +14,11 @@
                 </div>
             </div>
         </header>
+
         <main>
             <slot />
         </main>
+
         <footer class="sticky bottom-0 left-0 w-full">
             <nav class="flex justify-around">
                 <a href="#" class="flex flex-col items-center text-gray-300 hover:text-white">
@@ -62,8 +64,8 @@
 </template>
 
 <style>
-footer {
-    background-color: #f7f7f7;
-    padding: 28px 0px;
-}
+    footer {
+        background-color: #f7f7f7;
+        padding: 28px 0px;
+    }
 </style>

@@ -1,80 +1,91 @@
+<script setup>
+definePageMeta({
+    layout: false,
+});
+</script>
+
 <template>
-    <div class="product-card" style="margin-top: 10px;">
-        <!-- Encabezado -->
-        <div class="header">
-            <button class="back-button">←</button>
+    <div>
+        <!-- Header -->
+        <div id="header">
             <div>
-                <h2 class="store-name">{{ producto.comercio[1] }}</h2>
-                <p class="product-header">FICHA DE PRODUCTO</p>
+                <p id="flecha">←</p>
             </div>
-            <div class="icons">
-                <button class="icon-button">
-                    <img src="@/assets/heart.svg" alt="Favorito" class="icon-image" />
+
+            <div>
+                <h3 id="nombre-local"> {{ nombre_local }} </h3>
+                <p id="subtitulo">Ficha de producto</p>
+            </div>
+
+            <div id="corazon">
+                <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="red" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <path
+                        d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z">
+                    </path>
+                </svg>
+
+            </div>
+        </div>
+
+        <div class="product-carousel" @touchstart="handleTouchStart" @touchmove="handleTouchMove"
+            @touchend="handleTouchEnd">
+            <img :src="selectedVariant.imagenes[currentImage]" :alt="`Imagen del producto (${selectedVariant.color})`"
+                class="carousel-image" />
+        </div>
+
+        <div class="carousel-pagination">
+            <span v-for="(imagen, index) in selectedVariant.imagenes" :key="index"
+                :class="{ 'active-dot': currentImage === index }" @click="currentImage = index"></span>
+        </div>
+
+        <!-- Product Images -->
+        <div class="product-container">
+
+
+            <!-- Product Details -->
+            <div id="nombre-valoracion">
+                <h1>{{ producto.nombre }}</h1>
+                <div id="puntuacion">
+                    <span class="star">★</span> {{ producto.valoracion }}
+                </div>
+            </div>
+
+            <p id="descripcion">{{ producto.descripcion }}</p>
+
+            <div class="colors-container">
+                <p>Color:</p>
+                <div class="colors">
+                    <button v-for="(color, index) in displayedColors" :key="index" :style="{ backgroundColor: color }"
+                        class="color-btn" @click="filterByColor(color)"
+                        :class="{ 'active-color': color === selectedColor }">
+                    </button>
+                </div>
+            </div>
+
+            <div class="sizes-container">
+                <p>Talla:</p>
+                <ul>
+                    <li v-for="(variant, index) in filteredVariants" :key="index">
+                        <button @click="selectSize(variant)" :class="{ 'active-size': variant === selectedSize }"
+                            class="size-btn">
+                            {{ variant.size }}
+                        </button>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            <div class="footer-content">
+                <p id="precio" v-if="selectedSize">{{ selectedSize.price.toFixed(2) }}€</p>
+            </div>
+            <div class="footer-content">
+                <button class="add-to-cart-btn">
+                    <ButtonBasketComp />
                 </button>
             </div>
-        </div>
-
-        <!-- Imágenes -->
-        <div class="image-gallery">
-            <button class="nav-button left" @click="prevImage">‹</button>
-            <div class="image-carousel" :style="carouselStyle">
-                <img
-                    v-for="(imagen, index) in producto.imagenes"
-                    :key="index"
-                    :src="imagen"
-                    :alt="'Imagen ' + index"
-                    :class="{ active: currentImage === index }"
-                />
-            </div>
-            <button class="nav-button right" @click="nextImage">›</button>
-            <div class="dots">
-                <span
-                    v-for="(dot, index) in producto.imagenes"
-                    :key="index"
-                    class="dot"
-                    :class="{ active: currentImage === index }"
-                    @click="setImage(index)"
-                ></span>
-            </div>
-        </div>
-
-        <!-- Información del producto -->
-        <div class="details">
-            <p><strong>Valoración: </strong>  {{ producto.valoracion }} ★</p>
-            <p class="product-description">{{ producto.descripcion }}</p>
-
-            <div class="options">
-                <div class="info-div">
-                    <h1>Size</h1>
-                    <div class="options-grid">
-                        <button
-                            id="tallas"
-                            v-for="size in producto.tamaños"
-                            :key="size"
-                            class="option-button"
-                        >
-                            {{ size }}
-                        </button>
-                    </div>
-                </div>
-                <div class="info-div" style="margin-top: 20px;">
-                    <h1>Color</h1>
-                    <div class="options-grid">
-                        <button
-                            id="colores"
-                            v-for="color in producto.colores"
-                            :key="color.nombre"
-                            class="option-button"
-                            :style="{ backgroundColor: color.codigo }"
-                        ></button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="footer">
-            <p class="price">{{ producto.precio.toFixed(2) }}€</p>
-            <ButtonBasketComp />
         </div>
     </div>
 </template>
@@ -89,243 +100,317 @@ export default {
     data() {
         return {
             currentImage: 0,
+            startX: 0,
+            endX: 0,
+            selectedColor: null,
+            selectedSize: null,
+            nombre_local: "Los Pollos Hermanos",
             producto: {
                 id: 1,
                 nombre: "Camiseta de Algodón",
-                descripcion: "Camiseta cómoda y ligera, ideal para el verano.",
-                stock_general: 150,
-                precio: 19.99,
+                descripcion: "quia sapiente ratione quas provident fugit, aspernatur iusto!",
                 valoracion: 4.9,
-                imagenes: [
-                    "https://imgs.search.brave.com/zLz9LQZ7X_HueDRlt4jt4hM7bd8DNZAS5fU2qTI2FTA/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9zdGF0/aWMud2l4c3RhdGlj/LmNvbS9tZWRpYS9m/OTE5NWZfNjY0OTI0/MzYwNTk3NGZkYzg4/OWFiZjRlMzA4NzM4/NzV-bXYyLnBuZy92/MS9maWxsL3dfNzQz/LGhfNzQzLGFsX2Ms/cV85MCx1c21fMC42/Nl8xLjAwXzAuMDEs/ZW5jX2F2aWYscXVh/bGl0eV9hdXRvL3Jv/bGV4LnBuZw",
-                    "camiseta2.jpg",
-                    "camiseta3.jpg"
+                varientes: [
+                    {
+                        size: "M",
+                        color: "red",
+                        stock: 10,
+                        price: 19.99,
+                        imagenes: [
+                            "https://imgs.search.brave.com/uXq6fdSqx6oo_Agh0JgoHF71Cy9jVUlC6wgl4-Ox2FQ/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9jb250/ZW50LnRoZXdvc2dy/b3VwLmNvbS9wcm9k/dWN0aW1hZ2UvMTc5/MjEwNzMvMTc5MjEw/NzNfMS5qcGc_aW1w/b2xpY3k9bGlzdGVy",
+                            "https://imgs.search.brave.com/kv5cMdd4NJeWH_ElJLsg76i4p_x-91dQGlmHgIL7rko/rs:fit:500:0:0:0/g:ce/aHR0cHM6Ly9zdGF0/aWMucGF0ZWsuY29t/L2ltYWdlcy9hcnRp/Y2xlcy9mYWNlX3do/aXRlLzIyMC81MjA0/R18wMDFfMS5qcGc",
+                        ],
+                    },
+                    {
+                        size: "S",
+                        color: "blue",
+                        stock: 5,
+                        price: 40,
+                        imagenes: [
+                            "https://imgs.search.brave.com/Xgysk_DiRHk7waITeVjN03Mmm1208Al0A1FNj67iw4Y/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly93d3cu/c2Vla3BuZy5jb20v/cG5nL2RldGFpbC8x/NTUtMTU1MTY0N19y/aWNoYXJkLW1pbGxl/LXJtLTUwLTAzLnBu/Zw",
+                            "https://imgs.search.brave.com/_rcGOA_4pmDw6pMYpHl3dXmHGJ1sTNxvRT9xl2PrKcU/rs:fit:500:0:0:0/g:ce/aHR0cHM6Ly93d3cu/c2Vla3BuZy5jb20v/cG5nL2RldGFpbC84/MTUtODE1NzI5NF9y/aWNoYXJkLW1pbGxl/LTUwLTAyLnBuZw",
+                        ],
+                    },
+                    {
+                        size: "M",
+                        color: "blue",
+                        stock: 5,
+                        price: 40,
+                        imagenes: [
+                            "https://imgs.search.brave.com/Xgysk_DiRHk7waITeVjN03Mmm1208Al0A1FNj67iw4Y/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly93d3cu/c2Vla3BuZy5jb20v/cG5nL2RldGFpbC8x/NTUtMTU1MTY0N19y/aWNoYXJkLW1pbGxl/LXJtLTUwLTAzLnBu/Zw",
+                            "https://imgs.search.brave.com/_rcGOA_4pmDw6pMYpHl3dXmHGJ1sTNxvRT9xl2PrKcU/rs:fit:500:0:0:0/g:ce/aHR0cHM6Ly93d3cu/c2Vla3BuZy5jb20v/cG5nL2RldGFpbC84/MTUtODE1NzI5NF9y/aWNoYXJkLW1pbGxl/LTUwLTAyLnBuZw",
+                        ],
+                    },
+                    {
+                        size: "L",
+                        color: "blue",
+                        stock: 5,
+                        price: 40,
+                        imagenes: [
+                            "https://imgs.search.brave.com/Xgysk_DiRHk7waITeVjN03Mmm1208Al0A1FNj67iw4Y/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly93d3cu/c2Vla3BuZy5jb20v/cG5nL2RldGFpbC8x/NTUtMTU1MTY0N19y/aWNoYXJkLW1pbGxl/LXJtLTUwLTAzLnBu/Zw",
+                            "https://imgs.search.brave.com/_rcGOA_4pmDw6pMYpHl3dXmHGJ1sTNxvRT9xl2PrKcU/rs:fit:500:0:0:0/g:ce/aHR0cHM6Ly93d3cu/c2Vla3BuZy5jb20v/cG5nL2RldGFpbC84/MTUtODE1NzI5NF9y/aWNoYXJkLW1pbGxl/LTUwLTAyLnBuZw",
+                        ],
+                    },
                 ],
-                comercio: ["1", "Nombre del Comercio"],
-                tamaños: ["S", "M", "L", "XL"],
-                colores: [
-                    { nombre: "Red", codigo: "#ff0000" },
-                    { nombre: "Blue", codigo: "#0000ff" },
-                    { nombre: "Green", codigo: "#008000" },
-                    { nombre: "Black", codigo: "#000000" }
-                ]
-            }
+            },
         };
     },
-    methods: {
-        nextImage() {
-            this.currentImage = (this.currentImage + 1) % this.producto.imagenes.length;
+    computed: {
+        displayedColors() {
+            const uniqueColors = new Set(this.producto.varientes.map((v) => v.color));
+            return [...uniqueColors];
         },
-        prevImage() {
-            this.currentImage = (this.currentImage - 1 + this.producto.imagenes.length) % this.producto.imagenes.length;
+        selectedVariant() {
+            return this.filteredVariants[0] || this.producto.varientes[0];
         },
-        setImage(index) {
-            this.currentImage = index;
+        filteredVariants() {
+            return this.producto.varientes.filter((v) => v.color === this.selectedColor);
         },
     },
-    computed: {
-        carouselStyle() {
-            return {
-                transform: `translateX(-${this.currentImage * 100}%)`
-            };
+    methods: {
+        filterByColor(color) {
+            this.selectedColor = color;
+            this.currentImage = 0;
+            this.selectedSize = this.filteredVariants[0] || null;
+        },
+        selectSize(variant) {
+            this.selectedSize = variant;
+        },
+        handleTouchStart(event) {
+            // Guarda la posición inicial del toque
+            this.startX = event.touches[0].clientX;
+        },
+        handleTouchMove(event) {
+            // Guarda la posición actual del toque mientras se mueve
+            this.endX = event.touches[0].clientX;
+        },
+        handleTouchEnd() {
+            // Calcula la diferencia de deslizamiento
+            const diffX = this.startX - this.endX;
+
+            if (diffX > 50) {
+                // Deslizar a la izquierda (siguiente imagen)
+                this.nextImage();
+            } else if (diffX < -50) {
+                // Deslizar a la derecha (imagen anterior)
+                this.prevImage();
+            }
+
+            // Reinicia las posiciones
+            this.startX = 0;
+            this.endX = 0;
+        },
+        nextImage() {
+            // Aumenta el índice de la imagen, con límites
+            if (this.currentImage < this.selectedVariant.imagenes.length - 1) {
+                this.currentImage++;
+            }
+        },
+        prevImage() {
+            // Disminuye el índice de la imagen, con límites
+            if (this.currentImage > 0) {
+                this.currentImage--;
+            }
+        },
+    },
+    mounted() {
+        // Mantén la lógica para inicializar color y talla seleccionados
+        const firstVariant = this.producto.varientes[0];
+        if (firstVariant) {
+            this.selectedColor = firstVariant.color;
+            this.selectedSize = firstVariant;
         }
-    }
+    },
 };
 </script>
 
 <style scoped>
-h1{
-    font-size: 20px;
-}
-#colores{
-    border-radius: 3000000px;
-}
-/* Contenedor principal */
-.product-card {
+/* General */
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
     display: flex;
     flex-direction: column;
-    border: 1px solid #ddd;
-    border-radius: 10px;
-    padding: 10px;
-    max-width: 400px;
-    margin: auto;
-    background-color: #fff;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    height: 100vh;
+    /* Altura completa de la pantalla */
 }
 
-/* Encabezado */
-svg {
-    width: 50px;
-    height: 50px;
-}
-
-#tallas{
-    background: black;
-    color: white;
-}
-
-.header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 10px;
-}
-
-.store-name {
-    font-size: 1.2em;
-    font-weight: bold;
-    margin: 0;
-    text-align: center;
-}
-
-.product-header {
-    font-size: 0.9em;
-    color: gray;
-    text-align: center;
-}
-
-.back-button,
-.icon-button {
-    background: none;
-    border: none;
-    cursor: pointer;
-    font-size: 1.5em;
-}
-
-/* Galería de imágenes */
-.image-gallery {
-    position: relative;
-}
-
-.image-carousel {
-    display: flex;
+#header {
     width: 100%;
-    transition: transform 0.3s ease-in-out;
+    display: grid;
+    grid-template-columns: 1fr 5fr 1fr;
+    align-items: center;
+    padding: 10px 20px;
+    gap: 10px;
+    text-align: center;
+    background: #f5f5f5;
+    border-bottom: 1px solid #ddd;
 }
 
-.image-carousel img {
-    min-width: 100%;
-    height: 100%;
-    object-fit: cover;
-    border-radius: 8px;
+#nombre-local {
+    font-size: 18px;
+    font-weight: bold;
 }
 
-.dots {
+#subtitulo {
+    font-size: 12px;
+    color: #888;
+}
+
+/* Contenedor principal */
+.product-container {
+    flex: 1;
+    /* Ocupa todo el espacio entre header y footer */
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    /* Espaciado uniforme entre los elementos */
+    padding: 20px;
+    overflow-y: auto;
+    /* Habilitar desplazamiento si el contenido excede la altura */
+}
+
+/* Carrusel de Imágenes */
+.product-carousel {
+    position: relative;
+    width: 100%;
+    height: 400px;
+    overflow: hidden;
     display: flex;
     justify-content: center;
-    margin-top: 5px;
+    align-items: center;
 }
 
-.dot {
+.carousel-image {
+    width: 100%;
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+}
+
+.carousel-pagination {
+    display: flex;
+    justify-content: center;
+    margin-top: 10px;
+    gap: 5px;
+}
+
+.carousel-pagination span {
     width: 10px;
     height: 10px;
     border-radius: 50%;
     background-color: #ddd;
-    margin: 0 3px;
+    cursor: pointer;
 }
 
-.dot.active {
-    background-color: #007bff;
+.carousel-pagination .active-dot {
+    background-color: #555;
 }
 
-/* Detalles del producto */
-.details {
-    margin-top: 10px;
-}
-
-.product-description {
-    font-size: 0.9em;
-    margin: 5px 0;
-}
-
-.options {
+/* Detalles del Producto */
+#nombre-valoracion {
+    display: flex;
     justify-content: space-between;
+    align-items: center;
+    width: 90%;
+    margin: 10px auto;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.star {
+    color: gold;
+}
+
+#descripcion {
+    margin: 10px auto;
+    width: 90%;
+    color: #555;
+    font-size: 14px;
+    text-align: center;
+}
+
+/* Colores del Producto */
+.colors-container {
+    width: 90%;
+    margin: 0 auto 15px;
+}
+
+.colors {
+    display: flex;
+    justify-content: flex-start;
+    gap: 10px;
     margin: 10px 0;
 }
 
-.options-grid {
-    display: flex;
-}
-
-.option-button {
-    border: 1px solid #ddd;
-    width: 40px;
-    height: 40px;
-    margin-right: 5px;
-    text-align: center;
-    cursor: pointer;
+.color-btn {
+    width: 30px;
+    height: 30px;
+    border: none;
     border-radius: 5px;
-    background-color: #f9f9f9;
+    cursor: pointer;
 }
 
-.option-button:hover {
-    background-color: #007bff;
+/* Tallas del Producto */
+.sizes-container {
+    width: 90%;
+    margin: 0 auto 15px;
+}
+
+.sizes-container ul {
+    display: flex;
+    justify-content: flex-start;
+    gap: 10px;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.sizes-container p,
+.colors-container p {
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.size-btn {
+    padding: 8px 10px;
+    border: none;
+    margin-top: 8px;
+    border-radius: 5px;
+    cursor: pointer;
+    background-color: #4f4f4f;
     color: white;
 }
 
+.size-btn.active-size {
+    background-color: #ddd;
+    font-weight: bold;
+    color: black;
+}
+
+/* Footer */
 .footer {
     display: flex;
     justify-content: space-between;
+    padding: 10px 20px;
+    background-color: #f5f5f5;
+    border-top: 1px solid #ddd;
     align-items: center;
-    margin-top: 10px;
-}
-
-.price {
-    font-size: 1.5em;
-    font-weight: bold;
-    margin: 0;
-    color: #333;
-}
-
-@media (min-width: 600px) {
-    .product-card {
-        max-width: 600px;
-    }
-}
-
-.image-gallery {
-    position: relative;
-    overflow: hidden;
+    position: fixed;
+    bottom: 0;
     width: 100%;
-    height: 300px;
-    /* Ajusta según sea necesario */
 }
 
-.nav-button {
-    position: absolute;
-    top: 25%;
-    transform: translateY(-50%);
-    background: black;
-    color: white;
-    border: none;
-    cursor: pointer;
-    font-size: 30px;
+.footer-content {
+    margin: 0 auto;
+    text-align: center;
 }
 
-.nav-button.left {
-    left: 10px;
-}
 
-.nav-button.right {
-    right: 10px;
-}
-
-.dots {
-    display: flex;
-    justify-content: center;
-    margin-top: 5px;
-}
-
-.dot {
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
-    background-color: #ddd;
-    margin: 0 3px;
-    cursor: pointer;
-}
-
-.dot.active {
-    background-color: #007bff;
+#precio {
+    font-size: 24px;
+    font-weight: bold;
+    color: #333;
+    text-align: center;
 }
 </style>

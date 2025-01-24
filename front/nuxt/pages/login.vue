@@ -1,15 +1,15 @@
 <script setup>
-import { navigateTo } from '#app';
-definePageMeta({
-    layout: 'authentication',
-});
+    import { navigateTo } from '#app';
+    definePageMeta({
+        layout: 'authentication',
+    });
 
-const emailUser = ref();
-const password = ref();
+    const emailUser = ref();
+    const password = ref();
 
-function login() {
-    navigateTo('');
-}
+    function login() {
+        navigateTo('');
+    }
 </script>
 
 <template>

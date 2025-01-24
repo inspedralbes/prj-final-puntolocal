@@ -1,6 +1,6 @@
 <template>
     <button @click="addToBasket">
-        <img :src="shoppingBasketIcon" alt="Añadir al carrito" class="svg-icon" />
+        <img :src="shoppingBasketIcon" alt="Icono de carrito" class="svg-icon" />
     </button>
 </template>
 
@@ -27,6 +27,7 @@ export default {
         background-color: #007bff;
         color: white;
         border: none;
+        font-size: 20px;
         border-radius: 5px;
         cursor: pointer;
         display: flex;
