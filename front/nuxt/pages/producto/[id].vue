@@ -6,7 +6,6 @@ definePageMeta({
 
 <template>
     <div>
-        <!-- Header -->
         <div id="header">
             <div>
                 <p id="flecha">←</p>
@@ -39,11 +38,9 @@ definePageMeta({
                 :class="{ 'active-dot': currentImage === index }" @click="currentImage = index"></span>
         </div>
 
-        <!-- Product Images -->
         <div class="product-container">
 
 
-            <!-- Product Details -->
             <div id="nombre-valoracion">
                 <h1>{{ producto.nombre }}</h1>
                 <div id="puntuacion">
@@ -56,9 +53,9 @@ definePageMeta({
             <div class="colors-container">
                 <p>Color:</p>
                 <div class="colors">
-                    <button v-for="(color, index) in displayedColors" :key="index" :style="{ backgroundColor: color }"
-                        class="color-btn" @click="filterByColor(color)"
-                        :class="{ 'active-color': color === selectedColor }">
+                    <button v-for="(color, index) in displayedColors" :key="index"
+                        :style="{ backgroundImage: `url(${getFirstImageForColor(color)})` }" class="color-btn"
+                        @click="filterByColor(color)" :class="{ 'active-color': color === selectedColor }">
                     </button>
                 </div>
             </div>
@@ -76,7 +73,6 @@ definePageMeta({
             </div>
         </div>
 
-        <!-- Footer -->
         <div class="footer">
             <div class="footer-content">
                 <p id="precio" v-if="selectedSize">{{ selectedSize.price.toFixed(2) }}€</p>
@@ -168,6 +164,10 @@ export default {
         },
     },
     methods: {
+        getFirstImageForColor(color) {
+            const variant = this.producto.varientes.find(v => v.color === color);
+            return variant ? variant.imagenes[0] : '';
+        },
         filterByColor(color) {
             this.selectedColor = color;
             this.currentImage = 0;
@@ -177,44 +177,36 @@ export default {
             this.selectedSize = variant;
         },
         handleTouchStart(event) {
-            // Guarda la posición inicial del toque
             this.startX = event.touches[0].clientX;
         },
         handleTouchMove(event) {
-            // Guarda la posición actual del toque mientras se mueve
             this.endX = event.touches[0].clientX;
         },
         handleTouchEnd() {
-            // Calcula la diferencia de deslizamiento
             const diffX = this.startX - this.endX;
 
             if (diffX > 50) {
-                // Deslizar a la izquierda (siguiente imagen)
                 this.nextImage();
             } else if (diffX < -50) {
-                // Deslizar a la derecha (imagen anterior)
                 this.prevImage();
             }
 
-            // Reinicia las posiciones
             this.startX = 0;
             this.endX = 0;
         },
         nextImage() {
-            // Aumenta el índice de la imagen, con límites
             if (this.currentImage < this.selectedVariant.imagenes.length - 1) {
                 this.currentImage++;
             }
         },
         prevImage() {
-            // Disminuye el índice de la imagen, con límites
             if (this.currentImage > 0) {
                 this.currentImage--;
             }
         },
     },
+
     mounted() {
-        // Mantén la lógica para inicializar color y talla seleccionados
         const firstVariant = this.producto.varientes[0];
         if (firstVariant) {
             this.selectedColor = firstVariant.color;
@@ -225,26 +217,24 @@ export default {
 </script>
 
 <style scoped>
-/* General */
 body {
     margin: 0;
-    font-family: Arial, sans-serif;
     display: flex;
-    flex-direction: column;
     height: 100vh;
-    /* Altura completa de la pantalla */
+    flex-direction: column;
+    font-family: Arial, sans-serif;
 }
 
 #header {
+    gap: 10px;
     width: 100%;
     display: grid;
-    grid-template-columns: 1fr 5fr 1fr;
-    align-items: center;
     padding: 10px 20px;
-    gap: 10px;
     text-align: center;
+    align-items: center;
     background: #f5f5f5;
     border-bottom: 1px solid #ddd;
+    grid-template-columns: 1fr 5fr 1fr;
 }
 
 #nombre-local {
@@ -253,32 +243,27 @@ body {
 }
 
 #subtitulo {
-    font-size: 12px;
     color: #888;
+    font-size: 12px;
 }
 
-/* Contenedor principal */
 .product-container {
     flex: 1;
-    /* Ocupa todo el espacio entre header y footer */
     display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    /* Espaciado uniforme entre los elementos */
     padding: 20px;
     overflow-y: auto;
-    /* Habilitar desplazamiento si el contenido excede la altura */
+    flex-direction: column;
+    justify-content: space-between;
 }
 
-/* Carrusel de Imágenes */
 .product-carousel {
-    position: relative;
     width: 100%;
+    display: flex;
     height: 400px;
     overflow: hidden;
-    display: flex;
-    justify-content: center;
+    position: relative;
     align-items: center;
+    justify-content: center;
 }
 
 .carousel-image {
@@ -289,33 +274,32 @@ body {
 }
 
 .carousel-pagination {
-    display: flex;
-    justify-content: center;
-    margin-top: 10px;
     gap: 5px;
+    display: flex;
+    margin-top: 10px;
+    justify-content: center;
 }
 
 .carousel-pagination span {
     width: 10px;
     height: 10px;
+    cursor: pointer;
     border-radius: 50%;
     background-color: #ddd;
-    cursor: pointer;
 }
 
 .carousel-pagination .active-dot {
     background-color: #555;
 }
 
-/* Detalles del Producto */
 #nombre-valoracion {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
     width: 90%;
-    margin: 10px auto;
+    display: flex;
     font-size: 18px;
     font-weight: bold;
+    margin: 10px auto;
+    align-items: center;
+    justify-content: space-between;
 }
 
 .star {
@@ -323,47 +307,47 @@ body {
 }
 
 #descripcion {
-    margin: 10px auto;
     width: 90%;
     color: #555;
     font-size: 14px;
-    text-align: center;
+    margin: auto auto 20px auto;
 }
 
-/* Colores del Producto */
 .colors-container {
     width: 90%;
     margin: 0 auto 15px;
 }
 
 .colors {
-    display: flex;
-    justify-content: flex-start;
     gap: 10px;
+    display: flex;
     margin: 10px 0;
+    justify-content: flex-start;
 }
 
 .color-btn {
-    width: 30px;
-    height: 30px;
+    width: 35px;
+    height: 35px;
     border: none;
-    border-radius: 5px;
     cursor: pointer;
+    border-radius: 5px;
+    background-size: cover;
+    border: 1px solid black;
+    background-position: center;
 }
 
-/* Tallas del Producto */
 .sizes-container {
     width: 90%;
     margin: 0 auto 15px;
 }
 
 .sizes-container ul {
-    display: flex;
-    justify-content: flex-start;
-    gap: 10px;
-    list-style: none;
-    padding: 0;
     margin: 0;
+    gap: 10px;
+    padding: 0;
+    display: flex;
+    list-style: none;
+    justify-content: flex-start;
 }
 
 .sizes-container p,
@@ -373,32 +357,31 @@ body {
 }
 
 .size-btn {
-    padding: 8px 10px;
     border: none;
-    margin-top: 8px;
-    border-radius: 5px;
-    cursor: pointer;
-    background-color: #4f4f4f;
     color: white;
+    cursor: pointer;
+    margin-top: 8px;
+    padding: 8px 10px;
+    border-radius: 5px;
+    background-color: #4f4f4f;
 }
 
 .size-btn.active-size {
-    background-color: #ddd;
-    font-weight: bold;
     color: black;
+    font-weight: bold;
+    background-color: #ddd;
 }
 
-/* Footer */
 .footer {
-    display: flex;
-    justify-content: space-between;
-    padding: 10px 20px;
-    background-color: #f5f5f5;
-    border-top: 1px solid #ddd;
-    align-items: center;
-    position: fixed;
     bottom: 0;
     width: 100%;
+    display: flex;
+    position: fixed;
+    padding: 10px 20px;
+    align-items: center;
+    background-color: #f5f5f5;
+    border-top: 1px solid #ddd;
+    justify-content: space-between;
 }
 
 .footer-content {
@@ -408,9 +391,9 @@ body {
 
 
 #precio {
+    color: #333;
     font-size: 24px;
     font-weight: bold;
-    color: #333;
     text-align: center;
 }
 </style>
