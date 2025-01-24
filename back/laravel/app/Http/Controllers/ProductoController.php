@@ -38,7 +38,7 @@ class ProductoController extends Controller
             "nombre" => "required | string | max:60",
             "descripcion" => "string | max:500",
             "precio" => "required | numeric | min:0 | max: 99999.99",
-            'imagenes' => 'required|array|max:4',
+            'imagenes' => 'array|max:4',
             'imagenes.*' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
@@ -50,9 +50,9 @@ class ProductoController extends Controller
                 foreach ($request->file('imagenes') as $imagen) {
                     $imagenesRutas[] = $imagen->store('productos', 'public');
                 }
+                $validated['imagenes'] = json_encode($imagenesRutas);
             }
 
-            $validated['imagenes'] = json_encode($imagenesRutas);
             $producto = Producto::create($validated);
             if(!$producto){
                 return response()->json(['error' => 'Producto no creado'], 404);

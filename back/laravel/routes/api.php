@@ -17,12 +17,6 @@
     });
 
 
-    // Route::middleware('auth:sanctum')->prefix('producto')->group(function () {
-        // Route::post('crear', [ProductoController::class,'store']);
-    // });
-
-    // Route::prefix('producto')->group(function () {
-    //     Route::post('crear', [ProductoController::class, 'store']);
-    // });
-
-    Route::post('producto/crear', [ProductoController::class, 'store']);
+    Route::middleware('auth:sanctum')->prefix('producto')->group(function () {
+        Route::post('crear', [ProductoController::class,'store']);
+    });
