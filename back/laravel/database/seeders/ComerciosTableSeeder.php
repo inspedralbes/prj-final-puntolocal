@@ -23,12 +23,15 @@ class ComerciosTableSeeder extends Seeder
         for ($i = 0; $i < $cantidad; $i++) {
             DB::table('comercios')->insert([
                 'nombre' => $faker->company,
-                "phone" => "603" . $faker->numberBetween(100000, 999999),
+                'idUser' => $faker->numberBetween(1,10),
+                'phone' => "603" . $faker->numberBetween(100000, 999999),
                 'email' => $faker->companyEmail,
                 'calle_num' => $faker->streetAddress,
                 'ciudad' => "Castelldefels",
                 'provincia' => "Barcelona",
-                'cp' => '08860',
+                'codigo_postal' => '08860',
+                'num_planta' => $faker->numberBetween(1,5),
+                'num_puerta' => $faker->numberBetween(1,100),
                 'categoria_id' => rand(1, 10),
                 'descripcion' => $faker->paragraph,
                 'gestion_stock' => rand(0, 1),

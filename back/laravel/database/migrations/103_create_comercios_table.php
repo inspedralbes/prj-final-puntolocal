@@ -8,6 +8,9 @@ return new class extends Migration {
         Schema::create('comercios', function (Blueprint $table) {
             $table->id();
             $table->string('nombre');
+            
+            $table->unsignedBigInteger('idUser');
+            $table->foreign('idUser')->references('id')->on('cliente')->onDelete('cascade');
 
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
@@ -19,13 +22,14 @@ return new class extends Migration {
             $table->string('calle_num');
             $table->string('ciudad');
             $table->string('provincia');
-            $table->string('cp');
+            $table->string('codigo_postal');
 
             $table->unsignedBigInteger('categoria_id');
             $table->foreign('categoria_id')->references('id')->on('categorias')->onDelete('cascade');
 
-            $table->unsignedBigInteger('idUser');
-            $table->foreign('idUser')->references('id')->on('cliente')->onDelete('cascade');
+            $table->integer('num_planta')->nullable();
+            $table->integer('num_puerta')->nullable();
+
             $table->text('descripcion');
             $table->boolean('gestion_stock');
             $table->float('puntaje_medio');
