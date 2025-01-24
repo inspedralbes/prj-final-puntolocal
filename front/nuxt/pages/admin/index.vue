@@ -1,31 +1,27 @@
 <script setup>
-import { ref } from 'vue';
-import AddProducts from './add-products.vue'; // Importamos el componente
+    import { ref } from 'vue';
+    import AddProducts from './add-products.vue';
 
-definePageMeta({
-    layout: false,
-});
+    definePageMeta({
+        layout: false,
+    });
 
-// Estado para gestionar el contenido actual
-const currentView = ref('default');
+    const currentView = ref('default');
 
-// Función para cambiar la vista
-const changeView = (view) => {
-    currentView.value = view;
-};
+    const changeView = (view) => {
+        currentView.value = view;
+    };
 </script>
 
 <template>
     <div id="general">
         <div id="menu">
             <div id="productes" class="menu-section">
-                <h1>Productes</h1>
                 <button class="menu-button" @click="changeView('addProducts')">Afegir producte</button>
                 <button class="menu-button">Veure productes</button>
             </div>
 
             <div id="categories" class="menu-section">
-                <h1>Categorias</h1>
                 <button class="menu-button">Afegir categories</button>
                 <button class="menu-button">Veure categorias</button>
             </div>
@@ -53,42 +49,40 @@ const changeView = (view) => {
 
 <style scoped>
     #general {
-        display: flex;
-        flex-wrap: wrap;
         width: 100%;
         height: 100vh;
+        display: flex;
+        flex-wrap: wrap;
         font-family: Arial, sans-serif;
         color: #333;
     }
 
-    /* Menú lateral */
     #menu {
-        height: 100vh;
         width: 20%;
+        height: 100vh;
         min-width: 250px;
-        box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+        background: rgb(234, 234, 234);
     }
 
     .menu-section {
-        margin-bottom: 20px;
-        background: #ffffff;
-        border-radius: 10px;
+        margin: 20px 0;
+        border-bottom: 1px solid black;
     }
 
     .menu-section h1 {
+        color: #4a4a4a;
         font-size: 1.5rem;
         margin-bottom: 10px;
-        color: #4a4a4a;
     }
 
     .menu-button {
-        display: block;
         width: 90%;
-        margin: 10px auto;
-        font-size: 1rem;
         border: none;
-        border-radius: 5px;
+        display: block;
+        font-size: 1rem;
         cursor: pointer;
+        margin: 10px auto;
+        border-radius: 5px;
         transition: background 0.3s;
     }
 
@@ -96,24 +90,23 @@ const changeView = (view) => {
         background: #554dff;
     }
 
-    /* Contenido principal */
     #contenido {
-        flex: 1; /* Ocupa todo el espacio restante */
-        height: 100vh; /* Asegura la altura completa de la ventana */
-        overflow-y: auto; /* Activa el desplazamiento solo en el eje vertical */
-        padding: 0; /* Quita padding para que los componentes ocupen todo el espacio */
+        flex: 1;
+        padding: 0;
         display: flex;
-        justify-content: center; /* Centra el contenido horizontalmente */
-        align-items: flex-start; /* Alinea el contenido en la parte superior */
+        height: 100vh;
+        overflow-y: auto;
+        justify-content: center;
+        align-items: flex-start;
     }
 
     #contenido > * {
-        width: 100%; /* Asegura que el componente hijo ocupe todo el ancho */
-        padding: 20px; /* Añade espacio interno en el contenido */
+        width: 100%;
+        padding: 20px;
     }
 
     #contenido p {
-        font-size: 1.2rem;
         color: #333;
+        font-size: 1.2rem;
     }
 </style>
