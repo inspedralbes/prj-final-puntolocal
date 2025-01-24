@@ -15,6 +15,7 @@ return new class extends Migration {
             $table->string('phone', 15)->nullable();
             $table->timestamp('phone_verified_at')->nullable();
 
+            
             $table->string('calle_num');
             $table->string('ciudad');
             $table->string('provincia');
@@ -23,6 +24,8 @@ return new class extends Migration {
             $table->unsignedBigInteger('categoria_id');
             $table->foreign('categoria_id')->references('id')->on('categorias')->onDelete('cascade');
 
+            $table->unsignedBigInteger('idUser');
+            $table->foreign('idUser')->references('id')->on('cliente')->onDelete('cascade');
             $table->text('descripcion');
             $table->boolean('gestion_stock');
             $table->float('puntaje_medio');
