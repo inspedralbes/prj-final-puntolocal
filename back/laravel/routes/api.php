@@ -28,16 +28,19 @@
         Route::get('getCategoriasGenerales', [CategoriaGeneralController::class, 'getCategoriasGenerales']);
     });
 
-
-    Route::middleware('auth:sanctum')->prefix('producto')->group(function () {
+    
+    Route::prefix('producto')->group(function () {
         // Obtener todos los productos
         Route::get('/', [ProductoController::class, 'index']);
-        
-        // Crear un nuevo producto
-        Route::post('/', [ProductoController::class, 'store']);
-        
+
         // Obtener un producto específico
         Route::get('{id}', [ProductoController::class, 'show']);
+    });
+
+
+    Route::middleware('auth:sanctum')->prefix('producto')->group(function () {
+        // Crear un nuevo producto
+        Route::post('/', [ProductoController::class, 'store']);
         
         // Actualizar un producto específico
         Route::put('{id}', [ProductoController::class, 'update']);
@@ -45,3 +48,4 @@
         // Eliminar un producto específico
         Route::delete('{id}', [ProductoController::class, 'destroy']);
     });
+    

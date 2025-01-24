@@ -14,7 +14,22 @@ class ProductoController extends Controller
      */
     public function index()
     {
-        //
+        $productos = Producto::with('subcategoria', 'comercio')->get()->map(function ($producto) {
+            return [
+                "nombre" => $producto->nombre,
+                "descripcion" => $producto->descripcion,
+                "subcategoria_id" => $producto->subcategoria_id,
+                'subcategoria' => $producto->subcategoria ? $producto->subcategoria->name : null,
+                "comercio_id" => $producto->comercio_id,
+                "comercio" => $producto->comercio->nombre,
+                "precio" => $producto->precio
+            ];
+        });
+        if ($productos->isEmpty()) {
+            return response()->json(['message' => 'No hay productos'], 200);  // Se puede devolver un 200 en vez de 404
+        }
+
+        return response()->json(['data' => $productos], 200);
     }
 
     /**
@@ -31,7 +46,7 @@ class ProductoController extends Controller
     public function store(Request $request)
     {
         // dd($request->all());
-        
+
         $validated = $request->validate([
             "subcategoria_id" => "required | integer",
             "comercio_id" => "required | integer",
@@ -54,28 +69,35 @@ class ProductoController extends Controller
             }
 
             $producto = Producto::create($validated);
-            if(!$producto){
+            if (!$producto) {
                 return response()->json(['error' => 'Producto no creado'], 404);
             }
             return response()->json(['message' => 'Producto creado exitosamente', 'data' => $producto], 201);
         } catch (error) {
-            return response()->json(['error'=> ''], 404);
+            return response()->json(['error' => ''], 404);
         }
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(Request $request)
+    public function show($id)
     {
-        $validated = $request->validate(["id_producto" => "required | integer"]);
-        $producto = Producto::with('categoriaConcreta', 'comercio')
-            ->find($validated['id_producto']);
+        $producto = Producto::with('subcategoria', 'comercio')->where('id', $id)->first();
 
         if (!$producto) {
-            return response()->json(['error' => 'Producto no encontrado'], 404);
+            return response()->json(['message' => 'Producto no encontrado'], 404);
         }
-        return response()->json($producto, 200);
+
+        return response()->json([
+            "nombre" => $producto->nombre,
+            "descripcion" => $producto->descripcion,
+            "subcategoria_id" => $producto->subcategoria_id,
+            "subcategoria" => $producto->subcategoria ? $producto->subcategoria->name : null,
+            "comercio_id" => $producto->comercio_id,
+            "comercio" => $producto->comercio->nombre,
+            "precio" => $producto->precio
+        ], 200);
     }
 
     /**
@@ -89,16 +111,55 @@ class ProductoController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Producto $producto)
+    public function update(Request $request, $id)
     {
-        //
+        $request->validate([
+            'nombre' => 'required|string|max:60',
+            'descripcion' => 'required|string',
+            'precio' => 'required|numeric|min:1',
+            'subcategoria_id' => 'required|exists:subcategorias,id',
+            'comercio_id' => 'required|exists:comercios,id',
+        ]);
+        
+
+        try {
+            $producto = Producto::findOrFail($id);
+    
+            $producto->update([
+                'nombre' => $request->nombre,
+                'descripcion' => $request->descripcion,
+                'precio' => $request->precio,
+                'subcategoria_id' => $request->subcategoria_id,
+                'comercio_id' => $request->comercio_id,
+            ]);
+    
+            return response()->json([
+                'message' => 'Producto actualizado con éxito',
+                'data' => $producto
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => 'Producto no actualizado',
+                'details' => $e->getMessage()
+            ], 500);
+        }
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Producto $producto)
+    public function destroy($id)
     {
-        //
+        $producto = Producto::findOrFail($id);
+        
+        try {
+            $producto->delete();
+            return response()->json(['message' => 'Producto eliminado con éxito'], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => 'Producto no eliminado',
+                'details' => $e->getMessage()
+            ], 500);
+        }
     }
 }
