@@ -16,6 +16,7 @@
             'nombre',
             'descripcion',
             'precio',
+            'stock',
             'imagenes',
         ];
 

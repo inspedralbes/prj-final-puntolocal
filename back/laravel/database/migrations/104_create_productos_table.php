@@ -14,6 +14,7 @@
                 $table->string('nombre');
                 $table->text('descripcion');
                 $table->float('precio');
+                $table->integer('stock')->nullable();
                 $table->json('imagenes')->nullable();
             });
         }

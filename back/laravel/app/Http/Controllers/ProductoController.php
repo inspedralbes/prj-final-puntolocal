@@ -22,7 +22,8 @@ class ProductoController extends Controller
                 'subcategoria' => $producto->subcategoria ? $producto->subcategoria->name : null,
                 "comercio_id" => $producto->comercio_id,
                 "comercio" => $producto->comercio->nombre,
-                "precio" => $producto->precio
+                "precio" => $producto->precio,
+                "stock" => $producto->stock
             ];
         });
         if ($productos->isEmpty()) {
@@ -53,6 +54,7 @@ class ProductoController extends Controller
             "nombre" => "required | string | max:60",
             "descripcion" => "string | max:500",
             "precio" => "required | numeric | min:0 | max: 99999.99",
+            "stock" => "nullable | numeric | min:0",
             'imagenes' => 'array|max:4',
             'imagenes.*' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
@@ -96,7 +98,8 @@ class ProductoController extends Controller
             "subcategoria" => $producto->subcategoria ? $producto->subcategoria->name : null,
             "comercio_id" => $producto->comercio_id,
             "comercio" => $producto->comercio->nombre,
-            "precio" => $producto->precio
+            "precio" => $producto->precio,
+            "stock" => $producto->stock
         ], 200);
     }
 
@@ -119,6 +122,7 @@ class ProductoController extends Controller
             'precio' => 'required|numeric|min:1',
             'subcategoria_id' => 'required|exists:subcategorias,id',
             'comercio_id' => 'required|exists:comercios,id',
+            "stock" => "nullable | numeric | min:0",
         ]);
         
 
@@ -131,6 +135,7 @@ class ProductoController extends Controller
                 'precio' => $request->precio,
                 'subcategoria_id' => $request->subcategoria_id,
                 'comercio_id' => $request->comercio_id,
+                "stock" => $request->stock,
             ]);
     
             return response()->json([
