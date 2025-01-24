@@ -6,8 +6,15 @@
 
 <script>
 import shoppingBasketIcon from '../assets/shopping-basket.svg';
+import { useComercioStore } from '@/stores/comercioStore';
 
 export default {
+    props: {
+        producto: {
+            type: Object,
+            required: true
+        }
+    },
     data() {
         return {
             shoppingBasketIcon,
@@ -15,7 +22,12 @@ export default {
     },
     methods: {
         addToBasket() {
-            console.log("Producto añadido al carrito");
+            const comercioStore = useComercioStore();
+            comercioStore.addToBasket(this.producto)
+            if(confirm('Quieres ir a la cesta?')){
+                navigateTo('/cistella')
+            }
+            
         },
     },
 };

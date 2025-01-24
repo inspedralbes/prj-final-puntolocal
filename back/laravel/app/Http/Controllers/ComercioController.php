@@ -67,4 +67,19 @@ class ComercioController extends Controller
             'cliente' => $cliente
         ], 201);
     }
+
+    public function getComercios() {
+        $comercios = Comercio::all();
+        return response()->json($comercios, 200);
+    }
+
+    public function getComercio($id) {
+        $comercio = Comercio::find($id);
+        if ($comercio == null) {
+            return response()->json([
+                'error' => 'Comercio no encontrado'
+            ], 404);
+        }
+        return response()->json($comercio, 200);
+    }
 }

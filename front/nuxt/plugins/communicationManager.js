@@ -11,7 +11,52 @@ export default defineNuxtPlugin(nuxtApp => {
       ///////////////////////////// GET  //////////////////////////////////
       async getCategoriasGenerales() {
         try {
-          const response = await fetch(Host + '/categoriasGenerales/getCategoriasGenerales',{
+          const response = await fetch(Host + '/categoriasGenerales',{
+            method: 'GET',
+            headers: {
+              'Accept': 'application/json',
+              'Content-Type': 'application/json',
+              'Authorization': authStore.token ? `Bearer ${authStore.token}` : ''
+            },
+          });
+          if (response.ok) {
+            const json = await response.json();
+            return json;
+          } else {
+            console.error(`Error en la petición: ${response.status} ${response.statusText}`)
+            return null;
+          }
+      
+        } catch (error) {
+          console.error('Error al realizar la petición:', error);
+          return null;
+        }
+      },
+      async getComercio(comercioId) {
+        try {
+          const response = await fetch(`${Host}/comercios/${comercioId}`, {
+            method: 'GET',
+            headers: {
+              'Accept': 'application/json',
+              'Content-Type': 'application/json',
+              'Authorization': authStore.token ? `Bearer ${authStore.token}` : ''
+            },
+          });
+          if (response.ok) {
+            const json = await response.json();
+            return json;
+          } else {
+            console.error(`Error en la petición: ${response.status} ${response.statusText}`);
+            return null;
+          }
+        } catch (error) {
+          console.error('Error al realizar la petición:', error);
+          return null;
+        }
+      },
+      async getComercios() {
+        try {
+          const response = await fetch(Host + '/comercios',{
             method: 'GET',
             headers: {
               'Accept': 'application/json',
@@ -84,7 +129,7 @@ export default defineNuxtPlugin(nuxtApp => {
 
       async registerStore(json) {
         try {
-          const response = await fetch(Host + '/comercios/registerComercio', {
+          const response = await fetch(Host + '/comercios', {
             method: 'POST',
             headers: {
               'Accept': 'application/json',

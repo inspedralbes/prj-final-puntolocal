@@ -20,10 +20,12 @@
     // ==== COMERCIOS ===================
 
     Route::middleware('auth:sanctum')->prefix('comercios')->group(function () {
-        Route::post('registerComercio', [ComercioController::class, 'RegistrarComercio']);
+        Route::post('/', [ComercioController::class, 'RegistrarComercio']);
+        Route::get('/', [ComercioController::class, 'getComercios']);
+        Route::get('/{id}', [ComercioController::class, 'getComercio']); 
     });
 
     // ==== CATEGORIAS GENERALES ===================
     Route::middleware('auth:sanctum')->prefix('categoriasGenerales')->group(function () {
-        Route::get('getCategoriasGenerales', [CategoriaGeneralController::class, 'getCategoriasGenerales']);
+        Route::get('/', [CategoriaGeneralController::class, 'getCategoriasGenerales']);
     });

@@ -74,7 +74,7 @@
 
         <div class="footer">
             <p class="price">{{ producto.precio.toFixed(2) }}€</p>
-            <ButtonBasketComp />
+            <ButtonBasketComp :producto="producto" />
         </div>
     </div>
 </template>
@@ -108,7 +108,8 @@ export default {
                     { nombre: "Blue", codigo: "#0000ff" },
                     { nombre: "Green", codigo: "#008000" },
                     { nombre: "Black", codigo: "#000000" }
-                ]
+                ],
+                cantidad: 1,
             }
         };
     },
