@@ -19,11 +19,12 @@
         </div>
     </div>
     <div id="contain-productos">
+        <h1 class="titulo-productos">Ultimes tendències</h1>
         <div id="productos">
-            <productoComp></productoComp>
-            <productoComp></productoComp>
-            <productoComp></productoComp>
-            <productoComp></productoComp>
+            <productoComp img="https://catalogosparaempresas.com/wp-content/uploads/2022/07/ice2-1.jpg" title="Zapatilla deportiva negra" price="24,99" comercio="WhyNot?"></productoComp>
+            <productoComp img="https://static.carrefour.es/hd_510x_/crs/cdn_static/catalog/hd/424728_00_1.jpg" title="iPhone 13 128GB Apple - Blanco estrella" price="539,00" comercio="K-Tuin Castelldefels Anec Blau"></productoComp>
+            <productoComp img="https://www.markamania.es/1017148-large_default/pantalon-deportivo-de-corte-recto-roly-new-astun.jpg" title="Pantalon Jean Negro Ajustado Elastico" price="19,99" comercio="JD Esports"></productoComp>
+            <productoComp img="https://www.shutterstock.com/image-photo/big-diamond-solitaire-necklace-chain-600nw-2083887445.jpg" title="Collar de diamante para dama" price="69,99" comercio="Joyeria Poppins"></productoComp>
         </div>
     </div>
 </template>
@@ -57,6 +58,7 @@
     align-items: center;
     overflow: scroll;
     box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+    background-color: #eff1f3;
 }
 
 #contain-categorias::-webkit-scrollbar {
@@ -73,6 +75,7 @@
     box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
     margin-left: 20px;
     border-radius: 10px;
+    background-color: white;
 }
 
 #contain-productos{
@@ -84,6 +87,13 @@
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: 20px;
+}
+
+.titulo-productos{
+    font-size: 20px;
+    font-weight: 500;
+    margin-top: 0px;
+    margin-bottom: 10px;
 }
 </style>
 
