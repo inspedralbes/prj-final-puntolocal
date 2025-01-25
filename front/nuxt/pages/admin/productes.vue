@@ -63,7 +63,7 @@
                         type="button" data-drawer-target="drawer-create-product-default"
                         data-drawer-show="drawer-create-product-default" aria-controls="drawer-create-product-default"
                         data-drawer-placement="right">
-                        Add new product
+                        Afegir nou producte
                     </button>
                 </div>
             </div>
@@ -287,6 +287,13 @@
                             value="2999" placeholder="$149" required="">
                     </div>
                     <div>
+                        <label for="descompte"
+                            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Descompte</label>
+                        <input type="number" name="descompte" id="descompte"
+                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                            placeholder="5%" required="">
+                    </div>
+                    <div>
                         <label for="stock"
                             class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Stock</label>
                         <input type="number" name="stock" id="stock"
@@ -361,7 +368,7 @@
                 <div class="relative bg-white rounded-lg shadow dark:bg-gray-800">
                     <div class="flex items-start justify-between p-5 border-b rounded-t dark:border-gray-700">
                         <h3 class="text-xl font-semibold dark:text-white">
-                            Editar producte
+                            Afegir producte
                         </h3>
                         <button type="button" @click="toggleCard('crear')"
                             class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-700 dark:hover:text-white"
