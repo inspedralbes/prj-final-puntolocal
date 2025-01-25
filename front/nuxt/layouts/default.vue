@@ -14,9 +14,11 @@
                 </div>
             </div>
         </header>
+
         <main>
             <slot />
         </main>
+
         <footer class="sticky bottom-0 left-0 w-full">
             <nav class="flex justify-around">
                 <NuxtLink to="/" class="flex flex-col items-center text-gray-300 hover:text-white">
