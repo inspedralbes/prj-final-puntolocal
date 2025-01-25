@@ -16,6 +16,7 @@ class ProductoController extends Controller
     {
         $productos = Producto::with('subcategoria', 'comercio')->get()->map(function ($producto) {
             return [
+                "id" => $producto->id,
                 "nombre" => $producto->nombre,
                 "descripcion" => $producto->descripcion,
                 "subcategoria_id" => $producto->subcategoria_id,
@@ -33,6 +34,28 @@ class ProductoController extends Controller
         return response()->json(['data' => $productos], 200);
     }
 
+    public function getByComercio($comercioID){
+        $productos = Producto::with('subcategoria', 'comercio')->where('comercio_id', $comercioID)->get()->map(function ($producto) {
+            return [
+                "id" => $producto->id,
+                "nombre" => $producto->nombre,
+                "descripcion" => $producto->descripcion,
+                "subcategoria_id" => $producto->subcategoria_id,
+                'subcategoria' => $producto->subcategoria ? $producto->subcategoria->name : null,
+                "comercio_id" => $producto->comercio_id,
+                "comercio" => $producto->comercio->nombre,
+                "precio" => $producto->precio,
+                "stock" => $producto->stock
+            ];
+        });
+
+        if ($productos->isEmpty()) {
+            return response()->json(['message' => 'No hay productos'], 200);  // Se puede devolver un 200 en vez de 404
+        }
+
+        return response()->json($productos);
+    }
+
     /**
      * Show the form for creating a new resource.
      */
@@ -46,7 +69,6 @@ class ProductoController extends Controller
      */
     public function store(Request $request)
     {
-        // dd($request->all());
 
         $validated = $request->validate([
             "subcategoria_id" => "required | integer",
@@ -58,8 +80,6 @@ class ProductoController extends Controller
             'imagenes' => 'array|max:4',
             'imagenes.*' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
-
-        // dd($validated);
 
         try {
             $imagenesRutas = [];
@@ -92,6 +112,7 @@ class ProductoController extends Controller
         }
 
         return response()->json([
+            "id" => $producto->id,
             "nombre" => $producto->nombre,
             "descripcion" => $producto->descripcion,
             "subcategoria_id" => $producto->subcategoria_id,

@@ -84,7 +84,7 @@ export default defineNuxtPlugin(nuxtApp => {
 
       async registerStore(json) {
         try {
-          const response = await fetch(Host + '/comercios/registerComercio', {
+          const response = await fetch(`${Host}/comercios/registerComercio`, {
             method: 'POST',
             headers: {
               'Accept': 'application/json',
@@ -107,6 +107,59 @@ export default defineNuxtPlugin(nuxtApp => {
           return null;
         }
       },
+
+
+
+      async getByComercio() {
+        try {
+          const response = await fetch(`${Host}/producto/comercio/2`);
+          if(!response.ok){
+            console.error(`Error en la petición: ${response.status} ${response.statusText}`)
+            return null;
+          }
+          const json = await response.json();
+          return json;
+        } catch (error) {
+          console.error('Error al realizar la petición:', error);
+        }
+      },
+
+      async infoProducto(id) {
+        try {
+          const response = await fetch(`${Host}/producto/${id}`);
+          if(!response.ok){
+            console.error(`Error en la petición: ${response.status} ${response.statusText}`)
+            return null;
+          }
+          const json = await response.json();
+          return json;
+        } catch (error) {
+          console.error('Error al realizar la petición:', error);
+        }
+      },
+
+      async guardarProducto(producto) {
+        try {
+          const id = producto.id;
+          const response = await fetch(`${Host}/producto/${id}`, {
+            method: 'PUT',
+            headers: {
+              'Accept': 'application/json',
+              'Content-Type': 'application/json',
+              'Authorization': authStore.token ? `Bearer ${authStore.token}` : ''
+            },
+            body: JSON.stringify(producto)
+          });
+          if(!response.ok){
+            console.error(`Error en la petición: ${response.status} ${response.statusText}`)
+            return null;
+          }
+          const json = await response.json();
+          return json;
+        } catch (error) {
+          console.error('Error al realizar la petición:', error);
+        }
+      }
         
     };
   
