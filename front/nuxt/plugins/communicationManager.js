@@ -127,9 +127,34 @@ export default defineNuxtPlugin(nuxtApp => {
         console.error('Error al realizar la petición:', error);
         return null;
       }
-    }
+    },
+
+    async createProducto(formData) {
+      try {
+        const response = await fetch(`${Host}/producto-prueba`, {
+          method: 'POST',
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'multipart/form-data',
+            'Authorization': authStore.token ? `Bearer ${authStore.token}` : ''
+          },
+          body: formData
+        });
+
+        if (!response.ok) {
+          console.error(`Error en la petición: ${response.status} ${response.statusText}`);
+          return null;
+        }
+
+        const json = await response.json();
+        return json;
+      } catch (error) {
+        console.error('Error al realizar la petición:', error);
+        return null;
+      }
+    },
   };
 
-  // Inyectar el communicationManager en la app
-  nuxtApp.provide('communicationManager', communicationManager);
+// Inyectar el communicationManager en la app
+nuxtApp.provide('communicationManager', communicationManager);
 });

@@ -11,97 +11,43 @@
 
             <div class="input-group">
                 <label for="categoria" class="label">Categoria</label>
-                <select v-model="form.categoriaSeleccionada" id="categoria" class="input-field">
+                <select v-model="form.categoriaSeleccionada" id="categoria" class="input-field" required>
                     <option value="" disabled selected>Selecciona una categoria</option>
-                    <!-- Mostrar las categorías en el desplegable -->
                     <option v-for="(categoria, index) in form.categorias" :key="index" :value="categoria.id">
                         {{ categoria.name }}
                     </option>
                 </select>
             </div>
 
-            <!-- Descripció -->
             <div class="input-group">
                 <label for="descripcion" class="label">Descripció</label>
                 <textarea v-model="form.descripcion" id="descripcion" placeholder="Introdueix una descripció"
                     class="input-field" required></textarea>
             </div>
 
-            <!-- Imatges Generals -->
             <div class="input-group">
-                <label for="imagenesGenerales" class="label">Imatges Generals (màxim 4)</label>
-                <input type="file" accept="image/*" @change="handleGeneralImageChange" multiple id="imagenesGenerales"
-                    class="file-input" />
-                <div v-if="form.imagenesGenerales.length > 0" class="image-preview">
-                    <p class="preview-text">Imatges generals carregades:</p>
-                    <div class="image-wrapper">
-                        <div v-for="(image, imgIndex) in form.imagenesGenerales" :key="imgIndex" class="image-item">
-                            <img :src="image" alt="Vista prèvia" class="image-thumbnail" />
-                            <button type="button" @click="removeGeneralImage(imgIndex)" class="remove-btn">X</button>
-                        </div>
-                    </div>
+                <label for="imagenPrincipal" class="label">Imatge Principal</label>
+                <input type="file" accept="image/*" @change="handleImageChange" id="imagenPrincipal" class="file-input" required />
+                <div v-if="form.imagen" class="image-preview">
+                    <p class="preview-text">Vista prèvia de la imatge:</p>
+                    <img :src="form.imagen.url" alt="Vista prèvia" class="image-thumbnail" />
                 </div>
             </div>
 
-            <!-- Preu General -->
             <div class="input-group">
                 <label for="precioGeneral" class="label">Preu General (€)</label>
                 <input type="number" v-model="form.precioGeneral" id="precioGeneral"
-                    placeholder="Introdueix el preu general" class="input-field" />
+                    placeholder="Introdueix el preu general" class="input-field" required />
             </div>
 
-            <!-- Variants -->
-            <div class="variants-group">
-                <h3 class="variants-title">Variants</h3>
-                <div v-for="(variant, index) in form.varientes" :key="index" class="variant-item">
-                    <!-- Color -->
-                    <div class="input-group">
-                        <label :for="'color-' + index" class="label">Color</label>
-                        <input type="text" v-model="variant.color" :id="'color-' + index"
-                            placeholder="Introdueix un color" class="input-field" required />
-                    </div>
-
-                    <!-- Mides -->
-                    <div class="sizes-group">
-                        <label :for="'sizes-' + index" class="label">Mides</label>
-                        <div v-for="(size, sizeIndex) in variant.sizes" :key="sizeIndex" class="size-item">
-                            <input type="text" v-model="size.name" placeholder="Introdueix una mida"
-                                class="input-field" />
-                            <input type="number" v-model="size.precio" placeholder="Preu (€)" class="input-number" />
-                            <button type="button" @click="removeSize(index, sizeIndex)" class="remove-size-btn">
-                                Eliminar Mida
-                            </button>
-                        </div>
-                        <button type="button" @click="addSize(index)" class="add-size-btn">Afegir Mida</button>
-                    </div>
-
-                    <!-- Imatges de Variants -->
-                    <div class="input-group">
-                        <label for="imagenesVariante" class="label">Imatges (màxim 4)</label>
-                        <input type="file" accept="image/*" @change="handleImageChange($event, index)" multiple
-                            id="imagenesVariante" class="file-input" />
-                        <div v-if="variant.imagenes.length > 0" class="image-preview">
-                            <p class="preview-text">Imatges carregades:</p>
-                            <div class="image-wrapper">
-                                <div v-for="(image, imgIndex) in variant.imagenes" :key="imgIndex" class="image-item">
-                                    <img :src="image" alt="Vista prèvia" class="image-thumbnail" />
-                                    <button type="button" @click="removeImage(index, imgIndex)" class="remove-btn">
-                                        X
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <button type="button" @click="addVariant" class="add-variant-btn">Afegir Variant</button>
+            <div class="input-group">
+                <label for="stock" class="label">Stock</label>
+                <input type="number" v-model="form.stock" id="stock"
+                    placeholder="Introdueix la quantitat en estoc" class="input-field" required />
             </div>
 
-            <!-- Botó d'Enviar -->
             <div class="submit-btn-container">
-                <button type="submit"
-                    :disabled="form.varientes.length === 0 || form.varientes.some(variant => variant.imagenes.length === 0)"
-                    class="submit-btn">
+                <button type="submit" :disabled="!canSubmit" class="submit-btn">
                     Guardar Producte
                 </button>
             </div>
@@ -110,110 +56,94 @@
 </template>
 
 <script setup>
+import { ref, computed, onMounted } from "vue";
+
 definePageMeta({
     layout: false,
 });
-import { ref, onMounted } from "vue";
+
 const { $communicationManager } = useNuxtApp();
-
-// Función para obtener las subcategorías y mostrar en consola
-const fetchSubcategorias = async () => {
-    const categoria_id = 1; // O el ID que deseas pasar
-    const result = await $communicationManager.getSubcategoriasByCategoriaId(categoria_id);
-
-    // Mostramos los resultados en la consola
-    console.log('Subcategorías obtenidas:', result);
-
-    // Asignamos las subcategorías al formulario (form.categorias)
-    if (result && result.success && result.data) {
-        form.value.categorias = result.data; // Usamos el campo `data` para obtener las subcategorías
-    } else {
-        console.error('No se pudieron obtener las subcategorías');
-    }
-};
 
 const form = ref({
     nombre: "",
     descripcion: "",
     categoriaSeleccionada: "",
-    categorias: [], // Se inicializa vacío, se llenará con las subcategorías
     precioGeneral: null,
-    imagenesGenerales: [],
-    varientes: [
-        {
-            color: "",
-            sizes: [
-                {
-                    name: "",
-                    precio: null,
-                },
-            ],
-            imagenes: [],
-        },
-    ],
+    stock: null,
+    imagen: null,
+    categorias: [],
 });
 
-const addVariant = () => {
-    form.value.varientes.push({
-        color: "",
-        sizes: [
-            {
-                name: "",
-                precio: null,
-            },
-        ],
-        imagenes: [],
-    });
+const fetchSubcategorias = async () => {
+    const categoria_id = 1;
+    const result = await $communicationManager.getSubcategoriasByCategoriaId(categoria_id);
+
+    if (result && result.success && result.data) {
+        form.value.categorias = result.data;
+    } else {
+        console.error("No se pudieron obtener las subcategorías");
+    }
 };
 
-const addSize = (variantIndex) => {
-    form.value.varientes[variantIndex].sizes.push({
-        name: "",
-        precio: null,
-    });
+const handleImageChange = (event) => {
+    const file = event.target.files[0];
+
+    if (file) {
+        form.value.imagen = {
+            file, 
+            url: URL.createObjectURL(file),
+        };
+    }
 };
 
-const removeSize = (variantIndex, sizeIndex) => {
-    form.value.varientes[variantIndex].sizes.splice(sizeIndex, 1);
-};
+const canSubmit = computed(() => {
+    return form.value.nombre && form.value.descripcion && form.value.precioGeneral != null && form.value.categoriaSeleccionada && form.value.imagen && form.value.stock != null;
+});
 
-const handleGeneralImageChange = (event) => {
-    const files = Array.from(event.target.files);
-    const maxFiles = 4;
-    if (files.length + form.value.imagenesGenerales.length > maxFiles) {
-        alert(`Solo puedes subir hasta ${maxFiles} imágenes.`);
+const submitForm = async () => {
+    if (!canSubmit.value) {
+        alert("Per favor, completa tots els camps necessaris.");
         return;
     }
-    const fileURLs = files.map((file) => URL.createObjectURL(file));
-    form.value.imagenesGenerales.push(...fileURLs);
-};
 
-const removeGeneralImage = (imgIndex) => {
-    form.value.imagenesGenerales.splice(imgIndex, 1);
-};
+    const formData = new FormData();
+    formData.append("nombre", form.value.nombre);
+    formData.append("descripcion", form.value.descripcion);
+    formData.append("subcategoria_id", form.value.categoriaSeleccionada);
+    formData.append("comercio_id", 3);
+    formData.append("precio", form.value.precioGeneral || "");
+    formData.append("stock", form.value.stock);
+    formData.append("imagen", form.value.imagen.file);
 
-const handleImageChange = (event, index) => {
-    const files = Array.from(event.target.files);
-    const maxFiles = 4;
-    if (files.length + form.value.varientes[index].imagenes.length > maxFiles) {
-        alert(`Solo puedes subir hasta ${maxFiles} imágenes por variante.`);
-        return;
+    try {
+        const response = await fetch("http://localhost:8000/api/producto-prueba", {
+            method: "POST",
+            body: formData,
+        });
+
+        if (response.ok) {
+            const data = await response.json();
+            console.log("Respuesta de la API:", data);
+            alert("Producte creat correctament!");
+        } else {
+            console.error("Error en la solicitud:", response.statusText);
+            alert("Error al crear el producto.");
+        }
+    } catch (error) {
+        console.error("Error en enviar el formulario:", error);
+        alert("Error al enviar el formulario.");
     }
-    const fileURLs = files.map((file) => URL.createObjectURL(file));
-    form.value.varientes[index].imagenes.push(...fileURLs);
 };
 
-const removeImage = (variantIndex, imageIndex) => {
-    form.value.varientes[variantIndex].imagenes.splice(imageIndex, 1);
-};
-
-const submitForm = () => {
-    console.log("Formulario enviado:", form.value);
-};
-
-// Llamamos a la función cuando el componente se monta
 onMounted(fetchSubcategorias);
 </script>
+
+
+
+
+
+
+
 
 
 
@@ -230,10 +160,10 @@ body {
 select.input-field {
     appearance: none;
     background-color: #fff;
-    background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'><path fill='none' d='M0 0h20v20H0z'/><path fill='%23333' d='M7 8l3 3 3-3H7z'/></svg>");
+    background-size: 12px 12px;
     background-repeat: no-repeat;
     background-position: right 10px center;
-    background-size: 12px 12px;
+    background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'><path fill='none' d='M0 0h20v20H0z'/><path fill='%23333' d='M7 8l3 3 3-3H7z'/></svg>");
 }
 
 .form-container {
