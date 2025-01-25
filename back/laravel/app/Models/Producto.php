@@ -17,7 +17,7 @@
             'descripcion',
             'precio',
             'stock',
-            'imagenes',
+            'imagen'
         ];
 
         public function subcategoria() {
