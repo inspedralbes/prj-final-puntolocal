@@ -1,9 +1,3 @@
-<script setup>
-definePageMeta({
-    layout: 'admin',
-})
-</script>
-
 <template>
     <main>
         <div
@@ -64,8 +58,8 @@ definePageMeta({
                             </div>
                         </div>
                     </div>
-                    <button id="createProductButton"
-                        class="text-white bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-primary-600 dark:hover:bg-primary-700 focus:outline-none dark:focus:ring-primary-800"
+                    <button id="createProductButton" @click="toggleCard('crear')"
+                        class="inline-flex items-center bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
                         type="button" data-drawer-target="drawer-create-product-default"
                         data-drawer-show="drawer-create-product-default" aria-controls="drawer-create-product-default"
                         data-drawer-placement="right">
@@ -110,6 +104,10 @@ definePageMeta({
                                     </th>
                                     <th scope="col"
                                         class="p-4 text-xs font-medium text-left text-gray-500 uppercase dark:text-gray-400">
+                                        Stock
+                                    </th>
+                                    <th scope="col"
+                                        class="p-4 text-xs font-medium text-left text-gray-500 uppercase dark:text-gray-400">
                                         Descompte
                                     </th>
                                     <th scope="col"
@@ -150,10 +148,13 @@ definePageMeta({
                                         $129</td>
                                     <td
                                         class="p-4 text-base font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                        N/A</td>
+                                    <td
+                                        class="p-4 text-base font-medium text-gray-900 whitespace-nowrap dark:text-white">
                                         No</td>
 
                                     <td class="p-4 space-x-2 whitespace-nowrap">
-                                        <button type="button" id="updateProductButton"
+                                        <button type="button" id="updateProductButton" @click="toggleCard('editar')"
                                             data-drawer-target="drawer-update-product-default"
                                             data-drawer-show="drawer-update-product-default"
                                             aria-controls="drawer-update-product-default" data-drawer-placement="right"
@@ -169,7 +170,7 @@ definePageMeta({
                                             </svg>
                                             Editar
                                         </button>
-                                        <button type="button" id="deleteProductButton"
+                                        <button type="button" id="deleteProductButton" @click="toggleCard('eliminar')"
                                             data-drawer-target="drawer-delete-product-default"
                                             data-drawer-show="drawer-delete-product-default"
                                             aria-controls="drawer-delete-product-default" data-drawer-placement="right"
@@ -239,20 +240,130 @@ definePageMeta({
             </div>
         </div>
 
-        <div class="bg-gray-900/50 dark:bg-gray-900/80 fixed inset-0 z-40"></div>
+        <div v-if="backgroundShadow" class="bg-gray-900/50 dark:bg-gray-900/80 fixed inset-0 z-40"></div>
         <!-- Edit Product Drawer -->
-        <div v-if="true"
+        <div v-if="isOpen['editar']" id="drawer-update-product-default"
+            class="fixed top-0 right-0 z-40 w-full h-screen max-w-xs p-4 overflow-y-auto transition-transform bg-white dark:bg-gray-800"
+            aria-labelledby="drawer-label">
+            <h5 id="drawer-label"
+                class="inline-flex items-center mb-6 text-sm font-semibold text-gray-500 uppercase dark:text-gray-400">
+                Editar producte</h5>
+            <button type="button" data-drawer-dismiss="drawer-update-product-default" @click="toggleCard('editar')"
+                aria-controls="drawer-update-product-default"
+                class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 absolute top-2.5 right-2.5 inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white">
+                <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"
+                    xmlns="http://www.w3.org/2000/svg">
+                    <path fill-rule="evenodd"
+                        d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                        clip-rule="evenodd"></path>
+                </svg>
+                <span class="sr-only">Close menu</span>
+            </button>
+            <form action="#">
+                <div class="space-y-4">
+                    <div>
+                        <label for="name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Nom de
+                            producte</label>
+                        <input type="text" name="title" id="name"
+                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                            value="Education Dashboard" placeholder="Type product name" required="">
+                    </div>
+                    <div>
+                        <label for="category"
+                            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Subcategoria</label>
+                        <select id="category"
+                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
+                            <option selected="">Flowbite</option>
+                            <option value="RE">React</option>
+                            <option value="AN">Angular</option>
+                            <option value="VU">Vue JS</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="price"
+                            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Precio</label>
+                        <input type="number" name="price" id="price"
+                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                            value="2999" placeholder="$149" required="">
+                    </div>
+                    <div>
+                        <label for="stock"
+                            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Stock</label>
+                        <input type="number" name="stock" id="stock"
+                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                            placeholder="10" required="">
+                    </div>
+                    <div>
+                        <label for="description"
+                            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Descripción</label>
+                        <textarea id="description" rows="4"
+                            class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                            placeholder="Enter event description here">Start developing with an open-source library of over 450+ UI components, sections, and pages built with the utility classes from Tailwind CSS and designed in Figma.</textarea>
+                    </div>
+                </div>
+                <div class="bottom-0 left-0 flex justify-center w-full pb-4 mt-4 space-x-4 sm:absolute sm:px-4 sm:mt-0">
+                    <button type="submit"
+                        class="inline-flex items-center bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                        Guardar
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Delete Product Drawer -->
+        <div v-if="isOpen['eliminar']"
             class="fixed left-0 right-0 z-50 items-center justify-center overflow-x-hidden overflow-y-auto top-4 md:inset-0 h-modal sm:h-full flex"
-            id="edit-user-modal" aria-modal="true" role="dialog">
-            <div class="relative w-full h-full max-w-2xl px-4 md:h-auto">
+            id="delete-user-modal" aria-modal="true" role="dialog">
+            <div class="relative w-full h-full max-w-md px-4 md:h-auto">
                 <!-- Modal content -->
                 <div class="relative bg-white rounded-lg shadow dark:bg-gray-800">
                     <!-- Modal header -->
+                    <div class="flex justify-end p-2">
+                        <button type="button" @click="toggleCard('eliminar')"
+                            class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-700 dark:hover:text-white"
+                            data-modal-hide="delete-user-modal">
+                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <path fill-rule="evenodd"
+                                    d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                                    clip-rule="evenodd"></path>
+                            </svg>
+                        </button>
+                    </div>
+                    <!-- Modal body -->
+                    <div class="p-6 pt-0 text-center">
+                        <svg class="w-16 h-16 mx-auto text-red-600" fill="none" stroke="currentColor"
+                            viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                        <h3 class="mt-5 mb-6 text-lg text-gray-500 dark:text-gray-400">Are you sure you want to delete
+                            this user?</h3>
+                        <button type="button" @click="toggleCard('eliminar')"
+                            class="text-white bg-red-600 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-base inline-flex items-center px-3 py-2.5 text-center mr-2 dark:focus:ring-red-800">
+                            Yes, I'm sure
+                        </button>
+                        <button type="button" @click="toggleCard('eliminar')"
+                            class="text-gray-900 bg-white hover:bg-gray-100 focus:ring-4 focus:ring-primary-300 border border-gray-200 font-medium inline-flex items-center rounded-lg text-base px-3 py-2.5 text-center dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700 dark:focus:ring-gray-700"
+                            data-modal-hide="delete-user-modal">
+                            No, cancel
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Add Product Drawer -->
+        <div v-if="isOpen['crear']"
+            class="fixed left-0 right-0 z-50 items-center justify-center overflow-x-hidden overflow-y-auto top-4 md:inset-0 h-modal sm:h-full flex"
+            id="edit-user-modal" aria-modal="true" role="dialog">
+            <div class="relative w-full h-full max-w-2xl px-4 md:h-auto">
+                <div class="relative bg-white rounded-lg shadow dark:bg-gray-800">
                     <div class="flex items-start justify-between p-5 border-b rounded-t dark:border-gray-700">
                         <h3 class="text-xl font-semibold dark:text-white">
                             Editar producte
                         </h3>
-                        <button type="button"
+                        <button type="button" @click="toggleCard('crear')"
                             class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-700 dark:hover:text-white"
                             data-modal-toggle="edit-user-modal">
                             <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"
@@ -263,7 +374,6 @@ definePageMeta({
                             </svg>
                         </button>
                     </div>
-                    <!-- Modal body -->
                     <div class="p-6 space-y-6">
                         <form action="#">
                             <div class="grid grid-cols-6 gap-6">
@@ -279,14 +389,9 @@ definePageMeta({
                                     <label for="category"
                                         class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Subcategoria</label>
                                     <select id="category"
-                                    class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
-                                        <option selected="" data-v-inspector="pages/admin/productes.vue:358:29">Flowbite
-                                        </option>
-                                        <option value="RE" data-v-inspector="pages/admin/productes.vue:359:29">React
-                                        </option>
-                                        <option value="AN" data-v-inspector="pages/admin/productes.vue:360:29">Angular
-                                        </option>
-                                        <option value="VU" data-v-inspector="pages/admin/productes.vue:361:29">Vue JS
+                                        class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
+                                        <option selected="" data-v-inspector="pages/admin/productes.vue:358:29">
+                                            Flowbite
                                         </option>
                                     </select>
                                 </div>
@@ -314,226 +419,50 @@ definePageMeta({
                             </div>
                         </form>
                     </div>
-                    <!-- Modal footer -->
                     <div class="items-center p-6 border-t border-gray-200 rounded-b dark:border-gray-700">
                         <button
-                        class="inline-flex items-center bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" type="submit">Guardar</button>
+                            class="inline-flex items-center bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                            type="submit">Guardar</button>
                     </div>
 
                 </div>
             </div>
         </div>
-        <div v-if="true" id="drawer-update-product-default"
-            class="fixed top-0 right-0 z-40 w-full h-screen max-w-xs p-4 overflow-y-auto transition-transform bg-white dark:bg-gray-800"
-            aria-labelledby="drawer-label">
-            <h5 id="drawer-label"
-                class="inline-flex items-center mb-6 text-sm font-semibold text-gray-500 uppercase dark:text-gray-400">
-                Update Product</h5>
-            <button type="button" data-drawer-dismiss="drawer-update-product-default"
-                aria-controls="drawer-update-product-default"
-                class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 absolute top-2.5 right-2.5 inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white">
-                <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"
-                    xmlns="http://www.w3.org/2000/svg">
-                    <path fill-rule="evenodd"
-                        d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
-                        clip-rule="evenodd"></path>
-                </svg>
-                <span class="sr-only">Close menu</span>
-            </button>
-            <form action="#">
-                <div class="space-y-4">
-                    <div>
-                        <label for="name"
-                            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Name</label>
-                        <input type="text" name="title" id="name"
-                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                            value="Education Dashboard" placeholder="Type product name" required="">
-                    </div>
-                    <div>
-                        <label for="category"
-                            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Technology</label>
-                        <select id="category"
-                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
-                            <option selected="">Flowbite</option>
-                            <option value="RE">React</option>
-                            <option value="AN">Angular</option>
-                            <option value="VU">Vue JS</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label for="price"
-                            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Price</label>
-                        <input type="number" name="price" id="price"
-                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                            value="2999" placeholder="$149" required="">
-                    </div>
-                    <div>
-                        <label for="description"
-                            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Description</label>
-                        <textarea id="description" rows="4"
-                            class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                            placeholder="Enter event description here">Start developing with an open-source library of over 450+ UI components, sections, and pages built with the utility classes from Tailwind CSS and designed in Figma.</textarea>
-                    </div>
-                    <div>
-                        <label for="discount"
-                            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Discount</label>
-                        <select id="discount"
-                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
-                            <option selected="">No</option>
-                            <option value="5">5%</option>
-                            <option value="10">10%</option>
-                            <option value="20">20%</option>
-                            <option value="30">30%</option>
-                            <option value="40">40%</option>
-                            <option value="50">50%</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="bottom-0 left-0 flex justify-center w-full pb-4 mt-4 space-x-4 sm:absolute sm:px-4 sm:mt-0">
-                    <button type="submit"
-                        class="w-full justify-center text-white bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">
-                        Update
-                    </button>
-                    <button type="button"
-                        class="w-full justify-center text-red-600 inline-flex items-center hover:text-white border border-red-600 hover:bg-red-600 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:border-red-500 dark:text-red-500 dark:hover:text-white dark:hover:bg-red-600 dark:focus:ring-red-900">
-                        <svg aria-hidden="true" class="w-5 h-5 mr-1 -ml-1" fill="currentColor" viewBox="0 0 20 20"
-                            xmlns="http://www.w3.org/2000/svg">
-                            <path fill-rule="evenodd"
-                                d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z"
-                                clip-rule="evenodd"></path>
-                        </svg>
-                        Delete
-                    </button>
-                </div>
-            </form>
-        </div>
-
-
-        <!-- Delete Product Drawer -->
-        <div id="drawer-delete-product-default"
-            class="fixed top-0 right-0 z-40 w-full h-screen max-w-xs p-4 overflow-y-auto transition-transform translate-x-full bg-white dark:bg-gray-800"
-            tabindex="-1" aria-labelledby="drawer-label" aria-hidden="true">
-            <h5 id="drawer-label"
-                class="inline-flex items-center text-sm font-semibold text-gray-500 uppercase dark:text-gray-400">Delete
-                item</h5>
-            <button type="button" data-drawer-dismiss="drawer-delete-product-default"
-                aria-controls="drawer-delete-product-default"
-                class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 absolute top-2.5 right-2.5 inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white">
-                <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"
-                    xmlns="http://www.w3.org/2000/svg">
-                    <path fill-rule="evenodd"
-                        d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
-                        clip-rule="evenodd"></path>
-                </svg>
-                <span class="sr-only">Close menu</span>
-            </button>
-            <svg class="w-10 h-10 mt-8 mb-4 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-                xmlns="http://www.w3.org/2000/svg">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                    d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-            </svg>
-            <h3 class="mb-6 text-lg text-gray-500 dark:text-gray-400">Are you sure you want to delete this product?</h3>
-            <a href="#"
-                class="text-white bg-red-600 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm inline-flex items-center px-3 py-2.5 text-center mr-2 dark:focus:ring-red-900">
-                Yes, I'm sure
-            </a>
-            <a href="#"
-                class="text-gray-900 bg-white hover:bg-gray-100 focus:ring-4 focus:ring-primary-300 border border-gray-200 font-medium inline-flex items-center rounded-lg text-sm px-3 py-2.5 text-center dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700 dark:focus:ring-gray-700"
-                data-drawer-hide="drawer-delete-product-default">
-                No, cancel
-            </a>
-        </div>
-
-
-        <!-- Add Product Drawer -->
-        <div id="drawer-create-product-default"
-            class="fixed top-0 right-0 z-40 w-full h-screen max-w-xs p-4 overflow-y-auto transition-transform translate-x-full bg-white dark:bg-gray-800"
-            tabindex="-1" aria-labelledby="drawer-label" aria-hidden="true">
-            <h5 id="drawer-label"
-                class="inline-flex items-center mb-6 text-sm font-semibold text-gray-500 uppercase dark:text-gray-400">
-                New Product</h5>
-            <button type="button" data-drawer-dismiss="drawer-create-product-default"
-                aria-controls="drawer-create-product-default"
-                class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 absolute top-2.5 right-2.5 inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white">
-                <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"
-                    xmlns="http://www.w3.org/2000/svg">
-                    <path fill-rule="evenodd"
-                        d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
-                        clip-rule="evenodd"></path>
-                </svg>
-                <span class="sr-only">Close menu</span>
-            </button>
-            <form action="#">
-                <div class="space-y-4">
-                    <div>
-                        <label for="name"
-                            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Name</label>
-                        <input type="text" name="title" id="name"
-                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                            placeholder="Type product name" required="">
-                    </div>
-
-                    <div>
-                        <label for="price"
-                            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Price</label>
-                        <input type="number" name="price" id="price"
-                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                            placeholder="$2999" required="">
-                    </div>
-                    <div>
-                        <label for="category-create"
-                            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Technology</label>
-                        <select id="category-create"
-                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
-                            <option selected="">Select category</option>
-                            <option value="FL">Flowbite</option>
-                            <option value="RE">React</option>
-                            <option value="AN">Angular</option>
-                            <option value="VU">Vue</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label for="description"
-                            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Description</label>
-                        <textarea id="description" rows="4"
-                            class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                            placeholder="Enter event description here"></textarea>
-                    </div>
-                    <div>
-                        <label for="discount-create"
-                            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Discount</label>
-                        <select id="discount-create"
-                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
-                            <option selected="">No</option>
-                            <option value="5">5%</option>
-                            <option value="10">10%</option>
-                            <option value="20">20%</option>
-                            <option value="30">30%</option>
-                            <option value="40">40%</option>
-                            <option value="50">50%</option>
-                        </select>
-                    </div>
-                    <div class="bottom-0 left-0 flex justify-center w-full pb-4 space-x-4 md:px-4 md:absolute">
-                        <button type="submit"
-                            class="text-white w-full justify-center bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">
-                            Add product
-                        </button>
-                        <button type="button" data-drawer-dismiss="drawer-create-product-default"
-                            aria-controls="drawer-create-product-default"
-                            class="inline-flex w-full justify-center text-gray-500 items-center bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-primary-300 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-500 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-600">
-                            <svg aria-hidden="true" class="w-5 h-5 -ml-1 sm:mr-1" fill="none" stroke="currentColor"
-                                viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M6 18L18 6M6 6l12 12"></path>
-                            </svg>
-                            Cancel
-                        </button>
-                    </div>
-
-                </div>
-            </form>
-
-
-        </div>
     </main>
 </template>
+
+<script setup>
+definePageMeta({
+    layout: 'admin',
+});
+
+const backgroundShadow = ref(false);
+
+const isOpen = reactive({
+    'editar': false,
+    'eliminar': false,
+    'crear': false,
+});
+
+function toggleCard(menu) {
+    isOpen[menu] = !isOpen[menu];
+    backgroundShadow.value = !backgroundShadow.value
+}
+
+const closeAll = (e) => {
+    if (e.key === "Escape") {
+        isOpen['editar'] = false;
+        isOpen['eliminar'] = false;
+        isOpen['crear'] = false;
+        backgroundShadow.value = false;
+    }
+};
+
+onMounted(() => {
+    document.addEventListener('keydown', closeAll);
+});
+
+onBeforeMount(() => {
+    document.addEventListener('keydown', closeAll);
+});
+</script>
