@@ -131,7 +131,7 @@ export default defineNuxtPlugin(nuxtApp => {
 
     async createProducto(formData) {
       try {
-        const response = await fetch(`${Host}/producto-prueba`, {
+        const response = await fetch(`${Host}/auth/producto-prueba`, {
           method: 'POST',
           headers: {
             'Accept': 'application/json',

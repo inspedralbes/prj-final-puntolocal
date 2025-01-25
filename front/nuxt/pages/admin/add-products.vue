@@ -56,87 +56,100 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from "vue";
+    import { ref, computed, onMounted } from "vue";
+    import { useAuthStore } from '../../stores/authStore';
 
-definePageMeta({
-    layout: false,
-});
+    definePageMeta({
+        layout: false,
+    });
 
-const { $communicationManager } = useNuxtApp();
+    const { $communicationManager } = useNuxtApp();
 
-const form = ref({
-    nombre: "",
-    descripcion: "",
-    categoriaSeleccionada: "",
-    precioGeneral: null,
-    stock: null,
-    imagen: null,
-    categorias: [],
-});
+    const form = ref({
+        nombre: "",
+        descripcion: "",
+        categoriaSeleccionada: "",
+        precioGeneral: null,
+        stock: null,
+        imagen: null,
+        categorias: [],
+    });
 
-const fetchSubcategorias = async () => {
-    const categoria_id = 1;
-    const result = await $communicationManager.getSubcategoriasByCategoriaId(categoria_id);
+    const authStore = useAuthStore(); 
+    const token = computed(() => authStore.token);
 
-    if (result && result.success && result.data) {
-        form.value.categorias = result.data;
-    } else {
-        console.error("No se pudieron obtener las subcategorías");
-    }
-};
+    const fetchSubcategorias = async () => {
+        const categoria_id = 1;
+        const result = await $communicationManager.getSubcategoriasByCategoriaId(categoria_id);
 
-const handleImageChange = (event) => {
-    const file = event.target.files[0];
-
-    if (file) {
-        form.value.imagen = {
-            file, 
-            url: URL.createObjectURL(file),
-        };
-    }
-};
-
-const canSubmit = computed(() => {
-    return form.value.nombre && form.value.descripcion && form.value.precioGeneral != null && form.value.categoriaSeleccionada && form.value.imagen && form.value.stock != null;
-});
-
-const submitForm = async () => {
-    if (!canSubmit.value) {
-        alert("Per favor, completa tots els camps necessaris.");
-        return;
-    }
-
-    const formData = new FormData();
-    formData.append("nombre", form.value.nombre);
-    formData.append("descripcion", form.value.descripcion);
-    formData.append("subcategoria_id", form.value.categoriaSeleccionada);
-    formData.append("comercio_id", 3);
-    formData.append("precio", form.value.precioGeneral || "");
-    formData.append("stock", form.value.stock);
-    formData.append("imagen", form.value.imagen.file);
-
-    try {
-        const response = await fetch("http://localhost:8000/api/producto-prueba", {
-            method: "POST",
-            body: formData,
-        });
-
-        if (response.ok) {
-            const data = await response.json();
-            console.log("Respuesta de la API:", data);
-            alert("Producte creat correctament!");
+        if (result && result.success && result.data) {
+            form.value.categorias = result.data;
         } else {
-            console.error("Error en la solicitud:", response.statusText);
-            alert("Error al crear el producto.");
+            console.error("No se pudieron obtener las subcategorías");
         }
-    } catch (error) {
-        console.error("Error en enviar el formulario:", error);
-        alert("Error al enviar el formulario.");
-    }
-};
+    };
 
-onMounted(fetchSubcategorias);
+    const handleImageChange = (event) => {
+        const file = event.target.files[0];
+
+        if (file) {
+            form.value.imagen = {
+                file,
+                url: URL.createObjectURL(file),
+            };
+        }
+    };
+
+    const canSubmit = computed(() => {
+        return form.value.nombre && form.value.descripcion && form.value.precioGeneral != null && form.value.categoriaSeleccionada && form.value.imagen && form.value.stock != null;
+    });
+
+    const submitForm = async () => {
+        if (!canSubmit.value) {
+            alert("Per favor, completa tots els camps necessaris.");
+            return;
+        }
+
+        const formData = new FormData();
+        formData.append("nombre", form.value.nombre);
+        formData.append("descripcion", form.value.descripcion);
+        formData.append("subcategoria_id", form.value.categoriaSeleccionada);
+        formData.append("comercio_id", 3);
+        formData.append("precio", form.value.precioGeneral || "");
+        formData.append("stock", form.value.stock);
+        formData.append("imagen", form.value.imagen.file);
+
+        if (!token.value) {
+            alert("No se ha encontrado un token de autenticación. Por favor, inicia sesión.");
+            return;
+        }
+
+        try {
+            const response = await fetch("http://localhost:8000/api/producto", {
+                method: "POST",
+                body: formData,
+                headers: {
+                    'Authorization': `Bearer ${token.value}`,
+                },
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                console.log("Respuesta de la API:", data);
+                alert("Producte creat correctament!");
+            } else {
+                console.error("Error en la solicitud:", response.statusText);
+                alert("Error al crear el producto.");
+            }
+        } catch (error) {
+            console.error("Error en enviar el formulario:", error);
+            alert("Error al enviar el formulario.");
+        }
+    };
+
+    onMounted(fetchSubcategorias);
 </script>
+
 
 
 

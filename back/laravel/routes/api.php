@@ -40,7 +40,7 @@
 
     Route::middleware('auth:sanctum')->prefix('producto')->group(function () {
         // Crear un nuevo producto
-        // Route::post('/', [ProductoController::class, 'store']);
+        Route::post('/', [ProductoController::class, 'store']);
         
         // Actualizar un producto específico
         Route::put('{id}', [ProductoController::class, 'update']);
@@ -48,7 +48,6 @@
         // Eliminar un producto específico
         Route::delete('{id}', [ProductoController::class, 'destroy']);
     });
-    Route::post('producto-prueba', [ProductoController::class, 'store']);
 
     // ==== SUBCATEGORIAS ===============
     Route::prefix('subcategorias')->group(function () {
