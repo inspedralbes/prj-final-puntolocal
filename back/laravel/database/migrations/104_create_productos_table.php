@@ -13,9 +13,9 @@
                 $table->foreign('comercio_id')->references('id')->on('comercios')->onDelete('cascade');
                 $table->string('nombre');
                 $table->text('descripcion');
-                $table->float('precio');
+                $table->float('precio')->nullable();
                 $table->integer('stock')->nullable();
-                $table->json('imagenes')->nullable();
+                $table->json('imagenes')->nullable()->comment('{"generales": [], "variantes": [{"color": "", "sizes": [{"name": "", "precio": 0}], "imagenes": []}]}')->change();
             });
         }
 
@@ -23,5 +23,3 @@
             Schema::dropIfExists('productos');
         }
     };
-
-    // 1|jV8Z1AinmzEGnygq1VFhfHhkZ23o3sJqcls2AWnYa8f5e886

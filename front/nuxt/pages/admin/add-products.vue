@@ -13,8 +13,9 @@
                 <label for="categoria" class="label">Categoria</label>
                 <select v-model="form.categoriaSeleccionada" id="categoria" class="input-field">
                     <option value="" disabled selected>Selecciona una categoria</option>
-                    <option v-for="(categoria, index) in form.categorias" :key="index" :value="categoria">
-                        {{ categoria }}
+                    <!-- Mostrar las categorías en el desplegable -->
+                    <option v-for="(categoria, index) in form.categorias" :key="index" :value="categoria.id">
+                        {{ categoria.name }}
                     </option>
                 </select>
             </div>
@@ -56,15 +57,16 @@
                     <!-- Color -->
                     <div class="input-group">
                         <label :for="'color-' + index" class="label">Color</label>
-                        <input type="text" v-model="variant.color" :id="'color-' + index" placeholder="Introdueix un color"
-                            class="input-field" required />
+                        <input type="text" v-model="variant.color" :id="'color-' + index"
+                            placeholder="Introdueix un color" class="input-field" required />
                     </div>
 
                     <!-- Mides -->
                     <div class="sizes-group">
                         <label :for="'sizes-' + index" class="label">Mides</label>
                         <div v-for="(size, sizeIndex) in variant.sizes" :key="sizeIndex" class="size-item">
-                            <input type="text" v-model="size.name" placeholder="Introdueix una mida" class="input-field" />
+                            <input type="text" v-model="size.name" placeholder="Introdueix una mida"
+                                class="input-field" />
                             <input type="number" v-model="size.precio" placeholder="Preu (€)" class="input-number" />
                             <button type="button" @click="removeSize(index, sizeIndex)" class="remove-size-btn">
                                 Eliminar Mida
@@ -107,19 +109,34 @@
     </div>
 </template>
 
-
-
 <script setup>
 definePageMeta({
     layout: false,
 });
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
+const { $communicationManager } = useNuxtApp();
+
+// Función para obtener las subcategorías y mostrar en consola
+const fetchSubcategorias = async () => {
+    const categoria_id = 1; // O el ID que deseas pasar
+    const result = await $communicationManager.getSubcategoriasByCategoriaId(categoria_id);
+
+    // Mostramos los resultados en la consola
+    console.log('Subcategorías obtenidas:', result);
+
+    // Asignamos las subcategorías al formulario (form.categorias)
+    if (result && result.success && result.data) {
+        form.value.categorias = result.data; // Usamos el campo `data` para obtener las subcategorías
+    } else {
+        console.error('No se pudieron obtener las subcategorías');
+    }
+};
 
 const form = ref({
     nombre: "",
     descripcion: "",
     categoriaSeleccionada: "",
-    categorias: ["Electrónica", "Ropa", "Juguetes", "Muebles", "Alimentos"],
+    categorias: [], // Se inicializa vacío, se llenará con las subcategorías
     precioGeneral: null,
     imagenesGenerales: [],
     varientes: [
@@ -193,7 +210,11 @@ const removeImage = (variantIndex, imageIndex) => {
 const submitForm = () => {
     console.log("Formulario enviado:", form.value);
 };
+
+// Llamamos a la función cuando el componente se monta
+onMounted(fetchSubcategorias);
 </script>
+
 
 
 <style scoped>

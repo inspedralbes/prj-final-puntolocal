@@ -1,10 +1,11 @@
 <?php
-    use App\Http\Controllers\ProductoController;
     use Illuminate\Http\Request;
     use Illuminate\Support\Facades\Route;
     use App\Http\Controllers\ClienteController;
-    use App\Http\Controllers\CategoriaGeneralController;
+    use App\Http\Controllers\ProductoController;
     use App\Http\Controllers\ComercioController;
+    use App\Http\Controllers\SubcategoriaController;
+    use App\Http\Controllers\CategoriaGeneralController;
 
     Route::get('/user', function (Request $request) {
         return $request->user();
@@ -18,7 +19,6 @@
     });
 
     // ==== COMERCIOS ===================
-
     Route::middleware('auth:sanctum')->prefix('comercios')->group(function () {
         Route::post('registerComercio', [ComercioController::class, 'RegistrarComercio']);
     });
@@ -28,7 +28,7 @@
         Route::get('getCategoriasGenerales', [CategoriaGeneralController::class, 'getCategoriasGenerales']);
     });
 
-    
+    // ==== PRODUCTO ====================    
     Route::prefix('producto')->group(function () {
         // Obtener todos los productos
         Route::get('/', [ProductoController::class, 'index']);
@@ -48,4 +48,9 @@
         // Eliminar un producto específico
         Route::delete('{id}', [ProductoController::class, 'destroy']);
     });
-    
+
+    // ==== SUBCATEGORIAS ===============
+    Route::prefix('subcategorias')->group(function () {
+        // Ver subcategorias
+        Route::get('/{categoria_id}', [SubcategoriaController::class, 'show']);
+    });
