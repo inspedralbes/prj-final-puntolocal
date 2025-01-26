@@ -14,7 +14,7 @@ return new class extends Migration {
             $table->foreign('comercio_id')->references('id')->on('comercios')->onDelete('cascade');
             $table->string('nombre');
             $table->text('descripcion');
-            $table->float('precio')->nullable();
+            $table->float('precio');
             $table->integer('stock')->nullable();
             $table->string('imagen')->nullable()->comment('Nombre del archivo de la imagen principal del producto');
         });

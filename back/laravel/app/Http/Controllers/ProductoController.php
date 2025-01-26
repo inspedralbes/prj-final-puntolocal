@@ -42,7 +42,7 @@ class ProductoController extends Controller
             'comercio_id' => 'required|exists:comercios,id',
             'nombre' => 'required|string|max:255',
             'descripcion' => 'required|string',
-            'precio' => 'nullable|numeric',
+            'precio' => 'required|numeric',
             'stock' => 'nullable|integer',
             'imagen' => 'required|image|mimes:jpg,jpeg,png,gif',
         ]);
