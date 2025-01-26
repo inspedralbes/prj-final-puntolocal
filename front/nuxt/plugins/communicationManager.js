@@ -131,11 +131,9 @@ export default defineNuxtPlugin(nuxtApp => {
 
     async createProducto(formData) {
       try {
-        const response = await fetch(`${Host}/auth/producto-prueba`, {
+        const response = await fetch(`${Host}/producto`, {
           method: 'POST',
           headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'multipart/form-data',
             'Authorization': authStore.token ? `Bearer ${authStore.token}` : ''
           },
           body: formData
@@ -146,15 +144,16 @@ export default defineNuxtPlugin(nuxtApp => {
           return null;
         }
 
-        const json = await response.json();
-        return json;
+        const jsonResponse = await response.json();
+        return { success: true, data: jsonResponse };
       } catch (error) {
         console.error('Error al realizar la petición:', error);
-        return null;
+        return { success: false, message: error.message };
       }
     },
+
   };
 
-// Inyectar el communicationManager en la app
-nuxtApp.provide('communicationManager', communicationManager);
+  // Inyectar el communicationManager en la app
+  nuxtApp.provide('communicationManager', communicationManager);
 });
