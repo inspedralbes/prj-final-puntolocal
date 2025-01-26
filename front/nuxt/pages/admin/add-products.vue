@@ -106,7 +106,7 @@ const canSubmit = computed(() => {
 
 const submitForm = async () => {
     if (!canSubmit.value) {
-        alert("Per favor, completa tots els camps necessaris.");
+        alert("Si us plau, completa tots els camps necessaris.");
         return;
     }
 

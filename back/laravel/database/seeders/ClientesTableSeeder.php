@@ -26,7 +26,7 @@ class ClientesTableSeeder extends Seeder
                 "apellidos" => $faker->lastName(),
                 "email" => $faker->unique()->safeEmail,
                 "phone" => "603" . $faker->numberBetween(100000, 999999),
-                'password' => Hash::make("12345678"),
+                'password' => Hash::make(value: "12345678"),
                 "street_address" => $faker->streetAddress(),
                 "ciudad" => "Castelldefels",
                 "provincia" => "Barcelona",
@@ -35,5 +35,18 @@ class ClientesTableSeeder extends Seeder
                 "numero_puerta" => $faker->numberBetween(1, 99),
             ]);
         }
+        DB::table("cliente")->insert([
+            "name" => "Agustín Enzo",
+            "apellidos" => "Noviello",
+            "email" => "a23agunovnov@inspedralbes.cat",
+            "phone" => "603397347",
+            'password' => Hash::make(value: "12345678"),
+            "street_address" => "Carrer Confiança 32",
+            "ciudad" => "Castelldefels",
+            "provincia" => "Barcelona",
+            "codigo_postal" => "08860",
+            "numero_planta" => 1,
+            "numero_puerta" => 1,
+        ]);
     }
 }

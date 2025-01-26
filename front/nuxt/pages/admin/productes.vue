@@ -129,7 +129,8 @@
                                     </td>
                                     <td
                                         class="p-4 text-sm font-normal text-gray-500 whitespace-nowrap dark:text-gray-400">
-                                        <div class="text-base font-semibold text-gray-900 dark:text-white">{{producto.nombre}}
+                                        <div class="text-base font-semibold text-gray-900 dark:text-white">
+                                            {{ producto.nombre }}
                                         </div>
                                         <div class="text-sm font-normal text-gray-500 dark:text-gray-400">Info de algo
                                         </div>
@@ -170,7 +171,8 @@
                                             </svg>
                                             Editar
                                         </button>
-                                        <button type="button" id="deleteProductButton" @click="eliminarProd(producto.id)"
+                                        <button type="button" id="deleteProductButton"
+                                            @click="eliminarProd(producto.id)"
                                             data-drawer-target="drawer-delete-product-default"
                                             data-drawer-show="drawer-delete-product-default"
                                             aria-controls="drawer-delete-product-default" data-drawer-placement="right"
@@ -382,23 +384,25 @@
                         </button>
                     </div>
                     <div class="p-6 space-y-6">
-                        <form action="#">
+                        <form @submit.prevent="crearProducto">
                             <div class="grid grid-cols-6 gap-6">
                                 <div class="col-span-6 sm:col-span-3">
                                     <label for="nom-producte"
-                                        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Nom de
+                                        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Nom del
                                         producte</label>
                                     <input type="text" name="nom-producte" id="nom-producte"
                                         class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                                        placeholder="Samarreta blanca" required>
+                                        v-model="productoNuevo.nombre" placeholder="Samarreta blanca" required>
                                 </div>
                                 <div class="col-span-6 sm:col-span-3">
                                     <label for="category"
                                         class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Subcategoria</label>
-                                    <select id="category"
+                                    <select id="category" v-model="productoActual.subcategoria"
                                         class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
-                                        <option data-v-inspector="pages/admin/productes.vue:358:29">
-                                            Flowbite
+                                        <option v-for="subcategoria in subcategorias" :key="subcategoria.id"
+                                            :value="subcategoria.id"
+                                            data-v-inspector="pages/admin/productes.vue:358:29">
+                                            {{ subcategoria.name }}
                                         </option>
                                     </select>
                                 </div>
@@ -407,39 +411,83 @@
                                         class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Precio</label>
                                     <input type="number" name="precio" id="precio"
                                         class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                                        placeholder="10.99" required>
+                                        v-model="productoNuevo.precio" step="any" @input="handleInput" placeholder="10.99" required>
                                 </div>
                                 <div class="col-span-6 sm:col-span-3">
                                     <label for="stock"
                                         class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Stock</label>
                                     <input type="number" name="stock" id="stock"
                                         class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                                        placeholder="10" required>
+                                        v-model="productoNuevo.stock" placeholder="10" required>
                                 </div>
                                 <div class="col-span-6">
                                     <label for="descripcion"
-                                        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Descripció del producte</label>
-                                    <textarea id="descripcion" rows="4"
+                                        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Descripció
+                                        del producte</label>
+                                    <textarea id="descripcion" required rows="4"
                                         class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                                        ></textarea>
+                                        v-model="productoNuevo.descripcion"></textarea>
                                 </div>
+                                <div class="col-span-6">
+                                    <label for="descripcion"
+                                        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Imatge
+                                        del producte</label>
+                                    <input type="file" accept="image/*" @change="handleImageChange" id="imagenPrincipal"
+                                        class="p-3 text-sm rounded-lg border border-gray-300 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                                        required />
+                                    <div v-if="productoNuevo.imagen" class="image-preview">
+                                        <p class="text-white">Vista prèvia de la imatge:</p>
+                                        <div class="image-container">
+                                            <img :src="productoNuevo.imagen.url" alt="Vista prèvia"
+                                                class="image-thumbnail" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="items-center py-5 my-5 border-t border-gray-200 rounded-b dark:border-gray-700">
+                                <button
+                                    class="inline-flex items-center bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-8 rounded"
+                                    type="submit" @submit.prevent="crearProducto">Guardar</button>
                             </div>
                         </form>
                     </div>
-                    <div class="items-center p-6 border-t border-gray-200 rounded-b dark:border-gray-700">
-                        <button
-                            class="inline-flex items-center bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-                            type="submit">Guardar</button>
-                    </div>
-
                 </div>
             </div>
         </div>
     </main>
 </template>
 
+<style scoped>
+.image-preview {
+    margin-top: 10px;
+}
+
+.image-container {
+    width: 200px;
+    height: 200px;
+}
+
+.image-thumbnail {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.preview-text {
+    font-size: 0.9rem;
+    margin-bottom: 10px;
+}
+</style>
+
 <script setup>
 const { $communicationManager } = useNuxtApp();
+import { useAuthStore } from '../../stores/authStore';
+
+const authStore = useAuthStore();
+const token = computed(() => authStore.token);
+
+const subcategorias = ref();
+
 const productos = reactive([]);
 const productoActual = ref({
     'nombre': '',
@@ -447,6 +495,15 @@ const productoActual = ref({
     'subcategoria': '',
     'precio': '',
     'stock': '',
+});
+
+const productoNuevo = ref({
+    'nombre': '',
+    'descripcion': '',
+    'subcategoria': '',
+    'precio': '',
+    'stock': '',
+    'imagen': null,
 });
 
 definePageMeta({
@@ -471,9 +528,9 @@ async function guardarProd() {
     console.log(productoActual.value)
     const data = await $communicationManager.guardarProducto(productoActual.value);
     console.log(data.data)
-    if(data.data){
+    if (data.data) {
         const index = productos.findIndex(prod => prod.id === data.data.id);
-        if(index !== -1){
+        if (index !== -1) {
             productos[index] = { ...productoActual.value };
         }
     }
@@ -498,12 +555,6 @@ async function eliminarProd(id) {
     console.log(data);
 }
 
-async function crearProd(json) {
-    toggleCard('crear');
-    const data = await $communicationManager.crearProducto(id);
-    console.log(data);
-}
-
 const closeAll = (e) => {
     if (e.key === "Escape") {
         isOpen['editar'] = false;
@@ -513,8 +564,61 @@ const closeAll = (e) => {
     }
 };
 
-onMounted(() => {
+async function fetchSubcategorias(categoria_id) {
+    const result = await $communicationManager.getSubcategoriasByCategoriaId(categoria_id);
+
+    if (result && result.success && result.data) {
+        return result.data;
+    } else {
+        console.error("No se pudieron obtener las subcategorías");
+    }
+};
+
+function handleImageChange(event) {
+    const file = event.target.files[0];
+
+    if (file) {
+        productoNuevo.value.imagen = {
+            file,
+            url: URL.createObjectURL(file),
+        };
+    }
+};
+
+async function crearProducto() {
+    alert('pulsado');
+    const formData = new FormData();
+    formData.append("nombre", productoNuevo.value.nombre);
+    formData.append("descripcion", productoNuevo.value.descripcion);
+    formData.append("subcategoria_id", productoNuevo.value.subcategoria);
+    formData.append("comercio_id", 3);
+    formData.append("precio", productoNuevo.value.precio || "");
+    formData.append("stock", productoNuevo.value.stock);
+    formData.append("imagen", productoNuevo.value.imagen.file);
+
+    const result = await $communicationManager.createProducto(formData);
+
+    if (result && result.success) {
+        alert('creado');
+        toggleCard('crear');
+        productos.push(productoNuevo.value);
+        productoNuevo.value = {
+            'nombre': '',
+            'descripcion': '',
+            'subcategoria': '',
+            'precio': '',
+            'stock': '',
+            'imagen': null,
+        };
+    } else {
+        console.error("Error en la creación del producto:", result?.message || "Error desconocido");
+        alert("Error al crear el producto.");
+    }
+};
+
+onMounted(async () => {
     document.addEventListener('keydown', closeAll);
+    subcategorias.value = await fetchSubcategorias(1);
 });
 
 onBeforeMount(async () => {
