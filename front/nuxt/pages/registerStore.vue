@@ -26,8 +26,6 @@ const formData = reactive({
 
 const categorias = ref('')
 
-
-
 async function getCategoriasGenerales() {
     const { $communicationManager } = useNuxtApp();
     categorias.value = await $communicationManager.getCategoriasGenerales();

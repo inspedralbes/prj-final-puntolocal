@@ -28,7 +28,9 @@ Esta API permite gestionar productos en un sistema de comercio, incluyendo la cr
                 "id": 1,
                 "nombre": "Producto 1",
                 "descripcion": "Descripción del producto 1",
+                "subcategoria_id": 1,
                 "subcategoria": "Subcategoría 1",
+                "comercio_id": 1,
                 "comercio": "Comercio 1",
                 "precio": 100.00,
                 "stock": 10
@@ -47,7 +49,43 @@ Esta API permite gestionar productos en un sistema de comercio, incluyendo la cr
 
 ---
 
-### 2. Crear un nuevo producto
+### 2. Obtener todos los productos de un comercio específico
+
+- **URL:** `/api/producto/comercio/{comercioID}`
+- **Método:** `GET`
+- **Descripción:** Obtiene una lista de todos los productos del comercio.
+- **Parámetros:** Ninguno.
+- **Respuesta:**
+  - **Código de estado 200 OK**:
+    ```json
+    {
+        "data": [
+            {
+                "id": 1,
+                "nombre": "Producto 1",
+                "descripcion": "Descripción del producto 1",
+                "subcategoria_id": 1,
+                "subcategoria": "Subcategoría 1",
+                "comercio_id": 1,
+                "comercio": "Comercio 1",
+                "precio": 100.00,
+                "stock": 10
+            },
+            ...
+        ]
+    }
+    ```
+
+  - **Código de estado 404 Not Found** (Si no hay productos):
+    ```json
+    {
+        "message": "No hay productos"
+    }
+    ```
+
+---
+
+### 3. Crear un nuevo producto
 
 - **URL:** `/api/producto`
 - **Método:** `POST`
@@ -101,7 +139,7 @@ Esta API permite gestionar productos en un sistema de comercio, incluyendo la cr
 
 ---
 
-### 3. Obtener un producto específico
+### 4. Obtener un producto específico
 
 - **URL:** `/api/producto/{id}`
 - **Método:** `GET`
@@ -132,7 +170,7 @@ Esta API permite gestionar productos en un sistema de comercio, incluyendo la cr
 
 ---
 
-### 4. Actualizar un producto
+### 5. Actualizar un producto
 
 - **URL:** `/api/producto/{id}`
 - **Método:** `PUT`
@@ -182,7 +220,7 @@ Esta API permite gestionar productos en un sistema de comercio, incluyendo la cr
 
 ---
 
-### 5. Eliminar un producto
+### 6. Eliminar un producto
 
 - **URL:** `/api/producto/{id}`
 - **Método:** `DELETE`

@@ -4,8 +4,9 @@
             class="p-4 bg-white block sm:flex items-center justify-between border-b border-gray-200 lg:mt-1.5 dark:bg-gray-800 dark:border-gray-700">
             <div class="w-full mb-1 mt-16">
                 <div class="mb-4">
-                    <h1 class="text-xl font-semibold text-gray-900 sm:text-2xl dark:text-white">All products</h1>
+                    <h1 class="text-xl font-semibold text-gray-900 sm:text-2xl dark:text-white">Tots els productes</h1>
                 </div>
+                <!-- Barra de búsqueda + botones -->
                 <div
                     class="items-center justify-between block sm:flex md:divide-x md:divide-gray-100 dark:divide-gray-700">
                     <div class="flex items-center mb-4 sm:mb-0">
@@ -14,7 +15,7 @@
                             <div class="relative w-48 mt-1 sm:w-64 xl:w-96">
                                 <input type="text" name="email" id="products-search"
                                     class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                                    placeholder="Search for products">
+                                    placeholder="Buscar productes...">
                             </div>
                         </form>
                         <div class="flex items-center w-full sm:justify-end">
@@ -68,6 +69,7 @@
                 </div>
             </div>
         </div>
+        <!-- Tabla de productos -->
         <div class="flex flex-col">
             <div class="overflow-x-auto">
                 <div class="inline-block min-w-full align-middle">
@@ -117,7 +119,7 @@
                                 </tr>
                             </thead>
                             <tbody class="bg-white divide-y divide-gray-200 dark:bg-gray-800 dark:divide-gray-700">
-                                <tr class="hover:bg-gray-100 dark:hover:bg-gray-700">
+                                <tr v-for="producto in productos" class="hover:bg-gray-100 dark:hover:bg-gray-700">
                                     <td class="w-4 p-4">
                                         <div class="flex items-center">
                                             <input id="checkbox-633293" aria-describedby="checkbox-1" type="checkbox"
@@ -127,34 +129,32 @@
                                     </td>
                                     <td
                                         class="p-4 text-sm font-normal text-gray-500 whitespace-nowrap dark:text-gray-400">
-                                        <div class="text-base font-semibold text-gray-900 dark:text-white">React UI Kit
+                                        <div class="text-base font-semibold text-gray-900 dark:text-white">{{producto.nombre}}
                                         </div>
-                                        <div class="text-sm font-normal text-gray-500 dark:text-gray-400">Html templates
+                                        <div class="text-sm font-normal text-gray-500 dark:text-gray-400">Info de algo
                                         </div>
                                     </td>
                                     <td
                                         class="p-4 text-base font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                        React JS</td>
+                                        {{ producto.subcategoria }}</td>
                                     <td
                                         class="max-w-sm p-4 overflow-hidden text-base font-normal text-gray-500 truncate xl:max-w-xs dark:text-gray-400">
-                                        Start developing with an open-source library of over 450+ UI components,
-                                        sections, and pages built with the utility classes from Tailwind CSS and
-                                        designed in Figma.</td>
+                                        {{ producto.descripcion }}</td>
                                     <td
                                         class="p-4 text-base font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                        #633293</td>
+                                        {{ producto.id }}</td>
                                     <td
                                         class="p-4 text-base font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                        $129</td>
+                                        {{ producto.precio }}€</td>
                                     <td
                                         class="p-4 text-base font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                        N/A</td>
+                                        {{ producto.stock ? producto.stock : 'N/A' }}</td>
                                     <td
                                         class="p-4 text-base font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                        No</td>
+                                        {{ producto.descuento ? producto.descuento : 'No' }}</td>
 
                                     <td class="p-4 space-x-2 whitespace-nowrap">
-                                        <button type="button" id="updateProductButton" @click="toggleCard('editar')"
+                                        <button type="button" id="updateProductButton" @click="editarProd(producto.id)"
                                             data-drawer-target="drawer-update-product-default"
                                             data-drawer-show="drawer-update-product-default"
                                             aria-controls="drawer-update-product-default" data-drawer-placement="right"
@@ -170,7 +170,7 @@
                                             </svg>
                                             Editar
                                         </button>
-                                        <button type="button" id="deleteProductButton" @click="toggleCard('eliminar')"
+                                        <button type="button" id="deleteProductButton" @click="eliminarProd(producto.id)"
                                             data-drawer-target="drawer-delete-product-default"
                                             data-drawer-show="drawer-delete-product-default"
                                             aria-controls="drawer-delete-product-default" data-drawer-placement="right"
@@ -185,7 +185,6 @@
                                         </button>
                                     </td>
                                 </tr>
-
                             </tbody>
                         </table>
                     </div>
@@ -193,7 +192,8 @@
             </div>
         </div>
 
-        <div
+        <!-- Footer de paginación -->
+        <!-- <div
             class="sticky bottom-0 right-0 items-center w-full p-4 bg-white border-t border-gray-200 sm:flex sm:justify-between dark:bg-gray-800 dark:border-gray-700">
             <div class="flex items-center mb-4 sm:mb-0">
                 <a href="#"
@@ -238,7 +238,7 @@
                     </svg>
                 </a>
             </div>
-        </div>
+        </div> -->
 
         <div v-if="backgroundShadow" class="bg-gray-900/50 dark:bg-gray-900/80 fixed inset-0 z-40"></div>
         <!-- Edit Product Drawer -->
@@ -259,14 +259,14 @@
                 </svg>
                 <span class="sr-only">Close menu</span>
             </button>
-            <form action="#">
+            <form @submit.prevent="guardarProd">
                 <div class="space-y-4">
                     <div>
                         <label for="name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Nom de
                             producte</label>
                         <input type="text" name="title" id="name"
                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                            value="Education Dashboard" placeholder="Type product name" required>
+                            v-model="productoActual.nombre" placeholder="Camiseta negra" required>
                     </div>
                     <div>
                         <label for="category"
@@ -284,32 +284,32 @@
                             class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Precio</label>
                         <input type="number" name="price" id="price"
                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                            value="2999" placeholder="$149" required>
+                            v-model="productoActual.precio" step="any" @input="handleInput" placeholder="100€" required>
                     </div>
                     <div>
                         <label for="descompte"
                             class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Descompte</label>
                         <input type="number" name="descompte" id="descompte"
                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                            placeholder="5%" required>
+                            v-model="productoActual.descuento" placeholder="5%">
                     </div>
                     <div>
                         <label for="stock"
                             class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Stock</label>
                         <input type="number" name="stock" id="stock"
                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                            placeholder="10" required>
+                            v-model="productoActual.stock" placeholder="10">
                     </div>
                     <div>
                         <label for="description"
                             class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Descripción</label>
-                        <textarea id="description" rows="4"
+                        <textarea id="description" rows="4" required
                             class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                            placeholder="Enter event description here">Start developing with an open-source library of over 450+ UI components, sections, and pages built with the utility classes from Tailwind CSS and designed in Figma.</textarea>
+                            placeholder="Camiseta blanca 100% algodón" v-model="productoActual.descripcion"></textarea>
                     </div>
                 </div>
                 <div class="bottom-0 left-0 flex justify-center w-full pb-4 mt-4 space-x-4 sm:absolute sm:px-4 sm:mt-0">
-                    <button type="submit"
+                    <button @submit.prevent="guardarProd"
                         class="inline-flex items-center bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
                         Guardar
                     </button>
@@ -439,6 +439,16 @@
 </template>
 
 <script setup>
+const { $communicationManager } = useNuxtApp();
+const productos = reactive([]);
+const productoActual = ref({
+    'nombre': '',
+    'descripcion': '',
+    'subcategoria': '',
+    'precio': '',
+    'stock': '',
+});
+
 definePageMeta({
     layout: 'admin',
 });
@@ -451,9 +461,47 @@ const isOpen = reactive({
     'crear': false,
 });
 
+const handleInput = (event) => {
+    const value = event.target.value.replace(',', '.');
+    productoActual.value.precio = parseFloat(value) || '';
+    console.log(productoActual.value.precio)
+};
+
+async function guardarProd() {
+    console.log(productoActual.value)
+    const data = await $communicationManager.guardarProducto(productoActual.value);
+    console.log(data.data)
+    if(data.data){
+        const index = productos.findIndex(prod => prod.id === data.data.id);
+        if(index !== -1){
+            productos[index] = { ...productoActual.value };
+        }
+    }
+    toggleCard('editar');
+}
+
 function toggleCard(menu) {
     isOpen[menu] = !isOpen[menu];
     backgroundShadow.value = !backgroundShadow.value
+}
+
+async function editarProd(id) {
+    toggleCard('editar');
+    const data = await $communicationManager.infoProducto(id);
+    productoActual.value = data;
+    console.log(productoActual.value);
+}
+
+async function eliminarProd(id) {
+    toggleCard('eliminar');
+    const data = await $communicationManager.eliminarProducto(id);
+    console.log(data);
+}
+
+async function crearProd(json) {
+    toggleCard('crear');
+    const data = await $communicationManager.crearProducto(id);
+    console.log(data);
 }
 
 const closeAll = (e) => {
@@ -469,7 +517,9 @@ onMounted(() => {
     document.addEventListener('keydown', closeAll);
 });
 
-onBeforeMount(() => {
-    document.addEventListener('keydown', closeAll);
+onBeforeMount(async () => {
+    const data = await $communicationManager.getByComercio();
+    Object.assign(productos, data);
+    console.log(productos);
 });
 </script>

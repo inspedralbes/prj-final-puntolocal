@@ -14,6 +14,7 @@ class ProductoController extends Controller
     {
         $productos = Producto::with('subcategoria', 'comercio')->get()->map(function ($producto) {
             return [
+                "id" => $producto->id,
                 "nombre" => $producto->nombre,
                 "descripcion" => $producto->descripcion,
                 "subcategoria_id" => $producto->subcategoria_id,
@@ -31,12 +32,39 @@ class ProductoController extends Controller
         return response()->json(['data' => $productos], 200);
     }
 
+    public function getByComercio($comercioID){
+        $productos = Producto::with('subcategoria', 'comercio')->where('comercio_id', $comercioID)->get()->map(function ($producto) {
+            return [
+                "id" => $producto->id,
+                "nombre" => $producto->nombre,
+                "descripcion" => $producto->descripcion,
+                "subcategoria_id" => $producto->subcategoria_id,
+                'subcategoria' => $producto->subcategoria ? $producto->subcategoria->name : null,
+                "comercio_id" => $producto->comercio_id,
+                "comercio" => $producto->comercio->nombre,
+                "precio" => $producto->precio,
+                "stock" => $producto->stock
+            ];
+        });
+
+        if ($productos->isEmpty()) {
+            return response()->json(['message' => 'No hay productos'], 200);  // Se puede devolver un 200 en vez de 404
+        }
+
+        return response()->json($productos);
+    }
+
     public function create()
     {
         //
     }
 
-    public function store(Request $request) {
+    /**
+     * Store a newly created resource in storage.
+     */
+    public function store(Request $request)
+    {
+
         $validated = $request->validate([
             'subcategoria_id' => 'required|exists:subcategorias,id',
             'comercio_id' => 'required|exists:comercios,id',
@@ -79,6 +107,7 @@ class ProductoController extends Controller
         }
 
         return response()->json([
+            "id" => $producto->id,
             "nombre" => $producto->nombre,
             "descripcion" => $producto->descripcion,
             "subcategoria_id" => $producto->subcategoria_id,
