@@ -266,7 +266,7 @@
                             producte</label>
                         <input type="text" name="title" id="name"
                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                            value="Education Dashboard" placeholder="Type product name" required="">
+                            value="Education Dashboard" placeholder="Type product name" required>
                     </div>
                     <div>
                         <label for="category"
@@ -284,21 +284,21 @@
                             class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Precio</label>
                         <input type="number" name="price" id="price"
                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                            value="2999" placeholder="$149" required="">
+                            value="2999" placeholder="$149" required>
                     </div>
                     <div>
                         <label for="descompte"
                             class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Descompte</label>
                         <input type="number" name="descompte" id="descompte"
                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                            placeholder="5%" required="">
+                            placeholder="5%" required>
                     </div>
                     <div>
                         <label for="stock"
                             class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Stock</label>
                         <input type="number" name="stock" id="stock"
                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                            placeholder="10" required="">
+                            placeholder="10" required>
                     </div>
                     <div>
                         <label for="description"
@@ -385,19 +385,19 @@
                         <form action="#">
                             <div class="grid grid-cols-6 gap-6">
                                 <div class="col-span-6 sm:col-span-3">
-                                    <label for="first-name"
+                                    <label for="nom-producte"
                                         class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Nom de
                                         producte</label>
-                                    <input type="text" name="first-name" value="Bonnie" id="first-name"
+                                    <input type="text" name="nom-producte" id="nom-producte"
                                         class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                                        placeholder="Bonnie" required="">
+                                        placeholder="Samarreta blanca" required>
                                 </div>
                                 <div class="col-span-6 sm:col-span-3">
                                     <label for="category"
                                         class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Subcategoria</label>
                                     <select id="category"
                                         class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
-                                        <option selected="" data-v-inspector="pages/admin/productes.vue:358:29">
+                                        <option data-v-inspector="pages/admin/productes.vue:358:29">
                                             Flowbite
                                         </option>
                                     </select>
@@ -405,23 +405,23 @@
                                 <div class="col-span-6 sm:col-span-3">
                                     <label for="precio"
                                         class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Precio</label>
-                                    <input type="number" name="precio" value="bonnie@flowbite.com" id="precio"
+                                    <input type="number" name="precio" id="precio"
                                         class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                                        placeholder="10.99" required="">
+                                        placeholder="10.99" required>
                                 </div>
                                 <div class="col-span-6 sm:col-span-3">
                                     <label for="stock"
                                         class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Stock</label>
-                                    <input type="number" name="stock" value="bonnie@flowbite.com" id="stock"
+                                    <input type="number" name="stock" id="stock"
                                         class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                                        placeholder="10" required="">
+                                        placeholder="10" required>
                                 </div>
                                 <div class="col-span-6">
                                     <label for="descripcion"
-                                        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Descripció</label>
+                                        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Descripció del producte</label>
                                     <textarea id="descripcion" rows="4"
                                         class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                                        placeholder="👨&zwj;💻Full-stack web developer. Open-source contributor.">👨&zwj;💻Full-stack web developer. Open-source contributor.</textarea>
+                                        ></textarea>
                                 </div>
                             </div>
                         </form>
