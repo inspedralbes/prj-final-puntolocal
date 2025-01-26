@@ -6,7 +6,6 @@
     use App\Http\Controllers\ComercioController;
     use App\Http\Controllers\SubcategoriaController;
     use App\Http\Controllers\CategoriaGeneralController;
-
     Route::get('/user', function (Request $request) {
         return $request->user();
     })->middleware('auth:sanctum');
@@ -53,4 +52,9 @@
     Route::prefix('subcategorias')->group(function () {
         // Ver subcategorias
         Route::get('/{categoria_id}', [SubcategoriaController::class, 'show']);
+    });
+
+    // ==== CLIENTES ====================
+    Route::middleware('auth:sanctum')->prefix('clientes')->group(function () {
+        Route::get('{id}', [ClienteController::class, 'obtenerDatosCliente']);
     });
