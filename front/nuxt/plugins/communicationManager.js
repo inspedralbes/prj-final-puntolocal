@@ -5,6 +5,8 @@ const pinia = createPinia();
 setActivePinia(pinia);
 const authStore = useAuthStore();
 const Host = 'http://localhost:8000/api';
+const user = authStore.user;
+const comercio = authStore.comercio;
 
 export default defineNuxtPlugin(nuxtApp => {
   const communicationManager = {
@@ -25,8 +27,8 @@ export default defineNuxtPlugin(nuxtApp => {
           return null;
         }
 
-        const json = await response.json();
-        return json;
+        const data = await response.json();
+        return data;
       } catch (error) {
         console.error('Error al realizar la petición:', error);
         return null;
@@ -49,8 +51,8 @@ export default defineNuxtPlugin(nuxtApp => {
           return null;
         }
 
-        const json = await response.json();
-        return json;
+        const data = await response.json();
+        return data;
       } catch (error) {
         console.error('Error al realizar la petición:', error);
         return null;
@@ -73,8 +75,8 @@ export default defineNuxtPlugin(nuxtApp => {
           return null;
         }
 
-        const jsonResponse = await response.json();
-        return jsonResponse;
+        const data = await response.json();
+        return data;
       } catch (error) {
         console.error('Error al realizar la petición:', error);
         return null;
@@ -96,8 +98,8 @@ export default defineNuxtPlugin(nuxtApp => {
           return null;
         }
 
-        const jsonResponse = await response.json();
-        return jsonResponse;
+        const data = await response.json();
+        return data;
       } catch (error) {
         console.error('Error al realizar la petición:', error);
         return null;
@@ -121,8 +123,8 @@ export default defineNuxtPlugin(nuxtApp => {
           return null;
         }
 
-        const jsonResponse = await response.json();
-        return jsonResponse;
+        const data = await response.json();
+        return data;
       } catch (error) {
         console.error('Error al realizar la petición:', error);
         return null;
@@ -131,7 +133,8 @@ export default defineNuxtPlugin(nuxtApp => {
 
     async getByComercio() {
       try {
-        const response = await fetch(`${Host}/producto/comercio/3`);
+
+        const response = await fetch(`${Host}/producto/comercio/${comercio.id}`);
         if (!response.ok) {
           console.error(`Error en la petición: ${response.status} ${response.statusText}`)
           return null;
@@ -157,17 +160,21 @@ export default defineNuxtPlugin(nuxtApp => {
       }
     },
 
-    async guardarProducto(producto) {
+    async guardarProducto(formData, id) {
+
+      for (let [key, value] of formData.entries()) {
+        console.log(key, value); // Imprime el nombre del campo y su valor
+      }
       try {
-        const id = producto.id;
+        // const id = formData.get('id');
+        console.log(id);
+
         const response = await fetch(`${Host}/producto/${id}`, {
-          method: 'PUT',
+          method: 'POST',
           headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json',
-            'Authorization': authStore.token ? `Bearer ${authStore.token}` : ''
+            'Authorization': authStore.token ? `Bearer ${authStore.token}` : '',
           },
-          body: JSON.stringify(producto)
+          body: formData,
         });
         if (!response.ok) {
           console.error(`Error en la petición: ${response.status} ${response.statusText}`)
@@ -180,7 +187,11 @@ export default defineNuxtPlugin(nuxtApp => {
       }
     },
 
+
     async createProducto(formData) {
+      for (let [key, value] of formData.entries()) {
+        console.log(key, value); // Imprime el nombre del campo y su valor
+      }
       try {
         const response = await fetch(`${Host}/producto`, {
           method: 'POST',
@@ -195,8 +206,8 @@ export default defineNuxtPlugin(nuxtApp => {
           return null;
         }
 
-        const jsonResponse = await response.json();
-        return { success: true, data: jsonResponse };
+        const data = await response.json();
+        return { success: true, data: data };
       } catch (error) {
         console.error('Error al realizar la petición:', error);
         return { success: false, message: error.message };
