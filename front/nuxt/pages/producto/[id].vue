@@ -76,7 +76,7 @@
             </div>
             <div class="footer-content">
                 <button class="add-to-cart-btn">
-                    <ButtonBasketComp :producto="producto" />
+                    <ButtonBasketComp :producto="constructBasketItem()" />
                 </button>
             </div>
         </div>
@@ -100,7 +100,7 @@
                 startX: 0,
                 endX: 0,
                 selectedColor: null,
-                selectedSize: null,
+                selectedSize: '',
                 nombre_local: "Los Pollos Hermanos",
                 producto: {
                     id: 1,
@@ -205,6 +205,26 @@
                     this.currentImage--;
                 }
             },
+            constructBasketItem() {
+                console.log(this.selectedSize)
+                return {
+                    id: this.producto.id,
+                    nombre: this.producto.nombre,
+                    descripcion: this.producto.descripcion,
+                    stock_general: 150, 
+                    precio: this.selectedSize.price,
+                    valoracion: this.producto.valoracion,
+                    comercio: 1, //Aqui deberemos tener el id del comercio con el que trabajaremos para pedir datos en la BD
+                    variante: [{
+                        size: this.selectedSize.size,
+                        color: this.selectedColor,
+                        stock: this.selectedSize.stock,
+                        price: this.selectedSize.price,
+                        imagenes: this.selectedVariant.imagenes
+                    }],
+                    cantidad: 1
+                };
+            }
         },
 
         mounted() {

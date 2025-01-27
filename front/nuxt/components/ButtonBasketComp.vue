@@ -23,11 +23,10 @@ export default {
     methods: {
         addToBasket() {
             const comercioStore = useComercioStore();
-            comercioStore.addToBasket(this.producto)
-            if(confirm('Quieres ir a la cesta?')){
-                navigateTo('/cistella')
+            comercioStore.addToBasket(this.producto);
+            if(confirm('¿Quieres ir a la cesta?')){
+                navigateTo('/cistella');
             }
-            
         },
     },
 };
