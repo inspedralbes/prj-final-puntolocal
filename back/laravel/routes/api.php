@@ -5,16 +5,24 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ClienteController;
 use App\Http\Controllers\CategoriaController;
 use App\Http\Controllers\ComercioController;
+use App\Http\Controllers\Auth\AuthController;
 
 Route::get('/user', function (Request $request) {
     return $request->user();
 })->middleware('auth:sanctum');
 
 
-// ==== USUARIOS ===================
+// ==== AUTH ===================
 Route::prefix('auth')->group(function () {
-    Route::post('register', [ClienteController::class, 'RegistrarCliente']);
-    Route::post('login', [ClienteController::class, 'login']);
+    Route::post('register', [AuthController::class, 'registrar']);
+    Route::post('login', [AuthController::class, 'login']);
+    Route::post('logout', [AuthController::class, 'logout']);
+});
+
+// ==== CLIENTES ===================
+Route::middleware('auth:sanctum')->prefix('cliente')->group(function () {
+    Route::get('/{id}', [ClienteController::class, 'getCliente']);
+    Route::put('/{id}', [ClienteController::class, 'updateCliente']);
 });
 
 // ==== COMERCIOS ===================
