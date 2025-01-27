@@ -7,55 +7,76 @@ const authStore = useAuthStore();
 const Host = 'http://localhost:8000/api';
 
 export default defineNuxtPlugin(nuxtApp => {
-  const communicationManager = {
-    ///////////////////////////// GET  //////////////////////////////////
-    async getCategoriasGenerales() {
-      try {
-        const response = await fetch(`${Host}/categoriasGenerales/getCategoriasGenerales`, {
-          method: 'GET',
-          headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json',
-            'Authorization': authStore.token ? `Bearer ${authStore.token}` : ''
+    const communicationManager = {
+      ///////////////////////////// GET  //////////////////////////////////
+      async getCategoriasGenerales() {
+        try {
+          const response = await fetch(Host + '/categoriasGenerales',{
+            method: 'GET',
+            headers: {
+              'Accept': 'application/json',
+              'Content-Type': 'application/json',
+              'Authorization': authStore.token ? `Bearer ${authStore.token}` : ''
+            },
+          });
+          if (response.ok) {
+            const json = await response.json();
+            return json;
+          } else {
+            console.error(`Error en la petición: ${response.status} ${response.statusText}`)
+            return null;
           }
-        });
-
-        if (!response.ok) {
-          console.error(`Error en la petición: ${response.status} ${response.statusText}`);
+      
+        } catch (error) {
+          console.error('Error al realizar la petición:', error);
           return null;
         }
-
-        const json = await response.json();
-        return json;
-      } catch (error) {
-        console.error('Error al realizar la petición:', error);
-        return null;
-      }
-    },
-
-    async getSubcategoriasByCategoriaId(categoria_id) {
-      try {
-        const response = await fetch(`${Host}/subcategorias/${categoria_id}`, {
-          method: 'GET',
-          headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json',
-            'Authorization': authStore.token ? `Bearer ${authStore.token}` : ''
+      },
+      async getComercio(comercioId) {
+        try {
+          const response = await fetch(`${Host}/comercios/${comercioId}`, {
+            method: 'GET',
+            headers: {
+              'Accept': 'application/json',
+              'Content-Type': 'application/json',
+              'Authorization': authStore.token ? `Bearer ${authStore.token}` : ''
+            },
+          });
+          if (response.ok) {
+            const json = await response.json();
+            return json;
+          } else {
+            console.error(`Error en la petición: ${response.status} ${response.statusText}`);
+            return null;
           }
-        });
-
-        if (!response.ok) {
-          console.error(`Error en la petición: ${response.status} ${response.statusText}`);
+        } catch (error) {
+          console.error('Error al realizar la petición:', error);
           return null;
         }
-
-        const json = await response.json();
-        return json;
-      } catch (error) {
-        console.error('Error al realizar la petición:', error);
-        return null;
-      }
-    },
+      },
+      async getComercios() {
+        try {
+          const response = await fetch(Host + '/comercios',{
+            method: 'GET',
+            headers: {
+              'Accept': 'application/json',
+              'Content-Type': 'application/json',
+              'Authorization': authStore.token ? `Bearer ${authStore.token}` : ''
+            },
+          });
+          if (response.ok) {
+            const json = await response.json();
+            return json;
+          } else {
+            console.error(`Error en la petición: ${response.status} ${response.statusText}`)
+            return null;
+          }
+      
+        } catch (error) {
+          console.error('Error al realizar la petición:', error);
+          return null;
+        }
+      },
 
     ///////////////////////////// POST //////////////////////////////////
     async register(json) {
@@ -104,17 +125,17 @@ export default defineNuxtPlugin(nuxtApp => {
       }
     },
 
-    async registerStore(json) {
-      try {
-        const response = await fetch(`${Host}/comercios/registerComercio`, {
-          method: 'POST',
-          headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json',
-            'Authorization': authStore.token ? `Bearer ${authStore.token}` : ''
-          },
-          body: JSON.stringify(json)
-        });
+      async registerStore(json) {
+        try {
+          const response = await fetch(Host + '/comercios', {
+            method: 'POST',
+            headers: {
+              'Accept': 'application/json',
+              'Content-Type': 'application/json',
+              'Authorization': authStore.token ? `Bearer ${authStore.token}` : ''
+            },
+            body: JSON.stringify(json)
+          });
 
         if (!response.ok) {
           console.error(`Error en la petición: ${response.status} ${response.statusText}`);
