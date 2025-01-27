@@ -25,6 +25,7 @@ class ComprasRealizadasTableSeeder extends Seeder
                 "estado" => $faker->numberBetween(1,3),
                 'total' => $faker->randomFloat(2, 5, 1000),
                 'tipo_envio' => $faker->numberBetween(1, 2),
+                'tipo_envio_id' => $faker->numberBetween(1,2),
                 'created_at' => now(),
             ]);
         }

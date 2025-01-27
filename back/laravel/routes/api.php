@@ -1,6 +1,7 @@
 <?php
     use Illuminate\Http\Request;
     use Illuminate\Support\Facades\Route;
+    use App\Http\Controllers\OrderController;
     use App\Http\Controllers\ClienteController;
     use App\Http\Controllers\ProductoController;
     use App\Http\Controllers\ComercioController;
@@ -57,4 +58,6 @@
     // ==== CLIENTES ====================
     Route::middleware('auth:sanctum')->prefix('clientes')->group(function () {
         Route::get('{id}', [ClienteController::class, 'obtenerDatosCliente']);
+
+        Route::get('{id}/compras', [OrderController::class, 'comprasCliente']);
     });
