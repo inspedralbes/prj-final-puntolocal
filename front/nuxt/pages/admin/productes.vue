@@ -98,10 +98,6 @@
                                     </th>
                                     <th scope="col"
                                         class="p-4 text-xs font-medium text-left text-gray-500 uppercase dark:text-gray-400">
-                                        ID
-                                    </th>
-                                    <th scope="col"
-                                        class="p-4 text-xs font-medium text-left text-gray-500 uppercase dark:text-gray-400">
                                         Precio
                                     </th>
                                     <th scope="col"
@@ -143,9 +139,6 @@
                                         {{ producto.descripcion }}</td>
                                     <td
                                         class="p-4 text-base font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                        {{ producto.id }}</td>
-                                    <td
-                                        class="p-4 text-base font-medium text-gray-900 whitespace-nowrap dark:text-white">
                                         {{ producto.precio }}€</td>
                                     <td
                                         class="p-4 text-base font-medium text-gray-900 whitespace-nowrap dark:text-white">
@@ -172,7 +165,7 @@
                                             Editar
                                         </button>
                                         <button type="button" id="deleteProductButton"
-                                            @click="eliminarProd(producto.id)"
+                                            @click="selectIdProdToDelete(producto.id)"
                                             data-drawer-target="drawer-delete-product-default"
                                             data-drawer-show="drawer-delete-product-default"
                                             aria-controls="drawer-delete-product-default" data-drawer-placement="right"
@@ -346,16 +339,15 @@
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                         </svg>
-                        <h3 class="mt-5 mb-6 text-lg text-gray-500 dark:text-gray-400">Are you sure you want to delete
-                            this user?</h3>
-                        <button type="button" @click="toggleCard('eliminar')"
+                        <h3 class="mt-5 mb-6 text-lg text-gray-500 dark:text-gray-400">Está seguro que desea eliminar el producto?</h3>
+                        <button type="button" @click="eliminarProducto(id_producto_eliminar)"
                             class="text-white bg-red-600 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-base inline-flex items-center px-3 py-2.5 text-center mr-2 dark:focus:ring-red-800">
-                            Yes, I'm sure
+                            Si, estoy seguro
                         </button>
                         <button type="button" @click="toggleCard('eliminar')"
                             class="text-gray-900 bg-white hover:bg-gray-100 focus:ring-4 focus:ring-primary-300 border border-gray-200 font-medium inline-flex items-center rounded-lg text-base px-3 py-2.5 text-center dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700 dark:focus:ring-gray-700"
                             data-modal-hide="delete-user-modal">
-                            No, cancel
+                            No, cancelar
                         </button>
                     </div>
                 </div>
@@ -397,7 +389,7 @@
                                 <div class="col-span-6 sm:col-span-3">
                                     <label for="category"
                                         class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Subcategoria</label>
-                                    <select id="category" v-model="productoActual.subcategoria"
+                                    <select id="category" v-model="productoNuevo.subcategoria"
                                         class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
                                         <option v-for="subcategoria in subcategorias" :key="subcategoria.id"
                                             :value="subcategoria.id"
@@ -506,6 +498,8 @@ const productoNuevo = ref({
     'imagen': null,
 });
 
+const id_producto_eliminar = ref();
+
 definePageMeta({
     layout: 'admin',
 });
@@ -521,13 +515,10 @@ const isOpen = reactive({
 const handleInput = (event) => {
     const value = event.target.value.replace(',', '.');
     productoActual.value.precio = parseFloat(value) || '';
-    console.log(productoActual.value.precio)
 };
 
 async function guardarProd() {
-    console.log(productoActual.value)
     const data = await $communicationManager.guardarProducto(productoActual.value);
-    console.log(data.data)
     if (data.data) {
         const index = productos.findIndex(prod => prod.id === data.data.id);
         if (index !== -1) {
@@ -546,13 +537,24 @@ async function editarProd(id) {
     toggleCard('editar');
     const data = await $communicationManager.infoProducto(id);
     productoActual.value = data;
-    console.log(productoActual.value);
 }
 
-async function eliminarProd(id) {
+function selectIdProdToDelete(id) {
     toggleCard('eliminar');
+    id_producto_eliminar.value = id;
+}
+
+async function eliminarProducto(id) {
     const data = await $communicationManager.eliminarProducto(id);
-    console.log(data);
+    if(data.success){
+        const index = productos.findIndex(product => product.id === id);
+        if(index !== -1){
+            productos.splice(index,1);
+            toggleCard('eliminar');
+        }
+    }else{
+        console.log('Error: ' + data.message);
+    }
 }
 
 const closeAll = (e) => {
@@ -586,7 +588,6 @@ function handleImageChange(event) {
 };
 
 async function crearProducto() {
-    alert('pulsado');
     const formData = new FormData();
     formData.append("nombre", productoNuevo.value.nombre);
     formData.append("descripcion", productoNuevo.value.descripcion);
@@ -599,8 +600,8 @@ async function crearProducto() {
     const result = await $communicationManager.createProducto(formData);
 
     if (result && result.success) {
-        alert('creado');
         toggleCard('crear');
+        productoNuevo.value.id = result.data.producto.id;
         productos.push(productoNuevo.value);
         productoNuevo.value = {
             'nombre': '',
@@ -612,7 +613,6 @@ async function crearProducto() {
         };
     } else {
         console.error("Error en la creación del producto:", result?.message || "Error desconocido");
-        alert("Error al crear el producto.");
     }
 };
 
@@ -624,6 +624,5 @@ onMounted(async () => {
 onBeforeMount(async () => {
     const data = await $communicationManager.getByComercio();
     Object.assign(productos, data);
-    console.log(productos);
 });
 </script>

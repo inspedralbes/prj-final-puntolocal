@@ -72,7 +72,7 @@ class ProductoController extends Controller
             'descripcion' => 'required|string',
             'precio' => 'required|numeric',
             'stock' => 'nullable|integer',
-            'imagen' => 'required|image|mimes:jpg,jpeg,png,gif',
+            'imagen' => 'required|image|mimes:jpg,jpeg,png,webp',
         ]);
 
         $imagenPath = $request->file('imagen')->store('productos', 'public');

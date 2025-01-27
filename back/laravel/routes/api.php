@@ -38,7 +38,6 @@
 
         // Obtener un producto específico
         Route::get('{id}', [ProductoController::class, 'show']);
-
     });
 
 
