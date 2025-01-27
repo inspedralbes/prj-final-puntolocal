@@ -46,7 +46,7 @@ class ComercioController extends Controller
             'calle_num' => $request->street_address,
             'ciudad' => $request->ciudad,
             'provincia' => $request->provincia,
-            'cp' => $request->codigo_postal,
+            'codigo_postal' => $request->codigo_postal,
             'num_planta' => $request->numero_planta,
             'num_puerta' => $request->numero_puerta,
             'categoria_id' => $request->categoria,

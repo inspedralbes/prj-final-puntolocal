@@ -26,7 +26,7 @@ Route::middleware('auth:sanctum')->prefix('comercios')->group(function () {
 });
 
 // ==== CATEGORIAS ===================
-Route::middleware('auth:sanctum')->prefix('categoriasGenerales')->group(function () {
+Route::middleware('auth:sanctum')->prefix('categorias')->group(function () {
     Route::get('/', [CategoriaController::class, 'index']);
 });
 

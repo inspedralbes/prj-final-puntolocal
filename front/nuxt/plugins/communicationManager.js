@@ -9,9 +9,9 @@ const Host = 'http://localhost:8000/api';
 export default defineNuxtPlugin(nuxtApp => {
     const communicationManager = {
       ///////////////////////////// GET  //////////////////////////////////
-      async getCategoriasGenerales() {
+      async getCategorias() {
         try {
-          const response = await fetch(Host + '/categoriasGenerales',{
+          const response = await fetch(Host + '/categorias',{
             method: 'GET',
             headers: {
               'Accept': 'application/json',

@@ -9,15 +9,15 @@ definePageMeta({
 const authStore = useAuthStore();
 
 const formData = reactive({
-    name: '',
+    nombre: '',
     email: '',
     phone: '',
     street_address: '',
     ciudad: '',
     provincia: '',
     codigo_postal: null,
-    numero_planta: null,
-    numero_puerta: null,
+    num_planta: null,
+    num_puerta: null,
     descripcion: '',
     categoria: null,
     idUser: null,
@@ -28,7 +28,7 @@ const categorias = ref('')
 
 async function getCategoriasGenerales() {
     const { $communicationManager } = useNuxtApp();
-    categorias.value = await $communicationManager.getCategoriasGenerales();
+    categorias.value = await $communicationManager.getCategorias();
 }
 
 async function register() {
@@ -81,7 +81,7 @@ onMounted(() => {
                             <div>
                                 <label for="nom" class="block text-sm font-medium text-gray-700">Nom</label>
                                 <div class="mt-1">
-                                    <input id="nom" name="nom" v-model="formData.name" type="text" data-testid="nom"
+                                    <input id="nom" name="nom" v-model="formData.nombre" type="text" data-testid="nom"
                                         required=""
                                         class="block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm">
                                 </div>
@@ -141,7 +141,7 @@ onMounted(() => {
                                 <label for="numero_planta" class="block text-sm font-medium text-gray-700">Número
                                     Planta</label>
                                 <div class="mt-1">
-                                    <input id="numero_planta" name="numero_planta" v-model="formData.numero_planta"
+                                    <input id="numero_planta" name="numero_planta" v-model="formData.num_planta"
                                         type="text" data-testid="numero_planta" required=""
                                         class="block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm">
                                 </div>
@@ -150,7 +150,7 @@ onMounted(() => {
                                 <label for="numero_puerta" class="block text-sm font-medium text-gray-700">Número
                                     Porta</label>
                                 <div class="mt-1">
-                                    <input id="numero_puerta" name="numero_puerta" v-model="formData.numero_puerta"
+                                    <input id="numero_puerta" name="numero_puerta" v-model="formData.num_puerta"
                                         type="text" data-testid="numero_puerta" required=""
                                         class="block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm">
                                 </div>
