@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="layout-container">
         <header class="sticky top-0 left-0 w-full bg-white z-10">
             <div class="mx-auto flex max-w-7xl items-center justify-between p-2 py-4 lg:px-8 border-b-2 border-black-500"
                 aria-label="Global">
@@ -14,7 +14,7 @@
                 </div>
             </div>
         </header>
-        <main>
+        <main class="flex-grow">
             <slot />
         </main>
         <footer class="sticky bottom-0 left-0 w-full">
@@ -62,6 +62,17 @@
 </template>
 
 <style>
+.layout-container {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.flex-grow {
+    flex: 1;
+}
+
+/* ...existing styles... */
 footer {
     background-color: #f7f7f7;
     padding: 20px 0px;
