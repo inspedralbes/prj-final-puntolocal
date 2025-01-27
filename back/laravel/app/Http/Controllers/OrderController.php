@@ -5,8 +5,10 @@ namespace App\Http\Controllers;
 use App\Models\Order;
 use Illuminate\Http\Request;
 
-class OrderController extends Controller {
-    public function comprasCliente($clienteId) {
+class OrderController extends Controller
+{
+    public function comprasCliente($clienteId)
+    {
         try {
             $compras = Order::with(['tipoEnvio'])->where('cliente_id', $clienteId)->orderBy('fecha', 'desc')->get();
             $compras->load('productosCompra.producto');
@@ -30,25 +32,25 @@ class OrderController extends Controller {
         }
     }
 
-    public function detalleCompra($clienteId) {
+    public function detalleCompra($id)
+    {
         try {
-            $compras = Order::with(['tipoEnvio'])->where('cliente_id', $clienteId)->orderBy('fecha', 'desc')->get();
-            $compras->load('productosCompra.producto');
+            $compra = Order::with(['tipoEnvio', 'productosCompra.producto'])
+                ->where('id', $id)
+                ->first();
 
-            if ($compras->isEmpty()) {
-                return response()->json(['message' => 'No se encontraron compras para este cliente.'], 404);
+            if (!$compra) {
+                return response()->json(['message' => 'Compra no encontrada.'], 404);
             }
 
-            $compras->transform(function ($order) {
-                $order->tipo_envio_info = [
-                    'id' => $order->tipoEnvio->id,
-                    'nombre' => $order->tipoEnvio->nombre
-                ];
+            $compra->tipo_envio_info = [
+                'id' => $compra->tipoEnvio->id,
+                'nombre' => $compra->tipoEnvio->nombre
+            ];
 
-                return $order;
-            });
+            return response()->json($compra, 200);
         } catch (\Exception $e) {
-            return response()->json(['error' => 'Ocurrió un error al obtener las compras: ' . $e->getMessage()], 500);
+            return response()->json(['error' => 'Ocurrió un error al obtener los detalles de la compra: ' . $e->getMessage()], 500);
         }
     }
 }

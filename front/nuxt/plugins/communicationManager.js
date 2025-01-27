@@ -105,9 +105,9 @@ export default defineNuxtPlugin(nuxtApp => {
       }
     },
 
-    async compraClienteDetallada(clienteId) {
+    async detalleCompra(compraId) {
       try {
-        const response = await fetch(`${Host}/clientes/${clienteId}/compras/${}`, {
+        const response = await fetch(`${Host}/clientes/compras/${compraId}`, {
           method: 'GET',
           headers: {
             'Accept': 'application/json',
@@ -122,12 +122,13 @@ export default defineNuxtPlugin(nuxtApp => {
         }
 
         const json = await response.json();
-        return json;
+        return json; // Retorna los detalles de la compra
       } catch (error) {
         console.error('Error al realizar la petición:', error);
         return null;
       }
     },
+
 
     ///////////////////////////// POST //////////////////////////////////
     async register(json) {

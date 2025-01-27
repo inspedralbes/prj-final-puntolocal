@@ -1,5 +1,5 @@
 <template>
-    <div id="general">
+    <div id="general" style="height: 100vh;">
         <div class="container mx-auto p-6">
             <h1 class="text-2xl font-bold mb-6">Mis Compras</h1>
 
@@ -56,9 +56,3 @@
 
     onMounted(fetchCompras);
 </script>
-
-<style>
-    #general {
-        height: 100vh;
-    }
-</style>

@@ -61,5 +61,5 @@
 
         Route::get('{id}/compras', [OrderController::class, 'comprasCliente']);
 
-        Route::get('{id}/compras/{id}', [OrderController::class, 'detalleCompra']);
+        Route::get('compras/{id}', [OrderController::class, 'detalleCompra']);
     });
