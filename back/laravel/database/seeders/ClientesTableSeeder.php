@@ -48,5 +48,18 @@ class ClientesTableSeeder extends Seeder
             "numero_planta" => 1,
             "numero_puerta" => 1,
         ]);
+        DB::table("cliente")->insert([
+            "name" => "Lorenzo",
+            "apellidos" => "Moll",
+            "email" => "lorenzo@gmail.com",
+            "phone" => "603397347",
+            'password' => Hash::make(value: "12345678"),
+            "street_address" => "Carrer Confiança 32",
+            "ciudad" => "Ciutadella",
+            "provincia" => "Menorca",
+            "codigo_postal" => "07760",
+            "numero_planta" => 1,
+            "numero_puerta" => 1,
+        ]);
     }
 }

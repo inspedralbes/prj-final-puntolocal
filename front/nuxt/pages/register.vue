@@ -10,15 +10,8 @@ const formData = reactive({
     name: '',
     apellidos: '',
     email: '',
-    phone: '',
     password: '',
     password_confirmation: '',
-    street_address: '',
-    ciudad: '',
-    provincia: '',
-    codigo_postal: '',
-    numero_planta: '',
-    numero_puerta: '',
 });
 
 async function register() {

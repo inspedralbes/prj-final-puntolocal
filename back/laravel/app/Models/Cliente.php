@@ -12,7 +12,7 @@
         protected $table = 'cliente';
 
         protected $fillable = [
-            'nombre', 'apellidos', 'email', 'phone',
+            'name', 'apellidos', 'email', 'phone',
             'password', 'street_address', 'ciudad', 'provincia',
             'codigo_postal', 'numero_planta', 'numero_puerta', 'puntos',
         ];

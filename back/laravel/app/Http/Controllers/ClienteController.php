@@ -10,17 +10,10 @@
     class ClienteController extends Controller {
         public function RegistrarCliente(Request $request) {
             $validator = Validator::make($request->all(), [
-                'nombre' => 'required|string|max:255',
+                'name' => 'required|string|max:255',
                 'apellidos' => 'required|string|max:255',
                 'email' => 'required|email|unique:cliente,email',
-                'phone' => 'integer | digits:9',
                 'password' => 'required|string|min:8|confirmed',
-                'streed_address' => 'string|max:255',
-                'ciudad' => 'string|max:100',
-                'provincia' => 'string|max:100',
-                'codigo_postal' => 'integer',
-                'numero_planta' => 'integer',
-                'numero_puerta' => 'string'
             ]);
 
             if ($validator->fails()) {
@@ -30,17 +23,17 @@
             }
 
             $cliente = Cliente::create([
-                'nombre' => $request->name,
+                'name' => $request->name,
                 'apellidos' => $request->apellidos,
                 'email' => $request->email,
-                'phone' => $request->phone,
+                'phone' => null,
                 'password' => Hash::make($request->password),
-                'street_address' => $request->street_address,
-                'ciudad' => $request->ciudad,
-                'provincia' => $request->provincia,
-                'codigo_postal' => $request->codigo_postal,
-                'numero_planta' => $request->numero_planta,
-                'numero_puerta' => $request->numero_puerta,
+                'street_address' => '',
+                'ciudad' => '',
+                'provincia' => '',
+                'codigo_postal' => null,
+                'numero_planta' => null,
+                'numero_puerta' => null,
             ]);
 
             $verificationUrl = route('verification.verify', ['id' => $cliente->id, 'hash' => sha1($cliente->email)]);

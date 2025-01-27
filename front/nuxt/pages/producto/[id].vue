@@ -76,7 +76,7 @@
             </div>
             <div class="footer-content">
                 <button class="add-to-cart-btn">
-                    <ButtonBasketComp />
+                    <ButtonBasketComp :producto="producto" />
                 </button>
             </div>
         </div>
