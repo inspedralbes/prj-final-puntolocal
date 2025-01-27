@@ -30,4 +30,8 @@
         public function categoria() {
             return $this->belongsTo(Categoria::class, 'categoria_id', 'id');
         }
+
+        // public function productos() {
+        //     return $this->hasMany(Producto::class,'comercio_id');
+        // }
     }
