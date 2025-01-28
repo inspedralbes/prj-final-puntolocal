@@ -1,16 +1,17 @@
 <?php
-    use App\Http\Controllers\Auth\AuthController;
-    use Illuminate\Http\Request;
-    use Illuminate\Support\Facades\Route;
-    use App\Http\Controllers\OrderController;
-    use App\Http\Controllers\ClienteController;
-    use App\Http\Controllers\ProductoController;
-    use App\Http\Controllers\ComercioController;
-    use App\Http\Controllers\SubcategoriaController;
-    use App\Http\Controllers\CategoriaController;
-    Route::get('/user', function (Request $request) {
-        return $request->user();
-    })->middleware('auth:sanctum');
+use App\Http\Controllers\Auth\AuthController;
+use App\Http\Controllers\OrderComercioController;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\OrderController;
+use App\Http\Controllers\ClienteController;
+use App\Http\Controllers\ProductoController;
+use App\Http\Controllers\ComercioController;
+use App\Http\Controllers\SubcategoriaController;
+use App\Http\Controllers\CategoriaController;
+Route::get('/user', function (Request $request) {
+    return $request->user();
+})->middleware('auth:sanctum');
 
 
 // ==== AUTH ===================
@@ -33,6 +34,37 @@ Route::middleware('auth:sanctum')->prefix('comercios')->group(function () {
     Route::get('/{id}', [ComercioController::class, 'getComercio']);
 });
 
+// ==== COMANDES ===================
+Route::middleware('auth:sanctum')->prefix('comandes')->group(function () {
+    // Obtener todas las comandas de un usuario
+    Route::get('/', [OrderController::class, 'index']);
+
+    // Crear un nueva comanda
+    Route::post('/', [OrderController::class, 'store']);
+
+    // Actualizar una comanda
+    // Route::post('/{id}', [OrderController::class, 'update']);
+
+    // Obtener una comanda específica
+    Route::get('/{id}', [OrderController::class, 'show']);
+});
+
+// ==== COMANDES COMERCIOS ===================
+Route::middleware('auth:sanctum')->prefix('admin/comandes')->group(function () {
+    // Obtener todas las comandas de un comercio
+    Route::get('/', [OrderComercioController::class, 'index']);
+
+    // Obtener una comanda específica
+    Route::get('/{id}', [OrderComercioController::class, 'show']);
+    
+    // Crear un nueva comanda
+    Route::post('/', [OrderComercioController::class, 'store']);
+
+    // Actualizar una comanda
+    Route::post('/{id}', [OrderComercioController::class, 'update']);
+
+});
+
 // ==== CATEGORIAS ===================
 Route::prefix('categorias')->group(function () {
     Route::get('/', [CategoriaController::class, 'index']);
@@ -49,7 +81,7 @@ Route::prefix('producto')->group(function () {
     Route::get('/', [ProductoController::class, 'index']);
 
     // Obtener todos los productos de un comercio específico
-    Route::get('comercio/{comercioID}', [ProductoController::class,'getByComercio']);
+    Route::get('comercio/{comercioID}', [ProductoController::class, 'getByComercio']);
 
     // Obtener un producto específico
     Route::get('{id}', [ProductoController::class, 'show']);
@@ -66,17 +98,17 @@ Route::middleware('auth:sanctum')->prefix('producto')->group(function () {
     Route::delete('{id}', [ProductoController::class, 'destroy']);
 });
 
-    // ==== SUBCATEGORIAS ===============
-    Route::prefix('subcategorias')->group(function () {
-        // Ver subcategorias
-        Route::get('/{categoria_id}', [SubcategoriaController::class, 'show']);
-    });
+// ==== SUBCATEGORIAS ===============
+Route::prefix('subcategorias')->group(function () {
+    // Ver subcategorias
+    Route::get('/{categoria_id}', [SubcategoriaController::class, 'show']);
+});
 
-    // ==== CLIENTES ====================
-    Route::middleware('auth:sanctum')->prefix('clientes')->group(function () {
-        Route::get('{id}', [ClienteController::class, 'obtenerDatosCliente']);
+// ==== CLIENTES ====================
+Route::middleware('auth:sanctum')->prefix('clientes')->group(function () {
+    Route::get('{id}', [ClienteController::class, 'obtenerDatosCliente']);
 
-        Route::get('{id}/compras', [OrderController::class, 'comprasCliente']);
+    Route::get('{id}/compras', [OrderController::class, 'comprasCliente']);
 
-        Route::get('compras/{id}', [OrderController::class, 'detalleCompra']);
-    });
+    Route::get('compras/{id}', [OrderController::class, 'detalleCompra']);
+});

@@ -8,14 +8,17 @@
 
     class DatabaseSeeder extends Seeder {
         public function run(): void {
-            $this->call(EstatCompraTableSeeder::class);
-            $this->call(ATipoEnviosTableSeeder::class);
+            $this->call(EstatsTableSeeder::class);
+            $this->call(TipoEnviosTableSeeder::class);
             $this->call(ClientesTableSeeder::class);
             $this->call(CategoriasTableSeeder::class);
             $this->call(SubcategoriasTableSeeder::class);
             $this->call(ComerciosTableSeeder::class);
-            $this->call(ProductsTableSeeder::class);
-            $this->call(ComprasRealizadasTableSeeder::class);
+            $this->call(ProductosTableSeeder::class);
+
+            // ORDERS
+            $this->call(OrdersTableSeeder::class);
+            $this->call(OrderComerciosTableSeeder::class);
             $this->call(ProductosCompraTableSeeder::class);
         }
     }

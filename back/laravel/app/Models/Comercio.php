@@ -34,4 +34,8 @@
         // public function productos() {
         //     return $this->hasMany(Producto::class,'comercio_id');
         // }
+
+        public function orders() {
+            return $this->hasMany(Order::class,'comercio_id');
+        }
     }

@@ -7,6 +7,51 @@ use Illuminate\Http\Request;
 
 class OrderController extends Controller
 {
+
+    public function index()
+    {
+        //
+    }
+
+    public function create()
+    {
+        //
+    }
+
+    public function store(Request $request)
+    {
+        //
+    }
+
+    public function show($id)
+    {
+        try {
+            $order = Order::with('tipoEnvio', 'estatCompra', 'cliente', 'orderComercios', 'orderComercios.productosCompra')->where('id', $id)->first();
+
+            if (!$order) {
+                return response()->json(['message' => 'Compra no encontrada.'], 404);
+            }
+
+            return response()->json($order, 200);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Ocurrió un error al obtener los detalles de la compra: ' . $e->getMessage()], 500);
+        }
+    }
+
+    public function edit(Order $order)
+    {
+        //
+    }
+
+    public function update(Request $request, Order $order)
+    {
+        //
+    }
+
+    public function destroy(Order $order)
+    {
+        //
+    }
     public function comprasCliente($clienteId)
     {
         try {
@@ -35,7 +80,7 @@ class OrderController extends Controller
     public function detalleCompra($id)
     {
         try {
-            $compra = Order::with(['estatCompra','tipoEnvio', 'productosCompra.producto'])
+            $compra = Order::with(['estatCompra', 'tipoEnvio', 'productosCompra.producto'])
                 ->where('id', $id)
                 ->first();
 
@@ -53,4 +98,6 @@ class OrderController extends Controller
             return response()->json(['error' => 'Ocurrió un error al obtener los detalles de la compra: ' . $e->getMessage()], 500);
         }
     }
+
+
 }
