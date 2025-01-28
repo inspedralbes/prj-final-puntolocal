@@ -77,6 +77,28 @@ export default defineNuxtPlugin(nuxtApp => {
           return null;
         }
       },
+      async getUserData(userId) {
+        try {
+          const response = await fetch(`${Host}/cliente/${userId}`, {
+            method: 'GET',
+            headers: {
+              'Accept': 'application/json',
+              'Content-Type': 'application/json',
+              'Authorization': authStore.token ? `Bearer ${authStore.token}` : ''
+            },
+          });
+          if (response.ok) {
+            const json = await response.json();
+            return json;
+          } else {
+            console.error(`Error en la petición: ${response.status} ${response.statusText}`);
+            return null;
+          }
+        } catch (error) {
+          console.error('Error al realizar la petición:', error);
+          return null;
+        }
+      },
 
     ///////////////////////////// POST //////////////////////////////////
     async register(json) {
