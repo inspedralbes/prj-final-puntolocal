@@ -37,10 +37,10 @@
                         class="w-24 h-24 object-cover rounded-md" />
                     <div class="flex-1">
                         <h4 class="font-medium text-gray-800">{{ producto.producto.nombre }}</h4>
-                        <p class="text-sm text-gray-500">{{ producto.producto.descripcion }}</p>
+                        <p class="text-sm text-gray-500">{{ truncateDescription(producto.producto.descripcion) }}</p>
                         <div class="mt-2 flex justify-between items-center">
-                            <span class="font-bold text-blue-500">{{ producto.total.toFixed(2) }} €</span>
                             <span class="text-sm text-gray-500">Quantitat: {{ producto.cantidad }}</span>
+                            <span class="font-bold text-blue-500">{{ producto.total.toFixed(2) }} €</span>
                         </div>
                     </div>
                 </div>
@@ -75,6 +75,15 @@
     const formattedJson = computed(() => {
         return compra.value ? JSON.stringify(compra.value, null, 2) : "";
     });
+
+    // Function to truncate the description to 10 words
+    const truncateDescription = (descripcion) => {
+        const words = descripcion.split(' ');
+        if (words.length > 10) {
+            return words.slice(0, 10).join(' ') + '...';
+        }
+        return descripcion;
+    };
 
     onMounted(async () => {
         const compraId = route.params.id;
