@@ -1,3 +1,0 @@
-<template>
-    Perfil
-</template>

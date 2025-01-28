@@ -1,16 +1,15 @@
 <?php
-use App\Http\Controllers\ProductoController;
-use App\Http\Controllers\SubcategoriaController;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\ClienteController;
-use App\Http\Controllers\CategoriaController;
-use App\Http\Controllers\ComercioController;
-use App\Http\Controllers\Auth\AuthController;
-
-Route::get('/user', function (Request $request) {
-    return $request->user();
-})->middleware('auth:sanctum');
+    use Illuminate\Http\Request;
+    use Illuminate\Support\Facades\Route;
+    use App\Http\Controllers\OrderController;
+    use App\Http\Controllers\ClienteController;
+    use App\Http\Controllers\ProductoController;
+    use App\Http\Controllers\ComercioController;
+    use App\Http\Controllers\SubcategoriaController;
+    use App\Http\Controllers\CategoriaGeneralController;
+    Route::get('/user', function (Request $request) {
+        return $request->user();
+    })->middleware('auth:sanctum');
 
 
 // ==== AUTH ===================
@@ -66,3 +65,17 @@ Route::middleware('auth:sanctum')->prefix('producto')->group(function () {
     Route::delete('{id}', [ProductoController::class, 'destroy']);
 });
 
+    // ==== SUBCATEGORIAS ===============
+    Route::prefix('subcategorias')->group(function () {
+        // Ver subcategorias
+        Route::get('/{categoria_id}', [SubcategoriaController::class, 'show']);
+    });
+
+    // ==== CLIENTES ====================
+    Route::middleware('auth:sanctum')->prefix('clientes')->group(function () {
+        Route::get('{id}', [ClienteController::class, 'obtenerDatosCliente']);
+
+        Route::get('{id}/compras', [OrderController::class, 'comprasCliente']);
+
+        Route::get('compras/{id}', [OrderController::class, 'detalleCompra']);
+    });

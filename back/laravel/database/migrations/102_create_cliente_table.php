@@ -7,25 +7,25 @@
         public function up(): void {
             Schema::create('cliente', function (Blueprint $table) {
                 $table->id();
-                $table->string('name');                             // Nombre 
-                $table->string('apellidos');                        // Apellidos
+                $table->string('name');
+                $table->string('apellidos');
 
-                $table->string('email')->unique();                  // Email
-                $table->timestamp('email_verified_at')->nullable(); // Verificación de Email
+                $table->string('email')->unique();
+                $table->timestamp('email_verified_at')->nullable();
 
-                $table->string('phone', 15)->nullable();            // Teléfono
-                $table->timestamp('phone_verified_at')->nullable(); //Verificación de Telefono
+                $table->string('phone', 15)->nullable();
+                $table->timestamp('phone_verified_at')->nullable();
 
-                $table->string('password')->nullable();             // Contraseña
-                $table->string('street_address')->nullable();       // Calle y número
-                $table->string('ciudad')->nullable();               // Ciudad
-                $table->string('provincia')->nullable();            // Provincia
-                $table->integer('codigo_postal')->nullable();       // Código postal
-                $table->integer('numero_planta')->nullable();       // Numero de la planta
-                $table->integer('numero_puerta')->nullable();       // Numero puerta
+                $table->string('password')->nullable();
+                $table->string('street_address')->nullable();
+                $table->string('ciudad')->nullable();
+                $table->string('provincia')->nullable();
+                $table->integer('codigo_postal')->nullable();
+                $table->integer('numero_planta')->nullable();
+                $table->integer('numero_puerta')->nullable();
+                $table->integer('rol')->default(0);                 // Por defecto se pone como cliente. 1 = comercio
 
                 $table->integer('puntos')->nullable();
-
                 $table->rememberToken();
                 $table->timestamps();
             });

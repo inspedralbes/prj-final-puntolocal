@@ -7,59 +7,50 @@ use Illuminate\Http\Request;
 
 class OrderController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+    public function comprasCliente($clienteId)
     {
-        //
+        try {
+            $compras = Order::with(['tipoEnvio'])->where('cliente_id', $clienteId)->orderBy('fecha', 'desc')->get();
+            $compras->load('productosCompra.producto');
+
+            if ($compras->isEmpty()) {
+                return response()->json(['message' => 'No se encontraron compras para este cliente.'], 404);
+            }
+
+            $compras->transform(function ($order) {
+                $order->tipo_envio_info = [
+                    'id' => $order->tipoEnvio->id,
+                    'nombre' => $order->tipoEnvio->nombre
+                ];
+
+                return $order;
+            });
+
+            return response()->json($compras, 200);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Ocurrió un error al obtener las compras: ' . $e->getMessage()], 500);
+        }
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+    public function detalleCompra($id)
     {
-        //
-    }
+        try {
+            $compra = Order::with(['estatCompra','tipoEnvio', 'productosCompra.producto'])
+                ->where('id', $id)
+                ->first();
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
-    }
+            if (!$compra) {
+                return response()->json(['message' => 'Compra no encontrada.'], 404);
+            }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Order $order)
-    {
-        //
-    }
+            $compra->tipo_envio_info = [
+                'id' => $compra->tipoEnvio->id,
+                'nombre' => $compra->tipoEnvio->nombre
+            ];
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Order $order)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, Order $order)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Order $order)
-    {
-        //
+            return response()->json($compra, 200);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Ocurrió un error al obtener los detalles de la compra: ' . $e->getMessage()], 500);
+        }
     }
 }
