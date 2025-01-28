@@ -276,7 +276,7 @@
                         </li>
 
 
-
+                        <!--  ======= VENTAS ================================  -->
                         <li>
                             <button type="button"
                                 class="flex items-center w-full p-2 text-base text-gray-900 transition duration-75 rounded-lg group hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-700"
@@ -300,8 +300,10 @@
                             </button>
                             <ul id="dropdown-crud" :class="{ hidden: isHidden['ventas'] }" class="space-y-2 py-2">
                                 <li>
-                                    <a href="https://flowbite-admin-dashboard.vercel.app/crud/products/"
-                                        class="text-base text-gray-900 rounded-lg flex items-center p-2 group hover:bg-gray-100 transition duration-75 pl-11 dark:text-gray-200 dark:hover:bg-gray-700 ">Comandes</a>
+                                    <NuxtLink to="/admin/comandes"
+                                        class="text-base text-gray-900 rounded-lg flex items-center p-2 group hover:bg-gray-100 transition duration-75 pl-11 dark:text-gray-200 dark:hover:bg-gray-700 ">
+                                        Comandes
+                                    </NuxtLink>
                                 </li>
                                 <li>
                                     <a href="https://flowbite-admin-dashboard.vercel.app/crud/users/"
@@ -309,6 +311,8 @@
                                 </li>
                             </ul>
                         </li>
+
+                        <!--  ======= CLIENTES ================================  -->
                         <li>
                             <button type="button"
                                 class="flex items-center w-full p-2 text-base text-gray-900 transition duration-75 rounded-lg group hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-700"

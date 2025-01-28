@@ -16,4 +16,28 @@
 body {
   /* font-family: "Lato", serif; */
 }
+
+.color-principal-1{
+  color: #276BF2;
+}
+
+.color-principal-2{
+  color: #447EF2;
+}
+
+.color-principal-3{
+  color: #6393F2;
+}
+
+.color-secundario-1{
+  color: #6393F2;
+}
+
+.color-secundario-2{
+  color: #1E2026;
+}
+
+.color-secundario-3{
+  color: #F2F2F2;
+}
 </style>
