@@ -10,10 +10,8 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Storage;
 
-class ProductoController extends Controller
-{
-    public function index()
-    {
+class ProductoController extends Controller {
+    public function index() {
         $productos = Producto::with('subcategoria', 'comercio')->get()->map(function ($producto) {
             return [
                 "id" => $producto->id,
@@ -50,22 +48,16 @@ class ProductoController extends Controller
         });
 
         if ($productos->isEmpty()) {
-            return response()->json(['message' => 'No hay productos'], 200);  // Se puede devolver un 200 en vez de 404
+            return response()->json(['message' => 'No hay productos'], 200);
         }
 
         return response()->json($productos);
     }
 
-    public function create()
-    {
-        //
+    public function create() {
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
+    public function store(Request $request) {
         $user = Auth::user();
 
         $validated = $request->validate([
@@ -104,8 +96,7 @@ class ProductoController extends Controller
         ], 201);
     }
     
-    public function show($id)
-    {
+    public function show($id) {
         $producto = Producto::with('subcategoria', 'comercio')->where('id', $id)->first();
 
         if (!$producto) {
@@ -126,8 +117,7 @@ class ProductoController extends Controller
         ], 200);
     }
 
-    public function update(Request $request, $id)
-    {
+    public function update(Request $request, $id) {
         $user = Auth::user();
 
         $request->validate([
@@ -177,9 +167,7 @@ class ProductoController extends Controller
         }
     }
 
-    public function destroy($id)
-    {
-
+    public function destroy($id) {
         $user = Auth::user();
 
         $producto = Producto::with('comercio')->findOrFail($id);
