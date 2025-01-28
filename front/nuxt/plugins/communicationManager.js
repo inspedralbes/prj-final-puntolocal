@@ -3,13 +3,13 @@ import { createPinia, setActivePinia } from 'pinia';
 
 const pinia = createPinia();
 setActivePinia(pinia);
-const authStore = useAuthStore();
 const Host = 'http://localhost:8000/api';
 
 export default defineNuxtPlugin(nuxtApp => {
     const communicationManager = {
       ///////////////////////////// GET  //////////////////////////////////
       async getCategorias() {
+        const authStore = useAuthStore();
         try {
           const response = await fetch(Host + '/categorias',{
             method: 'GET',
@@ -33,6 +33,7 @@ export default defineNuxtPlugin(nuxtApp => {
         }
       },
       async getComercio(comercioId) {
+        const authStore = useAuthStore();
         try {
           const response = await fetch(`${Host}/comercios/${comercioId}`, {
             method: 'GET',
@@ -55,6 +56,7 @@ export default defineNuxtPlugin(nuxtApp => {
         }
       },
       async getComercios() {
+        const authStore = useAuthStore();
         try {
           const response = await fetch(Host + '/comercios',{
             method: 'GET',
@@ -78,6 +80,7 @@ export default defineNuxtPlugin(nuxtApp => {
         }
       },
       async getUserData(userId) {
+        const authStore = useAuthStore();
         try {
           const response = await fetch(`${Host}/cliente/${userId}`, {
             method: 'GET',
@@ -148,6 +151,7 @@ export default defineNuxtPlugin(nuxtApp => {
     },
 
     async logout() {
+      const authStore = useAuthStore();
       try {
         const response = await fetch(Host + '/auth/logout', {
           method: 'POST',
@@ -172,6 +176,7 @@ export default defineNuxtPlugin(nuxtApp => {
     },
 
     async changePassword(json) {
+        const authStore = useAuthStore();
         try {
           const response = await fetch(Host + '/auth/change-password', {
             method: 'POST',
@@ -197,6 +202,7 @@ export default defineNuxtPlugin(nuxtApp => {
     },
 
       async registerStore(json) {
+        const authStore = useAuthStore();
         try {
           const response = await fetch(Host + '/comercios', {
             method: 'POST',
@@ -250,6 +256,7 @@ export default defineNuxtPlugin(nuxtApp => {
     },
 
     async guardarProducto(producto) {
+      const authStore = useAuthStore();
       try {
         const id = producto.id;
         const response = await fetch(`${Host}/producto/${id}`, {
@@ -273,6 +280,7 @@ export default defineNuxtPlugin(nuxtApp => {
     },
 
     async createProducto(formData) {
+      const authStore = useAuthStore();
       try {
         const response = await fetch(`${Host}/producto`, {
           method: 'POST',
