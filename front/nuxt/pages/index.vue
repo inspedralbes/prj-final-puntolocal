@@ -109,7 +109,6 @@
 
     function seleccionarProductosAleatorios(lista) {
         if (!Array.isArray(lista)) {
-            console.error("El parámetro proporcionado no es una lista válida:", lista);
             return [];
         }
         const copiaLista = [...lista];
