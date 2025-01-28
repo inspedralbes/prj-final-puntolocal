@@ -131,7 +131,7 @@ class ProductsTableSeeder extends Seeder
             $prodID = $faker->numberBetween(1, 50);
             DB::table("productos")->insert([
                 "subcategoria_id" => $faker->numberBetween(1, 105),
-                "comercio_id" => $faker->numberBetween(1, 10),
+                "comercio_id" => $faker->numberBetween(1, 11),
                 "nombre" => $productos[$prodID],
                 "descripcion" => $descripciones[$prodID],
                 'precio' => $faker->randomFloat(2, 5, 1000),

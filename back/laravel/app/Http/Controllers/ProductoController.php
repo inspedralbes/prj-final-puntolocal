@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Comercio;
+use Illuminate\Support\Facades\Auth;
 use Validator;
 use App\Models\Producto;
 use Illuminate\Http\Request;
@@ -64,6 +66,7 @@ class ProductoController extends Controller
      */
     public function store(Request $request)
     {
+        $user = Auth::user();
 
         $validated = $request->validate([
             'subcategoria_id' => 'required|exists:subcategorias,id',
@@ -72,10 +75,18 @@ class ProductoController extends Controller
             'descripcion' => 'required|string',
             'precio' => 'required|numeric',
             'stock' => 'nullable|integer',
-            'imagen' => 'required|image|mimes:jpg,jpeg,png,gif',
+            'imagen' => 'required|image|mimes:jpg,jpeg,png,webp',
         ]);
 
         $imagenPath = $request->file('imagen')->store('productos', 'public');
+
+        $comercio = Comercio::findOrFail($validated['comercio_id']);
+        
+        if($comercio->idUser !== $user->id){
+            return response()->json([
+                'error' => 'No tienes permiso para editar este producto.',
+            ], 403);
+        }
 
         $producto = Producto::create([
             'subcategoria_id' => $validated['subcategoria_id'],
@@ -89,15 +100,10 @@ class ProductoController extends Controller
 
         return response()->json([
             'message' => 'Producto creado con éxito.',
-            'producto' => $producto
+            'producto' => $producto,
         ], 201);
     }
     
-
-
-
-
-
     public function show($id)
     {
         $producto = Producto::with('subcategoria', 'comercio')->where('id', $id)->first();
@@ -115,29 +121,39 @@ class ProductoController extends Controller
             "comercio_id" => $producto->comercio_id,
             "comercio" => $producto->comercio->nombre,
             "precio" => $producto->precio,
-            "stock" => $producto->stock
+            "stock" => $producto->stock,
+            "imagen" => $producto->imagen,
         ], 200);
-    }
-
-    public function edit(Producto $producto)
-    {
-        //
     }
 
     public function update(Request $request, $id)
     {
+        $user = Auth::user();
+
         $request->validate([
             'nombre' => 'required|string|max:60',
             'descripcion' => 'required|string',
             'precio' => 'required|numeric|min:1',
             'subcategoria_id' => 'required|exists:subcategorias,id',
             'comercio_id' => 'required|exists:comercios,id',
-            "stock" => "nullable | numeric | min:0",
+            'stock' => "nullable|numeric",
+            'imagen' => 'nullable|image|mimes:jpg,jpeg,png,webp',
         ]);
 
-
         try {
-            $producto = Producto::findOrFail($id);
+            $producto = Producto::with('comercio')->findOrFail($id);
+
+            if ($request->hasFile('imagen')) {
+                $imagenPath = $request->file('imagen')->store('productos', 'public');
+            } else {
+                $imagenPath = $producto->imagen; // Mantén la imagen anterior
+            }
+
+            if($producto->comercio->idUser !== $user->id){
+                return response()->json([
+                    'error' => 'No tienes permiso para editar este producto.',
+                ], 403);
+            }
 
             $producto->update([
                 'nombre' => $request->nombre,
@@ -146,6 +162,7 @@ class ProductoController extends Controller
                 'subcategoria_id' => $request->subcategoria_id,
                 'comercio_id' => $request->comercio_id,
                 "stock" => $request->stock,
+                'imagen' => $imagenPath,
             ]);
 
             return response()->json([
@@ -162,7 +179,16 @@ class ProductoController extends Controller
 
     public function destroy($id)
     {
-        $producto = Producto::findOrFail($id);
+
+        $user = Auth::user();
+
+        $producto = Producto::with('comercio')->findOrFail($id);
+
+        if($producto->comercio->idUser !== $user->id){
+            return response()->json([
+                'error' => 'No tienes permiso para eliminar este producto.',
+            ], 403);
+        }
 
         try {
             $producto->delete();

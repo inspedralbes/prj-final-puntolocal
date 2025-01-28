@@ -5,36 +5,42 @@ export const useAuthStore = defineStore('auth', {
     isAuthenticated: false, 
     token: typeof window !== 'undefined' ? sessionStorage.getItem('token') || null : null, 
     user: typeof window !== 'undefined' ? JSON.parse(sessionStorage.getItem('user')) || null : null,
+    comercio: typeof window !== 'undefined' ? JSON.parse(sessionStorage.getItem('comercio')) || null : null,
   }),
   getters: {
     userName: (state) => state.user ? state.user.name : '',
     userEmail: (state) => state.user ? state.user.email : '',
   },
   actions: {
-    login(userData, userToken) {
+    login(userData, userToken, comercioData) {
       this.isAuthenticated = true;
       this.user = userData; 
       this.token = userToken; 
+      this.comercio = comercioData;
       if (typeof window !== 'undefined') {
         sessionStorage.setItem('token', userToken);
         sessionStorage.setItem('user', JSON.stringify(userData));
+        sessionStorage.setItem('comercio', JSON.stringify(comercioData));        
       }
     },
     logout() {
       this.isAuthenticated = false;
       this.user = null;
       this.token = null;
+      this.comercio = null;
       if (typeof window !== 'undefined') {
         sessionStorage.removeItem('token'); 
         sessionStorage.removeItem('user'); 
+        sessionStorage.removeItem('comercio'); 
       }
     },
     initialize() {
       if (typeof window !== 'undefined') {
         const token = sessionStorage.getItem('token');
         const user = JSON.parse(sessionStorage.getItem('user'));
-        if (token && user) {
-          this.login(user, token);
+        const comercio = JSON.parse(sessionStorage.getItem('comercio'));
+        if (token && user && comercio) {
+          this.login(user, token, comercio);
         }
       }
     }

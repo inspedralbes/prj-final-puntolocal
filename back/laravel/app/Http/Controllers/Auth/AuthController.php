@@ -2,6 +2,7 @@
     namespace App\Http\Controllers\Auth;
 
     use App\Models\Cliente;
+    use App\Models\Comercio;
     use Illuminate\Http\Request;
     use Illuminate\Support\Facades\Mail;
     use Illuminate\Support\Facades\Hash;
@@ -63,6 +64,7 @@
             }
 
             $cliente = Cliente::where('email', $request->email)->first();
+            $comercio = Comercio::where('idUser', $cliente->id)->first();
 
             if (!$cliente) {
                 return response()->json([
@@ -88,6 +90,7 @@
                 'message' => 'Inicio de sesión exitoso.',
                 'user' => $cliente,
                 'token' => $token,
+                'comercio' => $comercio,
             ], 200);
         }
 

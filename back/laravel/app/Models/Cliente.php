@@ -25,6 +25,6 @@
         ];
 
         public function comercios() {
-            return $this->hasMany(Comercio::class, 'cliente_id');
+            return $this->hasMany(Comercio::class, 'idUser');
         }
     }

@@ -18,12 +18,12 @@ class ComerciosTableSeeder extends Seeder
     {
         $faker = Faker::create();
 
-        $cantidad = 10;
+        $cantidad = 11;
 
         for ($i = 0; $i < $cantidad; $i++) {
             DB::table('comercios')->insert([
                 'nombre' => $faker->company,
-                'idUser' => $faker->numberBetween(1,10),
+                'idUser' => $i+1,
                 'phone' => "603" . $faker->numberBetween(100000, 999999),
                 'email' => $faker->companyEmail,
                 'calle_num' => $faker->streetAddress,

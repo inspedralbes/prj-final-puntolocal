@@ -98,10 +98,6 @@
                                     </th>
                                     <th scope="col"
                                         class="p-4 text-xs font-medium text-left text-gray-500 uppercase dark:text-gray-400">
-                                        ID
-                                    </th>
-                                    <th scope="col"
-                                        class="p-4 text-xs font-medium text-left text-gray-500 uppercase dark:text-gray-400">
                                         Precio
                                     </th>
                                     <th scope="col"
@@ -143,9 +139,6 @@
                                         {{ producto.descripcion }}</td>
                                     <td
                                         class="p-4 text-base font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                        {{ producto.id }}</td>
-                                    <td
-                                        class="p-4 text-base font-medium text-gray-900 whitespace-nowrap dark:text-white">
                                         {{ producto.precio }}€</td>
                                     <td
                                         class="p-4 text-base font-medium text-gray-900 whitespace-nowrap dark:text-white">
@@ -172,7 +165,7 @@
                                             Editar
                                         </button>
                                         <button type="button" id="deleteProductButton"
-                                            @click="eliminarProd(producto.id)"
+                                            @click="selectIdProdToDelete(producto.id)"
                                             data-drawer-target="drawer-delete-product-default"
                                             data-drawer-show="drawer-delete-product-default"
                                             aria-controls="drawer-delete-product-default" data-drawer-placement="right"
@@ -273,12 +266,12 @@
                     <div>
                         <label for="category"
                             class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Subcategoria</label>
-                        <select id="category"
+                        <select id="category" v-model="productoActual.subcategoria_id"
                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
-                            <option selected="">Flowbite</option>
-                            <option value="RE">React</option>
-                            <option value="AN">Angular</option>
-                            <option value="VU">Vue JS</option>
+                            <option v-for="subcategoria in subcategorias" :key="subcategoria.id"
+                                :value="subcategoria.id" data-v-inspector="pages/admin/productes.vue:358:29">
+                                {{ subcategoria.name }}
+                            </option>
                         </select>
                     </div>
                     <div>
@@ -308,6 +301,21 @@
                         <textarea id="description" rows="4" required
                             class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
                             placeholder="Camiseta blanca 100% algodón" v-model="productoActual.descripcion"></textarea>
+                    </div>
+                    <div>
+                        <label for="imagenPrincipal"
+                            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Imatge
+                            del producte</label>
+                        <input type="file" accept="image/*" @change="handleImageEditar" id="imagenPrincipal"
+                            name="imagenPrincipal"
+                            class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                            />
+                        <div v-if="productoActual.imagen" class="image-preview">
+                            <p class="text-white">Vista prèvia de la imatge:</p>
+                            <div class="image-container">
+                                <img :src="productoNuevo.imagen" alt="Vista prèvia" class="image-thumbnail" />
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div class="bottom-0 left-0 flex justify-center w-full pb-4 mt-4 space-x-4 sm:absolute sm:px-4 sm:mt-0">
@@ -346,16 +354,16 @@
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                         </svg>
-                        <h3 class="mt-5 mb-6 text-lg text-gray-500 dark:text-gray-400">Are you sure you want to delete
-                            this user?</h3>
-                        <button type="button" @click="toggleCard('eliminar')"
+                        <h3 class="mt-5 mb-6 text-lg text-gray-500 dark:text-gray-400">Está seguro que desea eliminar el
+                            producto?</h3>
+                        <button type="button" @click="eliminarProducto(id_producto_eliminar)"
                             class="text-white bg-red-600 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-base inline-flex items-center px-3 py-2.5 text-center mr-2 dark:focus:ring-red-800">
-                            Yes, I'm sure
+                            Si, estoy seguro
                         </button>
                         <button type="button" @click="toggleCard('eliminar')"
                             class="text-gray-900 bg-white hover:bg-gray-100 focus:ring-4 focus:ring-primary-300 border border-gray-200 font-medium inline-flex items-center rounded-lg text-base px-3 py-2.5 text-center dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700 dark:focus:ring-gray-700"
                             data-modal-hide="delete-user-modal">
-                            No, cancel
+                            No, cancelar
                         </button>
                     </div>
                 </div>
@@ -397,7 +405,7 @@
                                 <div class="col-span-6 sm:col-span-3">
                                     <label for="category"
                                         class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Subcategoria</label>
-                                    <select id="category" v-model="productoActual.subcategoria"
+                                    <select id="category" v-model="productoNuevo.subcategoria_id"
                                         class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
                                         <option v-for="subcategoria in subcategorias" :key="subcategoria.id"
                                             :value="subcategoria.id"
@@ -411,7 +419,8 @@
                                         class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Precio</label>
                                     <input type="number" name="precio" id="precio"
                                         class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                                        v-model="productoNuevo.precio" step="any" @input="handleInput" placeholder="10.99" required>
+                                        v-model="productoNuevo.precio" step="any" @input="handleInput"
+                                        placeholder="10.99" required>
                                 </div>
                                 <div class="col-span-6 sm:col-span-3">
                                     <label for="stock"
@@ -429,10 +438,11 @@
                                         v-model="productoNuevo.descripcion"></textarea>
                                 </div>
                                 <div class="col-span-6">
-                                    <label for="descripcion"
+                                    <label for="imagenPrincipal"
                                         class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Imatge
                                         del producte</label>
-                                    <input type="file" accept="image/*" @change="handleImageChange" id="imagenPrincipal"
+                                    <input type="file" accept="image/*" @change="handleImageCrear" id="imagenPrincipal"
+                                        name="imagenPrincipal"
                                         class="p-3 text-sm rounded-lg border border-gray-300 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
                                         required />
                                     <div v-if="productoNuevo.imagen" class="image-preview">
@@ -485,26 +495,36 @@ import { useAuthStore } from '../../stores/authStore';
 
 const authStore = useAuthStore();
 const token = computed(() => authStore.token);
+const user = ref(authStore.user);
+const comercio = ref(authStore.comercio);
 
 const subcategorias = ref();
 
 const productos = reactive([]);
 const productoActual = ref({
+    'id': '',
     'nombre': '',
     'descripcion': '',
     'subcategoria': '',
+    'subcategoria_id': '',
     'precio': '',
     'stock': '',
+    'comercio_id': '',
+    'comercio': '',
+    'imagen': '',
 });
 
 const productoNuevo = ref({
     'nombre': '',
     'descripcion': '',
+    'subcategoria_id': '',
     'subcategoria': '',
     'precio': '',
     'stock': '',
     'imagen': null,
 });
+
+const id_producto_eliminar = ref();
 
 definePageMeta({
     layout: 'admin',
@@ -521,38 +541,29 @@ const isOpen = reactive({
 const handleInput = (event) => {
     const value = event.target.value.replace(',', '.');
     productoActual.value.precio = parseFloat(value) || '';
-    console.log(productoActual.value.precio)
 };
-
-async function guardarProd() {
-    console.log(productoActual.value)
-    const data = await $communicationManager.guardarProducto(productoActual.value);
-    console.log(data.data)
-    if (data.data) {
-        const index = productos.findIndex(prod => prod.id === data.data.id);
-        if (index !== -1) {
-            productos[index] = { ...productoActual.value };
-        }
-    }
-    toggleCard('editar');
-}
 
 function toggleCard(menu) {
     isOpen[menu] = !isOpen[menu];
     backgroundShadow.value = !backgroundShadow.value
 }
 
-async function editarProd(id) {
-    toggleCard('editar');
-    const data = await $communicationManager.infoProducto(id);
-    productoActual.value = data;
-    console.log(productoActual.value);
+function selectIdProdToDelete(id) {
+    toggleCard('eliminar');
+    id_producto_eliminar.value = id;
 }
 
-async function eliminarProd(id) {
-    toggleCard('eliminar');
+async function eliminarProducto(id) {
     const data = await $communicationManager.eliminarProducto(id);
-    console.log(data);
+    if (data.success) {
+        const index = productos.findIndex(product => product.id === id);
+        if (index !== -1) {
+            productos.splice(index, 1);
+            toggleCard('eliminar');
+        }
+    } else {
+        console.log('Error: ' + data.message);
+    }
 }
 
 const closeAll = (e) => {
@@ -574,7 +585,7 @@ async function fetchSubcategorias(categoria_id) {
     }
 };
 
-function handleImageChange(event) {
+function handleImageCrear(event) {
     const file = event.target.files[0];
 
     if (file) {
@@ -585,26 +596,74 @@ function handleImageChange(event) {
     }
 };
 
+function handleImageEditar(event) {
+    const file = event.target.files[0];
+
+    if (file) {
+        productoActual.value.imagen = {
+            file,
+            url: URL.createObjectURL(file),
+        };
+    }
+};
+
+async function editarProd(id) {
+    toggleCard('editar');
+    const data = await $communicationManager.infoProducto(id);
+    productoActual.value = data;
+    console.log(productoActual.value);
+}
+
+async function guardarProd() {
+    const formData = new FormData();
+    // formData.append("id", productoActual.value.id);
+    formData.append("nombre", productoActual.value.nombre);
+    formData.append("descripcion", productoActual.value.descripcion);
+    formData.append("subcategoria_id", productoActual.value.subcategoria_id);
+    formData.append("comercio_id", comercio.value.id);
+    formData.append("precio", productoActual.value.precio);
+    if(productoActual.value.stock){
+        formData.append("stock", productoActual.value.stock);
+    }
+    if(productoActual.value.imagen !== null && productoActual.value.imagen.file){
+        formData.append("imagen", productoActual.value.imagen.file);
+    }
+
+    const data = await $communicationManager.guardarProducto(formData, productoActual.value.id);
+    if (data.data) {
+        const index = productos.findIndex(prod => prod.id === data.data.id);
+        if (index !== -1) {
+            productos[index] = { ...productoActual.value };
+        }
+    }
+    toggleCard('editar');
+}
+
 async function crearProducto() {
-    alert('pulsado');
     const formData = new FormData();
     formData.append("nombre", productoNuevo.value.nombre);
     formData.append("descripcion", productoNuevo.value.descripcion);
-    formData.append("subcategoria_id", productoNuevo.value.subcategoria);
-    formData.append("comercio_id", 3);
+    formData.append("subcategoria_id", productoNuevo.value.subcategoria_id);
+    formData.append("comercio_id", comercio.value.id);
     formData.append("precio", productoNuevo.value.precio || "");
     formData.append("stock", productoNuevo.value.stock);
     formData.append("imagen", productoNuevo.value.imagen.file);
 
+    for (const [key, value] of formData.entries()) {
+        console.log(`${key}:`, value);
+    }
     const result = await $communicationManager.createProducto(formData);
 
     if (result && result.success) {
-        alert('creado');
         toggleCard('crear');
+        productoNuevo.value.id = result.data.producto.id;
+        // productoNuevo.
+        console.log(productoNuevo.value);
         productos.push(productoNuevo.value);
         productoNuevo.value = {
             'nombre': '',
             'descripcion': '',
+            'subcategoria_id': '',
             'subcategoria': '',
             'precio': '',
             'stock': '',
@@ -612,18 +671,20 @@ async function crearProducto() {
         };
     } else {
         console.error("Error en la creación del producto:", result?.message || "Error desconocido");
-        alert("Error al crear el producto.");
     }
 };
 
 onMounted(async () => {
     document.addEventListener('keydown', closeAll);
-    subcategorias.value = await fetchSubcategorias(1);
+    subcategorias.value = await fetchSubcategorias(comercio.value.categoria_id);
+
+    // console.log('Comercio (toRaw):', toRaw(authStore.comercio)); // Muestra el objeto real
+    // console.log('Comercio (JSON):', JSON.stringify(authStore.comercio, null, 2)); // JSON legible
+    // console.log('Comercio (copia):', { ...authStore.comercio }); // Copia sin reactividad
 });
 
 onBeforeMount(async () => {
     const data = await $communicationManager.getByComercio();
     Object.assign(productos, data);
-    console.log(productos);
 });
 </script>

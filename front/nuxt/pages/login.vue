@@ -31,15 +31,14 @@ async function login() {
     const response = await $communicationManager.login(formData);
 
     if (response) {
-        console.log('Ha iniciat sessió correctament');
-        authStore.login(response.user, response.token);
+        authStore.login(response.user, response.token, response.comercio);
         navigateTo('/');
     } else {
         console.log('Hi ha hagut algun error, revisi les seves dades');
     }
 }
 
-onMounted(() => {
+onBeforeMount(() => {
     if (authStore.isAuthenticated) {
         navigateTo('/');
     }
