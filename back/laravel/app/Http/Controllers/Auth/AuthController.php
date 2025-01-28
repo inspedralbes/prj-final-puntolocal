@@ -98,4 +98,33 @@
                 'message' => 'Sesión cerrada exitosamente.'
             ], 200);
         }
+
+        public function changePassword(Request $request) {
+            $validator = Validator::make($request->all(), [
+                'currentPassword' => 'required|string|min:8',
+                'newPassword' => 'required|string|min:8',
+                'confirmPassword' => 'required|string|min:8|same:newPassword',
+            ]);
+
+            if ($validator->fails()) {
+                return response()->json([
+                    'error' => $validator->errors()
+                ], 422);
+            }
+
+            $cliente = $request->user();
+
+            if (!Hash::check($request->currentPassword, $cliente->password)) {
+                return response()->json([
+                    'error' => 'Contraseña actual incorrecta.'
+                ], 400);
+            }
+
+            $cliente->password = Hash::make($request->newPassword);
+            $cliente->save();
+
+            return response()->json([
+                'message' => 'Contraseña cambiada exitosamente.'
+            ], 200);
+        }
     }

@@ -33,6 +33,7 @@ async function login() {
     if (response) {
         console.log('Ha iniciat sessió correctament');
         authStore.login(response.user, response.token);
+        window.location.reload();
         navigateTo('/');
     } else {
         console.log('Hi ha hagut algun error, revisi les seves dades');

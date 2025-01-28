@@ -4,7 +4,11 @@ import { useAuthStore } from '#imports';
 
 const authStore = useAuthStore();
 
-function logout() {
+async function logout() {
+    const {
+        $communicationManager
+    } = useNuxtApp();
+    await $communicationManager.logout();
     authStore.logout();
     navigateTo('/login');
 }
@@ -18,6 +22,6 @@ function logout() {
         <button @click="logout" class="text-left">
             LOGOUT
         </button>
-        
+
     </div>
 </template>

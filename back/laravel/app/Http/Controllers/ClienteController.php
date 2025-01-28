@@ -45,4 +45,54 @@
             }
         }
 
+        public function updateDatosPersonales(Request $request, $id) {
+            $cliente = Cliente::find($id);
+            if ($cliente) {
+                $validator = Validator::make($request->all(), [
+                    'nombre' => 'required',
+                    'apellido' => 'required',
+                    'email' => 'required|email',
+                    'telefono' => 'required',
+                ]);
+                if ($validator->fails()) {
+                    return response()->json(['message' => 'Datos incorrectos'], 400);
+                }
+                $cliente->nombre = $request->nombre;
+                $cliente->apellido = $request->apellido;
+                $cliente->email = $request->email;
+                $cliente->telefono = $request->telefono;
+                $cliente->save();
+                return response()->json($cliente, 200);
+            } else {
+                return response()->json(['message' => 'Cliente no encontrado'], 404);
+            }
+        }
+
+        public function updateDatosFacturacion(Request $request, $id) {
+            $cliente = Cliente::find($id);
+            if ($cliente) {
+                $validator = Validator::make($request->all(), [
+                    'street_address' => 'required|string',
+                    'ciudad' => 'required|string',
+                    'provincia' => 'required|string',
+                    'codigo_postal' => 'required|numeric',
+                    'numero_planta' => 'required|numeric',
+                    'numero_puerta' => 'required|numeric', 
+                ]);
+                if ($validator->fails()) {
+                    return response()->json(['message' => 'Datos incorrectos'], 400);
+                }
+                $cliente->street_address = $request->street_address;
+                $cliente->ciudad = $request->ciudad;
+                $cliente->provincia = $request->provincia;
+                $cliente->codigo_postal = $request->codigo_postal;
+                $cliente->numero_planta = $request->numero_planta;
+                $cliente->numero_puerta = $request->numero_puerta;
+                $cliente->save();
+                return response()->json($cliente, 200);
+            } else {
+                return response()->json(['message' => 'Cliente no encontrado'], 404);
+            }
+        }
+
     }

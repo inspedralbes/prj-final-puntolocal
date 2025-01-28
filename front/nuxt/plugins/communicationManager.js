@@ -147,6 +147,55 @@ export default defineNuxtPlugin(nuxtApp => {
       }
     },
 
+    async logout() {
+      try {
+        const response = await fetch(Host + '/auth/logout', {
+          method: 'POST',
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+            'Authorization': authStore.token ? `Bearer ${authStore.token}` : ''
+          }
+        });
+        if (response.ok) {
+          const json = await response.json();
+          return json.data;
+        } else {
+          console.error(`Error en la petición: ${response.status} ${response.statusText}`)
+          return null;
+        }
+    
+      } catch (error) {
+        console.error('Error al realizar la petición:', error);
+        return null;
+      }
+    },
+
+    async changePassword(json) {
+        try {
+          const response = await fetch(Host + '/auth/change-password', {
+            method: 'POST',
+            headers: {
+              'Accept': 'application/json',
+              'Content-Type': 'application/json',
+              'Authorization': authStore.token ? `Bearer ${authStore.token}` : ''
+            },
+            body: JSON.stringify(json)
+          });
+
+        if (!response.ok) {
+          console.error(`Error en la petición: ${response.status} ${response.statusText}`);
+          return null;
+        }
+
+        const jsonResponse = await response.json();
+        return jsonResponse;
+      } catch (error) {
+        console.error('Error al realizar la petición:', error);
+        return null;
+      }
+    },
+
       async registerStore(json) {
         try {
           const response = await fetch(Host + '/comercios', {
