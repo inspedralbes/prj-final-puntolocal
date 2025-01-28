@@ -2,24 +2,24 @@
     <div id="detalle-compra" class="h-screen bg-gray-100">
         <div class="container mx-auto p-6 bg-white shadow-lg rounded-lg mt-6">
             <h1 class="text-3xl font-bold mb-6 text-gray-800">Detalls de la Compra</h1>
+            
+            <div v-if="loading" class="flex justify-center items-center">
+                <Loading />
+            </div>
 
-            <div v-if="compra" class="space-y-6">
-                <!-- Fecha y Precio total -->
+            <div v-else-if="compra" class="space-y-6">
                 <div class="flex justify-between items-center text-lg text-gray-700">
                     <p><strong>Data:</strong> {{ new Date(compra.fecha).toLocaleDateString('ca-ES') }}</p>
                     <p><strong>Total:</strong> {{ compra.total.toFixed(2) }} €</p>
                 </div>
 
-                <!-- Tipo de Envío -->
                 <div class="flex items-center justify-between">
                     <p><strong>Tipus d'enviament:</strong> {{ compra.tipo_envio_info?.nombre }}</p>
                 </div>
 
-                <!-- Productos -->
                 <h3 class="text-xl font-semibold mt-4 text-gray-700">Productes:</h3>
                 <div v-for="producto in compra.productos_compra" :key="producto.id"
                     class="bg-gray-50 p-4 rounded-lg shadow-md flex items-center space-x-4 mb-4">
-                    <!-- Imagen del producto (si existe) -->
                     <img :src="producto.producto.imagen || 'https://via.placeholder.com/100'" alt="Imagen del producto"
                         class="w-24 h-24 object-cover rounded-md" />
                     <div class="flex-1">
@@ -31,11 +31,10 @@
                         </div>
                     </div>
                 </div>
-
             </div>
 
             <div v-else>
-                <p class="text-center text-gray-500">Cargando...</p>
+                <p class="text-center text-gray-500">No s'ha trobat informació de la compra.</p>
             </div>
         </div>
     </div>
@@ -44,16 +43,19 @@
 <script setup>
     import { ref, onMounted } from "vue";
     import { useRoute } from "vue-router";
-    import { useAuthStore } from "@/stores/authStore";
+    import Loading from "../../../components/loading.vue";
+    import { useAuthStore } from "../../../stores/authStore";
 
     const { $communicationManager } = useNuxtApp();
     const route = useRoute();
     const compra = ref(null);
+    const loading = ref(true);
 
     onMounted(async () => {
         const compraId = route.params.id;
 
         if (compraId) {
+            loading.value = true;
             const response = await $communicationManager.detalleCompra(compraId);
 
             if (response) {
@@ -61,6 +63,7 @@
             } else {
                 console.error("No es va poder obtenir els detalls de la compra.");
             }
+            loading.value = false;
         }
     });
 </script>
