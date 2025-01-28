@@ -2,7 +2,7 @@
     <div id="detalle-compra" class="h-screen bg-gray-100">
         <div class="container mx-auto p-6 bg-white shadow-lg rounded-lg mt-6">
             <h1 class="text-3xl font-bold mb-6 text-gray-800">Detalls de la Compra</h1>
-            
+
             <div v-if="loading" class="flex justify-center items-center">
                 <Loading />
             </div>
@@ -11,6 +11,19 @@
                 <div class="flex justify-between items-center text-lg text-gray-700">
                     <p><strong>Data:</strong> {{ new Date(compra.fecha).toLocaleDateString('ca-ES') }}</p>
                     <p><strong>Total:</strong> {{ compra.total.toFixed(2) }} €</p>
+                </div>
+
+                <div class="flex items-center space-x-2">
+                    <div id="colorEstado" :style="{ backgroundColor: compra.estat_compra.color }"
+                        class="w-6 h-6 rounded-full border border-gray-400"></div>
+                    <p>
+                        <strong>Estat de la compra:</strong>
+                        {{ compra.estat_id === 1 ? "Pendiente"
+                            : compra.estat_id === 2 ? "Procesando"
+                                : compra.estat_id === 3 ? "Enviado"
+                                    : compra.estat_id === 4 ? "Entregado"
+                                        : "Cancelado" }}
+                    </p>
                 </div>
 
                 <div class="flex items-center justify-between">
@@ -31,6 +44,11 @@
                         </div>
                     </div>
                 </div>
+
+                <h3 class="text-xl font-semibold mt-6 text-gray-700">JSON complet:</h3>
+                <pre class="bg-gray-100 p-4 rounded-lg text-sm text-gray-600 overflow-auto">
+                    {{ formattedJson }}
+                </pre>
             </div>
 
             <div v-else>
@@ -41,15 +59,22 @@
 </template>
 
 <script setup>
-    import { ref, onMounted } from "vue";
+    definePageMeta({
+        layout: false,
+    });
+
+    import { ref, onMounted, computed } from "vue";
     import { useRoute } from "vue-router";
     import Loading from "../../../components/loading.vue";
-    import { useAuthStore } from "../../../stores/authStore";
 
     const { $communicationManager } = useNuxtApp();
     const route = useRoute();
     const compra = ref(null);
     const loading = ref(true);
+
+    const formattedJson = computed(() => {
+        return compra.value ? JSON.stringify(compra.value, null, 2) : "";
+    });
 
     onMounted(async () => {
         const compraId = route.params.id;
@@ -67,3 +92,12 @@
         }
     });
 </script>
+
+<style scoped>
+    #colorEstado {
+        width: 15px;
+        height: 15px;
+        border-radius: 99px;
+        border: 1px solid #ccc;
+    }
+</style>

@@ -35,7 +35,7 @@ class OrderController extends Controller
     public function detalleCompra($id)
     {
         try {
-            $compra = Order::with(['tipoEnvio', 'productosCompra.producto'])
+            $compra = Order::with(['estatCompra','tipoEnvio', 'productosCompra.producto'])
                 ->where('id', $id)
                 ->first();
 

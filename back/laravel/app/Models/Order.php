@@ -1,5 +1,4 @@
 <?php
-
     namespace App\Models;
 
     use Illuminate\Database\Eloquent\Model;
@@ -8,9 +7,9 @@
         protected $fillable = [
             'cliente_id',
             'fecha',
-            'estado',
             'total',
-            'tipo_envio'
+            'tipo_envio',
+            'estat_id',
         ];
 
         public function cliente() {
@@ -23,5 +22,9 @@
 
         public function tipoEnvio() {
             return $this->belongsTo(TipoEnvio::class, 'tipo_envio_id');
+        }
+
+        public function estatCompra() {
+            return $this->belongsTo(EstatCompra::class, 'estat_id');
         }
     }
