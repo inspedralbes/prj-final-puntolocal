@@ -130,6 +130,79 @@ export default defineNuxtPlugin(nuxtApp => {
       }
     },
 
+    async getDatosCliente(clienteId) {
+      try {
+        const response = await fetch(`${Host}/clientes/${clienteId}`, {
+          method: 'GET',
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+            'Authorization': authStore.token ? `Bearer ${authStore.token}` : ''
+          }
+        });
+
+        if (!response.ok) {
+          console.error(`Error en la petición: ${response.status} ${response.statusText}`);
+          return null;
+        }
+
+        const json = await response.json();
+        return json;
+      } catch (error) {
+        console.error('Error al realizar la petición:', error);
+        return null;
+      }
+    },
+
+    async comprasCliente(clienteId) {
+      try {
+        const response = await fetch(`${Host}/clientes/${clienteId}/compras`, {
+          method: 'GET',
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+            'Authorization': authStore.token ? `Bearer ${authStore.token}` : ''
+          }
+        });
+
+        if (!response.ok) {
+          console.error(`Error en la petición: ${response.status} ${response.statusText}`);
+          return null;
+        }
+
+        const json = await response.json();
+        return json;
+      } catch (error) {
+        console.error('Error al realizar la petición:', error);
+        return null;
+      }
+    },
+
+    async detalleCompra(compraId) {
+      try {
+        const response = await fetch(`${Host}/clientes/compras/${compraId}`, {
+          method: 'GET',
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+            'Authorization': authStore.token ? `Bearer ${authStore.token}` : ''
+          }
+        });
+
+        if (!response.ok) {
+          console.error(`Error en la petición: ${response.status} ${response.statusText}`);
+          return null;
+        }
+
+        const json = await response.json();
+        return json; // Retorna los detalles de la compra
+      } catch (error) {
+        console.error('Error al realizar la petición:', error);
+        return null;
+      }
+    },
+
+
     ///////////////////////////// POST //////////////////////////////////
     async register(json) {
       try {
