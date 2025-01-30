@@ -21,102 +21,134 @@
     <div id="contain-productos">
         <h1 class="titulo-productos">Ultimes tendències</h1>
         <div id="productos">
-            <productoComp img="https://catalogosparaempresas.com/wp-content/uploads/2022/07/ice2-1.jpg" title="Zapatilla deportiva negra" price="24,99" comercio="WhyNot?"></productoComp>
-            <productoComp img="https://static.carrefour.es/hd_510x_/crs/cdn_static/catalog/hd/424728_00_1.jpg" title="iPhone 13 128GB Apple - Blanco estrella" price="539,00" comercio="K-Tuin Castelldefels Anec Blau"></productoComp>
-            <productoComp img="https://www.markamania.es/1017148-large_default/pantalon-deportivo-de-corte-recto-roly-new-astun.jpg" title="Pantalon Jean Negro Ajustado Elastico" price="19,99" comercio="JD Esports"></productoComp>
-            <productoComp img="https://www.shutterstock.com/image-photo/big-diamond-solitaire-necklace-chain-600nw-2083887445.jpg" title="Collar de diamante para dama" price="69,99" comercio="Joyeria Poppins"></productoComp>
+            <productoComp v-for="(producto, index) in productos" :key="index"
+                :img="producto.img"
+                :title="producto.nombre"
+                :price="producto.precio"
+                :comercio="producto.comercio">
+            </productoComp>
         </div>
     </div>
 </template>
 
 <style scoped>
-#banner {
-    width: 100%;
-    height: 260px;
-    display: flex;
-    align-items: center;
-    overflow: hidden;
-    position: relative;
-}
+    #banner {
+        width: 100%;
+        height: 260px;
+        display: flex;
+        overflow: hidden;
+        position: relative;
+        align-items: center;
+    }
 
-#carousel {
-    display: flex;
-    align-items: center;
-}
+    #carousel {
+        display: flex;
+        align-items: center;
+    }
 
-#carousel img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    object-position: center;
-}
+    #carousel img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: center;
+    }
 
-#contain-categorias {
-    width: 100%;
-    height: 110px;
-    display: flex;
-    align-items: center;
-    overflow: scroll;
-    box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
-    background-color: #eff1f3;
-}
+    #contain-categorias {
+        width: 100%;
+        height: 110px;
+        display: flex;
+        overflow: scroll;
+        align-items: center;
+        background-color: #eff1f3;
+        box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+    }
 
-#contain-categorias::-webkit-scrollbar {
-    display: none;
-}
+    #contain-categorias::-webkit-scrollbar {
+        display: none;
+    }
 
-#categorias {
-    padding-right: 20px;
-}
+    #categorias {
+        padding-right: 20px;
+    }
 
-#categorias .box-categoria {
-    width: 80px;
-    height: 80px;
-    box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
-    margin-left: 20px;
-    border-radius: 10px;
-    background-color: white;
-}
+    #categorias .box-categoria {
+        width: 80px;
+        height: 80px;
+        margin-left: 20px;
+        border-radius: 10px;
+        background-color: white;
+        box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+    }
 
-#contain-productos{
-    padding: 20px;
-}
+    #contain-productos {
+        padding: 20px;
+    }
 
-#productos {
-    width: 100%;
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 20px;
-}
+    #productos {
+        gap: 20px;
+        width: 100%;
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+    }
 
-.titulo-productos{
-    font-size: 20px;
-    font-weight: 500;
-    margin-top: 0px;
-    margin-bottom: 10px;
-}
+    .titulo-productos {
+        font-size: 20px;
+        margin-top: 0px;
+        font-weight: 500;
+        margin-bottom: 10px;
+    }
 </style>
 
 <script setup>
-import { onMounted } from 'vue';
-import { NuxtLink } from '#components';
+    import { ref, onMounted } from "vue";
+    import { useAuthStore } from "~/stores/authStore";
 
-onMounted(() => {
-    let currentIndex = 0;
-    const images = document.querySelectorAll("#carousel img");
-    const totalImages = images.length;
+    const { $communicationManager } = useNuxtApp();
+    const authStore = useAuthStore();
+    const productos = ref([]);
 
-    function moveCarousel() {
-        currentIndex++;
-
-        if (currentIndex >= totalImages) {
-            currentIndex = 0;
+    function seleccionarProductosAleatorios(lista) {
+        if (!Array.isArray(lista)) {
+            return [];
         }
-        const offset = -currentIndex * 100; // Calcular el desplazamiento
-        document.querySelector("#carousel").style.transform = `translateX(${offset}%)`;
+        const copiaLista = [...lista];
+        const seleccionados = [];
+        while (seleccionados.length < 6 && copiaLista.length > 0) {
+            const indiceAleatorio = Math.floor(Math.random() * copiaLista.length);
+            seleccionados.push(copiaLista[indiceAleatorio]);
+            copiaLista.splice(indiceAleatorio, 1);
+        }
+        return seleccionados;
     }
 
-    // Mueve el carrusel cada 5 segundos
-    setInterval(moveCarousel, 5000);
-});
+    async function fetchProductos() {
+        try {
+            const response = await $communicationManager.getProductos();
+            if (response && response.data) {
+                const productosRecibidos = response.data;
+                productos.value = seleccionarProductosAleatorios(productosRecibidos);
+            } else { console.error("Error al obtener los productos"); }
+        } catch (error) {
+            console.error("Error en la petición:", error);
+        }
+    }
+
+    onMounted(() => {
+        let currentIndex = 0;
+        const images = document.querySelectorAll("#carousel img");
+        const totalImages = images.length;
+
+        function moveCarousel() {
+            currentIndex++;
+
+            if (currentIndex >= totalImages) { currentIndex = 0; }
+
+            const offset = -currentIndex * 100;
+            document.querySelector("#carousel").style.transform = `translateX(${offset}%)`;
+        }
+
+        setInterval(moveCarousel, 5000);
+
+        fetchProductos();
+    });
 </script>

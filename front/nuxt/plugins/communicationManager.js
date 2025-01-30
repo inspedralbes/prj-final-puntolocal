@@ -35,6 +35,30 @@ export default defineNuxtPlugin(nuxtApp => {
       }
     },
 
+    async getProductos() {
+      try {
+        const response = await fetch(`${Host}/producto`, {
+          method: 'GET',
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+            'Authorization': authStore.token ? `Bearer ${authStore.token}` : ''
+          }
+        });
+
+        if (!response.ok) {
+          console.error(`Error en la petición: ${response.status} ${response.statusText}`);
+          return null;
+        }
+
+        const productos = await response.json();
+        return productos;
+      } catch (error) {
+        console.error('Error al realizar la petición:', error);
+        return null;
+      }
+    },
+
     async getCategoriasGenerales() {
       try {
         const response = await fetch(`${Host}/categoriasGenerales/getCategoriasGenerales`, {
