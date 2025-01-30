@@ -37,7 +37,13 @@ export const useAuthStore = defineStore('auth', {
           this.login(user, token);
         }
       }
-    }
+    },
+    setUser(user) {
+      this.user = user;
+      if (typeof window !== 'undefined') {
+        sessionStorage.setItem('user', JSON.stringify(user));
+      }
+    },
   },
   persist: {
     enabled: true,

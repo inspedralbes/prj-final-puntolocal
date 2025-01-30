@@ -76,10 +76,8 @@ async function changePassword() {
         $communicationManager
     } = useNuxtApp();
 
-    console.log(formDataPassword)
-
     if (!formDataPassword.currentPassword || !formDataPassword.newPassword || !formDataPassword.confirmPassword) {
-        console.error('És necessari completar tots els camps');
+        console.log('És necessari completar tots els camps');
         return;
     }
 
@@ -93,20 +91,75 @@ async function changePassword() {
         return;
     }
 
-    if(formDataPassword.currentPassword == formDataPassword.newPassword){
+    if (formDataPassword.currentPassword == formDataPassword.newPassword) {
         console.log(`La nova contrasenya no pot ser igual a l'anterior`)
         return;
     }
 
     const response = await $communicationManager.changePassword(formDataPassword);
 
-    if(response){
+    if (response) {
         console.log(`S'ha canviat la contrasenya correctament.`)
-    }else{
+    } else {
         console.log('Hi ha hagut un error, revisi les seves dades')
     }
 }
 
+async function updateDatosPersonales() {
+    const {
+        $communicationManager
+    } = useNuxtApp();
+
+    if (
+        formDataClient.name === formData.name &&
+        formDataClient.apellidos === formData.apellidos &&
+        formDataClient.email === formData.email &&
+        formDataClient.phone === formData.phone
+    ) {
+        console.log(`No s'han modificat les dades`);
+        return;
+    }
+
+    const response = await $communicationManager.updateDatosPersonales(formDataClient, authStore.user.id);
+
+    if (response) {
+        formData = response;
+        authStore.setUser(response);
+        console.log('Dades personals actualitzades correctament');
+    } else {
+        console.log('Hi ha hagut un error, revisi les seves dades');
+    }
+
+}
+
+async function updateDatosFacturacion() {
+    const {
+        $communicationManager
+    } = useNuxtApp();
+
+    if (
+        formDataStreet.street_address === formData.street_address &&
+        formDataStreet.ciudad === formData.ciudad &&
+        formDataStreet.provincia === formData.provincia &&
+        formDataStreet.codigo_postal === formData.codigo_postal &&
+        formDataStreet.numero_planta === formData.numero_planta &&
+        formDataStreet.numero_puerta === formData.numero_puerta
+    ) {
+        console.log(`No s'han modificat les dades`);
+        return;
+    }
+
+    const response = await $communicationManager.updateDatosFacturacion(formDataStreet, authStore.user.id);
+
+    if (response) {
+        formData = response;
+        authStore.setUser(response);
+        console.log('Dades personals actualitzades correctament');
+    } else {
+        console.log('Hi ha hagut un error, revisi les seves dades');
+    }
+
+}
 onMounted(() => {
     if (!authStore.isAuthenticated) {
         navigateTo('/login');
@@ -200,7 +253,7 @@ onMounted(() => {
                 <div class="mt-6 ml-3 mr-3">
                     <button type="submit" class="w-full sm:w-auto px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg 
                 shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 
-                focus:ring-offset-2 transition duration-200">
+                focus:ring-offset-2 transition duration-200" @click="updateDatosPersonales">
                         Guardar Canvis
                     </button>
                 </div>
@@ -235,7 +288,8 @@ onMounted(() => {
                                     stroke-linejoin="round" class="lucide lucide-lock h-5 w-5 text-gray-400">
                                     <rect width="18" height="11" x="3" y="11" rx="2" ry="2"></rect>
                                     <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
-                                </svg></div><input type="password" name="newPassword" v-model="formDataPassword.newPassword"
+                                </svg></div><input type="password" name="newPassword"
+                                v-model="formDataPassword.newPassword"
                                 class="pl-10 w-full h-12 rounded-lg border border-gray-300 shadow-sm text-sm">
                         </div>
                     </div>
@@ -275,7 +329,8 @@ onMounted(() => {
                                     stroke-linejoin="round" class="lucide lucide-map-pin h-5 w-5 text-gray-400">
                                     <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"></path>
                                     <circle cx="12" cy="10" r="3"></circle>
-                                </svg></div><input type="text" name="street_address" v-model="formDataStreet.street_address"
+                                </svg></div><input type="text" name="street_address"
+                                v-model="formDataStreet.street_address"
                                 class="pl-10 w-full h-12 rounded-lg border border-gray-300 shadow-sm text-sm">
                         </div>
                     </div>
@@ -325,7 +380,8 @@ onMounted(() => {
                                         stroke-linejoin="round" class="lucide lucide-map-pin h-5 w-5 text-gray-400">
                                         <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"></path>
                                         <circle cx="12" cy="10" r="3"></circle>
-                                    </svg></div><input type="text" name="codigo_postal" v-model="formDataStreet.codigo_postal"
+                                    </svg></div><input type="text" name="codigo_postal"
+                                    v-model="formDataStreet.codigo_postal"
                                     class="pl-10 w-full h-12 rounded-lg border border-gray-300 shadow-sm text-sm">
                             </div>
                         </div>
@@ -375,7 +431,7 @@ onMounted(() => {
                 <div class="mt-6 ml-3 mr-3">
                     <button type="submit" class="w-full sm:w-auto px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg 
                 shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 
-                focus:ring-offset-2 transition duration-200">
+                focus:ring-offset-2 transition duration-200" @click="updateDatosFacturacion">
                         Guardar Canvis
                     </button>
                 </div>

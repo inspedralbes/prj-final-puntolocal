@@ -303,6 +303,57 @@ export default defineNuxtPlugin(nuxtApp => {
       }
     },
 
+    async updateDatosPersonales(json, id) {
+        const authStore = useAuthStore();
+        try {
+          const response = await fetch(Host + '/cliente/' + id + '/datos-personales', {
+            method: 'PUT',
+            headers: {
+              'Accept': 'application/json',
+              'Content-Type': 'application/json',
+              'Authorization': authStore.token ? `Bearer ${authStore.token}` : ''
+            },
+            body: JSON.stringify(json)
+          });
+
+        if (!response.ok) {
+          console.error(`Error en la petición: ${response.status} ${response.statusText}`);
+          return null;
+        }
+
+        const jsonResponse = await response.json();
+        return jsonResponse;
+      } catch (error) {
+        console.error('Error al realizar la petición:', error);
+        return null;
+      }
+    },
+
+    async updateDatosFacturacion(json, id) {
+        const authStore = useAuthStore();
+        try {
+          const response = await fetch(Host + '/cliente/' + id + '/datos-facturacion', {
+            method: 'PUT',
+            headers: {
+              'Accept': 'application/json',
+              'Content-Type': 'application/json',
+              'Authorization': authStore.token ? `Bearer ${authStore.token}` : ''
+            },
+            body: JSON.stringify(json)
+          });
+
+        if (!response.ok) {
+          console.error(`Error en la petición: ${response.status} ${response.statusText}`);
+          return null;
+        }
+
+        const jsonResponse = await response.json();
+        return jsonResponse;
+      } catch (error) {
+        console.error('Error al realizar la petición:', error);
+        return null;
+      }
+    },
   };
 
   // Inyectar el communicationManager en la app

@@ -49,18 +49,18 @@
             $cliente = Cliente::find($id);
             if ($cliente) {
                 $validator = Validator::make($request->all(), [
-                    'nombre' => 'required',
-                    'apellido' => 'required',
+                    'name' => 'required|string',
+                    'apellidos' => 'required|string',
                     'email' => 'required|email',
-                    'telefono' => 'required',
+                    'phone' => 'required|string',
                 ]);
                 if ($validator->fails()) {
                     return response()->json(['message' => 'Datos incorrectos'], 400);
                 }
-                $cliente->nombre = $request->nombre;
-                $cliente->apellido = $request->apellido;
+                $cliente->name = $request->name;
+                $cliente->apellidos = $request->apellidos;
                 $cliente->email = $request->email;
-                $cliente->telefono = $request->telefono;
+                $cliente->phone = $request->phone;
                 $cliente->save();
                 return response()->json($cliente, 200);
             } else {
