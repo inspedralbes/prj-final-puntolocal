@@ -740,7 +740,7 @@ Esta API permite gestionar los clientes.
 ### 2. Actualizar información de personal del cliente
 
 - **URL:** `/api/cliente/{id}/datos-personales`
-- **Método:** `GET`
+- **Método:** `PUT`
 - **Descripción:** Permite actualizar la información personal de un cliente.
 - **Parámetros:**
   - `id`: (int, requerido) El ID del cliente que se desea obtener.
@@ -790,7 +790,7 @@ Esta API permite gestionar los clientes.
 ### 3. Actualizar información de facturación del cliente
 
 - **URL:** `/api/cliente/{id}/datos-personales`
-- **Método:** `GET`
+- **Método:** `PUT`
 - **Descripción:** Permite actualizar la información de facturación de un cliente.
 - **Parámetros:**
   - `id`: (int, requerido) El ID del cliente que se desea obtener.

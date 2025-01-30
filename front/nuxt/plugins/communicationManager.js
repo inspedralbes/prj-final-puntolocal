@@ -4,21 +4,23 @@ import { createPinia, setActivePinia } from 'pinia';
 const pinia = createPinia();
 setActivePinia(pinia);
 const Host = 'http://localhost:8000/api';
-const user = authStore.user;
-const comercio = authStore.comercio;
+//const comercio = authStore.comercio;
 
 export default defineNuxtPlugin(nuxtApp => {
   const communicationManager = {
+    get authStore() {
+      return useAuthStore();
+    },
+
     ///////////////////////////// GET  //////////////////////////////////
     async getCategorias() {
-        const authStore = useAuthStore();
       try {
         const response = await fetch(Host + '/categorias',{
           method: 'GET',
           headers: {
             'Accept': 'application/json',
             'Content-Type': 'application/json',
-            'Authorization': authStore.token ? `Bearer ${authStore.token}` : ''
+            'Authorization': this.authStore.token ? `Bearer ${this.authStore.token}` : ''
           },
         });
         if (response.ok) {
@@ -42,7 +44,7 @@ export default defineNuxtPlugin(nuxtApp => {
           headers: {
             'Accept': 'application/json',
             'Content-Type': 'application/json',
-            'Authorization': authStore.token ? `Bearer ${authStore.token}` : ''
+            'Authorization': this.authStore.token ? `Bearer ${this.authStore.token}` : ''
           }
         });
 
@@ -66,7 +68,7 @@ export default defineNuxtPlugin(nuxtApp => {
           headers: {
             'Accept': 'application/json',
             'Content-Type': 'application/json',
-            'Authorization': authStore.token ? `Bearer ${authStore.token}` : ''
+            'Authorization': this.authStore.token ? `Bearer ${this.authStore.token}` : ''
           }
         });
 
@@ -90,7 +92,7 @@ export default defineNuxtPlugin(nuxtApp => {
           headers: {
             'Accept': 'application/json',
             'Content-Type': 'application/json',
-            'Authorization': authStore.token ? `Bearer ${authStore.token}` : ''
+            'Authorization': this.authStore.token ? `Bearer ${this.authStore.token}` : ''
           }
         });
 
@@ -108,14 +110,13 @@ export default defineNuxtPlugin(nuxtApp => {
     },
 
     async getComercio(comercioId) {
-        const authStore = useAuthStore();
       try {
         const response = await fetch(`${Host}/comercios/${comercioId}`, {
           method: 'GET',
           headers: {
             'Accept': 'application/json',
             'Content-Type': 'application/json',
-            'Authorization': authStore.token ? `Bearer ${authStore.token}` : ''
+            'Authorization': this.authStore.token ? `Bearer ${this.authStore.token}` : ''
           },
         });
         if (response.ok) {
@@ -132,14 +133,13 @@ export default defineNuxtPlugin(nuxtApp => {
     },
 
     async getComercios() {
-        const authStore = useAuthStore();
       try {
         const response = await fetch(Host + '/comercios',{
           method: 'GET',
           headers: {
             'Accept': 'application/json',
             'Content-Type': 'application/json',
-            'Authorization': authStore.token ? `Bearer ${authStore.token}` : ''
+            'Authorization': this.authStore.token ? `Bearer ${this.authStore.token}` : ''
           },
         });
         if (response.ok) {
@@ -156,14 +156,13 @@ export default defineNuxtPlugin(nuxtApp => {
       }
     },
       async getUserData(userId) {
-        const authStore = useAuthStore();
         try {
           const response = await fetch(`${Host}/cliente/${userId}`, {
             method: 'GET',
             headers: {
               'Accept': 'application/json',
               'Content-Type': 'application/json',
-              'Authorization': authStore.token ? `Bearer ${authStore.token}` : ''
+              'Authorization': this.authStore.token ? `Bearer ${this.authStore.token}` : ''
             },
           });
           if (response.ok) {
@@ -186,7 +185,7 @@ export default defineNuxtPlugin(nuxtApp => {
           headers: {
             'Accept': 'application/json',
             'Content-Type': 'application/json',
-            'Authorization': authStore.token ? `Bearer ${authStore.token}` : ''
+            'Authorization': this.authStore.token ? `Bearer ${this.authStore.token}` : ''
           }
         });
 
@@ -210,7 +209,7 @@ export default defineNuxtPlugin(nuxtApp => {
           headers: {
             'Accept': 'application/json',
             'Content-Type': 'application/json',
-            'Authorization': authStore.token ? `Bearer ${authStore.token}` : ''
+            'Authorization': this.authStore.token ? `Bearer ${this.authStore.token}` : ''
           }
         });
 
@@ -234,7 +233,7 @@ export default defineNuxtPlugin(nuxtApp => {
           headers: {
             'Accept': 'application/json',
             'Content-Type': 'application/json',
-            'Authorization': authStore.token ? `Bearer ${authStore.token}` : ''
+            'Authorization': this.authStore.token ? `Bearer ${this.authStore.token}` : ''
           }
         });
 
@@ -300,14 +299,13 @@ export default defineNuxtPlugin(nuxtApp => {
     },
 
     async logout() {
-      const authStore = useAuthStore();
       try {
         const response = await fetch(Host + '/auth/logout', {
           method: 'POST',
           headers: {
             'Accept': 'application/json',
             'Content-Type': 'application/json',
-            'Authorization': authStore.token ? `Bearer ${authStore.token}` : ''
+            'Authorization': this.authStore.token ? `Bearer ${this.authStore.token}` : ''
           }
         });
         if (response.ok) {
@@ -325,14 +323,13 @@ export default defineNuxtPlugin(nuxtApp => {
     },
 
     async changePassword(json) {
-        const authStore = useAuthStore();
         try {
           const response = await fetch(Host + '/auth/change-password', {
             method: 'POST',
             headers: {
               'Accept': 'application/json',
               'Content-Type': 'application/json',
-              'Authorization': authStore.token ? `Bearer ${authStore.token}` : ''
+              'Authorization': this.authStore.token ? `Bearer ${this.authStore.token}` : ''
             },
             body: JSON.stringify(json)
           });
@@ -351,14 +348,13 @@ export default defineNuxtPlugin(nuxtApp => {
     },
 
     async logout() {
-      const authStore = useAuthStore();
       try {
         const response = await fetch(Host + '/auth/logout', {
           method: 'POST',
           headers: {
             'Accept': 'application/json',
             'Content-Type': 'application/json',
-            'Authorization': authStore.token ? `Bearer ${authStore.token}` : ''
+            'Authorization': this.authStore.token ? `Bearer ${this.authStore.token}` : ''
           }
         });
         if (response.ok) {
@@ -376,14 +372,13 @@ export default defineNuxtPlugin(nuxtApp => {
     },
 
     async changePassword(json) {
-        const authStore = useAuthStore();
         try {
           const response = await fetch(Host + '/auth/change-password', {
             method: 'POST',
             headers: {
               'Accept': 'application/json',
               'Content-Type': 'application/json',
-              'Authorization': authStore.token ? `Bearer ${authStore.token}` : ''
+              'Authorization': this.authStore.token ? `Bearer ${this.authStore.token}` : ''
             },
             body: JSON.stringify(json)
           });
@@ -402,14 +397,13 @@ export default defineNuxtPlugin(nuxtApp => {
     },
 
     async registerStore(json) {
-        const authStore = useAuthStore();
       try {
         const response = await fetch(`${Host}/comercios/registerComercio`, {
           method: 'POST',
           headers: {
             'Accept': 'application/json',
             'Content-Type': 'application/json',
-            'Authorization': authStore.token ? `Bearer ${authStore.token}` : ''
+            'Authorization': this.authStore.token ? `Bearer ${this.authStore.token}` : ''
           },
           body: JSON.stringify(json)
         });
@@ -456,7 +450,6 @@ export default defineNuxtPlugin(nuxtApp => {
     },
 
     async guardarProducto(formData, id) {
-      const authStore = useAuthStore();
       for (let [key, value] of formData.entries()) {
         console.log(key, value); // Imprime el nombre del campo y su valor
       }
@@ -467,7 +460,7 @@ export default defineNuxtPlugin(nuxtApp => {
         const response = await fetch(`${Host}/producto/${id}`, {
           method: 'POST',
           headers: {
-            'Authorization': authStore.token ? `Bearer ${authStore.token}` : '',
+            'Authorization': this.authStore.token ? `Bearer ${this.authStore.token}` : '',
           },
           body: formData,
         });
@@ -484,7 +477,6 @@ export default defineNuxtPlugin(nuxtApp => {
 
 
     async createProducto(formData) {
-      const authStore = useAuthStore();
       for (let [key, value] of formData.entries()) {
         console.log(key, value); // Imprime el nombre del campo y su valor
       }
@@ -492,7 +484,7 @@ export default defineNuxtPlugin(nuxtApp => {
         const response = await fetch(`${Host}/producto`, {
           method: 'POST',
           headers: {
-            'Authorization': authStore.token ? `Bearer ${authStore.token}` : ''
+            'Authorization': this.authStore.token ? `Bearer ${this.authStore.token}` : ''
           },
           body: formData
         });
@@ -538,7 +530,7 @@ export default defineNuxtPlugin(nuxtApp => {
         const response = await fetch(`${Host}/admin/comandes/`, {
           method: 'GET',
           headers: {
-            'Authorization': `Bearer ${authStore.token}`,
+            'Authorization': `Bearer ${this.authStore.token}`,
           },
         });
 
@@ -560,7 +552,7 @@ export default defineNuxtPlugin(nuxtApp => {
         const response = await fetch(`${Host}/admin/comandes/${id}`, {
           method: 'GET',
           headers: {
-            'Authorization': `Bearer ${authStore.token}`,
+            'Authorization': `Bearer ${this.authStore.token}`,
           },
         });
 
@@ -578,14 +570,13 @@ export default defineNuxtPlugin(nuxtApp => {
     },
 
     async updateDatosPersonales(json, id) {
-        const authStore = useAuthStore();
         try {
           const response = await fetch(Host + '/cliente/' + id + '/datos-personales', {
             method: 'PUT',
             headers: {
               'Accept': 'application/json',
               'Content-Type': 'application/json',
-              'Authorization': authStore.token ? `Bearer ${authStore.token}` : ''
+              'Authorization': this.authStore.token ? `Bearer ${this.authStore.token}` : ''
             },
             body: JSON.stringify(json)
           });
@@ -611,7 +602,7 @@ export default defineNuxtPlugin(nuxtApp => {
             headers: {
               'Accept': 'application/json',
               'Content-Type': 'application/json',
-              'Authorization': authStore.token ? `Bearer ${authStore.token}` : ''
+              'Authorization': this.authStore.token ? `Bearer ${this.authStore.token}` : ''
             },
             body: JSON.stringify(json)
           });
