@@ -8,20 +8,19 @@
             Schema::create('orders', function (Blueprint $table) {
                 $table->id();
                 $table->unsignedBigInteger('cliente_id');
-                $table->dateTime('fecha');
-                $table->float('total');
-                $table->integer('tipo_envio');
-                $table->unsignedBigInteger('estat_id')->nullable();
-                $table->timestamps();
-
                 $table->foreign('cliente_id')->references('id')->on('cliente')->onDelete('cascade');
-                $table->foreign('estat_id')->references('id')->on('estat_compras')->onDelete('set null');
+                $table->float('total');
+                $table->unsignedBigInteger('tipo')->nullable();
+                $table->foreign('tipo')->references('id')->on('tipo_envios')->onDelete('cascade');
+                $table->unsignedBigInteger('estat')->nullable();
+                $table->foreign('estat')->references('id')->on('estat_compras')->onDelete('cascade');
+                $table->timestamps();
             });
         }
 
         public function down(): void {
             Schema::table('orders', function (Blueprint $table) {
-                $table->dropForeign(['estat_id']);
+                $table->dropForeign(['estat']);
                 $table->dropForeign(['cliente_id']);
             });
             Schema::dropIfExists('orders');

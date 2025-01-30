@@ -454,7 +454,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="items-center py-5 my-5 border-t border-gray-200 rounded-b dark:border-gray-700">
+                            <div class="items-center pt-5 border-t border-gray-200 rounded-b dark:border-gray-700">
                                 <button
                                     class="inline-flex items-center bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-8 rounded"
                                     type="submit" @submit.prevent="crearProducto">Guardar</button>

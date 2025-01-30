@@ -16,14 +16,14 @@ class ProductosCompraTableSeeder extends Seeder
     {
         $faker = Faker::create();
         
-        $cantidad = 10;
+        $cantidad = 30;
 
         for ($i=0; $i <$cantidad; $i++) { 
             DB::table("producto_orders")->insert([
-                "order_id" => $faker->numberBetween(1,10),
+                "order_comercio_id" => ($i % 20) + 1,
                 "producto_id" => $faker->numberBetween(1,30),
                 "cantidad" => $faker->numberBetween(1,10),
-                "total" => $faker->randomFloat(2, 5, 100),
+                "precio" => $faker->randomFloat(2, 5, 100),
             ]);
         }
     }

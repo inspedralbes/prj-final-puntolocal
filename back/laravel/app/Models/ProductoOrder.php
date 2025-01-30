@@ -8,14 +8,14 @@
         public $timestamps = false;
 
         protected $fillable = [
-            'order_id',
+            'order_comercio_id',
             'producto_id',
             'cantidad',
-            'total'
+            'precio'
         ];
 
-        public function compra() {
-            return $this->belongsTo(Order::class, 'order_id');
+        public function orderComercio() {
+            return $this->belongsTo(Order::class, 'order_comercio_id');
         }
 
         public function producto() {

@@ -4,11 +4,11 @@
     use Illuminate\Database\Seeder;
     use Illuminate\Support\Facades\DB;
 
-    class ATipoEnviosTableSeeder extends Seeder {
+    class TipoEnviosTableSeeder extends Seeder {
         public function run(): void {
             DB::table('tipo_envios')->insert([
-                ['nombre' => 'Recollida a tenda'],
-                ['nombre' => 'Envio a casa'],
+                ['nombre' => 'Recollida'],
+                ['nombre' => 'Envio'],
             ]);
         }
     }

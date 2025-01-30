@@ -13,12 +13,12 @@ return new class extends Migration
     {
         Schema::create('producto_orders', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('order_id');
-            $table->foreign('order_id')->references('id')->on('orders')->onDelete('cascade');
+            $table->unsignedBigInteger('order_comercio_id');
+            $table->foreign('order_comercio_id')->references('id')->on('order_comercios')->onDelete('cascade');
             $table->unsignedBigInteger('producto_id');
             $table->foreign('producto_id')->references('id')->on('productos')->onDelete('cascade');
             $table->integer('cantidad')->min(1);
-            $table->float('total');
+            $table->float('precio'); //PRECIO UNIDAD, ¡¡¡NO MULTIPLICACIÓN!!!
         });
     }
 

@@ -379,6 +379,67 @@ export default defineNuxtPlugin(nuxtApp => {
         return { success: false, message: error.message };
       }
     },
+
+    async getOrders() {
+      try {
+        const response = await fetch(`${Host}/admin/comandes/`, {
+          method: 'GET',
+          headers: {
+            'Authorization': `Bearer ${authStore.token}`,
+          },
+        });
+
+        if (!response.ok) {
+          console.error(`Error en la petición: ${response.status} ${response.statusText}`);
+          return null;
+        }
+
+        const data = await response.json();
+        return { success: true, data: data };
+      } catch (error) {
+        console.error('Error al realizar la petición:', error);
+        return { success: false, message: error.message };
+      }
+    },
+
+    async infoOrder(id) {
+      try {
+        const response = await fetch(`${Host}/admin/comandes/${id}`, {
+          method: 'GET',
+          headers: {
+            'Authorization': `Bearer ${authStore.token}`,
+          },
+        });
+
+        if (!response.ok) {
+          console.error(`Error en la petición: ${response.status} ${response.statusText}`);
+          return null;
+        }
+
+        const data = await response.json();
+        return { success: true, data: data };
+      } catch (error) {
+        console.error('Error al realizar la petición:', error);
+        return { success: false, message: error.message };
+      }
+    },
+
+    async getEstats() {
+      try {
+        const response = await fetch(`${Host}/admin/estats`);
+
+        if(!response.ok){
+          console.error(`Error en la petición: ${response.status} ${response.statusText}`);
+          return null;
+        }
+
+        const data = await response.json();
+        return { success: true, data: data };
+      } catch (error) {
+        console.error('Error al realizar la petición:', error);
+        return { success: false, message: error.message };
+      }
+    }
   };
 
   // Inyectar el communicationManager en la app

@@ -13,7 +13,17 @@ class EstatCompraController extends Controller
      */
     public function index()
     {
-        //
+        try {
+            $estats = EstatCompra::all();
+
+            if (!$estats) {
+                return response()->json(['message' => 'Error en la petición'], 404);
+            }
+
+            return response()->json($estats, 200);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Ocurrió un error al obtener los detalles de la compra: ' . $e->getMessage()], 500);
+        }
     }
 
     /**
