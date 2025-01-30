@@ -1,5 +1,6 @@
 <?php
 use App\Http\Controllers\Auth\AuthController;
+use App\Http\Controllers\EstatCompraController;
 use App\Http\Controllers\OrderComercioController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -54,6 +55,22 @@ Route::middleware('auth:sanctum')->prefix('admin/comandes')->group(function () {
     // Obtener todas las comandas de un comercio
     Route::get('/', [OrderComercioController::class, 'index']);
 
+    // Obtener una comanda específica
+    Route::get('/{id}', [OrderComercioController::class, 'show']);
+    
+    // Crear un nueva comanda
+    Route::post('/', [OrderComercioController::class, 'store']);
+
+    // Actualizar una comanda
+    Route::post('/{id}', [OrderComercioController::class, 'update']);
+
+});
+
+// ==== ESTATS ===================
+// Obtener todos los estados que puede tener un pedido
+Route::get('/', [EstatCompraController::class, 'index']);
+
+Route::middleware('auth:sanctum')->prefix('admin/estats')->group(function () {
     // Obtener una comanda específica
     Route::get('/{id}', [OrderComercioController::class, 'show']);
     

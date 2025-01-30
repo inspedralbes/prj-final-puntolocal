@@ -113,7 +113,8 @@
                                         #{{ order.order_id }}</td>
                                     <td
                                         class="p-4 text-base font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                        {{ order.order.cliente.name }} {{ order.order.cliente.apellidos }}</td>
+                                        {{ order.order.cliente.name }} {{ formatApellido(order.order.cliente.apellidos)
+                                        }}</td>
                                     <td
                                         class="p-4 text-base font-medium text-gray-900 whitespace-nowrap dark:text-white">
                                         {{ formatFecha(order.created_at) }}</td>
@@ -128,11 +129,7 @@
                                         {{ order.estat_compra.nombre }}</td>
 
                                     <td class="p-4 space-x-2 whitespace-nowrap">
-                                        <button type="button" id="updateProductButton"
-                                            @click="showOrder(order.order_id)"
-                                            data-drawer-target="drawer-update-product-default"
-                                            data-drawer-show="drawer-update-product-default"
-                                            aria-controls="drawer-update-product-default" data-drawer-placement="right"
+                                        <NuxtLink v-if="order?.order?.id" :to="`/admin/comandes/${order.order.id}`" id="viewOrder"
                                             class="inline-flex items-center bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
                                             <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20"
                                                 xmlns="http://www.w3.org/2000/svg">
@@ -144,7 +141,8 @@
                                                     clip-rule="evenodd"></path>
                                             </svg>
                                             Veure comanda
-                                        </button>
+                                        </NuxtLink>
+
                                     </td>
                                 </tr>
                             </tbody>
@@ -153,13 +151,12 @@
                 </div>
             </div>
         </div>
-        <div v-if="backgroundShadow" class="bg-gray-900/50 dark:bg-gray-900/80 fixed inset-0 z-40"></div>
+        <!-- <div v-if="backgroundShadow" class="bg-gray-900/50 dark:bg-gray-900/80 fixed inset-0 z-40"></div>
         <div v-if="isOpen['info']"
             class="fixed left-0 right-0 z-50 items-center justify-center overflow-x-hidden overflow-y-auto top-4 md:inset-0 h-modal sm:h-full flex"
             id="edit-user-modal" aria-modal="true" role="dialog">
             <div class="relative w-full h-full max-w-2xl px-4 md:h-auto">
                 <div class="relative bg-white rounded-lg shadow dark:bg-gray-800">
-                    <!-- HEADER -->
                     <div class="flex items-start justify-between p-5 border-b rounded-t dark:border-gray-700">
                         <h3 class="text-xl font-bold dark:text-white">
                             #{{ actualOrder.order_id }} Informació comanda
@@ -175,23 +172,28 @@
                             </svg>
                         </button>
                     </div>
-                    <!-- CUERPO -->
 
-                    <div class="contain-data">
+                    <div v-if="actualOrder && actualOrder.order" class="contain-data">
                         <h3 class="text-xl font-semibold dark:text-white mb-2">Productes</h3>
                         <div class="contain-products divide-y divide-gray-200 dark:divide-gray-600">
                             <div class="producto" v-for="productoOrder in actualOrder.productos_compra">
                                 <div class="flex">
                                     <div class="contain-image rounded-md">
-                                        <img class="image object-cover w-full h-full" src="https://cdn-images.farfetch-contents.com/22/90/42/91/22904291_52923841_600.jpg" alt="image">
+                                        <img class="image object-cover w-full h-full"
+                                            src="https://cdn-images.farfetch-contents.com/22/90/42/91/22904291_52923841_600.jpg"
+                                            alt="image">
                                     </div>
                                     <div class="contain-text">
-                                        <h3 class="font-medium text-gray-900 dark:text-white">{{ productoOrder.producto.nombre }} <span class="font-large font-bold text-md text-gray-200 ml-1">x {{ productoOrder.cantidad }} UDS</span></h3>
+                                        <h3 class="font-medium text-gray-900 dark:text-white">{{
+                                            productoOrder.producto.nombre }} <span
+                                                class="font-large font-bold text-md text-gray-200 ml-1">x {{
+                                                productoOrder.cantidad }} UDS</span></h3>
                                         <h4 class="font-small text-gray-900 dark:text-white">Opciones de producto</h4>
                                     </div>
                                 </div>
                                 <div>
-                                    <h2 class="text-base font-medium text-gray-900 dark:text-white"> {{ (productoOrder.precio * productoOrder.cantidad).toFixed(2) }} €</h2>
+                                    <h2 class="text-base font-medium text-gray-900 dark:text-white"> {{
+                                        (productoOrder.precio * productoOrder.cantidad).toFixed(2) }} €</h2>
                                 </div>
                             </div>
                         </div>
@@ -212,7 +214,8 @@
                                     Cliente:
                                 </span>
                                 <span class="font-small text-gray-900 dark:text-white">
-                                    {{  actualOrder.order.cliente.name }} {{ formatApellido(actualOrder.order.cliente.apellidos) }}
+                                    {{ actualOrder.order.cliente.name }} {{
+                                        formatApellido(actualOrder.order.cliente.apellidos) }}
                                 </span>
                             </h3>
                             <h3>
@@ -228,16 +231,18 @@
                                     Tipo:
                                 </span>
                                 <span class="font-small text-gray-900 dark:text-white">
-                                    {{ actualOrder.order.tipo_envio.nombre  }}
+                                    {{ actualOrder.order.tipo_envio.nombre }}
                                 </span>
                             </h3>
-                            <span v-if="actualOrder.order.tipo === 1">
+                            <span v-if="actualOrder.order.tipo === 2">
                                 <h3>
                                     <span class="font-medium text-gray-900 dark:text-white">
                                         Dirección de entrega:
                                     </span>
                                     <span class="font-small text-gray-900 dark:text-white">
-                                        {{ actualOrder.order.cliente.street_address }}, {{ actualOrder.order.cliente.numero_planta }}º {{ actualOrder.order.cliente.numero_puerta }}
+                                        {{ actualOrder.order.cliente.street_address }}, {{
+                                        actualOrder.order.cliente.numero_planta }}º {{
+                                        actualOrder.order.cliente.numero_puerta }}
                                     </span>
                                 </h3>
                                 <h3>
@@ -251,7 +256,7 @@
                             </span>
                         </div>
                     </div>
-                    <!-- <div class="p-6 space-y-6">
+                    <div class="p-6 space-y-6">
                         <div class="overflow-x-auto max-h-[400px]">
                             <div class="space-y-4">
                                 <div
@@ -297,16 +302,16 @@
                                 Guardar
                             </button>
                         </div>
-                    </div> -->
+                    </div>
                 </div>
             </div>
 
-        </div>
+        </div> -->
     </main>
 </template>
 
 <style scoped>
-.contain-data{
+.contain-data {
     background-color: rgb(31 41 55 / var(--tw-bg-opacity, 1));
     width: 100%;
     height: 80vh;
@@ -316,7 +321,7 @@
     overflow-y: auto;
 }
 
-.contain-products{
+.contain-products {
     --tw-bg-opacity: 1;
     border: 1px solid #54585e;
     width: 100%;
@@ -324,7 +329,7 @@
     overflow-y: auto;
 }
 
-.producto{
+.producto {
     display: flex;
     background-color: rgb(55 65 81 / var(--tw-bg-opacity, 1));
     padding: 0.85rem;
@@ -332,14 +337,11 @@
     justify-content: space-between;
 }
 
-.contain-text{
+.contain-text {
     margin-left: 1rem;
 }
 
-.name{
-}
-
-.contain-image{
+.contain-image {
     width: 80px;
     height: 80px;
     overflow: hidden;
@@ -366,15 +368,16 @@ function toggleCard(menu) {
 
 const orders = reactive([]);
 const actualOrder = reactive({});
+const estats = reactive([]);
 
 const subtotal = computed(() => {
-    if(!actualOrder.productos_compra){
+    if (!actualOrder.productos_compra) {
         return 0;
     }
     return actualOrder.productos_compra.reduce((total, productoInfo) => {
         return total + productoInfo.cantidad * productoInfo.precio;
     }, 0);
-})
+});
 
 const formatFecha = (fecha) => {
     if (!fecha) return ""; // Manejar el caso de fecha nula o indefinida
@@ -402,13 +405,17 @@ async function showOrder(id) {
     console.log(actualOrder);
 }
 
-onMounted(() => {
+onMounted(async() => {
     document.addEventListener('keydown', closeAll);
+    const data = await $communicationManager.getEstats();
+    estats.push(...data.data);
+    console.log(estats);
 })
 
 onBeforeMount(async () => {
     const data = await $communicationManager.getOrders();
     orders.push(...data.data);
+    console.log(orders[0].estat_compra);
 })
 
 const closeAll = (e) => {
