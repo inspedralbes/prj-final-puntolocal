@@ -76,7 +76,6 @@
         return compra.value ? JSON.stringify(compra.value, null, 2) : "";
     });
 
-    // Function to truncate the description to 10 words
     const truncateDescription = (descripcion) => {
         const words = descripcion.split(' ');
         if (words.length > 10) {

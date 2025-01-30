@@ -22,11 +22,11 @@
         <h1 class="titulo-productos">Ultimes tendències</h1>
         <div id="productos">
             <productoComp v-for="(producto, index) in productos" :key="index"
-                :img="producto.img || 'https://via.placeholder.com/150'"
+                :img="producto.img"
                 :title="producto.nombre"
                 :price="producto.precio"
-                :comercio="producto.comercio"
-                ></productoComp>
+                :comercio="producto.comercio">
+            </productoComp>
         </div>
     </div>
 </template>
