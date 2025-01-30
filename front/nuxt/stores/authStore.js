@@ -40,6 +40,7 @@ export const useAuthStore = defineStore('auth', {
         const user = JSON.parse(sessionStorage.getItem('user'));
         const comercio = JSON.parse(sessionStorage.getItem('comercio'));
         if (token && user && comercio) {
+          isAuthenticated = true;
           this.login(user, token, comercio);
         }
       }

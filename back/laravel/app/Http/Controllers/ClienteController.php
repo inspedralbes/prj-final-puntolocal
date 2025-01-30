@@ -96,4 +96,40 @@ use Illuminate\Support\Facades\Validator;
             }
         }
 
+        public function obtenerDatosCliente(Request $request, $id) {
+            $validator = Validator::make(['id' => $id], [
+                'id' => 'required|integer',
+            ]);
+    
+            if ($validator->fails()) {
+                return response()->json([
+                    'error' => $validator->errors()
+                ], 422);
+            }
+    
+            $cliente = Cliente::find($id);
+    
+            if (!$cliente) {
+                return response()->json([
+                    'error' => 'Cliente no encontrado.'
+                ], 404);
+            }
+    
+            return response()->json([
+                'message' => 'Datos del cliente obtenidos correctamente.',
+                'cliente' => [
+                    'nombre' => $cliente->name,
+                    'apellidos' => $cliente->apellidos,
+                    'email' => $cliente->email,
+                    'phone' => $cliente->phone,
+                    'street_address' => $cliente->street_address,
+                    'ciudad' => $cliente->ciudad,
+                    'provincia' => $cliente->provincia,
+                    'codigo_postal' => $cliente->codigo_postal,
+                    'numero_planta' => $cliente->numero_planta,
+                    'numero_puerta' => $cliente->numero_puerta,
+                ]
+            ], 200);
+        }
+
     }

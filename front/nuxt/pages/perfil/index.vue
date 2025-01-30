@@ -6,8 +6,15 @@
                     Información personal
                 </button>
 
+                <button class="w-full bg-blue-500 text-white py-2 rounded-xl hover:bg-blue-600" @click="goToEdit">
+                    Editar informació
+                </button>
+
                 <button class="w-full bg-blue-500 text-white py-2 rounded-xl hover:bg-blue-600" @click="goToCompras">
                     Veure les meves compres
+                </button>
+                <button class="w-full bg-blue-500 text-white py-2 rounded-xl hover:bg-blue-600" @click="goToLogout">
+                    Tancar sessió
                 </button>
             </div>
         </div>
@@ -15,10 +22,19 @@
 </template>
 
 <script setup>
+    import { useAuthStore } from '#imports';
     import { useRouter } from 'vue-router';
-
+    
+    const authStore = useAuthStore();
     const router = useRouter();
 
-    function goToInfo() { router.push('/perfil/info'); }
-    function goToCompras() { router.push('/perfil/compras'); }
+    function goToInfo() { navigateTo('/perfil/info'); }
+    function goToEdit() { navigateTo('/perfil/perfilCliente'); }
+    function goToCompras() { navigateTo('/perfil/compras'); }
+    async function goToLogout() { 
+        const { $communicationManager } = useNuxtApp();
+        await $communicationManager.logout();
+        authStore.logout();
+        navigateTo('/login');
+    }
 </script>
