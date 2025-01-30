@@ -400,9 +400,68 @@ Esta API permite gestionar que los clientes se puedan registrar y loguear.
 
 ---
 
+### 3. Logout
+
+- **URL:** `/api/auth/logout`
+- **Método:** `POST`
+- **Descripción:** Permite deslogearse al usuario.
+- **Parámetros:**
+- **Respuesta:**
+
+  - **Código de estado 200 OK**:
+
+    ```json
+    {
+      "message": "Sesión cerrada exitosamente."
+    }
+    ```
+
+---
+
+### 4. Change Password
+
+- **URL:** `/api/auth/change-password`
+- **Método:** `POST`
+- **Descripción:** Permite cambiar el password al usuario.
+- **Parámetros:**
+  ```json
+  {
+    "currentPassword": "12345678",
+    "newPassword": "123456789",
+    "confirmPassword": "123456789"
+  }
+  ```
+- **Respuesta:**
+
+  - **Código de estado 200 OK**:
+
+    ```json
+    {
+      "message": "Contraseña cambiada exitosamente."
+    }
+    ```
+
+  - **Código de estado 404 Not Found** (Si no esta registrado):
+
+    ```json
+    {
+      "message": "Contraseña actual incorrecta."
+    }
+    ```
+
+  - **Código de estado 422** (Si los datos recibidos son incorrectos):
+    ```json
+    {
+      "message": "error"
+    }
+    `
+    ```
+
+---
+
 <!-- COMERCIOS -->
 
-# API de Auth
+# API de Comercios
 
 ## Descripción:
 
@@ -566,7 +625,7 @@ Esta API permite gestionar el registro de los comercios y obtener los datos de l
 
 <!-- CATEGORIAS -->
 
-# API de Auth
+# API de Categorias
 
 ## Descripción:
 
@@ -610,8 +669,170 @@ Esta API permite gestionar las categorias.
       {
         "id": 4,
         "name": "Salud y Belleza"
-      },"..."
+      },
+      "..."
     ]
+    ```
+
+---
+
+<!-- CLIENTES -->
+
+# API de Clientes
+
+## Descripción:
+
+Esta API permite gestionar los clientes.
+
+---
+
+## Autenticación:
+
+- **Método de autenticación:** Bearer Token (utilizando Sanctum).
+- **Cabecera:** `Authorization: Bearer <token>`
+
+---
+
+## Endpoints
+
+### 1. Obtener cliente por id
+
+- **URL:** `/api/cliente/{id}`
+- **Método:** `GET`
+- **Descripción:** Permite obtener la información de un cliente por su id.
+- **Parámetros:**
+  - `id`: (int, requerido) El ID del cliente que se desea obtener.
+- **Respuesta:**
+
+  - **Código de estado 200 OK**:
+
+    ```json
+    {
+      "id": 12,
+      "name": "Lorenzo",
+      "apellidos": "Moll",
+      "email": "lorenzo@gmail.com",
+      "email_verified_at": null,
+      "phone": "603397347",
+      "phone_verified_at": null,
+      "street_address": "Carrer Confiança 32",
+      "ciudad": "Ciutadella",
+      "provincia": "Menorca",
+      "codigo_postal": 7760,
+      "numero_planta": 1,
+      "numero_puerta": 4,
+      "puntos": null,
+      "created_at": null,
+      "updated_at": "2025-01-30T08:26:31.000000Z"
+    }
+    ```
+
+  - **Código de estado 404 Not Found** (Si no esta registrado):
+
+    ```json
+    {
+      "message": "Cliente no encontrado"
+    }
+    ```
+
+---
+
+### 2. Actualizar información de personal del cliente
+
+- **URL:** `/api/cliente/{id}/datos-personales`
+- **Método:** `GET`
+- **Descripción:** Permite actualizar la información personal de un cliente.
+- **Parámetros:**
+  - `id`: (int, requerido) El ID del cliente que se desea obtener.
+- **Respuesta:**
+
+  - **Código de estado 200 OK**:
+
+    ```json
+    {
+      "id": 12,
+      "name": "Lorenzo",
+      "apellidos": "Moll Anglada",
+      "email": "lorenzo@gmail.com",
+      "email_verified_at": null,
+      "phone": "603397347",
+      "phone_verified_at": null,
+      "street_address": "Carrer Confiança 32",
+      "ciudad": "Ciutadella",
+      "provincia": "Menorca",
+      "codigo_postal": 7760,
+      "numero_planta": 1,
+      "numero_puerta": 4,
+      "puntos": null,
+      "created_at": null,
+      "updated_at": "2025-01-30T09:12:06.000000Z"
+    }
+    ```
+
+  - **Código de estado 404 Not Found** (Si no esta registrado):
+
+    ```json
+    {
+      "message": "Cliente no encontrado"
+    }
+    ```
+
+  - **Código de estado 400 Not Found** (Si los datos enviados son incorrectos):
+
+    ```json
+    {
+      "message": "Datos incorrectos"
+    }
+    ```
+
+---
+
+### 3. Actualizar información de facturación del cliente
+
+- **URL:** `/api/cliente/{id}/datos-personales`
+- **Método:** `GET`
+- **Descripción:** Permite actualizar la información de facturación de un cliente.
+- **Parámetros:**
+  - `id`: (int, requerido) El ID del cliente que se desea obtener.
+- **Respuesta:**
+
+  - **Código de estado 200 OK**:
+
+    ```json
+    {
+      "id": 12,
+      "name": "Lorenzo",
+      "apellidos": "Moll Anglada",
+      "email": "lorenzo@gmail.com",
+      "email_verified_at": null,
+      "phone": "603397347",
+      "phone_verified_at": null,
+      "street_address": "Carrer Confiança 32",
+      "ciudad": "Ciutadella",
+      "provincia": "Menorca",
+      "codigo_postal": 7760,
+      "numero_planta": 1,
+      "numero_puerta": 5,
+      "puntos": null,
+      "created_at": null,
+      "updated_at": "2025-01-30T09:12:06.000000Z"
+    }
+    ```
+
+  - **Código de estado 404 Not Found** (Si no esta registrado):
+
+    ```json
+    {
+      "message": "Cliente no encontrado"
+    }
+    ```
+
+  - **Código de estado 400 Not Found** (Si los datos enviados son incorrectos):
+
+    ```json
+    {
+      "message": "Datos incorrectos"
+    }
     ```
 
 ---
