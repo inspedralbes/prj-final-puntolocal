@@ -45,15 +45,15 @@ async function register() {
 
     // Convertir valores necesarios a enteros
     formData.codigo_postal = parseInt(formData.codigo_postal) || null;
-    formData.numero_planta = parseInt(formData.numero_planta) || null;
-    formData.numero_puerta = parseInt(formData.numero_puerta) || null;
+    formData.num_planta = parseInt(formData.num_planta) || null;
+    formData.num_puerta = parseInt(formData.num_puerta) || null;
 
     // Llamar al plugin communicationManager para registrar
     const response = await $communicationManager.registerStore(formData);
 
     if (response) {
         console.log(`S'ha registrat correctament`)
-        navigateTo('/login')
+        navigateTo('/perfil')
     } else {
         console.log('Hi ha hagut algun error, comprovi les seves dades');
     }

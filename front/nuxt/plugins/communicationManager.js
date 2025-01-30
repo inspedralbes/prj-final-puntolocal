@@ -249,6 +249,29 @@ export default defineNuxtPlugin(nuxtApp => {
         return null;
       }
     },
+    async checkUserHasComercio(userId) {
+      try {
+        const response = await fetch(`${Host}/comercios/${userId}/check`, {
+          method: 'GET',
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+            'Authorization': this.authStore.token ? `Bearer ${this.authStore.token}` : ''
+          }
+        });
+
+        if (!response.ok) {
+          console.error(`Error en la petición: ${response.status} ${response.statusText}`);
+          return null;
+        }
+
+        const json = await response.json();
+        return json; // Retorna los detalles de la compra
+      } catch (error) {
+        console.error('Error al realizar la petición:', error);
+        return null;
+      }
+    },
 
 
     ///////////////////////////// POST //////////////////////////////////
@@ -398,7 +421,7 @@ export default defineNuxtPlugin(nuxtApp => {
 
     async registerStore(json) {
       try {
-        const response = await fetch(`${Host}/comercios/registerComercio`, {
+        const response = await fetch(`${Host}/comercios/`, {
           method: 'POST',
           headers: {
             'Accept': 'application/json',

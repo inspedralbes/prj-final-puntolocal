@@ -623,6 +623,44 @@ Esta API permite gestionar el registro de los comercios y obtener los datos de l
 
 ---
 
+### 4. Check que un usuario tenga un comercio
+
+- **URL:** `/api/comercios/checkUserHasComercio`
+- **Método:** `GET`
+- **Descripción:** Permite chequear que el usuario tenga un comercio
+- **Parámetros:** Ninguno.
+- **Respuesta:**
+
+  - **Código de estado 200 OK**:
+
+    ```json
+    {
+      "id": 1,
+      "nombre": "Bradtke, Dare and Leuschke",
+      "idUser": 10,
+      "email": "iliana12@farrell.com",
+      "email_verified_at": null,
+      "phone": "603689215",
+      "phone_verified_at": null,
+      "calle_num": "5971 Herzog Motorway",
+      "ciudad": "Castelldefels",
+      "provincia": "Barcelona",
+      "codigo_postal": "08860",
+      "categoria_id": 1,
+      "num_planta": 5,
+      "num_puerta": 4,
+      "descripcion": "Commodi odit corrupti quos est. Velit ut ut incidunt ipsa provident dicta. Est quae ea ut. Cupiditate iste nobis optio sequi similique numquam.",
+      "gestion_stock": 1,
+      "puntaje_medio": 4.6,
+      "imagenes": "[\"https://via.placeholder.com/640x480.png/008855?text=debitis\"]",
+      "horario": "{\"lunes\": \"09:00 - 18:00\", \"jueves\": \"09:00 - 18:00\", \"martes\": \"09:00 - 18:00\", \"domingo\": \"Cerrado\", \"sábado\": \"10:00 - 14:00\", \"viernes\": \"09:00 - 18:00\", \"miércoles\": \"09:00 - 18:00\"}",
+      "created_at": null,
+      "updated_at": null
+    }
+    ```
+
+---
+
 <!-- CATEGORIAS -->
 
 # API de Categorias
@@ -708,22 +746,7 @@ Esta API permite gestionar los clientes.
 
     ```json
     {
-      "id": 12,
-      "name": "Lorenzo",
-      "apellidos": "Moll",
-      "email": "lorenzo@gmail.com",
-      "email_verified_at": null,
-      "phone": "603397347",
-      "phone_verified_at": null,
-      "street_address": "Carrer Confiança 32",
-      "ciudad": "Ciutadella",
-      "provincia": "Menorca",
-      "codigo_postal": 7760,
-      "numero_planta": 1,
-      "numero_puerta": 4,
-      "puntos": null,
-      "created_at": null,
-      "updated_at": "2025-01-30T08:26:31.000000Z"
+      "message": "El usuario tiene un comercio."
     }
     ```
 
@@ -731,7 +754,7 @@ Esta API permite gestionar los clientes.
 
     ```json
     {
-      "message": "Cliente no encontrado"
+      "message": "El usuario no tiene un comercio."
     }
     ```
 
