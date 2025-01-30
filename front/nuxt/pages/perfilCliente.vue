@@ -169,7 +169,7 @@ onMounted(() => {
 </script>
 
 <template>
-    <div class="bg-gray-100 p-2 h-screen">
+    <div class="bg-gray-100 p-2 h-screen lg:max-w-[700px] mx-auto">
         <div class="flex flex-col mt-4 sm:flex-row gap-2 mb-6 px-4">
             <button @click="showSection('personal')" :class="[
                 'w-full md:w-auto px-4 py-2 text-md font-medium rounded-lg transition-colors duration-200',
