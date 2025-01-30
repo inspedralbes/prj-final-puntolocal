@@ -19,13 +19,15 @@ Route::get('/user', function (Request $request) {
 Route::prefix('auth')->group(function () {
     Route::post('register', [AuthController::class, 'registrar']);
     Route::post('login', [AuthController::class, 'login']);
-    Route::post('logout', [AuthController::class, 'logout']);
+    Route::middleware('auth:sanctum')->post('logout', [AuthController::class, 'logout']);
+    Route::middleware('auth:sanctum')->post('change-password', [AuthController::class, 'changePassword']);
 });
 
 // ==== CLIENTES ===================
 Route::middleware('auth:sanctum')->prefix('cliente')->group(function () {
     Route::get('/{id}', [ClienteController::class, 'getCliente']);
-    Route::put('/{id}', [ClienteController::class, 'updateCliente']);
+    Route::put('/{id}/datos-personales', [ClienteController::class, 'updateDatosPersonales']);
+    Route::put('/{id}/datos-facturacion', [ClienteController::class, 'updateDatosFacturacion']);
 });
 
 // ==== COMERCIOS ===================

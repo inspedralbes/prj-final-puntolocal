@@ -3,7 +3,6 @@ import { createPinia, setActivePinia } from 'pinia';
 
 const pinia = createPinia();
 setActivePinia(pinia);
-const authStore = useAuthStore();
 const Host = 'http://localhost:8000/api';
 const user = authStore.user;
 const comercio = authStore.comercio;
@@ -12,6 +11,7 @@ export default defineNuxtPlugin(nuxtApp => {
   const communicationManager = {
     ///////////////////////////// GET  //////////////////////////////////
     async getCategorias() {
+        const authStore = useAuthStore();
       try {
         const response = await fetch(Host + '/categorias',{
           method: 'GET',
@@ -108,6 +108,7 @@ export default defineNuxtPlugin(nuxtApp => {
     },
 
     async getComercio(comercioId) {
+        const authStore = useAuthStore();
       try {
         const response = await fetch(`${Host}/comercios/${comercioId}`, {
           method: 'GET',
@@ -131,6 +132,7 @@ export default defineNuxtPlugin(nuxtApp => {
     },
 
     async getComercios() {
+        const authStore = useAuthStore();
       try {
         const response = await fetch(Host + '/comercios',{
           method: 'GET',
@@ -153,6 +155,29 @@ export default defineNuxtPlugin(nuxtApp => {
         return null;
       }
     },
+      async getUserData(userId) {
+        const authStore = useAuthStore();
+        try {
+          const response = await fetch(`${Host}/cliente/${userId}`, {
+            method: 'GET',
+            headers: {
+              'Accept': 'application/json',
+              'Content-Type': 'application/json',
+              'Authorization': authStore.token ? `Bearer ${authStore.token}` : ''
+            },
+          });
+          if (response.ok) {
+            const json = await response.json();
+            return json;
+          } else {
+            console.error(`Error en la petición: ${response.status} ${response.statusText}`);
+            return null;
+          }
+        } catch (error) {
+          console.error('Error al realizar la petición:', error);
+          return null;
+        }
+      },
 
     async getDatosCliente(clienteId) {
       try {
@@ -266,6 +291,108 @@ export default defineNuxtPlugin(nuxtApp => {
           return null;
         }
 
+        const jsonResponse = await response.json();
+        return jsonResponse;
+      } catch (error) {
+        console.error('Error al realizar la petición:', error);
+        return null;
+      }
+    },
+
+    async logout() {
+      const authStore = useAuthStore();
+      try {
+        const response = await fetch(Host + '/auth/logout', {
+          method: 'POST',
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+            'Authorization': authStore.token ? `Bearer ${authStore.token}` : ''
+          }
+        });
+        if (response.ok) {
+          const json = await response.json();
+          return json.data;
+        } else {
+          console.error(`Error en la petición: ${response.status} ${response.statusText}`)
+          return null;
+        }
+    
+      } catch (error) {
+        console.error('Error al realizar la petición:', error);
+        return null;
+      }
+    },
+
+    async changePassword(json) {
+        const authStore = useAuthStore();
+        try {
+          const response = await fetch(Host + '/auth/change-password', {
+            method: 'POST',
+            headers: {
+              'Accept': 'application/json',
+              'Content-Type': 'application/json',
+              'Authorization': authStore.token ? `Bearer ${authStore.token}` : ''
+            },
+            body: JSON.stringify(json)
+          });
+
+        if (!response.ok) {
+          console.error(`Error en la petición: ${response.status} ${response.statusText}`);
+          return null;
+        }
+
+        const data = await response.json();
+        return data;
+      } catch (error) {
+        console.error('Error al realizar la petición:', error);
+        return null;
+      }
+    },
+
+    async logout() {
+      const authStore = useAuthStore();
+      try {
+        const response = await fetch(Host + '/auth/logout', {
+          method: 'POST',
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+            'Authorization': authStore.token ? `Bearer ${authStore.token}` : ''
+          }
+        });
+        if (response.ok) {
+          const json = await response.json();
+          return json.data;
+        } else {
+          console.error(`Error en la petición: ${response.status} ${response.statusText}`)
+          return null;
+        }
+    
+      } catch (error) {
+        console.error('Error al realizar la petición:', error);
+        return null;
+      }
+    },
+
+    async changePassword(json) {
+        const authStore = useAuthStore();
+        try {
+          const response = await fetch(Host + '/auth/change-password', {
+            method: 'POST',
+            headers: {
+              'Accept': 'application/json',
+              'Content-Type': 'application/json',
+              'Authorization': authStore.token ? `Bearer ${authStore.token}` : ''
+            },
+            body: JSON.stringify(json)
+          });
+
+        if (!response.ok) {
+          console.error(`Error en la petición: ${response.status} ${response.statusText}`);
+          return null;
+        }
+
         const data = await response.json();
         return data;
       } catch (error) {
@@ -275,6 +402,7 @@ export default defineNuxtPlugin(nuxtApp => {
     },
 
     async registerStore(json) {
+        const authStore = useAuthStore();
       try {
         const response = await fetch(`${Host}/comercios/registerComercio`, {
           method: 'POST',
@@ -328,7 +456,7 @@ export default defineNuxtPlugin(nuxtApp => {
     },
 
     async guardarProducto(formData, id) {
-
+      const authStore = useAuthStore();
       for (let [key, value] of formData.entries()) {
         console.log(key, value); // Imprime el nombre del campo y su valor
       }
@@ -356,6 +484,7 @@ export default defineNuxtPlugin(nuxtApp => {
 
 
     async createProducto(formData) {
+      const authStore = useAuthStore();
       for (let [key, value] of formData.entries()) {
         console.log(key, value); // Imprime el nombre del campo y su valor
       }
@@ -448,6 +577,57 @@ export default defineNuxtPlugin(nuxtApp => {
       }
     },
 
+    async updateDatosPersonales(json, id) {
+        const authStore = useAuthStore();
+        try {
+          const response = await fetch(Host + '/cliente/' + id + '/datos-personales', {
+            method: 'PUT',
+            headers: {
+              'Accept': 'application/json',
+              'Content-Type': 'application/json',
+              'Authorization': authStore.token ? `Bearer ${authStore.token}` : ''
+            },
+            body: JSON.stringify(json)
+          });
+
+        if (!response.ok) {
+          console.error(`Error en la petición: ${response.status} ${response.statusText}`);
+          return null;
+        }
+
+        const jsonResponse = await response.json();
+        return jsonResponse;
+      } catch (error) {
+        console.error('Error al realizar la petición:', error);
+        return null;
+      }
+    },
+
+    async updateDatosFacturacion(json, id) {
+        const authStore = useAuthStore();
+        try {
+          const response = await fetch(Host + '/cliente/' + id + '/datos-facturacion', {
+            method: 'PUT',
+            headers: {
+              'Accept': 'application/json',
+              'Content-Type': 'application/json',
+              'Authorization': authStore.token ? `Bearer ${authStore.token}` : ''
+            },
+            body: JSON.stringify(json)
+          });
+
+        if (!response.ok) {
+          console.error(`Error en la petición: ${response.status} ${response.statusText}`);
+          return null;
+        }
+
+        const jsonResponse = await response.json();
+        return jsonResponse;
+      } catch (error) {
+        console.error('Error al realizar la petición:', error);
+        return null;
+      }
+    },
     async getEstats() {
       try {
         const response = await fetch(`${Host}/admin/estats`);
