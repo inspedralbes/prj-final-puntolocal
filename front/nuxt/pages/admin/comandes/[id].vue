@@ -46,7 +46,7 @@
                                 </div>
                             </div>
                             <div class="contain-precio">
-                                <h2 class="text-base font-semibold text-gray-900 dark:text-white">
+                                <h2 class="font-small text-gray-900 dark:text-white truncate">
                                     {{ productoOrder.precio.toFixed(2) }} €</h2>
                                 <h2 class="text-base font-semibold text-gray-900 dark:text-white">
                                     <span class="font-large font-bold text-md text-gray-200 ml-1">

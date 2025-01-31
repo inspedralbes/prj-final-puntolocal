@@ -60,7 +60,7 @@ Route::middleware('auth:sanctum')->prefix('admin/comandes')->group(function () {
 
     // Obtener una comanda específica
     Route::get('/{id}', [OrderComercioController::class, 'show']);
-    
+
     // Crear un nueva comanda
     Route::post('/', [OrderComercioController::class, 'store']);
 
@@ -70,20 +70,22 @@ Route::middleware('auth:sanctum')->prefix('admin/comandes')->group(function () {
 });
 
 // ==== ESTATS ===================
-// Obtener todos los estados que puede tener un pedido
-Route::get('/', [EstatCompraController::class, 'index']);
-
-Route::middleware('auth:sanctum')->prefix('admin/estats')->group(function () {
-    // Obtener una comanda específica
-    Route::get('/{id}', [OrderComercioController::class, 'show']);
-    
-    // Crear un nueva comanda
-    Route::post('/', [OrderComercioController::class, 'store']);
-
-    // Actualizar una comanda
-    Route::post('/{id}', [OrderComercioController::class, 'update']);
-
+Route::prefix('admin/estats')->group(function () {
+    // Obtener todos los estados que puede tener un pedido
+    Route::get('/', [EstatCompraController::class, 'index']);
 });
+
+
+// Route::middleware('auth:sanctum')->prefix('admin/estats')->group(function () {
+//     // Obtener una comanda específica
+//     Route::get('/{id}', [OrderComercioController::class, 'show']);
+
+//     // Crear un nueva comanda
+//     Route::post('/', [OrderComercioController::class, 'store']);
+
+//     // Actualizar una comanda
+//     Route::post('/{id}', [OrderComercioController::class, 'update']);
+// });
 
 // ==== CATEGORIAS ===================
 Route::prefix('categorias')->group(function () {

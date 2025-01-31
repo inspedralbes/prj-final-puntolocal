@@ -126,23 +126,62 @@
                                         {{ order.subtotal }}</td>
                                     <td
                                         class="p-4 text-base font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                        {{ order.estat_compra.nombre }}</td>
 
-                                    <td class="p-4 space-x-2 whitespace-nowrap">
-                                        <NuxtLink v-if="order?.order?.id" :to="`/admin/comandes/${order.order.id}`" id="viewOrder"
+                                        <!-- {{ order.estat_compra.nombre }} -->
+                                        <select id="estat" v-model="order.estat_compra.id"
+                                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
+                                            <option v-for="estat in estats" :key="estat.id" :value="estat.id"
+                                                data-v-inspector="pages/admin/productes.vue:358:29">
+                                                {{ estat.nombre }}
+                                            </option>
+                                        </select>
+
+                                    </td>
+
+                                    <td class="p-4 space-x-2 whitespace-nowrap flex">
+                                        <NuxtLink v-if="order?.order?.id" :to="`/admin/comandes/${order.order.id}`"
+                                            id="viewOrder"
                                             class="inline-flex items-center bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-                                            <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20"
+                                            <svg class="w-4 h-4 mr-2" viewBox="0 0 24 24" fill="none"
                                                 xmlns="http://www.w3.org/2000/svg">
-                                                <path
-                                                    d="M17.414 2.586a2 2 0 00-2.828 0L7 10.172V13h2.828l7.586-7.586a2 2 0 000-2.828z">
-                                                </path>
-                                                <path fill-rule="evenodd"
-                                                    d="M2 6a2 2 0 012-2h4a1 1 0 010 2H4v10h10v-4a1 1 0 112 0v4a2 2 0 01-2 2H4a2 2 0 01-2-2V6z"
-                                                    clip-rule="evenodd"></path>
+                                                <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                                                <g id="SVGRepo_tracerCarrier" stroke-linecap="round"
+                                                    stroke-linejoin="round"></g>
+                                                <g id="SVGRepo_iconCarrier">
+                                                    <g clip-path="url(#clip0_429_11160)">
+                                                        <circle cx="12" cy="11.9999" r="9" stroke="#ffffff"
+                                                            stroke-width="2.5" stroke-linecap="round"
+                                                            stroke-linejoin="round"></circle>
+                                                        <rect x="12" y="8" width="0.01" height="0.01" stroke="#ffffff"
+                                                            stroke-width="3.75" stroke-linejoin="round"></rect>
+                                                        <path d="M12 12V16" stroke="#ffffff" stroke-width="2.5"
+                                                            stroke-linecap="round" stroke-linejoin="round"></path>
+                                                    </g>
+                                                    <defs>
+                                                        <clipPath id="clip0_429_11160">
+                                                            <rect width="24" height="24" fill="white"></rect>
+                                                        </clipPath>
+                                                    </defs>
+                                                </g>
                                             </svg>
                                             Veure comanda
                                         </NuxtLink>
-
+                                        <button type="button" id="updateOrderEstat" :disabled="isDisabled(order.id)"
+                                            @click="guardarEstat(order.id)"
+                                            class="inline-flex items-center bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded disabled:opacity-50 disabled:cursor-not-allowed">
+                                            <svg class="w-4 h-4 mr-2" viewBox="0 0 24 24" fill="none"
+                                                xmlns="http://www.w3.org/2000/svg">
+                                                <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                                                <g id="SVGRepo_tracerCarrier" stroke-linecap="round"
+                                                    stroke-linejoin="round"></g>
+                                                <g id="SVGRepo_iconCarrier">
+                                                    <path fill-rule="evenodd" clip-rule="evenodd"
+                                                        d="M18.1716 1C18.702 1 19.2107 1.21071 19.5858 1.58579L22.4142 4.41421C22.7893 4.78929 23 5.29799 23 5.82843V20C23 21.6569 21.6569 23 20 23H4C2.34315 23 1 21.6569 1 20V4C1 2.34315 2.34315 1 4 1H18.1716ZM4 3C3.44772 3 3 3.44772 3 4V20C3 20.5523 3.44772 21 4 21L5 21L5 15C5 13.3431 6.34315 12 8 12L16 12C17.6569 12 19 13.3431 19 15V21H20C20.5523 21 21 20.5523 21 20V6.82843C21 6.29799 20.7893 5.78929 20.4142 5.41421L18.5858 3.58579C18.2107 3.21071 17.702 3 17.1716 3H17V5C17 6.65685 15.6569 8 14 8H10C8.34315 8 7 6.65685 7 5V3H4ZM17 21V15C17 14.4477 16.5523 14 16 14L8 14C7.44772 14 7 14.4477 7 15L7 21L17 21ZM9 3H15V5C15 5.55228 14.5523 6 14 6H10C9.44772 6 9 5.55228 9 5V3Z"
+                                                        fill="#ffffff"></path>
+                                                </g>
+                                            </svg>
+                                            Guardar
+                                        </button>
                                     </td>
                                 </tr>
                             </tbody>
@@ -369,6 +408,7 @@ function toggleCard(menu) {
 const orders = reactive([]);
 const actualOrder = reactive({});
 const estats = reactive([]);
+const estatsOriginals = reactive([])
 
 const subtotal = computed(() => {
     if (!actualOrder.productos_compra) {
@@ -398,24 +438,46 @@ const formatApellido = (apellidos) => {
     return `${apellidos[0].toUpperCase()}.`; // Toma la primera letra y agrega un punto
 };
 
-async function showOrder(id) {
-    toggleCard('info');
-    const data = await $communicationManager.infoOrder(id);
-    Object.assign(actualOrder, data.data);
-    console.log(actualOrder);
+// async function showOrder(id) {
+//     toggleCard('info');
+//     const data = await $communicationManager.infoOrder(id);
+//     Object.assign(actualOrder, data.data);
+//     console.log(actualOrder);
+// }
+
+function isDisabled(id) {
+    const order = orders.find(order => order.id === id);
+    if(estatsOriginals[id] !== order.estat_compra.id){
+        return false;
+    }
+    return true;
 }
 
-onMounted(async() => {
+async function guardarEstat(id) {
+    const order = orders.find(order => order.id === id);
+    order.estat = order.estat_compra.id;
+    estatsOriginals[order.id] = order.estat;
+    console.log(order);
+    const data = await $communicationManager.updateOrder(order);
+    console.log(data);
+    
+}
+
+onMounted(async () => {
     document.addEventListener('keydown', closeAll);
     const data = await $communicationManager.getEstats();
     estats.push(...data.data);
-    console.log(estats);
+    // console.log(estats);
+
 })
 
 onBeforeMount(async () => {
     const data = await $communicationManager.getOrders();
     orders.push(...data.data);
-    console.log(orders[0].estat_compra);
+    orders.forEach(order => {
+        estatsOriginals[order.id] = order.estat;
+    });
+    // console.log(orders);
 })
 
 const closeAll = (e) => {

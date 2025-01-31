@@ -78,9 +78,29 @@ class OrderComercioController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, OrderComercio $orderComercio)
+    public function update(Request $request, $id)
     {
-        //
+        try {
+            $user = Auth::user();
+            $comercio = Comercio::where('idUser', $user->id)->first();
+
+            $validated = $request->validate([
+                'estat' => 'required|integer|exists:estat_compras,id'
+            ]);
+
+            $order = OrderComercio::with('estatCompra','order:id,tipo','order.tipoEnvio')->where('comercio_id', $comercio->id)->where('id', $id)->first();
+
+            if (!$order) {
+                return response()->json(['message' => 'No tienes ninguna orden con ese ID.'], 404);
+            }
+            $order->estat = $validated['estat'];
+            $order->save();
+            $order->load('estatCompra');
+
+            return response()->json($order, 200);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Ocurrió un error al obtener los detalles de la compra: ' . $e->getMessage()], 500);
+        }
     }
 
     /**
