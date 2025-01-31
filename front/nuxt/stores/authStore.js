@@ -2,10 +2,10 @@ import { defineStore } from 'pinia';
 
 export const useAuthStore = defineStore('auth', {
   state: () => ({
-    isAuthenticated: typeof window !== 'undefined' ? sessionStorage.getItem('isAuthenticated') || false : false,
-    token: typeof window !== 'undefined' ? sessionStorage.getItem('token') || null : null, 
-    user: typeof window !== 'undefined' ? JSON.parse(sessionStorage.getItem('user')) || null : null,
-    comercio: typeof window !== 'undefined' ? JSON.parse(sessionStorage.getItem('comercio')) || null : null,
+    isAuthenticated: typeof window !== 'undefined' ? localStorage.getItem('isAuthenticated') || false : false,
+    token: typeof window !== 'undefined' ? localStorage.getItem('token') || null : null, 
+    user: typeof window !== 'undefined' ? JSON.parse(localStorage.getItem('user')) || null : null,
+    comercio: typeof window !== 'undefined' ? JSON.parse(localStorage.getItem('comercio')) || null : null,
   }),
   getters: {
     userName: (state) => state.user ? state.user.name : '',
@@ -19,10 +19,10 @@ export const useAuthStore = defineStore('auth', {
       this.token = userToken; 
       this.comercio = comercioData;
       if (typeof window !== 'undefined') {
-        sessionStorage.setItem('isAuthenticated', this.isAuthenticated);
-        sessionStorage.setItem('token', userToken);
-        sessionStorage.setItem('user', JSON.stringify(userData));
-        sessionStorage.setItem('comercio', JSON.stringify(comercioData));        
+        localStorage.setItem('isAuthenticated', this.isAuthenticated);
+        localStorage.setItem('token', userToken);
+        localStorage.setItem('user', JSON.stringify(userData));
+        localStorage.setItem('comercio', JSON.stringify(comercioData));        
       }
     },
     logout() {
@@ -31,18 +31,18 @@ export const useAuthStore = defineStore('auth', {
       this.token = null;
       this.comercio = null;
       if (typeof window !== 'undefined') {
-        sessionStorage.removeItem('isAuthenticated');
-        sessionStorage.removeItem('token'); 
-        sessionStorage.removeItem('user'); 
-        sessionStorage.removeItem('comercio'); 
+        localStorage.removeItem('isAuthenticated');
+        localStorage.removeItem('token'); 
+        localStorage.removeItem('user'); 
+        localStorage.removeItem('comercio'); 
       }
     },
     initialize() {
       if (typeof window !== 'undefined') {
-        const isAuthenticated = sessionStorage.getItem('isAuthenticated');
-        const token = sessionStorage.getItem('token');
-        const user = JSON.parse(sessionStorage.getItem('user'));
-        const comercio = JSON.parse(sessionStorage.getItem('comercio'));
+        const isAuthenticated = localStorage.getItem('isAuthenticated');
+        const token = localStorage.getItem('token');
+        const user = JSON.parse(localStorage.getItem('user'));
+        const comercio = JSON.parse(localStorage.getItem('comercio'));
         if (token && user && comercio) {
           this.login(user, token, comercio);
         }
@@ -51,7 +51,7 @@ export const useAuthStore = defineStore('auth', {
     setUser(user) {
       this.user = user;
       if (typeof window !== 'undefined') {
-        sessionStorage.setItem('user', JSON.stringify(user));
+        localStorage.setItem('user', JSON.stringify(user));
       }
     },
   },
@@ -60,7 +60,7 @@ export const useAuthStore = defineStore('auth', {
     strategies: [
       {
         key: 'clientStorage', 
-        storage: typeof window !== 'undefined' ? sessionStorage : null,
+        storage: typeof window !== 'undefined' ? localStorage : null,
       },
     ],
   },
