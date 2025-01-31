@@ -4,13 +4,25 @@ namespace App\Http\Controllers;
 
 use App\Models\Order;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class OrderController extends Controller
 {
 
     public function index()
     {
-        //
+        try {
+            $user = Auth::user();
+            $orders = Order::with('tipoEnvio', 'estatCompra', )->orderBy("created_at","desc")->where('cliente_id', $user->id)->get();
+
+            if(empty($orders)){
+                return response()->json(['message' => 'No tiene órdenes'], 404);
+            }
+
+            return response()->json($orders, 200);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Ocurrió un error al obtener los detalles de la compra: ' . $e->getMessage()], 500);
+        }
     }
 
     public function create()
