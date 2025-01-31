@@ -3,7 +3,7 @@ import { useNuxtApp, navigateTo } from '#app';
 import { useAuthStore } from '@/stores/authStore';
 
 definePageMeta({
-    layout: 'authentication',
+    layout: 'default',
 });
 
 const formData = reactive({
@@ -58,7 +58,7 @@ onMounted(() => {
 
 <template>
     <div class="bg-gray-100">
-        <div class="flex min-h-[100vh] flex-col justify-center py-12 sm:px-6 lg:px-8">
+        <div class="flex min-h-[85vh] flex-col justify-center py-12 sm:px-6 lg:px-8">
             <div class="text-center sm:mx-auto sm:w-full sm:max-w-md">
                 <h1 class="text-3xl font-extrabold text-gray-900">
                     Registra't
