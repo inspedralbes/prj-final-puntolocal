@@ -5,8 +5,10 @@
                 ←
             </div>
 
-            <div class="flex-1 text-center text-lg font-semibold text-gray-800 truncate max-w-[calc(100%-2rem)]" :title="producto?.comercio || 'Nombre del comercio no disponible'">
-                {{ producto?.comercio?.length > 18 ? producto.comercio.slice(0, 18) + '...' : producto?.comercio || 'Nombre del comercio no disponible' }}
+            <div class="flex-1 text-center text-lg font-semibold text-gray-800 truncate max-w-[calc(100%-2rem)]"
+                :title="producto?.comercio || 'Nombre del comercio no disponible'">
+                {{ producto?.comercio?.length > 18 ? producto.comercio.slice(0, 18) + '...' : producto?.comercio ||
+                    'Nombre del comercio no disponible' }}
             </div>
 
             <div id="corazon" class="w-8 h-8 flex items-center justify-center cursor-pointer">
@@ -14,10 +16,19 @@
             </div>
         </div>
 
-        
-        <div id="footer" class="flex items-center justify-between p-4 mt-auto bg-gray-50 shadow-lg rounded-lg">
-            <div id="precio" class="text-xl font-semibold text-gray-800">
-                {{ producto?.precio ? `Precio: $${producto.precio.toFixed(2)}` : 'Precio no disponible' }}
+        <div id="imgs" class="h-[400px] w-full max-w-[900px] mx-auto overflow-hidden">
+            <img :src="producto?.imagen" alt="Imagen del producto" class="h-full w-full object-contain" />
+        </div>
+
+        <div id="infoAdicional" class="p-4 flex flex-col flex-grow">
+            <h2 class="text-2xl font-bold text-gray-800 text-justify">{{ producto?.nombre || 'Nombre no disponible' }}
+            </h2>
+            <p class="text-gray-600 mt-2 text-justify">{{ producto?.descripcion || 'Descripción no disponible' }}</p>
+        </div>
+
+        <div id="footer" class="flex items-center justify-between p-4 mt-auto bg-gray-50 rounded-lg shadow-footer">
+            <div id="precio" class="text-xl font-semibold text-gray-800 text-center" style="width: 50%;">
+                {{ producto?.precio ? `${producto.precio.toFixed(2)}€` : 'Precio no disponible' }}
             </div>
 
             <div id="carrito" class="flex items-center space-x-4">
@@ -26,8 +37,6 @@
         </div>
     </div>
 </template>
-
-
 
 <script setup>
     definePageMeta({
