@@ -200,7 +200,7 @@ onMounted(() => {
 </template>
 
 <style scoped>
-.gapQueFunciona {
-    gap: 1rem;
-}
+    .gapQueFunciona {
+        gap: 1rem;
+    }
 </style>
