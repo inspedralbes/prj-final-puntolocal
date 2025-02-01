@@ -8,9 +8,7 @@
     </div>
     <div id="contain-categorias">
         <div id="categorias" class="flex">
-            <div class="box-categoria">
-                <img src="" alt="">
-            </div>
+            <div class="box-categoria"><img src="" alt=""></div>
             <div class="box-categoria"></div>
             <div class="box-categoria"></div>
             <div class="box-categoria"></div>
@@ -19,13 +17,11 @@
         </div>
     </div>
     <div id="contain-productos">
-        <h1 class="titulo-productos">Ultimes tendències</h1>
+        <h1 class="titulo-productos">Últimes tendències</h1>
         <div id="productos">
-            <productoComp v-for="(producto, index) in productos" :key="index"
-                :img="producto.img"
-                :title="producto.nombre"
-                :price="producto.precio"
-                :comercio="producto.comercio">
+            <productoComp v-for="(producto, index) in productos" :key="index" :id="producto.id" :img="producto.img"
+                :title="producto.nombre" :price="producto.precio" :comercio="producto.comercio"
+                @click="mostrarIdProducto(producto.id)">
             </productoComp>
         </div>
     </div>
@@ -33,16 +29,16 @@
 
 <script setup>
     import { ref, onMounted } from "vue";
+    import { useRouter } from "vue-router";
     import { useAuthStore } from "~/stores/authStore";
 
     const { $communicationManager } = useNuxtApp();
     const authStore = useAuthStore();
     const productos = ref([]);
+    const router = useRouter();
 
     function seleccionarProductosAleatorios(lista) {
-        if (!Array.isArray(lista)) {
-            return [];
-        }
+        if (!Array.isArray(lista)) return [];
         const copiaLista = [...lista];
         const seleccionados = [];
         while (seleccionados.length < 6 && copiaLista.length > 0) {
@@ -57,12 +53,18 @@
         try {
             const response = await $communicationManager.getProductos();
             if (response && response.data) {
-                const productosRecibidos = response.data;
-                productos.value = seleccionarProductosAleatorios(productosRecibidos);
-            } else { console.error("Error al obtener los productos"); }
+                productos.value = seleccionarProductosAleatorios(response.data);
+            } else {
+                console.error("Error al obtener los productos");
+            }
         } catch (error) {
             console.error("Error en la petición:", error);
         }
+    }
+
+    function mostrarIdProducto(id) {
+        console.log("ID del producto seleccionado:", id);
+        router.push(`/producto/${id}`);
     }
 
     onMounted(() => {
@@ -72,18 +74,15 @@
 
         function moveCarousel() {
             currentIndex++;
-
-            if (currentIndex >= totalImages) { currentIndex = 0; }
-
-            const offset = -currentIndex * 100;
-            document.querySelector("#carousel").style.transform = `translateX(${offset}%)`;
+            if (currentIndex >= totalImages) currentIndex = 0;
+            document.querySelector("#carousel").style.transform = `translateX(-${currentIndex * 100}%)`;
         }
 
         setInterval(moveCarousel, 5000);
-
         fetchProductos();
     });
 </script>
+
 
 <style scoped>
     @import '../assets/index.css';
