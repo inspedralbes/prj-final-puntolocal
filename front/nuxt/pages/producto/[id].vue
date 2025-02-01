@@ -45,49 +45,42 @@
 </template>
 
 <script setup>
-definePageMeta({
-    layout: false,
-});
+    definePageMeta({
+        layout: false,
+    });
 
-import { useNuxtApp } from "#app";
-import { ref, onMounted } from "vue";
-import { useRoute } from "vue-router";
-import ButtonBasketComp from "../../components/ButtonBasketComp.vue";
+    import { useNuxtApp } from "#app";
+    import { ref, onMounted } from "vue";
+    import { useRoute } from "vue-router";
+    import ButtonBasketComp from "../../components/ButtonBasketComp.vue";
 
-const route = useRoute();
-const { $communicationManager } = useNuxtApp();
-const producto = ref(null);
-const selectedColor = ref(null);
-const selectedSize = ref(null);
+    const route = useRoute();
+    const { $communicationManager } = useNuxtApp();
+    const producto = ref(null);
+    const selectedColor = ref(null);
+    const selectedSize = ref(null);
 
-const fetchProducto = async () => {
-    try {
-        const id = route.params.id;
-        const response = await $communicationManager.getProductoById(id);
-        console.log("JSON recibido:", response);
+    const fetchProducto = async () => {
+        try {
+            const id = route.params.id;
+            const response = await $communicationManager.getProductoById(id);
 
-        if (response) {
-            producto.value = response;
+            if (response) {
+                producto.value = response;
 
-            console.log("Producto cargado:", producto.value);
-
-            if (producto.value?.comercio?.nombre) {
-                console.log("Nombre del comercio:", producto.value.comercio.nombre);
+                if (producto.value.varientes && producto.value.varientes.length > 0) {
+                    selectedColor.value = producto.value.varientes[0].color;
+                    selectedSize.value = producto.value.varientes[0];
+                }
             }
-
-            if (producto.value.varientes && producto.value.varientes.length > 0) {
-                selectedColor.value = producto.value.varientes[0].color;
-                selectedSize.value = producto.value.varientes[0];
-            }
+        } catch (error) {
+            console.error("Error obteniendo el producto:", error);
         }
-    } catch (error) {
-        console.error("Error obteniendo el producto:", error);
-    }
-};
+    };
 
-onMounted(() => {
-    fetchProducto();
-});
+    onMounted(() => {
+        fetchProducto();
+    });
 </script>
 
 <style scoped>
