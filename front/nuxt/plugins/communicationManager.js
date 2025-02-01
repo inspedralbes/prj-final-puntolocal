@@ -64,7 +64,7 @@ export default defineNuxtPlugin(nuxtApp => {
 
     async getProductos() {
       try {
-        const response = await fetch(`${Host}/producto`, {
+        const response = await fetch(`${Host}/producto/random`, {
           method: 'GET',
           headers: {
             'Accept': 'application/json',

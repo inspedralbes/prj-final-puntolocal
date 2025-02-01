@@ -31,62 +31,51 @@
 </template>
 
 <script setup>
-    import { ref, onMounted } from "vue";
-    import { useRouter } from "vue-router";
-    import { useAuthStore } from "~/stores/authStore";
+import { ref, onMounted } from "vue";
+import { useRouter } from "vue-router";
+import { useAuthStore } from "~/stores/authStore";
 
-    const { $communicationManager } = useNuxtApp();
-    const authStore = useAuthStore();
-    const productos = ref([]);
-    const router = useRouter();
+const { $communicationManager } = useNuxtApp();
+const authStore = useAuthStore();
+const productos = ref([]);
+const router = useRouter();
 
-    function seleccionarProductosAleatorios(lista) {
-        if (!Array.isArray(lista)) return [];
-        const copiaLista = [...lista];
-        const seleccionados = [];
-        while (seleccionados.length < 6 && copiaLista.length > 0) {
-            const indiceAleatorio = Math.floor(Math.random() * copiaLista.length);
-            seleccionados.push(copiaLista[indiceAleatorio]);
-            copiaLista.splice(indiceAleatorio, 1);
+async function fetchProductos() {
+    try {
+        const response = await $communicationManager.getProductos();
+        if (response && response.data) {
+            productos.value = response.data;
+        } else {
+            console.error("Error al obtener los productos");
         }
-        return seleccionados;
+    } catch (error) {
+        console.error("Error en la petición:", error);
+    }
+}
+
+function mostrarIdProducto(id) {
+    console.log("ID del producto seleccionado:", id);
+    router.push(`/producto/${id}`);
+}
+
+onMounted(() => {
+    let currentIndex = 0;
+    const images = document.querySelectorAll("#carousel img");
+    const totalImages = images.length;
+
+    function moveCarousel() {
+        currentIndex++;
+        if (currentIndex >= totalImages) currentIndex = 0;
+        document.querySelector("#carousel").style.transform = `translateX(-${currentIndex * 100}%)`;
     }
 
-    async function fetchProductos() {
-        try {
-            const response = await $communicationManager.getProductos();
-            if (response && response.data) {
-                productos.value = seleccionarProductosAleatorios(response.data);
-            } else {
-                console.error("Error al obtener los productos");
-            }
-        } catch (error) {
-            console.error("Error en la petición:", error);
-        }
-    }
-
-    function mostrarIdProducto(id) {
-        console.log("ID del producto seleccionado:", id);
-        router.push(`/producto/${id}`);
-    }
-
-    onMounted(() => {
-        let currentIndex = 0;
-        const images = document.querySelectorAll("#carousel img");
-        const totalImages = images.length;
-
-        function moveCarousel() {
-            currentIndex++;
-            if (currentIndex >= totalImages) currentIndex = 0;
-            document.querySelector("#carousel").style.transform = `translateX(-${currentIndex * 100}%)`;
-        }
-
-        setInterval(moveCarousel, 5000);
-        fetchProductos();
-    });
+    setInterval(moveCarousel, 5000);
+    fetchProductos();
+});
 </script>
 
 
+
 <style scoped>
-    @import '../assets/index.css';
+@import '../assets/index.css';
 </style>
