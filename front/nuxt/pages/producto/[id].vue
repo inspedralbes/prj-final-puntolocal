@@ -1,11 +1,12 @@
 <template>
-    <div class="min-h-screen flex flex-col">
-        <div id="header" class="flex items-center justify-between p-4 bg-white shadow-lg rounded-lg">
-            <div class="text-xl text-gray-700 cursor-pointer">
+    <div
+        class="min-h-screen flex flex-col bg-white text-gray-900 dark:bg-gray-900 dark:text-gray-100 transition-colors duration-300">
+        <div id="header" class="flex items-center justify-between p-4 bg-white dark:bg-gray-800 shadow-lg rounded-lg">
+            <div class="text-xl text-gray-700 dark:text-gray-300 cursor-pointer">
                 ←
             </div>
 
-            <div class="flex-1 text-center text-lg font-semibold text-gray-800 truncate max-w-[calc(100%-2rem)]"
+            <div class="flex-1 text-center text-lg font-semibold text-gray-800 dark:text-gray-200 truncate max-w-[calc(100%-2rem)]"
                 :title="producto?.comercio || 'Nombre del comercio no disponible'">
                 {{ producto?.comercio?.length > 18 ? producto.comercio.slice(0, 18) + '...' : producto?.comercio ||
                     'Nombre del comercio no disponible' }}
@@ -21,13 +22,18 @@
         </div>
 
         <div id="infoAdicional" class="p-4 flex flex-col flex-grow">
-            <h2 class="text-2xl font-bold text-gray-800 text-justify">{{ producto?.nombre || 'Nombre no disponible' }}
+            <h2 class="text-2xl font-bold text-gray-800 dark:text-gray-200 text-justify">
+                {{ producto?.nombre || 'Nombre no disponible' }}
             </h2>
-            <p class="text-gray-600 mt-2 text-justify">{{ producto?.descripcion || 'Descripción no disponible' }}</p>
+            <p class="text-gray-600 dark:text-gray-400 mt-2 text-justify">
+                {{ producto?.descripcion || 'Descripción no disponible' }}
+            </p>
         </div>
 
-        <div id="footer" class="flex items-center justify-between p-4 mt-auto bg-gray-50 rounded-lg shadow-footer">
-            <div id="precio" class="text-xl font-semibold text-gray-800 text-center" style="width: 50%;">
+        <div id="footer"
+            class="flex items-center justify-between p-4 mt-auto bg-gray-50 dark:bg-gray-800 rounded-lg shadow-footer">
+            <div id="precio" class="text-xl font-semibold text-gray-800 dark:text-gray-200 text-center"
+                style="width: 50%;">
                 {{ producto?.precio ? `${producto.precio.toFixed(2)}€` : 'Precio no disponible' }}
             </div>
 
@@ -39,49 +45,49 @@
 </template>
 
 <script setup>
-    definePageMeta({
-        layout: false,
-    });
+definePageMeta({
+    layout: false,
+});
 
-    import { useNuxtApp } from "#app";
-    import { ref, onMounted } from "vue";
-    import { useRoute } from "vue-router";
-    import ButtonBasketComp from "../../components/ButtonBasketComp.vue";
+import { useNuxtApp } from "#app";
+import { ref, onMounted } from "vue";
+import { useRoute } from "vue-router";
+import ButtonBasketComp from "../../components/ButtonBasketComp.vue";
 
-    const route = useRoute();
-    const { $communicationManager } = useNuxtApp();
-    const producto = ref(null);
-    const selectedColor = ref(null);
-    const selectedSize = ref(null);
+const route = useRoute();
+const { $communicationManager } = useNuxtApp();
+const producto = ref(null);
+const selectedColor = ref(null);
+const selectedSize = ref(null);
 
-    const fetchProducto = async () => {
-        try {
-            const id = route.params.id;
-            const response = await $communicationManager.getProductoById(id);
-            console.log("JSON recibido:", response);
+const fetchProducto = async () => {
+    try {
+        const id = route.params.id;
+        const response = await $communicationManager.getProductoById(id);
+        console.log("JSON recibido:", response);
 
-            if (response) {
-                producto.value = response;
+        if (response) {
+            producto.value = response;
 
-                console.log("Producto cargado:", producto.value);
+            console.log("Producto cargado:", producto.value);
 
-                if (producto.value?.comercio?.nombre) {
-                    console.log("Nombre del comercio:", producto.value.comercio.nombre);
-                }
-
-                if (producto.value.varientes && producto.value.varientes.length > 0) {
-                    selectedColor.value = producto.value.varientes[0].color;
-                    selectedSize.value = producto.value.varientes[0];
-                }
+            if (producto.value?.comercio?.nombre) {
+                console.log("Nombre del comercio:", producto.value.comercio.nombre);
             }
-        } catch (error) {
-            console.error("Error obteniendo el producto:", error);
-        }
-    };
 
-    onMounted(() => {
-        fetchProducto();
-    });
+            if (producto.value.varientes && producto.value.varientes.length > 0) {
+                selectedColor.value = producto.value.varientes[0].color;
+                selectedSize.value = producto.value.varientes[0];
+            }
+        }
+    } catch (error) {
+        console.error("Error obteniendo el producto:", error);
+    }
+};
+
+onMounted(() => {
+    fetchProducto();
+});
 </script>
 
 <style scoped>
