@@ -62,7 +62,6 @@ export default defineNuxtPlugin(nuxtApp => {
       }
     },
 
-
     async getProductos() {
       try {
         const response = await fetch(`${Host}/producto/random`, {
@@ -181,6 +180,7 @@ export default defineNuxtPlugin(nuxtApp => {
         return null;
       }
     },
+
     async getUserData(userId) {
       try {
         const response = await fetch(`${Host}/cliente/${userId}`, {
@@ -523,7 +523,6 @@ export default defineNuxtPlugin(nuxtApp => {
         console.error('Error al realizar la petición:', error);
       }
     },
-
 
     async createProducto(formData) {
       for (let [key, value] of formData.entries()) {

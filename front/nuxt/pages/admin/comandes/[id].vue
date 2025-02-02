@@ -25,7 +25,7 @@
                             <span
                                 class="text-xl font-bold leading-none text-gray-900 sm:text-2xl dark:text-white">Llistat
                                 de productes</span>
-                            <h3 class="text-base font-light text-gray-500 dark:text-gray-400">Llistat de tots els
+                            <h3 class="text-base font-light dark:text-gray-500">Llistat de tots els
                                 productes que el cliente ha comprat</h3>
                         </div>
                     </div>
@@ -49,7 +49,7 @@
                                 <h2 class="font-small text-gray-900 dark:text-white truncate">
                                     {{ productoOrder.precio.toFixed(2) }} €</h2>
                                 <h2 class="text-base font-semibold text-gray-900 dark:text-white">
-                                    <span class="font-large font-bold text-md text-gray-200 ml-1">
+                                    <span class="font-large font-bold text-md dark:text-gray-200 ml-1">
                                         x {{ productoOrder.cantidad }} UDS:
                                     </span>
                                     {{ (productoOrder.precio * productoOrder.cantidad).toFixed(2) }} €
@@ -65,7 +65,7 @@
                             <span
                                 class="text-xl font-bold leading-none text-gray-900 sm:text-2xl dark:text-white truncate">Total
                                 de la comanda</span>
-                            <h3 class="text-base font-light text-gray-500 dark:text-gray-400 truncate">
+                            <h3 class="text-base font-light dark:text-gray-500 truncate">
                                 Desglose completo del importe de la comanda</h3>
                         </div>
                         <div class="flex p-[0.85rem]">
@@ -133,11 +133,11 @@
                                         <g id="SVGRepo_iconCarrier">
                                             <path
                                                 d="M12.1992 12C14.9606 12 17.1992 9.76142 17.1992 7C17.1992 4.23858 14.9606 2 12.1992 2C9.43779 2 7.19922 4.23858 7.19922 7C7.19922 9.76142 9.43779 12 12.1992 12Z"
-                                                stroke="#FFFFFF" stroke-width="2" stroke-linecap="round"
+                                                stroke="currentColor" stroke-width="2" stroke-linecap="round"
                                                 stroke-linejoin="round"></path>
                                             <path
                                                 d="M3 22C3.57038 20.0332 4.74796 18.2971 6.3644 17.0399C7.98083 15.7827 9.95335 15.0687 12 15C16.12 15 19.63 17.91 21 22"
-                                                stroke="#FFFFFF" stroke-width="2" stroke-linecap="round"
+                                                stroke="currentColor" stroke-width="2" stroke-linecap="round"
                                                 stroke-linejoin="round"></path>
                                         </g>
                                     </svg>
@@ -147,7 +147,7 @@
                             </h3>
                             <h3 class="font-small py-1 text-gray-900 dark:text-white flex items-center truncate">
                                 <span class="mr-1">
-                                    <svg width="1em" height="1em" fill="#FFFFFF" viewBox="0 0 35 35" data-name="Layer 2"
+                                    <svg width="1em" height="1em" fill="currentColor" viewBox="0 0 35 35" data-name="Layer 2"
                                         id="ee13b174-13f0-43ea-b921-f168b1054f8d" xmlns="http://www.w3.org/2000/svg">
                                         <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
                                         <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round">
@@ -175,7 +175,7 @@
                                         <g id="SVGRepo_iconCarrier">
                                             <path
                                                 d="M3 5.5C3 14.0604 9.93959 21 18.5 21C18.8862 21 19.2691 20.9859 19.6483 20.9581C20.0834 20.9262 20.3009 20.9103 20.499 20.7963C20.663 20.7019 20.8185 20.5345 20.9007 20.364C21 20.1582 21 19.9181 21 19.438V16.6207C21 16.2169 21 16.015 20.9335 15.842C20.8749 15.6891 20.7795 15.553 20.6559 15.4456C20.516 15.324 20.3262 15.255 19.9468 15.117L16.74 13.9509C16.2985 13.7904 16.0777 13.7101 15.8683 13.7237C15.6836 13.7357 15.5059 13.7988 15.3549 13.9058C15.1837 14.0271 15.0629 14.2285 14.8212 14.6314L14 16C11.3501 14.7999 9.2019 12.6489 8 10L9.36863 9.17882C9.77145 8.93713 9.97286 8.81628 10.0942 8.64506C10.2012 8.49408 10.2643 8.31637 10.2763 8.1317C10.2899 7.92227 10.2096 7.70153 10.0491 7.26005L8.88299 4.05321C8.745 3.67376 8.67601 3.48403 8.55442 3.3441C8.44701 3.22049 8.31089 3.12515 8.15802 3.06645C7.98496 3 7.78308 3 7.37932 3H4.56201C4.08188 3 3.84181 3 3.63598 3.09925C3.4655 3.18146 3.29814 3.33701 3.2037 3.50103C3.08968 3.69907 3.07375 3.91662 3.04189 4.35173C3.01413 4.73086 3 5.11378 3 5.5Z"
-                                                stroke="#FFFFFF" stroke-width="1.8" stroke-linecap="round"
+                                                stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
                                                 stroke-linejoin="round"></path>
                                         </g>
                                     </svg>
@@ -203,7 +203,7 @@
                                         <g id="SVGRepo_iconCarrier">
                                             <path fill-rule="evenodd" clip-rule="evenodd"
                                                 d="M21.4498 10.275L11.9998 3.1875L2.5498 10.275L2.9998 11.625H3.7498V20.25H20.2498V11.625H20.9998L21.4498 10.275ZM5.2498 18.75V10.125L11.9998 5.0625L18.7498 10.125V18.75H14.9999V14.3333L14.2499 13.5833H9.74988L8.99988 14.3333V18.75H5.2498ZM10.4999 18.75H13.4999V15.0833H10.4999V18.75Z"
-                                                fill="#FFFFFF"></path>
+                                                fill="currentColor"></path>
                                         </g>
                                     </svg>
                                 </span>
@@ -219,7 +219,7 @@
                                         <g id="SVGRepo_iconCarrier">
                                             <path
                                                 d="M3 21H21M18 21V6.2C18 5.0799 18 4.51984 17.782 4.09202C17.5903 3.71569 17.2843 3.40973 16.908 3.21799C16.4802 3 15.9201 3 14.8 3H9.2C8.0799 3 7.51984 3 7.09202 3.21799C6.71569 3.40973 6.40973 3.71569 6.21799 4.09202C6 4.51984 6 5.0799 6 6.2V21M15 12H15.01"
-                                                stroke="#FFFFFF" stroke-width="1.8" stroke-linecap="round"
+                                                stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
                                                 stroke-linejoin="round"></path>
                                         </g>
                                     </svg>
@@ -237,7 +237,7 @@
                                         <g id="SVGRepo_iconCarrier">
                                             <path fill-rule="evenodd" clip-rule="evenodd"
                                                 d="M4.25 8.51464C4.25 4.45264 7.77146 1.25 12 1.25C16.2285 1.25 19.75 4.45264 19.75 8.51464C19.75 12.3258 17.3871 16.8 13.5748 18.4292C12.574 18.8569 11.426 18.8569 10.4252 18.4292C6.61289 16.8 4.25 12.3258 4.25 8.51464ZM12 2.75C8.49655 2.75 5.75 5.38076 5.75 8.51464C5.75 11.843 7.85543 15.6998 11.0147 17.0499C11.639 17.3167 12.361 17.3167 12.9853 17.0499C16.1446 15.6998 18.25 11.843 18.25 8.51464C18.25 5.38076 15.5034 2.75 12 2.75ZM12 7.75C11.3096 7.75 10.75 8.30964 10.75 9C10.75 9.69036 11.3096 10.25 12 10.25C12.6904 10.25 13.25 9.69036 13.25 9C13.25 8.30964 12.6904 7.75 12 7.75ZM9.25 9C9.25 7.48122 10.4812 6.25 12 6.25C13.5188 6.25 14.75 7.48122 14.75 9C14.75 10.5188 13.5188 11.75 12 11.75C10.4812 11.75 9.25 10.5188 9.25 9ZM3.59541 14.9966C3.87344 15.3036 3.84992 15.7779 3.54288 16.0559C2.97519 16.57 2.75 17.0621 2.75 17.5C2.75 18.2637 3.47401 19.2048 5.23671 19.998C6.929 20.7596 9.31951 21.25 12 21.25C14.6805 21.25 17.071 20.7596 18.7633 19.998C20.526 19.2048 21.25 18.2637 21.25 17.5C21.25 17.0621 21.0248 16.57 20.4571 16.0559C20.1501 15.7779 20.1266 15.3036 20.4046 14.9966C20.6826 14.6895 21.1569 14.666 21.4639 14.9441C22.227 15.635 22.75 16.5011 22.75 17.5C22.75 19.2216 21.2354 20.5305 19.3788 21.3659C17.4518 22.2331 14.8424 22.75 12 22.75C9.15764 22.75 6.54815 22.2331 4.62116 21.3659C2.76457 20.5305 1.25 19.2216 1.25 17.5C1.25 16.5011 1.77305 15.635 2.53605 14.9441C2.84309 14.666 3.31738 14.6895 3.59541 14.9966Z"
-                                                fill="#FFFFFF"></path>
+                                                fill="currentColor"></path>
                                         </g>
                                     </svg>
                                 </span>
@@ -255,7 +255,7 @@
                     <ol class="relative border-l border-gray-200 dark:border-gray-700 pt-4">
                         <li class="mb-10 ml-4">
                             <div
-                                class="absolute w-3 h-3 bg-gray-200 rounded-full mt-1.5 -left-1.5 border border-white dark:border-gray-800 dark:bg-gray-300">
+                                class="absolute w-3 h-3 bg-gray-600 rounded-full mt-1.5 -left-1.5 border border-white dark:border-gray-800 dark:bg-gray-300">
                             </div>
                             <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
                                 Pedido recibido
