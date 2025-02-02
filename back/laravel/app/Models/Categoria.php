@@ -1,17 +1,15 @@
 <?php
+    namespace App\Models;
+    use Illuminate\Database\Eloquent\Model;
 
-namespace App\Models;
+    class Categoria extends Model {
 
-use Illuminate\Database\Eloquent\Model;
+        protected $fillable = [
+            'name',
+            'imagenes',
+        ];
 
-class Categoria extends Model
-{
-
-    protected $fillable = [
-        'name',
-    ];
-
-    public function comercios() {
-        return $this->hasMany(Comercio::class, 'categoria_id', 'id');
+        public function comercios() {
+            return $this->hasMany(Comercio::class, 'categoria_id', 'id');
+        }
     }
-}
