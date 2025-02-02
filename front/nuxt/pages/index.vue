@@ -11,12 +11,7 @@
     </div>
     <div id="contain-categorias">
         <div id="categorias" class="flex">
-            <div class="box-categoria"><img src="" alt=""></div>
-            <div class="box-categoria"></div>
-            <div class="box-categoria"></div>
-            <div class="box-categoria"></div>
-            <div class="box-categoria"></div>
-            <div class="box-categoria"></div>
+            <div v-for="categoria in categorias" :key="categoria.id" class="box-categoria"></div>
         </div>
     </div>
     <div id="contain-productos">
@@ -38,6 +33,7 @@ import { useAuthStore } from "~/stores/authStore";
 const { $communicationManager } = useNuxtApp();
 const authStore = useAuthStore();
 const productos = ref([]);
+const categorias = ref([]);
 const router = useRouter();
 
 async function fetchProductos() {
@@ -52,6 +48,20 @@ async function fetchProductos() {
         console.error("Error en la petición:", error);
     }
 }
+
+async function fetchCategorias() {
+    try {
+        const responseCategorias = await $communicationManager.getCategoriasGenerales();
+        if (responseCategorias) {
+            categorias.value = responseCategorias;
+        } else {
+            console.error("Error al obtener las categorías");
+        }
+    } catch (error) {
+        console.error("Error en la petición:", error);
+    }
+}
+
 
 function mostrarIdProducto(id) {
     console.log("ID del producto seleccionado:", id);
@@ -71,6 +81,7 @@ onMounted(() => {
 
     setInterval(moveCarousel, 5000);
     fetchProductos();
+    fetchCategorias();
 });
 </script>
 
