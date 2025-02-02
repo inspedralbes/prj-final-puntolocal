@@ -686,5 +686,6 @@ onMounted(async () => {
 onBeforeMount(async () => {
     const data = await $communicationManager.getByComercio();
     Object.assign(productos, data);
+    console.log(productos);
 });
 </script>

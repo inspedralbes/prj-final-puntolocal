@@ -4,7 +4,8 @@ import { createPinia, setActivePinia } from 'pinia';
 const pinia = createPinia();
 setActivePinia(pinia);
 const Host = 'http://localhost:8000/api';
-//const comercio = authStore.comercio;
+const auth = useAuthStore();
+const comercio = auth.comercio;
 
 export default defineNuxtPlugin(nuxtApp => {
   const communicationManager = {
@@ -155,7 +156,8 @@ export default defineNuxtPlugin(nuxtApp => {
         return null;
       }
     },
-      async getUserData(userId) {
+
+    async getUserData(userId) {
         try {
           const response = await fetch(`${Host}/cliente/${userId}`, {
             method: 'GET',
@@ -176,7 +178,7 @@ export default defineNuxtPlugin(nuxtApp => {
           console.error('Error al realizar la petición:', error);
           return null;
         }
-      },
+    },
 
     async getDatosCliente(clienteId) {
       try {
@@ -249,6 +251,7 @@ export default defineNuxtPlugin(nuxtApp => {
         return null;
       }
     },
+
     async checkUserHasComercio(userId) {
       try {
         const response = await fetch(`${Host}/comercios/${userId}/check`, {
@@ -272,7 +275,6 @@ export default defineNuxtPlugin(nuxtApp => {
         return null;
       }
     },
-
 
     ///////////////////////////// POST //////////////////////////////////
     async register(json) {
@@ -642,6 +644,7 @@ export default defineNuxtPlugin(nuxtApp => {
         return null;
       }
     },
+
     async getEstats() {
       try {
         const response = await fetch(`${Host}/admin/estats`);
