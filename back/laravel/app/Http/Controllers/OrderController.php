@@ -50,6 +50,38 @@ class OrderController extends Controller
         }
     }
 
+    public function showOrdersComercios($id)
+    {
+        try {
+            $user = Auth::user();
+            $order = Order::with('tipoEnvio', 'estatCompra', 'orderComercios.comercio:id,nombre')->where('id', $id)->where('cliente_id', $user->id)->first();
+
+            if (!$order) {
+                return response()->json(['message' => 'Comanda no encontrada.'], 404);
+            }
+
+            return response()->json($order, 200);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Ocurrió un error al obtener los detalles de la compra: ' . $e->getMessage()], 500);
+        }
+    }
+
+    // public function showSuborder($id)
+    // {
+    //     try {
+    //         $user = Auth::user();
+    //         $order = Order::with('tipoEnvio', 'estatCompra', 'orderComercios', 'orderComercios.productosCompra', 'orderComercios.productosCompra.producto')->where('id', $id)->where('cliente_id', $user->id)->first();
+
+    //         if (!$order) {
+    //             return response()->json(['message' => 'Comanda no encontrada.'], 404);
+    //         }
+
+    //         return response()->json($order, 200);
+    //     } catch (\Exception $e) {
+    //         return response()->json(['error' => 'Ocurrió un error al obtener los detalles de la compra: ' . $e->getMessage()], 500);
+    //     }
+    // }
+
     public function edit(Order $order)
     {
         //

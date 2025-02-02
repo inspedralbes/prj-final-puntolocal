@@ -20,7 +20,7 @@ class OrdersTableSeeder extends Seeder
 
         for ($i = 0; $i < $cantidad; $i++) {
             DB::table("orders")->insert([
-                "cliente_id" => $faker->numberBetween(1,11),
+                "cliente_id" => 11,
                 "estat" => $faker->numberBetween(1,5),
                 'total' => $faker->randomFloat(2, 5, 1000),
                 'tipo' => $faker->numberBetween(1, 2),

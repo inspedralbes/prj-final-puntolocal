@@ -67,6 +67,26 @@ class OrderComercioController extends Controller
         }
     }
 
+    public function showData($id)
+    {
+        try {
+            $user = Auth::user();
+            $order = OrderComercio::with('estatCompra','order:id,tipo','order.tipoEnvio', 'productosCompra.producto')
+            ->whereHas('order', function ($query) use ($user) {
+                $query->where('cliente_id', $user->id);
+            })
+            ->where('id', $id)->first();
+
+            if (!$order) {
+                return response()->json(['message' => 'No tienes ninguna orden con ID #'.$id.'.'], 404);
+            }
+
+            return response()->json($order, 200);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Ocurrió un error al obtener los detalles de la compra: ' . $e->getMessage()], 500);
+        }
+    }
+
     /**
      * Show the form for editing the specified resource.
      */

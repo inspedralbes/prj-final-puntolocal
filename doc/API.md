@@ -859,3 +859,221 @@ Esta API permite gestionar los clientes.
     ```
 
 ---
+
+<!-- COMANDES -->
+
+# API de Comandes
+
+## Descripción:
+
+Esta API permite ver los pedidos de un comercio, su información, cambiar su estado y ver los pedidos que tengo como usuario.
+
+---
+
+## Autenticación:
+
+- **Método de autenticación:** Bearer Token (utilizando Sanctum).
+- **Cabecera:** `Authorization: Bearer <token>`
+
+---
+
+## Endpoints
+
+### 1. Crear una comanda
+
+- **URL:** `/api/comandes/`
+- **Método:** `POST`
+- **Descripción:** Permite crear una nueva comanda al usuario.
+- **Parámetros:** PENDIENTE
+- **Respuesta: (RESPUESTAS DE PLANTILLA, NO SON LAS CORRECTAS)**
+
+  - **Código de estado 200 OK**:
+
+    ```json
+    {
+      PENDIENTE
+    }
+    ```
+
+  - **Código de estado 404 Not Found** (Si no esta registrado):
+
+    ```json
+    {
+      PENDIENTE
+    }
+    ```
+
+---
+
+### 2. Ver comandas generales del usuario logueado
+
+- **URL:** `/api/comandes`
+- **Método:** `GET`
+- **Descripción:** Permite obtener las comandas del cliente.
+- **Parámetros:** Ninguno.
+- **Respuesta:**
+
+  - **Código de estado 200 OK**:
+
+    ```json
+    [
+      {
+        "id": 5,
+        "cliente_id": 10,
+        "total": 255.07,
+        "tipo": 1,
+        "estat": 5,
+        "created_at": "2025-01-31T08:13:39.000000Z",
+        "updated_at": null,
+        "tipo_envio": {
+            "id": 1,
+            "nombre": "Recollida",
+            "descripcion": null,
+            "created_at": null,
+            "updated_at": null
+        },
+        "estat_compra": {
+            "id": 5,
+            "nombre": "Cancelado",
+            "color": "#ff0000"
+        }
+      }
+    ]
+    ```
+
+  - **Código de estado 404 Not Found** (Si no tiene comandas):
+
+    ```json
+    []
+    ```
+---
+
+### 3. Ver en que comercios realizó una orden el cliente
+
+- **URL:** `/api/comandes/{id}/suborders`
+- **Método:** `GET`
+- **Descripción:** Permite obtener las subcomandas del cliente.
+- **Parámetros:**
+  - `id`: (int, requerido) El ID de la orden general que englobará los pedidos a comercios.
+- **Respuesta:**
+
+  - **Código de estado 200 OK**:
+
+    ```json
+    [
+      {
+        "id": 7,
+        "cliente_id": 11,
+        "total": 86.65,
+        "tipo": 2,
+        "estat": 1,
+        "created_at": "2025-01-31T11:46:07.000000Z",
+        "updated_at": null,
+        "tipo_envio": {
+          "id": 2,
+          "nombre": "Envio",
+          "descripcion": null,
+          "created_at": null,
+          "updated_at": null
+      },
+      "estat_compra": {
+        "id": 1,
+        "nombre": "Pendiente",
+        "color": "#ffb300"
+      },
+        "order_comercios": [
+        {
+            "id": 3,
+            "order_id": 1,
+            "comercio_id": 11,
+            "subtotal": 385.75,
+            "estat": 3,
+            "created_at": "2025-01-31T11:46:07.000000Z",
+            "updated_at": null,
+            "comercio": {
+                "id": 11,
+                "nombre": "Zemlak, Price and Frami"
+            }
+        }
+    ]
+      }
+    ]
+    ```
+
+  - **Código de estado 404 Not Found** (Si no tiene comandas):
+
+    ```json
+    {
+      "message": "Comanda no encontrada."
+    }
+    ```
+---
+
+### 4. Ver información de una subcomanda de un cliente
+
+- **URL:** `/api/comandes/suborder/{id}`
+- **Método:** `PUT`
+- **Descripción:** Permite ver toda la información de un subpedido a un comercio.
+- **Parámetros:**
+  - `id`: (int, requerido) El ID de la suborder que se desea obtener.
+- **Respuesta:**
+
+  - **Código de estado 200 OK**:
+
+    ```json
+    {
+      "id": 1,
+      "order_id": 9,
+      "comercio_id": 10,
+      "subtotal": 935.26,
+      "estat": 4,
+      "created_at": "2025-01-31T11:46:07.000000Z",
+      "updated_at": null,
+      "estat_compra": {
+        "id": 4,
+        "nombre": "Entregado",
+        "color": "#16d900"
+      },
+      "order": {
+        "id": 9,
+        "tipo": 1,
+        "tipo_envio": {
+          "id": 1,
+          "nombre": "Recollida",
+          "descripcion": null,
+          "created_at": null,
+          "updated_at": null
+        }
+      },
+      "productos_compra": [
+        {
+        "id": 21,
+        "order_comercio_id": 1,
+        "producto_id": 14,
+        "cantidad": 9,
+        "precio": 49.27,
+        "producto":{
+          "id": 14,
+          "subcategoria_id": 30,
+          "comercio_id": 3,
+          "nombre": "Videocámara de acción",
+          "descripcion": "Videocámara de acción resistente al agua...",
+          "precio": 922.8,
+          "stock": null,
+          "imagen": null
+          }
+        }
+      ]
+    }
+    ```
+
+  - **Código de estado 404 Not Found** (Si no esta registrado):
+
+    ```json
+    {
+      "message": "No tienes ninguna orden con ID #134."
+    }
+
+    ```
+
+---
