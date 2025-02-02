@@ -5,12 +5,9 @@
 
                 <div id="banner">
                     <div id="carousel" class="transition-transform duration-500 ease-in-out">
-                        <img
-                            src="https://static.vecteezy.com/system/resources/previews/002/506/587/non_2x/flash-sale-discount-banner-promotion-background-vector.jpg">
-                        <img
-                            src="https://s.tmimgcdn.com/scr/1200x750/343900/banner-de-venta-de-color-azul-degradado-vectorial-y-idea-de-fondo-azul-de-promocion-de-descuento-de-banner-de-venta_343959-original.jpg">
-                        <img
-                            src="https://img.freepik.com/vector-premium/promocion-plantilla-banner-descuento-venta-flash_7087-866.jpg">
+                        <img src="https://static.vecteezy.com/system/resources/previews/002/506/587/non_2x/flash-sale-discount-banner-promotion-background-vector.jpg">
+                        <img src="https://s.tmimgcdn.com/scr/1200x750/343900/banner-de-venta-de-color-azul-degradado-vectorial-y-idea-de-fondo-azul-de-promocion-de-descuento-de-banner-de-venta_343959-original.jpg">
+                        <img src="https://img.freepik.com/vector-premium/promocion-plantilla-banner-descuento-venta-flash_7087-866.jpg">
                     </div>
                 </div>
 
@@ -33,9 +30,9 @@
                     <h1 class="text-xl font-semibold text-gray-900 dark:text-white mb-4">Últimes tendències</h1>
                     <div id="productos" class="grid grid-cols-2 gap-4">
                         <productoComp v-for="(producto, index) in productos" :key="index" :id="producto.id"
-                            :img="producto.img" :title="producto.nombre" :price="producto.precio"
-                            :comercio="producto.comercio" price-class="text-gray-900 dark:text-white"
-                            @click="mostrarIdProducto(producto.id)">
+                            :img="producto.imagen ? `http://localhost:8000/storage/${producto.imagen}` : 'http://localhost:8000/storage/productos/default-image.webp'"
+                            :title="producto.nombre" :price="producto.precio" :comercio="producto.comercio"
+                            price-class="text-gray-900 dark:text-white" @click="mostrarIdProducto(producto.id)">
                         </productoComp>
                     </div>
                 </div>
@@ -44,66 +41,68 @@
     </div>
 </template>
 
+
 <script setup>
-    import { ref, onMounted, watch } from "vue";
-    import { useRouter } from "vue-router";
-    import { useAuthStore } from "~/stores/authStore";
+import { ref, onMounted, watch } from "vue";
+import { useRouter } from "vue-router";
+import { useAuthStore } from "~/stores/authStore";
 
-    const productos = ref([]);
-    const categorias = ref([]);
-    const router = useRouter();
-    const authStore = useAuthStore();
-    const { $communicationManager } = useNuxtApp();
-    const isDarkMode = ref(window.matchMedia("(prefers-color-scheme: dark)").matches);
+const productos = ref([]);
+const categorias = ref([]);
+const router = useRouter();
+const authStore = useAuthStore();
+const { $communicationManager } = useNuxtApp();
+const isDarkMode = ref(window.matchMedia("(prefers-color-scheme: dark)").matches);
 
-    onMounted(() => {
-        const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
-        const handleChange = (event) => {
-            isDarkMode.value = event.matches;
-        };
-        mediaQuery.addEventListener("change", handleChange);
+onMounted(() => {
+    const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
+    const handleChange = (event) => {
+        isDarkMode.value = event.matches;
+    };
+    mediaQuery.addEventListener("change", handleChange);
 
-        document.body.classList.toggle('dark', isDarkMode.value);
+    document.body.classList.toggle('dark', isDarkMode.value);
 
-        fetchProductos();
-        fetchCategorias();
-    });
+    fetchProductos();
+    fetchCategorias();
+});
 
-    watch(isDarkMode, (newValue) => {
-        document.body.classList.toggle('dark', newValue);
-    });
+watch(isDarkMode, (newValue) => {
+    document.body.classList.toggle('dark', newValue);
+});
 
-    async function fetchProductos() {
-        try {
-            const response = await $communicationManager.getProductos();
-            if (response && response.data) {
-                productos.value = response.data;
-            } else {
-                console.error("Error al obtener los productos");
-            }
-        } catch (error) {
-            console.error("Error en la petición:", error);
+async function fetchProductos() {
+    try {
+        const response = await $communicationManager.getProductos();
+        console.log(response);
+        if (response && response.data) {
+            productos.value = response.data;
+        } else {
+            console.error("Error al obtener los productos");
         }
+    } catch (error) {
+        console.error("Error en la petición:", error);
     }
+}
 
-    async function fetchCategorias() {
-        try {
-            const responseCategorias = await $communicationManager.getCategoriasGenerales();
-            if (responseCategorias) {
-                categorias.value = responseCategorias;
-            } else {
-                console.error("Error al obtener las categorías");
-            }
-        } catch (error) {
-            console.error("Error en la petición:", error);
+async function fetchCategorias() {
+    try {
+        const responseCategorias = await $communicationManager.getCategoriasGenerales();
+        if (responseCategorias) {
+            categorias.value = responseCategorias;
+        } else {
+            console.error("Error al obtener las categorías");
         }
+    } catch (error) {
+        console.error("Error en la petición:", error);
     }
+}
 
-    function mostrarIdProducto(id) {
-        router.push(`/producto/${id}`);
-    }
+function mostrarIdProducto(id) {
+    router.push(`/producto/${id}`);
+}
 </script>
 
 <style scoped>
-    @import '../assets/index.css';
+@import '../assets/index.css';
 </style>
