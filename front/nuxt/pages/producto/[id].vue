@@ -2,7 +2,7 @@
     <div
         class="min-h-screen flex flex-col bg-white text-gray-900 dark:bg-gray-900 dark:text-gray-100 transition-colors duration-300">
         <div id="header" class="flex items-center justify-between p-4 bg-white dark:bg-gray-800 shadow-lg rounded-lg">
-            <div class="text-xl text-gray-700 dark:text-gray-300 cursor-pointer">
+            <div @click="goBack" class="text-xl text-gray-700 dark:text-gray-300 cursor-pointer">
                 ←
             </div>
 
@@ -18,7 +18,8 @@
         </div>
 
         <div id="imgs" class="h-[400px] w-full max-w-[900px] mx-auto overflow-hidden">
-            <img :src="producto?.imagen" alt="Imagen del producto" class="h-full w-full object-contain" />
+            <img :src="producto?.imagen ? `http://localhost:8000/storage/${producto.imagen}` : 'http://localhost:8000/storage/productos/default-image.webp'"
+                alt="Imagen del producto" class="h-full w-full object-contain" />
         </div>
 
         <div id="infoAdicional" class="p-4 flex flex-col flex-grow">
@@ -59,6 +60,8 @@
     </div>
 </template>
 
+
+
 <script setup>
 definePageMeta({
     layout: false,
@@ -69,11 +72,12 @@ import { ref, onMounted } from "vue";
 import { useRoute } from "vue-router";
 import ButtonBasketComp from "../../components/ButtonBasketComp.vue";
 
-const route = useRoute();
-const producto = ref(null);
-const selectedSize = ref(null);
-const selectedColor = ref(null);
-const { $communicationManager } = useNuxtApp();
+    const route = useRoute();
+    const router = useRouter();
+    const producto = ref(null);
+    const selectedSize = ref(null);
+    const selectedColor = ref(null);
+    const { $communicationManager } = useNuxtApp();
 
 const fetchProducto = async () => {
     try {
@@ -83,15 +87,19 @@ const fetchProducto = async () => {
         if (response) {
             producto.value = response;
 
-            if (producto.value.varientes && producto.value.varientes.length > 0) {
-                selectedColor.value = producto.value.varientes[0].color;
-                selectedSize.value = producto.value.varientes[0];
+                if (producto.value.varientes && producto.value.varientes.length > 0) {
+                    selectedColor.value = producto.value.varientes[0].color;
+                    selectedSize.value = producto.value.varientes[0];
+                }
             }
+        } catch (error) {
+            console.error("Error obteniendo el producto:", error);
         }
-    } catch (error) {
-        console.error("Error obteniendo el producto:", error);
-    }
-};
+    };
+
+    const goBack = () => {
+    router.back();
+    };
 
 onMounted(() => {
     fetchProducto();

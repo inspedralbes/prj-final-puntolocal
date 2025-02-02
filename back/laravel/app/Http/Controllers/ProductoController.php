@@ -204,7 +204,8 @@
                     "comercio_id" => $producto->comercio_id,
                     "comercio" => $producto->comercio->nombre,
                     "precio" => $producto->precio,
-                    "stock" => $producto->stock
+                    "stock" => $producto->stock,
+                    "imagen" => $producto->imagen,
                 ];
             });
 
