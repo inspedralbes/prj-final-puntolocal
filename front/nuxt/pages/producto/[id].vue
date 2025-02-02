@@ -3,17 +3,31 @@
         class="min-h-screen flex flex-col bg-white text-gray-900 dark:bg-gray-900 dark:text-gray-100 transition-colors duration-300">
         <div id="header" class="flex items-center justify-between p-4 bg-white dark:bg-gray-800 shadow-lg rounded-lg">
             <div @click="goBack" class="text-xl text-gray-700 dark:text-gray-300 cursor-pointer">
-                ←
+                <svg width="1.5em" height="1.5em" viewBox="0 0 1024 1024" class="icon" xmlns="http://www.w3.org/2000/svg" fill="#000000">
+                    <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                    <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+                    <g id="SVGRepo_iconCarrier">
+                        <path fill="#000000" d="M224 480h640a32 32 0 110 64H224a32 32 0 010-64z"></path>
+                        <path fill="#000000"
+                            d="M237.248 512l265.408 265.344a32 32 0 01-45.312 45.312l-288-288a32 32 0 010-45.312l288-288a32 32 0 1145.312 45.312L237.248 512z">
+                        </path>
+                    </g>
+                </svg>
             </div>
 
-            <div class="flex-1 text-center text-lg font-semibold text-gray-800 dark:text-gray-200 max-w-[calc(100%-2rem)]">
+            <div
+                class="flex-1 text-center text-lg font-semibold text-gray-800 dark:text-gray-200 max-w-[calc(100%-2rem)]">
                 <h3>
                     {{ producto?.comercio || 'Nombre del comercio no disponible' }}
                 </h3>
             </div>
 
             <div id="corazon" class="w-8 h-8 flex items-center justify-center cursor-pointer">
-                <img src="../../assets/heart.svg" alt="Heart Icon" class="w-full h-full object-contain" />
+                <svg width="1.5em" height="1.5em" viewBox="0 0 24 24" fill="none" stroke="#333" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z">
+                    </path>
+                </svg>
             </div>
         </div>
 
@@ -28,7 +42,8 @@
                     {{ producto?.nombre || 'Nombre no disponible' }}
                 </h2>
                 <span class="flex items-center">
-                    <svg width="1.5em" height="1.5em" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg" fill="#f7ad23">
+                    <svg width="1.5em" height="1.5em" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg"
+                        fill="#f7ad23">
                         <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
                         <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
                         <g id="SVGRepo_iconCarrier">
@@ -37,7 +52,8 @@
                             </path>
                         </g>
                     </svg>
-                    <h3 class="ml-1 text-gray-600 font-bold text-xl dark:text-gray-400 mt-1">{{ producto?.valoracion || '3.8' }}</h3>
+                    <h3 class="ml-1 text-gray-600 font-bold text-xl dark:text-gray-400 mt-1">{{ producto?.valoracion ||
+                        '3.8' }}</h3>
                 </span>
             </div>
             <p class="text-gray-600 dark:text-gray-400 mt-2 text-justify">
@@ -72,12 +88,12 @@ import { ref, onMounted } from "vue";
 import { useRoute } from "vue-router";
 import ButtonBasketComp from "../../components/ButtonBasketComp.vue";
 
-    const route = useRoute();
-    const router = useRouter();
-    const producto = ref(null);
-    const selectedSize = ref(null);
-    const selectedColor = ref(null);
-    const { $communicationManager } = useNuxtApp();
+const route = useRoute();
+const router = useRouter();
+const producto = ref(null);
+const selectedSize = ref(null);
+const selectedColor = ref(null);
+const { $communicationManager } = useNuxtApp();
 
 const fetchProducto = async () => {
     try {
@@ -87,19 +103,19 @@ const fetchProducto = async () => {
         if (response) {
             producto.value = response;
 
-                if (producto.value.varientes && producto.value.varientes.length > 0) {
-                    selectedColor.value = producto.value.varientes[0].color;
-                    selectedSize.value = producto.value.varientes[0];
-                }
+            if (producto.value.varientes && producto.value.varientes.length > 0) {
+                selectedColor.value = producto.value.varientes[0].color;
+                selectedSize.value = producto.value.varientes[0];
             }
-        } catch (error) {
-            console.error("Error obteniendo el producto:", error);
         }
-    };
+    } catch (error) {
+        console.error("Error obteniendo el producto:", error);
+    }
+};
 
-    const goBack = () => {
+const goBack = () => {
     router.back();
-    };
+};
 
 onMounted(() => {
     fetchProducto();
