@@ -1,88 +1,107 @@
 <template>
-    <div id="banner">
-        <div id="carousel" class="transition-transform duration-500 ease-in-out">
-            <img src="https://static.vecteezy.com/system/resources/previews/002/506/587/non_2x/flash-sale-discount-banner-promotion-background-vector.jpg">
-            <img src="https://s.tmimgcdn.com/scr/1200x750/343900/banner-de-venta-de-color-azul-degradado-vectorial-y-idea-de-fondo-azul-de-promocion-de-descuento-de-banner-de-venta_343959-original.jpg">
-            <img src="https://img.freepik.com/vector-premium/promocion-plantilla-banner-descuento-venta-flash_7087-866.jpg">
-        </div>
-    </div>
-    <div id="contain-categorias">
-        <div id="categorias" class="flex">
-            <div class="box-categoria">
-                <img src="" alt="">
+    <div>
+        <div :class="{ 'dark': isDarkMode }">
+            <div class="bg-white dark:bg-gray-900 min-h-screen transition-colors duration-300">
+
+                <div id="banner">
+                    <div id="carousel" class="transition-transform duration-500 ease-in-out">
+                        <img
+                            src="https://static.vecteezy.com/system/resources/previews/002/506/587/non_2x/flash-sale-discount-banner-promotion-background-vector.jpg">
+                        <img
+                            src="https://s.tmimgcdn.com/scr/1200x750/343900/banner-de-venta-de-color-azul-degradado-vectorial-y-idea-de-fondo-azul-de-promocion-de-descuento-de-banner-de-venta_343959-original.jpg">
+                        <img
+                            src="https://img.freepik.com/vector-premium/promocion-plantilla-banner-descuento-venta-flash_7087-866.jpg">
+                    </div>
+                </div>
+
+                <div id="contain-categorias" class="w-full overflow-x-auto bg-gray-100 dark:bg-gray-800 py-4">
+                    <div id="categorias" class="flex space-x-6 px-4 items-center">
+                        <div v-for="categoria in categorias" :key="categoria.id"
+                            class="flex flex-col items-center justify-center">
+                            <div class="w-20 h-20 rounded-lg shadow-md bg-cover bg-center dark:shadow-sm dark:shadow-white"
+                                :style="{ backgroundImage: `url(${categoria.imagenes})` }">
+                            </div>
+                            <p
+                                class="h-10 flex items-center justify-center mt-2 text-sm font-medium text-gray-800 dark:text-gray-200">
+                                {{ categoria.name }}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="contain-productos" class="p-4">
+                    <h1 class="text-xl font-semibold text-gray-900 dark:text-white mb-4">Últimes tendències</h1>
+                    <div id="productos" class="grid grid-cols-2 gap-4">
+                        <productoComp v-for="(producto, index) in productos" :key="index" :id="producto.id"
+                            :img="producto.img" :title="producto.nombre" :price="producto.precio"
+                            :comercio="producto.comercio" price-class="text-gray-900 dark:text-white"
+                            @click="mostrarIdProducto(producto.id)">
+                        </productoComp>
+                    </div>
+                </div>
             </div>
-            <div class="box-categoria"></div>
-            <div class="box-categoria"></div>
-            <div class="box-categoria"></div>
-            <div class="box-categoria"></div>
-            <div class="box-categoria"></div>
-        </div>
-    </div>
-    <div id="contain-productos">
-        <h1 class="titulo-productos">Ultimes tendències</h1>
-        <div id="productos">
-            <productoComp v-for="(producto, index) in productos" :key="index"
-                :img="producto.img"
-                :title="producto.nombre"
-                :price="producto.precio"
-                :comercio="producto.comercio">
-            </productoComp>
         </div>
     </div>
 </template>
 
 <script setup>
-    import { ref, onMounted } from "vue";
+    import { ref, onMounted, watch } from "vue";
+    import { useRouter } from "vue-router";
     import { useAuthStore } from "~/stores/authStore";
 
-    const { $communicationManager } = useNuxtApp();
-    const authStore = useAuthStore();
     const productos = ref([]);
+    const categorias = ref([]);
+    const router = useRouter();
+    const authStore = useAuthStore();
+    const { $communicationManager } = useNuxtApp();
+    const isDarkMode = ref(window.matchMedia("(prefers-color-scheme: dark)").matches);
 
-    function seleccionarProductosAleatorios(lista) {
-        if (!Array.isArray(lista)) {
-            return [];
-        }
-        const copiaLista = [...lista];
-        const seleccionados = [];
-        while (seleccionados.length < 6 && copiaLista.length > 0) {
-            const indiceAleatorio = Math.floor(Math.random() * copiaLista.length);
-            seleccionados.push(copiaLista[indiceAleatorio]);
-            copiaLista.splice(indiceAleatorio, 1);
-        }
-        return seleccionados;
-    }
+    onMounted(() => {
+        const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
+        const handleChange = (event) => {
+            isDarkMode.value = event.matches;
+        };
+        mediaQuery.addEventListener("change", handleChange);
+
+        document.body.classList.toggle('dark', isDarkMode.value);
+
+        fetchProductos();
+        fetchCategorias();
+    });
+
+    watch(isDarkMode, (newValue) => {
+        document.body.classList.toggle('dark', newValue);
+    });
 
     async function fetchProductos() {
         try {
             const response = await $communicationManager.getProductos();
             if (response && response.data) {
-                const productosRecibidos = response.data;
-                productos.value = seleccionarProductosAleatorios(productosRecibidos);
-            } else { console.error("Error al obtener los productos"); }
+                productos.value = response.data;
+            } else {
+                console.error("Error al obtener los productos");
+            }
         } catch (error) {
             console.error("Error en la petición:", error);
         }
     }
 
-    onMounted(() => {
-        let currentIndex = 0;
-        const images = document.querySelectorAll("#carousel img");
-        const totalImages = images.length;
-
-        function moveCarousel() {
-            currentIndex++;
-
-            if (currentIndex >= totalImages) { currentIndex = 0; }
-
-            const offset = -currentIndex * 100;
-            document.querySelector("#carousel").style.transform = `translateX(${offset}%)`;
+    async function fetchCategorias() {
+        try {
+            const responseCategorias = await $communicationManager.getCategoriasGenerales();
+            if (responseCategorias) {
+                categorias.value = responseCategorias;
+            } else {
+                console.error("Error al obtener las categorías");
+            }
+        } catch (error) {
+            console.error("Error en la petición:", error);
         }
+    }
 
-        setInterval(moveCarousel, 5000);
-
-        fetchProductos();
-    });
+    function mostrarIdProducto(id) {
+        router.push(`/producto/${id}`);
+    }
 </script>
 
 <style scoped>
