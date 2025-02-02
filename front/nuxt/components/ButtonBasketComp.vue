@@ -1,6 +1,7 @@
 <template>
     <button @click="addToBasket">
-        <img :src="shoppingBasketIcon" alt="Icono de carrito" class="svg-icon" />
+        <!-- <img :src="shoppingBasketIcon" alt="Icono de carrito" class="svg-icon" /> -->
+         <h3 class="text-2xl font-bold">Afegir a la cistella</h3>
     </button>
 </template>
 
@@ -38,7 +39,7 @@
         display: flex;
         color: white;
         cursor: pointer;
-        padding: 10px 40px;
+        padding: 10px 20px;
         border-radius: 5px;
         align-items: center;
         justify-content: center;

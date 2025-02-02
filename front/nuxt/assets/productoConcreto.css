@@ -5,3 +5,11 @@ body{
 .shadow-footer {
     box-shadow: 0 -4px 10px rgba(0, 0, 0, 0.1);
 }
+
+#infoAdicional #contain-title{
+    
+}
+
+#infoAdicional #contain-title h2{
+    width: 85%;
+}
