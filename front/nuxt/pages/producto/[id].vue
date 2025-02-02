@@ -48,49 +48,49 @@
 
 
 <script setup>
-definePageMeta({
-    layout: false,
-});
+    definePageMeta({
+        layout: false,
+    });
 
-import { useNuxtApp } from "#app";
-import { ref, onMounted } from "vue";
-import { useRoute } from "vue-router";
-import ButtonBasketComp from "../../components/ButtonBasketComp.vue";
+    import { useNuxtApp } from "#app";
+    import { ref, onMounted } from "vue";
+    import { useRoute } from "vue-router";
+    import ButtonBasketComp from "../../components/ButtonBasketComp.vue";
 
-const route = useRoute();
-const router = useRouter();
-const producto = ref(null);
-const selectedSize = ref(null);
-const selectedColor = ref(null);
-const { $communicationManager } = useNuxtApp();
+    const route = useRoute();
+    const router = useRouter();
+    const producto = ref(null);
+    const selectedSize = ref(null);
+    const selectedColor = ref(null);
+    const { $communicationManager } = useNuxtApp();
 
-const fetchProducto = async () => {
-    try {
-        const id = route.params.id;
-        const response = await $communicationManager.getProductoById(id);
+    const fetchProducto = async () => {
+        try {
+            const id = route.params.id;
+            const response = await $communicationManager.getProductoById(id);
 
-        if (response) {
-            producto.value = response;
+            if (response) {
+                producto.value = response;
 
-            if (producto.value.varientes && producto.value.varientes.length > 0) {
-                selectedColor.value = producto.value.varientes[0].color;
-                selectedSize.value = producto.value.varientes[0];
+                if (producto.value.varientes && producto.value.varientes.length > 0) {
+                    selectedColor.value = producto.value.varientes[0].color;
+                    selectedSize.value = producto.value.varientes[0];
+                }
             }
+        } catch (error) {
+            console.error("Error obteniendo el producto:", error);
         }
-    } catch (error) {
-        console.error("Error obteniendo el producto:", error);
-    }
-};
+    };
 
-const goBack = () => {
-  router.back();
-};
+    const goBack = () => {
+    router.back();
+    };
 
-onMounted(() => {
-    fetchProducto();
-});
+    onMounted(() => {
+        fetchProducto();
+    });
 </script>
 
 <style scoped>
-@import '../../assets/productoConcreto.css';
+    @import '../../assets/productoConcreto.css';
 </style>
