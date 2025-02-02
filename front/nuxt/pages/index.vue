@@ -11,9 +11,12 @@
     </div>
     <div id="contain-categorias">
         <div id="categorias" class="flex">
-            <div v-for="categoria in categorias" :key="categoria.id" class="box-categoria"></div>
+            <div v-for="categoria in categorias" :key="categoria.id" class="box-categoria">
+                <p>{{ categoria.name }}</p>
+            </div>
         </div>
     </div>
+
     <div id="contain-productos">
         <h1 class="titulo-productos">Últimes tendències</h1>
         <div id="productos">
@@ -26,62 +29,62 @@
 </template>
 
 <script setup>
-    import { ref, onMounted } from "vue";
-    import { useRouter } from "vue-router";
-    import { useAuthStore } from "~/stores/authStore";
+import { ref, onMounted } from "vue";
+import { useRouter } from "vue-router";
+import { useAuthStore } from "~/stores/authStore";
 
-    const productos = ref([]);
-    const categorias = ref([]);
-    const router = useRouter();
-    const authStore = useAuthStore();
-    const { $communicationManager } = useNuxtApp();
+const productos = ref([]);
+const categorias = ref([]);
+const router = useRouter();
+const authStore = useAuthStore();
+const { $communicationManager } = useNuxtApp();
 
-    async function fetchProductos() {
-        try {
-            const response = await $communicationManager.getProductos();
-            if (response && response.data) {
-                productos.value = response.data;
-            } else {
-                console.error("Error al obtener los productos");
-            }
-        } catch (error) {
-            console.error("Error en la petición:", error);
+async function fetchProductos() {
+    try {
+        const response = await $communicationManager.getProductos();
+        if (response && response.data) {
+            productos.value = response.data;
+        } else {
+            console.error("Error al obtener los productos");
         }
+    } catch (error) {
+        console.error("Error en la petición:", error);
+    }
+}
+
+async function fetchCategorias() {
+    try {
+        const responseCategorias = await $communicationManager.getCategoriasGenerales();
+        if (responseCategorias) {
+            categorias.value = responseCategorias;
+        } else {
+            console.error("Error al obtener las categorías");
+        }
+    } catch (error) {
+        console.error("Error en la petición:", error);
+    }
+}
+
+
+function mostrarIdProducto(id) {
+    router.push(`/producto/${id}`);
+}
+
+onMounted(() => {
+    let currentIndex = 0;
+    const images = document.querySelectorAll("#carousel img");
+    const totalImages = images.length;
+
+    function moveCarousel() {
+        currentIndex++;
+        if (currentIndex >= totalImages) currentIndex = 0;
+        document.querySelector("#carousel").style.transform = `translateX(-${currentIndex * 100}%)`;
     }
 
-    async function fetchCategorias() {
-        try {
-            const responseCategorias = await $communicationManager.getCategoriasGenerales();
-            if (responseCategorias) {
-                categorias.value = responseCategorias;
-            } else {
-                console.error("Error al obtener las categorías");
-            }
-        } catch (error) {
-            console.error("Error en la petición:", error);
-        }
-    }
-
-
-    function mostrarIdProducto(id) {
-        router.push(`/producto/${id}`);
-    }
-
-    onMounted(() => {
-        let currentIndex = 0;
-        const images = document.querySelectorAll("#carousel img");
-        const totalImages = images.length;
-
-        function moveCarousel() {
-            currentIndex++;
-            if (currentIndex >= totalImages) currentIndex = 0;
-            document.querySelector("#carousel").style.transform = `translateX(-${currentIndex * 100}%)`;
-        }
-
-        setInterval(moveCarousel, 5000);
-        fetchProductos();
-        fetchCategorias();
-    });
+    setInterval(moveCarousel, 5000);
+    fetchProductos();
+    fetchCategorias();
+});
 </script>
 
 
