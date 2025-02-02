@@ -55,10 +55,10 @@
     import ButtonBasketComp from "../../components/ButtonBasketComp.vue";
 
     const route = useRoute();
-    const { $communicationManager } = useNuxtApp();
     const producto = ref(null);
-    const selectedColor = ref(null);
     const selectedSize = ref(null);
+    const selectedColor = ref(null);
+    const { $communicationManager } = useNuxtApp();
 
     const fetchProducto = async () => {
         try {

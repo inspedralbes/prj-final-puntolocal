@@ -88,7 +88,7 @@ export default defineNuxtPlugin(nuxtApp => {
 
     async getCategoriasGenerales() {
       try {
-        const response = await fetch(`${Host}/categoriasGenerales/getCategoriasGenerales`, {
+        const response = await fetch(`${Host}/categorias`, {
           method: 'GET',
           headers: {
             'Accept': 'application/json',
