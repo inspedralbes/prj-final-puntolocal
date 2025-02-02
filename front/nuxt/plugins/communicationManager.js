@@ -16,7 +16,7 @@ export default defineNuxtPlugin(nuxtApp => {
     ///////////////////////////// GET  //////////////////////////////////
     async getCategorias() {
       try {
-        const response = await fetch(Host + '/categorias',{
+        const response = await fetch(Host + '/categorias', {
           method: 'GET',
           headers: {
             'Accept': 'application/json',
@@ -31,16 +31,41 @@ export default defineNuxtPlugin(nuxtApp => {
           console.error(`Error en la petición: ${response.status} ${response.statusText}`)
           return null;
         }
-    
+
       } catch (error) {
         console.error('Error al realizar la petición:', error);
         return null;
       }
     },
 
+    async getProductoById(id) {
+      try {
+        const response = await fetch(`${Host}/producto/${id}`, {
+          method: 'GET',
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+            'Authorization': this.authStore.token ? `Bearer ${this.authStore.token}` : ''
+          }
+        });
+
+        if (!response.ok) {
+          console.error(`Error en la petición: ${response.status} ${response.statusText}`);
+          return null;
+        }
+
+        const producto = await response.json();
+        return producto;
+      } catch (error) {
+        console.error('Error al realizar la petición:', error);
+        return null;
+      }
+    },
+
+
     async getProductos() {
       try {
-        const response = await fetch(`${Host}/producto`, {
+        const response = await fetch(`${Host}/producto/random`, {
           method: 'GET',
           headers: {
             'Accept': 'application/json',
@@ -64,7 +89,7 @@ export default defineNuxtPlugin(nuxtApp => {
 
     async getCategoriasGenerales() {
       try {
-        const response = await fetch(`${Host}/categoriasGenerales/getCategoriasGenerales`, {
+        const response = await fetch(`${Host}/categorias`, {
           method: 'GET',
           headers: {
             'Accept': 'application/json',
@@ -135,7 +160,7 @@ export default defineNuxtPlugin(nuxtApp => {
 
     async getComercios() {
       try {
-        const response = await fetch(Host + '/comercios',{
+        const response = await fetch(Host + '/comercios', {
           method: 'GET',
           headers: {
             'Accept': 'application/json',
@@ -150,34 +175,33 @@ export default defineNuxtPlugin(nuxtApp => {
           console.error(`Error en la petición: ${response.status} ${response.statusText}`)
           return null;
         }
-    
+
       } catch (error) {
         console.error('Error al realizar la petición:', error);
         return null;
       }
     },
-
     async getUserData(userId) {
-        try {
-          const response = await fetch(`${Host}/cliente/${userId}`, {
-            method: 'GET',
-            headers: {
-              'Accept': 'application/json',
-              'Content-Type': 'application/json',
-              'Authorization': this.authStore.token ? `Bearer ${this.authStore.token}` : ''
-            },
-          });
-          if (response.ok) {
-            const json = await response.json();
-            return json;
-          } else {
-            console.error(`Error en la petición: ${response.status} ${response.statusText}`);
-            return null;
-          }
-        } catch (error) {
-          console.error('Error al realizar la petición:', error);
+      try {
+        const response = await fetch(`${Host}/cliente/${userId}`, {
+          method: 'GET',
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+            'Authorization': this.authStore.token ? `Bearer ${this.authStore.token}` : ''
+          },
+        });
+        if (response.ok) {
+          const json = await response.json();
+          return json;
+        } else {
+          console.error(`Error en la petición: ${response.status} ${response.statusText}`);
           return null;
         }
+      } catch (error) {
+        console.error('Error al realizar la petición:', error);
+        return null;
+      }
     },
 
     async getDatosCliente(clienteId) {
@@ -340,7 +364,7 @@ export default defineNuxtPlugin(nuxtApp => {
           console.error(`Error en la petición: ${response.status} ${response.statusText}`)
           return null;
         }
-    
+
       } catch (error) {
         console.error('Error al realizar la petición:', error);
         return null;
@@ -348,16 +372,16 @@ export default defineNuxtPlugin(nuxtApp => {
     },
 
     async changePassword(json) {
-        try {
-          const response = await fetch(Host + '/auth/change-password', {
-            method: 'POST',
-            headers: {
-              'Accept': 'application/json',
-              'Content-Type': 'application/json',
-              'Authorization': this.authStore.token ? `Bearer ${this.authStore.token}` : ''
-            },
-            body: JSON.stringify(json)
-          });
+      try {
+        const response = await fetch(Host + '/auth/change-password', {
+          method: 'POST',
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+            'Authorization': this.authStore.token ? `Bearer ${this.authStore.token}` : ''
+          },
+          body: JSON.stringify(json)
+        });
 
         if (!response.ok) {
           console.error(`Error en la petición: ${response.status} ${response.statusText}`);
@@ -389,7 +413,7 @@ export default defineNuxtPlugin(nuxtApp => {
           console.error(`Error en la petición: ${response.status} ${response.statusText}`)
           return null;
         }
-    
+
       } catch (error) {
         console.error('Error al realizar la petición:', error);
         return null;
@@ -397,16 +421,16 @@ export default defineNuxtPlugin(nuxtApp => {
     },
 
     async changePassword(json) {
-        try {
-          const response = await fetch(Host + '/auth/change-password', {
-            method: 'POST',
-            headers: {
-              'Accept': 'application/json',
-              'Content-Type': 'application/json',
-              'Authorization': this.authStore.token ? `Bearer ${this.authStore.token}` : ''
-            },
-            body: JSON.stringify(json)
-          });
+      try {
+        const response = await fetch(Host + '/auth/change-password', {
+          method: 'POST',
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+            'Authorization': this.authStore.token ? `Bearer ${this.authStore.token}` : ''
+          },
+          body: JSON.stringify(json)
+        });
 
         if (!response.ok) {
           console.error(`Error en la petición: ${response.status} ${response.statusText}`);
@@ -595,16 +619,16 @@ export default defineNuxtPlugin(nuxtApp => {
     },
 
     async updateDatosPersonales(json, id) {
-        try {
-          const response = await fetch(Host + '/cliente/' + id + '/datos-personales', {
-            method: 'PUT',
-            headers: {
-              'Accept': 'application/json',
-              'Content-Type': 'application/json',
-              'Authorization': this.authStore.token ? `Bearer ${this.authStore.token}` : ''
-            },
-            body: JSON.stringify(json)
-          });
+      try {
+        const response = await fetch(Host + '/cliente/' + id + '/datos-personales', {
+          method: 'PUT',
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+            'Authorization': this.authStore.token ? `Bearer ${this.authStore.token}` : ''
+          },
+          body: JSON.stringify(json)
+        });
 
         if (!response.ok) {
           console.error(`Error en la petición: ${response.status} ${response.statusText}`);
@@ -620,17 +644,17 @@ export default defineNuxtPlugin(nuxtApp => {
     },
 
     async updateDatosFacturacion(json, id) {
-        const authStore = useAuthStore();
-        try {
-          const response = await fetch(Host + '/cliente/' + id + '/datos-facturacion', {
-            method: 'PUT',
-            headers: {
-              'Accept': 'application/json',
-              'Content-Type': 'application/json',
-              'Authorization': this.authStore.token ? `Bearer ${this.authStore.token}` : ''
-            },
-            body: JSON.stringify(json)
-          });
+      const authStore = useAuthStore();
+      try {
+        const response = await fetch(Host + '/cliente/' + id + '/datos-facturacion', {
+          method: 'PUT',
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+            'Authorization': this.authStore.token ? `Bearer ${this.authStore.token}` : ''
+          },
+          body: JSON.stringify(json)
+        });
 
         if (!response.ok) {
           console.error(`Error en la petición: ${response.status} ${response.statusText}`);
@@ -649,7 +673,7 @@ export default defineNuxtPlugin(nuxtApp => {
       try {
         const response = await fetch(`${Host}/admin/estats`);
 
-        if(!response.ok){
+        if (!response.ok) {
           console.error(`Error en la petición: ${response.status} ${response.statusText}`);
           return null;
         }
@@ -673,7 +697,7 @@ export default defineNuxtPlugin(nuxtApp => {
           body: JSON.stringify({ estat: order.estat }),
         });
 
-        if(!response.ok){
+        if (!response.ok) {
           console.error(`Error en la petición: ${response.status} ${response.statusText}`);
           return null;
         }
