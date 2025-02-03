@@ -34,7 +34,7 @@ class GoogleController extends Controller
             $userData = [
                 'id' => $user->id,
                 'name' => $user->name,
-                'apellidos' => $user->lastname,
+                'apellidos' => $user->apellidos,
                 'email' => $user->email,
                 'token' => $token,
             ];
