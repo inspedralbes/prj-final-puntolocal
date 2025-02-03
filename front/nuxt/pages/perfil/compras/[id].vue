@@ -83,10 +83,10 @@
 </script>
 
 <style scoped>
-#estat {
-    width: 15px;
-    height: 15px;
-    border-radius: 50%;
-    margin-left: 10px;
-}
+    #estat {
+        width: 15px;
+        height: 15px;
+        border-radius: 50%;
+        margin-left: 10px;
+    }
 </style>
