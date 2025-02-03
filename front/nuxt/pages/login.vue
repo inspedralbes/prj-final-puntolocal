@@ -1,13 +1,14 @@
 <script setup>
 import { navigateTo } from '#app';
 import { useAuthStore } from '@/stores/authStore';
+import { errorMessages } from 'vue/compiler-sfc';
 definePageMeta({
     layout: 'default',
 });
 
 
 const authStore = useAuthStore();
-
+const errorMessage = ref('');
 const formData = reactive({
     email: '',
     password: '',
@@ -19,12 +20,14 @@ async function login() {
     // Verificar si los campos están vacíos
     if (!formData.email || !formData.password) {
         console.error('És necessari completar tots els camps');
+        errorMessage.value = 'És necessari completar tots els camps';
         return;
     }
 
     // Verificar que la contraseña tenga al menos 8 caracteres
     if (formData.password.length < 8) {
-        console.error('La contrasenya ha de tenir mínim 8 caràcters');
+        console.error('La contrasenya es incorrecta');
+        errorMessage.value = 'La contrasenya es incorrecta';
         return;
     }
     // Llamar al plugin communicationManager para registrar
@@ -35,8 +38,13 @@ async function login() {
         navigateTo('/');
     } else {
         console.log('Hi ha hagut algun error, revisi les seves dades');
+        errorMessage.value = 'Hi ha hagut algun error, revisi les seves dades';
     }
 }
+
+function loginWithGoogle() {
+    window.location.href = `http://localhost:8000/auth/google`;
+};
 
 onBeforeMount(() => {
     if (authStore.isAuthenticated) {
@@ -70,9 +78,12 @@ onBeforeMount(() => {
                             <label for="password" class="block text-sm font-medium text-gray-700">Contrasenya</label>
                             <div class="mt-1">
                                 <input id="password" name="password" v-model="formData.password" type="password"
-                                    data-testid="password" autocomplete="current-password" required=""
+                                    data-testid="password" autocomplete="current-password"
                                     class="block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm">
                             </div>
+                        </div>
+                        <div class="text-red-600">
+                            {{ errorMessage }}
                         </div>
                         <div class="flex items-center justify-between">
                             <div class="flex items-center">
@@ -101,7 +112,7 @@ onBeforeMount(() => {
                             </div>
                         </div>
                         <div class="mt-6 grid grid-cols-2 gap-3">
-                            <button
+                            <button @click="loginWithGoogle"
                                 class="inline-flex w-full items-center justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-500 shadow-sm hover:bg-gray-50 disabled:cursor-wait disabled:opacity-50">
                                 <span class="sr-only">Inicia sessió amb Google</span>
                                 <svg class="h-6 w-6" fill="currentColor" viewBox="-3 -2 24 24" aria-hidden="true">
@@ -134,7 +145,6 @@ onBeforeMount(() => {
                     <div class="m-auto mt-6 w-fit md:mt-8">
                         <span class="m-auto">No tens compte?
                             <NuxtLink class="font-semibold text-indigo-600" to="/register">Crear compte</NuxtLink>
-
                         </span>
                     </div>
                 </div>
