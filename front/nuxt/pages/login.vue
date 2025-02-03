@@ -42,6 +42,10 @@ async function login() {
     }
 }
 
+function loginWithGoogle() {
+    window.location.href = `http://localhost:8000/auth/google`;
+};
+
 onBeforeMount(() => {
     if (authStore.isAuthenticated) {
         navigateTo('/');
@@ -108,7 +112,7 @@ onBeforeMount(() => {
                             </div>
                         </div>
                         <div class="mt-6 grid grid-cols-2 gap-3">
-                            <button
+                            <button @click="loginWithGoogle"
                                 class="inline-flex w-full items-center justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-500 shadow-sm hover:bg-gray-50 disabled:cursor-wait disabled:opacity-50">
                                 <span class="sr-only">Inicia sessió amb Google</span>
                                 <svg class="h-6 w-6" fill="currentColor" viewBox="-3 -2 24 24" aria-hidden="true">
