@@ -13,7 +13,7 @@ const groups = reactive([]);
 
 // Fetch de los comercios que tienen id en la cesta
 onMounted(async () => {
-    const uniqueComercioIds = [...new Set(comercioStore.cesta.map(item => item.comercio))];
+    const uniqueComercioIds = [...new Set(comercioStore.cesta.map(item => item.comercio_id))];
     await Promise.all(uniqueComercioIds.map(async (id) => {
         const comercioData = await $communicationManager.getComercio(id);
         if (comercioData && comercioData.nombre) {
@@ -25,8 +25,8 @@ onMounted(async () => {
 // Agrupos los productos por el nombre del comercio
 const groupedCesta = computed(() => {
     return comercioStore.cesta.reduce((groups, item) => {
-        const comercioNombre = comercios.value[item.comercio] || 'Desconocido';
-        if (!groups[comercioNombre]) {
+        const comercioNombre = comercios.value[item.comercio_id] || 'Desconocido';
+        if (!groups[comercioNombre]) {  
             groups[comercioNombre] = [];
         }
         groups[comercioNombre].push(item);
@@ -61,7 +61,7 @@ const comprar = () => {
                             <path
                                 d="M11 1.5v1h3.5a.5.5 0 0 1 0 1h-.538l-.853 10.66A2 2 0 0 1 11.115 16h-6.23a2 2 0 0 1-1.994-1.84L2.038 3.5H1.5a.5.5 0 0 1 0-1H5v-1A1.5 1.5 0 0 1 6.5 0h3A1.5 1.5 0 0 1 11 1.5m-5 0v1h4v-1a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5M4.5 5.029l.5 8.5a.5.5 0 1 0 .998-.06l-.5-8.5a.5.5 0 1 0-.998.06m6.53-.528a.5.5 0 0 0-.528.47l-.5 8.5a.5.5 0 0 0 .998.058l.5-8.5a.5.5 0 0 0-.47-.528M8 4.5a.5.5 0 0 0-.5.5v8.5a.5.5 0 0 0 1 0V5a.5.5 0 0 0-.5-.5" />
                         </svg></button>
-                    <img :src="item.variante[0].imagenes[0]" alt="Product Image" class="w-[80px] h-[80px] mr-4" />
+                    <img :src="item.imagen" alt="Product Image" class="w-[80px] h-[80px] mr-4" />
                     <div class="flex flex-col">
                         <div class="flex mb-2">
                             <h3 class="mr-2 line-clamp-1 break-all max-sm:w-[178px]">{{ item.nombre }}</h3>
