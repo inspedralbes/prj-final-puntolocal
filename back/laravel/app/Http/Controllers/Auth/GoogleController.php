@@ -24,7 +24,6 @@ class GoogleController extends Controller
                 ['email' => $googleUser->getEmail()],
                 [
                     'name' => $googleUser->user['given_name'],
-                    'password' => bcrypt(''),
                     'apellidos' => $googleUser->user['family_name'],
                 ]
             );

@@ -27,7 +27,7 @@
             const { token, ...user } = userData;
   
             // Guardar token y usuario en el store
-            authStore.login(user, token);
+            authStore.login(user, token, '');
             navigateTo('/');
           } catch (error) {
             console.log('Hubo un problema con el inicio de sesión.');
