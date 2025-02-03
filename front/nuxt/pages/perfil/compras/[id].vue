@@ -1,111 +1,92 @@
 <template>
-    <div id="detalle-compra" class="h-screen bg-gray-100">
-        <div class="container mx-auto p-6 bg-white shadow-lg rounded-lg mt-6">
-            <h1 class="text-3xl font-bold mb-6 text-gray-800">Detalls de la Compra</h1>
+    <div v-if="loading" class="flex justify-center items-center h-screen text-xl text-gray-600">
+        <Loading />
+    </div>
 
-            <div v-if="loading" class="flex justify-center items-center">
-                <Loading />
+    <div v-else class="space-y-6 p-6">
+        <h1 class="text-2xl font-bold text-center text-gray-800 mb-6">Detalls de la Compra</h1>
+
+        <div class="bg-white p-6 rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300">
+            <div class="mb-4">
+                <p class="text-xl font-semibold text-gray-800">
+                    <strong>Data de Compra:</strong> {{ compras.created_at }}
+                </p>
+                <div class="flex items-center">
+                    <div :style="{ backgroundColor: compras.estat_compra?.color }" class="w-4 h-4 rounded-full mr-2">
+                    </div>
+                    <p class="text-lg text-gray-700">
+                        <strong>Estat:</strong> {{ compras.estat_compra?.nombre }}
+                    </p>
+                </div>
             </div>
 
-            <div v-else-if="compra" class="space-y-6">
-                <div class="flex justify-between items-center text-lg text-gray-700">
-                    <p><strong>Data:</strong> {{ new Date(compra.fecha).toLocaleDateString('ca-ES') }}</p>
-                    <p><strong>Total:</strong> {{ compra.total.toFixed(2) }} €</p>
-                </div>
+            <div v-for="order in compras.order_comercios" :key="order.id" class="border-t pt-4 mt-4">
+                <h2 class="text-lg font-semibold text-gray-800 mb-4">{{ order.comercio_nombre }}</h2>
 
-                <div class="flex items-center space-x-2">
-                    <div id="colorEstado" :style="{ backgroundColor: compra.estat_compra.color }"
-                        class="w-6 h-6 rounded-full border border-gray-400"></div>
-                    <p>
-                        <strong>Estat de la compra:</strong>
-                        {{ compra.estat_id === 1 ? "Pendiente"
-                            : compra.estat_id === 2 ? "Procesando"
-                                : compra.estat_id === 3 ? "Enviado"
-                                    : compra.estat_id === 4 ? "Entregado"
-                                        : "Cancelado" }}
+                <div v-for="producto in order.productos_compra" :key="producto.id" class="mb-4">
+                    <p class="text-lg text-gray-700">
+                        <strong>Producto:</strong> {{ producto.producto_nombre }} <br>
+                        <strong>Quantitat:</strong> {{ producto.cantidad }} <br>
+                        <strong>Preu per unitat:</strong> {{ producto.precio }} €
                     </p>
                 </div>
 
-                <div class="flex items-center justify-between">
-                    <p><strong>Tipus d'enviament:</strong> {{ compra.tipo_envio_info?.nombre }}</p>
+                <div class="text-lg text-gray-700 mb-4">
+                    <strong>Subtotal:</strong> {{ order.subtotal }} €
                 </div>
-
-                <h3 class="text-xl font-semibold mt-4 text-gray-700">Productes:</h3>
-                <div v-for="producto in compra.productos_compra" :key="producto.id"
-                    class="bg-gray-50 p-4 rounded-lg shadow-md flex items-center space-x-4 mb-4">
-                    <img :src="producto.producto.imagen || 'https://via.placeholder.com/100'" alt="Imagen del producto"
-                        class="w-24 h-24 object-cover rounded-md" />
-                    <div class="flex-1">
-                        <h4 class="font-medium text-gray-800">{{ producto.producto.nombre }}</h4>
-                        <p class="text-sm text-gray-500">{{ truncateDescription(producto.producto.descripcion) }}</p>
-                        <div class="mt-2 flex justify-between items-center">
-                            <span class="text-sm text-gray-500">Quantitat: {{ producto.cantidad }}</span>
-                            <span class="font-bold text-blue-500">{{ producto.total.toFixed(2) }} €</span>
-                        </div>
-                    </div>
-                </div>
-
-                <h3 class="text-xl font-semibold mt-6 text-gray-700">JSON complet:</h3>
-                <pre class="bg-gray-100 p-4 rounded-lg text-sm text-gray-600 overflow-auto">
-                    {{ formattedJson }}
-                </pre>
             </div>
 
-            <div v-else>
-                <p class="text-center text-gray-500">No s'ha trobat informació de la compra.</p>
+            <div class="mt-6 text-xl font-semibold text-gray-800">
+                <strong>Total de la Compra:</strong> {{ compras.total }} €
             </div>
         </div>
     </div>
 </template>
 
-<script setup>
-    definePageMeta({
-        layout: false,
-    });
 
-    import { ref, onMounted, computed } from "vue";
-    import { useRoute } from "vue-router";
+<script setup>
+    import { ref, onMounted } from "vue";
+    import { useRouter, useRoute } from "vue-router";
     import Loading from "../../../components/loading.vue";
+    import { useAuthStore } from "../../../stores/authStore";
 
     const { $communicationManager } = useNuxtApp();
-    const route = useRoute();
-    const compra = ref(null);
+    const compras = ref({});
     const loading = ref(true);
+    const router = useRouter();
+    const route = useRoute();
+    const authStore = useAuthStore();
 
-    const formattedJson = computed(() => {
-        return compra.value ? JSON.stringify(compra.value, null, 2) : "";
-    });
-
-    const truncateDescription = (descripcion) => {
-        const words = descripcion.split(' ');
-        if (words.length > 10) {
-            return words.slice(0, 10).join(' ') + '...';
-        }
-        return descripcion;
-    };
-
-    onMounted(async () => {
+    async function fetchCompraDetalles() {
+        loading.value = true;
+        const clienteId = authStore.user?.id;
         const compraId = route.params.id;
 
-        if (compraId) {
-            loading.value = true;
-            const response = await $communicationManager.detalleCompra(compraId);
+        if (clienteId && compraId) {
+            try {
+                const response = await $communicationManager.detalleCompra(compraId);
+                console.log("Detalle de la compra:", response);
 
-            if (response) {
-                compra.value = response;
-            } else {
-                console.error("No es va poder obtenir els detalls de la compra.");
+                if (response) {
+                    compras.value = response;
+                } else {
+                    console.error("Error al obtenir els detalls de la compra.");
+                }
+            } catch (error) {
+                console.error("Error en fetchCompraDetalles:", error);
             }
-            loading.value = false;
         }
-    });
+        loading.value = false;
+    }
+
+    onMounted(fetchCompraDetalles);
 </script>
 
 <style scoped>
-    #colorEstado {
+    #estat {
         width: 15px;
         height: 15px;
-        border-radius: 99px;
-        border: 1px solid #ccc;
+        border-radius: 50%;
+        margin-left: 10px;
     }
 </style>

@@ -6,11 +6,8 @@ use App\Models\Order;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
-class OrderController extends Controller
-{
-
-    public function index()
-    {
+class OrderController extends Controller {
+    public function index() {
         try {
             $user = Auth::user();
             $orders = Order::with('tipoEnvio', 'estatCompra', )->orderBy("created_at","desc")->where('cliente_id', $user->id)->get();
@@ -35,20 +32,40 @@ class OrderController extends Controller
         //
     }
 
-    public function show($id)
-    {
+    public function show($id) {
         try {
-            $order = Order::with('tipoEnvio', 'estatCompra', 'cliente', 'orderComercios', 'orderComercios.productosCompra')->where('id', $id)->first();
-
+            $order = Order::with([
+                'tipoEnvio', 
+                'estatCompra', 
+                'cliente', 
+                'orderComercios.comercio',
+                'orderComercios.productosCompra.producto'
+                ])
+            ->where('id', $id)
+            ->first();
+    
             if (!$order) {
                 return response()->json(['message' => 'Compra no encontrada.'], 404);
             }
-
+    
+            foreach ($order->orderComercios as $orderComercio) {
+                if ($orderComercio->comercio) {
+                    $orderComercio->comercio_nombre = $orderComercio->comercio->nombre;
+                }
+    
+                foreach ($orderComercio->productosCompra as $productoCompra) {
+                    if ($productoCompra->producto) {
+                        $productoCompra->producto_nombre = $productoCompra->producto->nombre;
+                    }
+                }
+            }
+    
             return response()->json($order, 200);
         } catch (\Exception $e) {
             return response()->json(['error' => 'Ocurrió un error al obtener los detalles de la compra: ' . $e->getMessage()], 500);
         }
     }
+    
 
     public function showOrdersComercios($id)
     {
