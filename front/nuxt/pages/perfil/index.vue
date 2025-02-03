@@ -24,7 +24,7 @@
                         {{ hasComercio ? 'Panel de Control del Comercio' : 'Crear Comercio' }}
                     </button>
 
-                    <button class="w-full bg-blue-500 text-white py-2 rounded-xl hover:bg-blue-600" @click="goToLogout">
+                    <button class="w-full bg-red-500 text-white py-2 rounded-xl hover:bg-red-600" @click="goToLogout">
                         Tancar sessió
                     </button>
 
