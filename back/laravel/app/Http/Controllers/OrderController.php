@@ -32,8 +32,7 @@ class OrderController extends Controller {
         //
     }
 
-    public function show($id)
-    {
+    public function show($id) {
         try {
             $order = Order::with([
                 'tipoEnvio', 
