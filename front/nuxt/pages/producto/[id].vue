@@ -53,7 +53,7 @@
                         </g>
                     </svg>
                     <h3 class="ml-1 text-gray-600 font-bold text-xl dark:text-gray-400 mt-1">{{ producto?.valoracion ||
-                        '3.8' }}</h3>
+                        '3.9' }}</h3>
                 </span>
             </div>
             <p class="text-gray-600 dark:text-gray-400 mt-2 text-justify">
@@ -99,10 +99,9 @@ const fetchProducto = async () => {
     try {
         const id = route.params.id;
         const response = await $communicationManager.getProductoById(id);
-
         if (response) {
             producto.value = response;
-
+            console.log(producto.value);
             if (producto.value.varientes && producto.value.varientes.length > 0) {
                 selectedColor.value = producto.value.varientes[0].color;
                 selectedSize.value = producto.value.varientes[0];
