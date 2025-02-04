@@ -18,12 +18,10 @@
                 <div class="overflow-x-auto">
                     <ul class="flex space-x-4">
                         <li v-for="subcategoria in subcategorias" :key="subcategoria.id"
-                            @click="toggleSubcategoria(subcategoria)"
-                            :class="{
+                            @click="toggleSubcategoria(subcategoria)" :class="{
                                 'text-blue-600': selectedSubcategorias.includes(subcategoria.id),
                                 'text-gray-600': !selectedSubcategorias.includes(subcategoria.id)
-                            }"
-                            class="font-medium hover:text-indigo-600 cursor-pointer transition duration-200">
+                            }" class="font-medium hover:text-indigo-600 cursor-pointer transition duration-200">
                             {{ subcategoria.name }}
                         </li>
                     </ul>
@@ -45,105 +43,90 @@
                         </button>
                     </div>
                 </div>
+
+                <div class="mt-6">
+                    <h4 class="text-lg font-medium text-gray-700">Nombre del Comercio:</h4>
+                    <p class="mt-2 text-gray-600">{{ comercio.nombre }}</p> <!-- Aquí no usamos .value -->
+                </div>
             </div>
         </div>
 
         <div v-if="view === 'informacion'">
-            <strong class="text-2xl font-semibold text-gray-800">Detalles completos del comercio:</strong>
-
-            <div class="mt-6">
-                <h4 class="text-lg font-medium text-gray-700">Nombre del Comercio:</h4>
-                <p class="mt-2 text-gray-600">{{ comercio.nombre }}</p>
-
-                <h4 class="text-lg font-medium text-gray-700 mt-4">Información de Contacto:</h4>
-                <p class="mt-2 text-gray-600">Email: <a :href="'mailto:' + comercio.email" class="text-indigo-600">{{ comercio.email }}</a></p>
-                <p class="mt-2 text-gray-600">Teléfono: {{ comercio.phone || 'No disponible' }}</p>
-
-                <h4 class="text-lg font-medium text-gray-700 mt-4">Dirección:</h4>
-                <p class="mt-2 text-gray-600">{{ comercio.calle_num }}, {{ comercio.ciudad }}, {{ comercio.provincia }}, {{ comercio.codigo_postal }}</p>
-
-                <h4 class="text-lg font-medium text-gray-700 mt-4">Descripción:</h4>
-                <p class="mt-2 text-gray-600">{{ comercio.descripcion }}</p>
-
-                <h4 class="text-lg font-medium text-gray-700 mt-4">Puntaje Medio:</h4>
-                <p class="mt-2 text-gray-600">{{ comercio.puntaje_medio }}</p>
-
-                <h4 class="text-lg font-medium text-gray-700 mt-4">Horario:</h4>
-                <pre v-if="comercio.horario" class="mt-2 text-gray-600">{{ formatHorario(comercio.horario) }}</pre>
-            </div>
         </div>
     </div>
 </template>
 
 <script setup>
-    definePageMeta({
-        layout: false,
-    });
+definePageMeta({
+    layout: false,
+});
 
-    import { useNuxtApp } from "#app";
-    import { ref, onMounted } from "vue";
-    import { useRoute, useRouter } from "vue-router";
-    import loading from "../../components/loading.vue";
+import { useNuxtApp } from "#app";
+import { ref, onMounted, computed } from "vue";
+import { useRoute, useRouter } from "vue-router";
+import loading from "../../components/loading.vue";
 
-    const route = useRoute();
-    const productos = ref([]);
-    const router = useRouter();
-    const comercio = ref(null);
-    const isLoading = ref(true);
-    const subcategorias = ref([]);
-    const selectedSubcategorias = ref([]);
-    const view = ref('productos');
-    const { $communicationManager } = useNuxtApp();
+const route = useRoute();
+const productos = ref([]);
+const router = useRouter();
+const comercio = ref(null);
+const isLoading = ref(true);
+const subcategorias = ref([]);
+const selectedSubcategorias = ref([]);
+const view = ref('productos');
+const { $communicationManager } = useNuxtApp();
 
-    const fetchComercio = async () => {
-        const id = route.params.id;
-        try {
-            const response = await $communicationManager.getComercioById(id);
+const fetchComercio = async () => {
+    const id = route.params.id;
+    try {
+        const response = await $communicationManager.getComercioById(id);
+        console.log(response);
 
-            if (response) {
-                comercio.value = response;
-                productos.value = response.productos;
+        if (response) {
+            comercio.value = response.comercio;
+            productos.value = response.productos;
 
-                const subcats = response.productos.map(producto => producto.subcategoria);
-                subcategorias.value = [...new Map(subcats.map(sub => [sub.id, sub])).values()];
+            const subcats = response.productos.map(producto => producto.subcategoria);
+            subcategorias.value = [...new Map(subcats.map(sub => [sub.id, sub])).values()];
 
-                isLoading.value = false;
-            } else {
-                throw new Error("No se pudo obtener el comercio");
-            }
-        } catch (error) {
-            console.error("Error al obtener el comercio:", error);
             isLoading.value = false;
-        }
-    };
-
-    const formatPrice = (price) => {
-        return parseFloat(price).toFixed(2);
-    };
-
-    const toggleView = (newView) => {
-        view.value = newView;
-        console.log("Vista cambiada a:", view.value);
-    };
-
-    const filteredProductos = computed(() => {
-        if (selectedSubcategorias.value.length === 0) {
-            return productos.value;
-        }
-        return productos.value.filter(producto =>
-            selectedSubcategorias.value.includes(producto.subcategoria.id)
-        );
-    });
-
-    const toggleSubcategoria = (subcategoria) => {
-        if (selectedSubcategorias.value.includes(subcategoria.id)) {
-            selectedSubcategorias.value = selectedSubcategorias.value.filter(id => id !== subcategoria.id);
+            console.log(comercio.value.nombre);
         } else {
-            selectedSubcategorias.value.push(subcategoria.id);
+            throw new Error("No se pudo obtener el comercio");
         }
-    };
+    } catch (error) {
+        console.error("Error al obtener el comercio:", error);
+        isLoading.value = false;
+    }
+};
 
-    onMounted(() => {
-        fetchComercio();
-    });
+const formatPrice = (price) => {
+    return parseFloat(price).toFixed(2);
+};
+
+const toggleView = (newView) => {
+    view.value = newView;
+    console.log("Vista cambiada a:", view.value);
+};
+
+const filteredProductos = computed(() => {
+    if (selectedSubcategorias.value.length === 0) {
+        return productos.value;
+    }
+    return productos.value.filter(producto =>
+        selectedSubcategorias.value.includes(producto.subcategoria.id)
+    );
+});
+
+const toggleSubcategoria = (subcategoria) => {
+    if (selectedSubcategorias.value.includes(subcategoria.id)) {
+        selectedSubcategorias.value = selectedSubcategorias.value.filter(id => id !== subcategoria.id);
+    } else {
+        selectedSubcategorias.value.push(subcategoria.id);
+    }
+};
+
+onMounted(() => {
+    fetchComercio();
+});
 </script>
