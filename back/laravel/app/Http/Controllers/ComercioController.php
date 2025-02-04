@@ -96,4 +96,78 @@ class ComercioController extends Controller
             ], 404);
         }
     }
+
+    public function updateComercio(Request $request, $id) {
+        $comercio = Comercio::find($id);
+        if ($comercio == null) {
+            return response()->json([
+                'error' => 'Comercio no encontrado'
+            ], 404);
+        }
+
+        $validator = Validator::make($request->all(), [
+            'nombre' => 'required|string|max:255',
+            'email' => 'required|email',
+            'phone' => 'required|string|max:15',
+            'calle_num' => 'required|string|max:255',
+            'ciudad' => 'required|string|max:255',
+            'provincia' => 'required|string|max:255',
+            'codigo_postal' => 'required|integer',
+            'num_planta' => 'required|integer',
+            'num_puerta' => 'required|integer',
+            'descripcion' => 'required|string|max:500',
+            'categoria_id' => 'required|integer',
+            'gestion_stock' => 'required|integer',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'error' => $validator->errors(),
+            ], 422);
+        }
+
+        $comercio->update($request->all());
+
+        return response()->json([
+            'message' => 'Comercio actualizado exitosamente.',
+            'comercio' => $comercio
+        ], 200);
+    }
+
+    public function updateComercioImagenes(Request $request, $id) {
+        $comercio = Comercio::find($id);
+        if ($comercio == null) {
+            return response()->json([
+                'error' => 'Comercio no encontrado'
+            ], 404);
+        }
+
+        $validator = Validator::make($request->all(), [
+            'imagenes' => 'nullable|array',
+            'imagenes.*' => 'image|mimes:jpg,jpeg,png,svg,webp|max:2048',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'error' => $validator->errors(),
+            ], 422);
+        }
+
+        $imagenesPaths = [];
+        if ($request->hasFile('imagenes')) {
+            foreach ($request->file('imagenes') as $imagen) {
+                $path = $imagen->store('comercios', 'public');
+                $imagenesPaths[] = $path;
+            }
+        }
+
+        $comercio->update([
+            'imagenes' => json_encode($imagenesPaths),
+        ]);
+
+        return response()->json([
+            'message' => 'Imágenes actualizadas exitosamente.',
+            'comercio' => $comercio
+        ], 200);
+    }
 }

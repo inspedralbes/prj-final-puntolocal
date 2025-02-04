@@ -165,7 +165,6 @@ async function updateDatosFacturacion() {
 
 }
 onMounted(() => {
-    // Lo suyo seria hacer esto pero si recargas la pagina no carga suficientemente rapido pinia o lo hago mal y te manda a login
     if (!authStore.isAuthenticated) {
         navigateTo('/login');
     }

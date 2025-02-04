@@ -617,57 +617,6 @@ export default defineNuxtPlugin(nuxtApp => {
       }
     },
 
-    async updateDatosPersonales(json, id) {
-      try {
-        const response = await fetch(Host + '/cliente/' + id + '/datos-personales', {
-          method: 'PUT',
-          headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json',
-            'Authorization': this.authStore.token ? `Bearer ${this.authStore.token}` : ''
-          },
-          body: JSON.stringify(json)
-        });
-
-        if (!response.ok) {
-          console.error(`Error en la petición: ${response.status} ${response.statusText}`);
-          return null;
-        }
-
-        const jsonResponse = await response.json();
-        return jsonResponse;
-      } catch (error) {
-        console.error('Error al realizar la petición:', error);
-        return null;
-      }
-    },
-
-    async updateDatosFacturacion(json, id) {
-      const authStore = useAuthStore();
-      try {
-        const response = await fetch(Host + '/cliente/' + id + '/datos-facturacion', {
-          method: 'PUT',
-          headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json',
-            'Authorization': this.authStore.token ? `Bearer ${this.authStore.token}` : ''
-          },
-          body: JSON.stringify(json)
-        });
-
-        if (!response.ok) {
-          console.error(`Error en la petición: ${response.status} ${response.statusText}`);
-          return null;
-        }
-
-        const jsonResponse = await response.json();
-        return jsonResponse;
-      } catch (error) {
-        console.error('Error al realizar la petición:', error);
-        return null;
-      }
-    },
-
     async getEstats() {
       try {
         const response = await fetch(`${Host}/admin/estats`);
@@ -707,7 +656,86 @@ export default defineNuxtPlugin(nuxtApp => {
         console.error('Error al realizar la petición:', error);
         return { success: false, message: error.message };
       }
-    }
+    },
+
+
+    ///////////////////////////// PUT //////////////////////////////////
+
+
+    async updateDatosPersonales(json, id) {
+      try {
+        const response = await fetch(Host + '/cliente/' + id + '/datos-personales', {
+          method: 'PUT',
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+            'Authorization': this.authStore.token ? `Bearer ${this.authStore.token}` : ''
+          },
+          body: JSON.stringify(json)
+        });
+
+        if (!response.ok) {
+          console.error(`Error en la petición: ${response.status} ${response.statusText}`);
+          return null;
+        }
+
+        const jsonResponse = await response.json();
+        return jsonResponse;
+      } catch (error) {
+        console.error('Error al realizar la petición:', error);
+        return null;
+      }
+    },
+
+    async updateDatosFacturacion(json, id) {
+      try {
+        const response = await fetch(Host + '/cliente/' + id + '/datos-facturacion', {
+          method: 'PUT',
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+            'Authorization': this.authStore.token ? `Bearer ${this.authStore.token}` : ''
+          },
+          body: JSON.stringify(json)
+        });
+
+        if (!response.ok) {
+          console.error(`Error en la petición: ${response.status} ${response.statusText}`);
+          return null;
+        }
+
+        const jsonResponse = await response.json();
+        return jsonResponse;
+      } catch (error) {
+        console.error('Error al realizar la petición:', error);
+        return null;
+      }
+    },
+
+    async updateComercio(json, id) {
+      try {
+        const response = await fetch(`${Host}/comercios/${id}`, {
+          method: 'PUT',
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+            'Authorization': this.authStore.token ? `Bearer ${this.authStore.token}` : ''
+          },
+          body: JSON.stringify(json)
+        });
+
+        if (!response.ok) {
+          console.error(`Error en la petición: ${response.status} ${response.statusText}`);
+          return null;
+        }
+
+        const jsonResponse = await response.json();
+        return jsonResponse;
+      } catch (error) {
+        console.error('Error al realizar la petición:', error);
+        return null;
+      }
+    },
   };
 
   // Inyectar el communicationManager en la app

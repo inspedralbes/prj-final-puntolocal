@@ -37,6 +37,8 @@
         Route::get('/', [ComercioController::class, 'getComercios']);
         Route::get('/{id}', [ComercioController::class, 'getComercio']);
         Route::get('/{id}/check', [ComercioController::class, 'checkUserHasComercio']);
+        Route::put('/{id}', [ComercioController::class, 'updateComercio']);
+        Route::post('/{id}/imagenes', [ComercioController::class, 'updateComercioImagenes']);
     });
 
 // ==== COMANDES ===================
