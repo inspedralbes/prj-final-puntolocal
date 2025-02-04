@@ -1,7 +1,7 @@
 <template>
     <button @click="addToBasket">
         <!-- <img :src="shoppingBasketIcon" alt="Icono de carrito" class="svg-icon" /> -->
-         <h3 class="text-2xl font-bold">Afegir a la cistella</h3>
+        <h3 class="text-2xl font-bold">Afegir a la cistella</h3>
     </button>
 </template>
 

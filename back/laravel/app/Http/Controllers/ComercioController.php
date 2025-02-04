@@ -2,20 +2,18 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
-
-
 use App\Models\Comercio;
+use App\Models\Producto;
+use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 
-
 class ComercioController extends Controller
 {
-    //
-    public function RegistrarComercio(Request $request) {
+    public function RegistrarComercio(Request $request)
+    {
         $validator = Validator::make($request->all(), [
             'nombre' => 'required|string|max:255',
             'idUser' => 'required|integer',
@@ -68,22 +66,49 @@ class ComercioController extends Controller
         ], 201);
     }
 
-    public function getComercios() {
+    public function getComercios()
+    {
         $comercios = Comercio::all();
         return response()->json($comercios, 200);
     }
 
     public function getComercio($id) {
         $comercio = Comercio::find($id);
+
         if ($comercio == null) {
             return response()->json([
                 'error' => 'Comercio no encontrado'
             ], 404);
         }
-        return response()->json($comercio, 200);
+
+        $productos = Producto::with('subcategoria')
+            ->where('comercio_id', $id)
+            ->get();
+
+        $productosData = $productos->map(function ($producto) {
+            return [
+                'producto_id' => $producto->id,
+                'nombre' => $producto->nombre,
+                'descripcion' => $producto->descripcion,
+                'precio' => $producto->precio,
+                'stock' => $producto->stock,
+                'imagen' => $producto->imagen,
+                'subcategoria' => [
+                    'id' => $producto->subcategoria->id,
+                    'name' => $producto->subcategoria->name,
+                ],
+            ];
+        });
+
+        return response()->json([
+            'comercio' => $comercio,
+            'productos' => $productosData,
+        ], 200);
     }
 
-    public function checkUserHasComercio($userId) {
+
+    public function checkUserHasComercio($userId)
+    {
         $comercio = Comercio::where('idUser', $userId)->first();
         if ($comercio) {
             return response()->json([

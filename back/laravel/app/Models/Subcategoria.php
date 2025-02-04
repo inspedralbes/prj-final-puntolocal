@@ -1,22 +1,19 @@
 <?php
+    namespace App\Models;
+    use Illuminate\Database\Eloquent\Model;
 
-namespace App\Models;
+    class Subcategoria extends Model {
+        public $timestamps = false;
+        protected $fillable = [
+            'categoria_id',
+            'name'
+        ];
 
-use Illuminate\Database\Eloquent\Model;
+        public function categoria() {
+            return $this->belongsTo(Categoria::class, 'categoria_id');
+        }
 
-class Subcategoria extends Model
-{
-    public $timestamps = false;
-    protected $fillable = [
-        'categoria_id',
-        'name'
-    ];
-
-    public function categoria() {
-        return $this->belongsTo(Categoria::class, 'categoria_id');
+        public function productos() {
+            return $this->hasMany(Producto::class, 'subcategoria_id', 'id');
+        }
     }
-
-    public function productos() {
-        return $this->hasMany(Producto::class, 'subcategoria_id', 'id');
-    }
-}
