@@ -1,60 +1,103 @@
 <template>
     <loading v-if="isLoading" />
 
-    <div v-if="comercio" class="text-gray-700 mb-6 p-6 bg-white rounded-lg shadow-lg">
-        <div class="flex justify-between items-center mb-6">
+    <div v-if="comercio" class="p-4 space-y-6">
+        <div class="flex gap-6 mb-6 justify-center">
             <a @click="toggleView('productos')"
-                class="text-lg font-medium text-indigo-600 hover:text-indigo-800 transition duration-200">
+                class="bg-transparent text-blue-600 rounded-lg transition-all duration-300 ease-in-out text-lg font-semibold flex items-center">
                 Ver Productos
             </a>
+
             <a @click="toggleView('informacion')"
-                class="text-lg font-medium text-indigo-600 hover:text-indigo-800 transition duration-200">
+                class="bg-transparent text-green-600 rounded-lg transition-all duration-300 ease-in-out text-lg font-semibold flex items-center">
                 Ver Información del Comercio
             </a>
         </div>
 
+
         <div v-if="view === 'productos'">
-            <div v-if="subcategorias.length" class="mb-6">
-                <div class="overflow-x-auto">
-                    <ul class="flex space-x-4">
-                        <li v-for="subcategoria in subcategorias" :key="subcategoria.id"
-                            @click="toggleSubcategoria(subcategoria)" :class="{
-                                'text-blue-600': selectedSubcategorias.includes(subcategoria.id),
-                                'text-gray-600': !selectedSubcategorias.includes(subcategoria.id)
-                            }" class="font-medium hover:text-indigo-600 cursor-pointer transition duration-200">
-                            {{ subcategoria.name }}
-                        </li>
-                    </ul>
-                </div>
+            <div v-if="subcategorias.length" class="overflow-x-auto pb-2 border-b border-gray-300">
+                <ul class="flex space-x-3 whitespace-nowrap">
+                    <li v-for="subcategoria in subcategorias" :key="subcategoria.id"
+                        @click="toggleSubcategoria(subcategoria)" :class="selectedSubcategorias.includes(subcategoria.id)
+                            ? 'bg-blue-800 text-white font-semibold'
+                            : 'bg-gray-200 text-gray-700 hover:bg-gray-300'"
+                        class="px-4 py-2 rounded-md cursor-pointer transition-all duration-300">
+                        {{ subcategoria.name }}
+                    </li>
+                </ul>
             </div>
 
-            <div id="productos" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div id="productos" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-[30px]">
                 <div v-for="(producto, index) in filteredProductos" :key="producto.producto_id"
-                    class="bg-white p-4 rounded-lg shadow-sm hover:shadow-lg transition duration-200">
+                    class="border rounded-lg p-4 shadow-md hover:shadow-lg transition">
                     <img :src="producto.imagen ? `http://localhost:8000/storage/${producto.imagen}` : 'http://localhost:8000/storage/productos/default-image.webp'"
-                        alt="Imagen del producto" class="w-full h-48 object-cover rounded-t-lg" />
-                    <h3 class="mt-4 text-xl font-semibold text-gray-800">{{ producto.nombre }}</h3>
-                    <p class="mt-2 text-gray-600 text-sm">{{ producto.descripcion }}</p>
-                    <div class="mt-4 flex justify-between items-center">
-                        <span class="text-lg font-semibold text-indigo-600">{{ formatPrice(producto.precio) }}€</span>
+                        alt="Imagen del producto" class="w-full h-48 object-cover mb-4 rounded-md" />
+                    <h3 class="font-semibold text-xl mb-2">{{ producto.nombre }}</h3>
+                    <p class="text-gray-600 mb-4">{{ producto.descripcion }}</p>
+                    <div class="flex justify-between items-center">
+                        <span class="text-lg font-bold">{{ formatPrice(producto.precio) }}€</span>
                         <button @click="mostrarIdProducto(producto.producto_id)"
-                            class="px-4 py-2 bg-indigo-600 text-white font-semibold rounded-md shadow-md hover:bg-indigo-700 transition duration-200">
+                            class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition">
                             Ver Producto
                         </button>
                     </div>
                 </div>
-
-                <div class="mt-6">
-                    <h4 class="text-lg font-medium text-gray-700">Nombre del Comercio:</h4>
-                    <p class="mt-2 text-gray-600">{{ comercio.nombre }}</p> <!-- Aquí no usamos .value -->
-                </div>
             </div>
         </div>
 
-        <div v-if="view === 'informacion'">
+        <div v-if="view === 'informacion'" class="space-y-4">
+            <div>
+                <h4 class="font-semibold text-lg">Nombre del Comercio:</h4>
+                <p class="text-gray-700">{{ comercio.nombre }}</p>
+            </div>
+
+            <div>
+                <h4 class="font-semibold text-lg">Descripción:</h4>
+                <p class="text-gray-700">{{ comercio.descripcion }}</p>
+            </div>
+
+            <div>
+                <h4 class="font-semibold text-lg">Dirección:</h4>
+                <p class="text-gray-700">
+                    {{ comercio.calle_num }}, {{ comercio.num_puerta }}, Planta {{ comercio.num_planta }}<br>
+                    {{ comercio.ciudad }}, {{ comercio.provincia }}, {{ comercio.codigo_postal }}
+                </p>
+            </div>
+
+            <div>
+                <h4 class="font-semibold text-lg">Teléfono:</h4>
+                <p class="text-gray-700">{{ comercio.phone }}</p>
+            </div>
+
+            <div>
+                <h4 class="font-semibold text-lg">Email:</h4>
+                <p class="text-gray-700">{{ comercio.email }}</p>
+            </div>
+
+            <div>
+                <h4 class="font-semibold text-lg">Horario:</h4>
+                <ul class="space-y-2">
+                    <li v-for="(horario, dia) in JSON.parse(comercio.horario)" :key="dia" class="text-gray-700">
+                        <strong>{{ dia }}:</strong> {{ horario }}
+                    </li>
+                </ul>
+            </div>
+
+            <div>
+                <h4 class="font-semibold text-lg">Puntuación Media:</h4>
+                <p class="text-yellow-500">{{ comercio.puntaje_medio }} ⭐</p>
+            </div>
+
+            <div v-if="comercio.imagenes">
+                <h4 class="font-semibold text-lg">Imagen del Comercio:</h4>
+                <img :src="JSON.parse(comercio.imagenes)[0]" alt="Imagen del comercio"
+                    class="w-full h-64 object-cover rounded-lg shadow-md" />
+            </div>
         </div>
     </div>
 </template>
+
 
 <script setup>
 definePageMeta({
@@ -80,7 +123,6 @@ const fetchComercio = async () => {
     const id = route.params.id;
     try {
         const response = await $communicationManager.getComercioById(id);
-        console.log(response);
 
         if (response) {
             comercio.value = response.comercio;
@@ -90,7 +132,6 @@ const fetchComercio = async () => {
             subcategorias.value = [...new Map(subcats.map(sub => [sub.id, sub])).values()];
 
             isLoading.value = false;
-            console.log(comercio.value.nombre);
         } else {
             throw new Error("No se pudo obtener el comercio");
         }
@@ -106,7 +147,6 @@ const formatPrice = (price) => {
 
 const toggleView = (newView) => {
     view.value = newView;
-    console.log("Vista cambiada a:", view.value);
 };
 
 const filteredProductos = computed(() => {
