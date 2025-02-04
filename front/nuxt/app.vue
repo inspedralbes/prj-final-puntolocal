@@ -14,7 +14,7 @@
 
 <style>
 body {
-  /* font-family: "Lato", serif; */
+  font-family: "Lato", serif;
 }
 
 .color-principal-1{

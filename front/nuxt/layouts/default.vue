@@ -29,23 +29,16 @@
                     </svg>
                 </NuxtLink>
                 <NuxtLink to="/cistella" class="flex flex-col items-center text-gray-300 hover:text-white">
-                    <svg class="w-6 h-6 mb-1" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                        <g clip-path="url(#clip0_15_35)">
-                            <rect width="24" height="24" />
+                    <svg width="1.5em" height="1.5em" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                        <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+                        <g id="SVGRepo_iconCarrier">
+                            <path d="M8 12L8 8C8 5.79086 9.79086 4 12 4V4C14.2091 4 16 5.79086 16 8L16 12"
+                                stroke="#000000" stroke-width="2" stroke-linecap="round"></path>
                             <path
-                                d="M5.33331 6H19.8672C20.4687 6 20.9341 6.52718 20.8595 7.12403L20.1095 13.124C20.0469 13.6245 19.6215 14 19.1172 14H16.5555H9.44442H7.99998"
-                                stroke="#000000" stroke-linejoin="round" />
-                            <path
-                                d="M2 4H4.23362C4.68578 4 5.08169 4.30341 5.19924 4.74003L8.30076 16.26C8.41831 16.6966 8.81422 17 9.26638 17H19"
-                                stroke="#000000" stroke-linecap="round" stroke-linejoin="round" />
-                            <circle cx="10" cy="20" r="1" stroke="#000000" stroke-linejoin="round" />
-                            <circle cx="17.5" cy="20" r="1" stroke="#000000" stroke-linejoin="round" />
+                                d="M3.69435 12.6678C3.83942 10.9269 3.91196 10.0565 4.48605 9.52824C5.06013 9 5.9336 9 7.68053 9H16.3195C18.0664 9 18.9399 9 19.514 9.52824C20.088 10.0565 20.1606 10.9269 20.3057 12.6678L20.8195 18.8339C20.904 19.8474 20.9462 20.3542 20.6491 20.6771C20.352 21 19.8435 21 18.8264 21H5.1736C4.15655 21 3.64802 21 3.35092 20.6771C3.05382 20.3542 3.09605 19.8474 3.18051 18.8339L3.69435 12.6678Z"
+                                stroke="#000000" stroke-width="2"></path>
                         </g>
-                        <defs>
-                            <clipPath id="clip0_15_35">
-                                <rect width="24" height="24" fill="white" />
-                            </clipPath>
-                        </defs>
                     </svg>
                 </NuxtLink>
                 <NuxtLink to="/perfil" class="flex flex-col items-center text-gray-300 hover:text-white">

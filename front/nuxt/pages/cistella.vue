@@ -6,14 +6,28 @@ definePageMeta({
 import { computed, onMounted, ref } from 'vue';
 import { useComercioStore } from '@/stores/comercioStore';
 import { useNuxtApp } from '#app';
+import { useRoute, useRouter } from "vue-router";
 import shoppingBasketIcon from '../assets/shopping-basket.svg';
 
+const route = useRoute();
+const router = useRouter();
 const comercioStore = useComercioStore();
 const { $communicationManager } = useNuxtApp();
 
 const comercios = ref({});
-
 const groups = reactive([]);
+const chooseShipping = ref(false);
+const choosed = ref(false);
+// const shipOption = ref(null);
+const shipOption = ref(2);
+// const paymentView = ref(false);
+const paymentView = ref(true);
+// const cistellaView = ref(true);
+const cistellaView = ref(false);
+
+const goBack = () => {
+    router.back();
+};
 
 // Fetch de los comercios que tienen id en la cesta
 onMounted(async () => {
@@ -43,63 +57,271 @@ const storeTotal = (storeName) => {
     return groupedCesta.value[storeName].reduce((acc, item) => acc + item.precio * item.cantidad, 0);
 };
 
+function toggleCheckout() {
+    chooseShipping.value = !chooseShipping.value;
+    shipOption.value = null;
+    choosed.value = false;
+}
+
+function togglePayment() {
+    paymentView.value = !paymentView.value;
+}
+
 const comprar = () => {
-    console.log('Aqui deberemos redirigir a la vista de compra')
+    console.log(groupedCesta.value);
+    toggleCheckout();
+}
+
+function chooseShip(event) {
+    shipOption.value = event.currentTarget.value;
+    console.log("Opción:", shipOption.value);
+    choosed.value = shipOption.value !== null;
+}
+
+function toPay() {
+    chooseShipping.value = !chooseShipping.value;
+    togglePayment();
+    console.log(shipOption.value);
 }
 
 </script>
 
 <template>
-    <header class="border-b border-gray-200 dsadsad"        >
-        <div>
-
+    <header class="border-b border-gray-300 flex items-center p-4">
+        <div class="flex items-center">
+            <div @click="goBack" class="text-xl text-gray-700 dark:text-gray-300 cursor-pointer">
+                <svg width="1.5em" height="1.5em" viewBox="0 0 1024 1024" class="icon"
+                    xmlns="http://www.w3.org/2000/svg" fill="#000000">
+                    <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                    <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+                    <g id="SVGRepo_iconCarrier">
+                        <path fill="#000000" d="M224 480h640a32 32 0 110 64H224a32 32 0 010-64z"></path>
+                        <path fill="#000000"
+                            d="M237.248 512l265.408 265.344a32 32 0 01-45.312 45.312l-288-288a32 32 0 010-45.312l288-288a32 32 0 1145.312 45.312L237.248 512z">
+                        </path>
+                    </g>
+                </svg>
+            </div>
+            <h3 class="text-2xl ml-4">Cistella</h3>
         </div>
     </header>
+
     <div>
         <div v-if="Object.keys(groupedCesta).length === 0">
             <p>La cistella esta buida.</p>
         </div>
-        <div v-else>
-            <div v-for="(items, storeName) in groupedCesta" :key="storeName"
-                class="bg-gray-100 mb-8 border rounded-lg p-4 m-4">
-                <h2 class="text-center font-bold text-xl mb-4">{{ storeName }}</h2>
-                <div v-for="item in items" :key="item.id" class="mb-4 flex items-center">
-                    <button @click="comercioStore.removeFromBasket(item.id)" class="mr-3">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
-                            class="bi bi-trash3-fill" viewBox="0 0 16 16">
-                            <path
-                                d="M11 1.5v1h3.5a.5.5 0 0 1 0 1h-.538l-.853 10.66A2 2 0 0 1 11.115 16h-6.23a2 2 0 0 1-1.994-1.84L2.038 3.5H1.5a.5.5 0 0 1 0-1H5v-1A1.5 1.5 0 0 1 6.5 0h3A1.5 1.5 0 0 1 11 1.5m-5 0v1h4v-1a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5M4.5 5.029l.5 8.5a.5.5 0 1 0 .998-.06l-.5-8.5a.5.5 0 1 0-.998.06m6.53-.528a.5.5 0 0 0-.528.47l-.5 8.5a.5.5 0 0 0 .998.058l.5-8.5a.5.5 0 0 0-.47-.528M8 4.5a.5.5 0 0 0-.5.5v8.5a.5.5 0 0 0 1 0V5a.5.5 0 0 0-.5-.5" />
-                        </svg>
+        <div v-else class="mt-[80px]">
+            <div v-if="chooseShipping">
+                <div class="bg-gray-900/50 dark:bg-gray-900/80 fixed inset-0 z-40" @click="toggleCheckout"></div>
+                <div id="chooseShipping" class="fixed bottom-0 z-40 flex flex-col items-center justify-center p-4">
+                    <h3 class="text-3xl font-semibold text-center" style="color: #1E2026">
+                        Com vols rebre la teva comanda?
+                    </h3>
+                    <div class="flex w-full justify-between contain-buttons mt-3">
+                        <button @click="chooseShip" value="1"
+                            class="flex items-center rounded-md px-3 py-4 min-w-[48%] text-lg font-bold disabled:opacity-50"
+                            :class="{ 'selected': shipOption === '1', 'noSelected': shipOption !== '1' }">
+                            <svg widths="1.8em" height="1.8em" fill="currentColor" version="1.1" id="Layer_1"
+                                xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+                                viewBox="0 0 512 512" xml:space="preserve" transform="matrix(-1, 0, 0, 1, 0, 0)">
+                                <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                                <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+                                <g id="SVGRepo_iconCarrier">
+                                    <g>
+                                        <g>
+                                            <polygon
+                                                points="438.32,62.807 438.32,109.573 407.95,109.573 407.95,62.807 343.661,62.807 343.661,192.019 502.609,192.019 502.609,62.807 ">
+                                            </polygon>
+                                        </g>
+                                    </g>
+                                    <g>
+                                        <g>
+                                            <path
+                                                d="M486.376,345.54c-1.198-1.768-2.476-3.476-3.833-5.119c-2.035-2.464-4.243-4.779-6.605-6.928 c-11.815-10.741-27.501-17.296-44.688-17.296c-8.021,0-15.714,1.427-22.841,4.041c-25.45,9.337-43.657,33.81-43.657,62.456 c0,2.292,0.116,4.556,0.344,6.79c0.682,6.698,2.363,13.106,4.89,19.07c0.421,0.994,0.866,1.976,1.333,2.945 c5.143,10.657,13.046,19.742,22.776,26.321c4.423,2.99,9.223,5.464,14.313,7.33c7.126,2.614,14.819,4.041,22.841,4.041 c26.355,0,49.178-15.411,59.931-37.694c0.468-0.969,0.912-1.951,1.333-2.945c2.527-5.965,4.207-12.372,4.891-19.07 c0.228-2.233,0.344-4.498,0.344-6.79C497.748,368.943,493.553,356.154,486.376,345.54z M431.249,403.056 c-11.228,0-20.361-9.134-20.361-20.361s9.134-20.361,20.361-20.361c11.228,0,20.361,9.134,20.361,20.361 S442.477,403.056,431.249,403.056z">
+                                            </path>
+                                        </g>
+                                    </g>
+                                    <g>
+                                        <g>
+                                            <path
+                                                d="M446.434,256.367v-33.978H259.901v54.282h-81.64V149.607h37.733v-30.37H107.044L35.24,324.023 C14.29,335.229,0,357.321,0,382.695c0,36.667,29.831,66.498,66.498,66.498s66.498-29.831,66.498-66.498 c0-3.845-0.346-7.608-0.976-11.276h172.497h30.525c5.604-48.119,46.608-85.591,96.207-85.591c23.322,0,44.745,8.286,61.482,22.067 L512,284.451C493.705,269.384,471.147,259.321,446.434,256.367z M66.498,403.056c-11.228,0-20.361-9.134-20.361-20.361 c0-11.228,9.134-20.361,20.361-20.361s20.361,9.134,20.361,20.361C86.86,393.923,77.725,403.056,66.498,403.056z">
+                                            </path>
+                                        </g>
+                                    </g>
+                                </g>
+                            </svg>
+                            <h3 class="ml-3">Enviament</h3>
+                        </button>
+                        <button @click="chooseShip" value="2"
+                            class="flex items-center rounded-md px-3 py-4 min-w-[48%] text-lg font-bold disabled:opacity-50"
+                            :class="{ 'selected': shipOption === '2', 'noSelected': shipOption !== '2' }">
+                            <svg width="1.8em" height="1.8em" viewBox="0 0 24 24" fill="none"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                                <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+                                <g id="SVGRepo_iconCarrier">
+                                    <path
+                                        d="M16.5276 2H7.47201C6.26919 2 5.66778 2 5.18448 2.2987C4.70117 2.5974 4.43221 3.13531 3.8943 4.21114L2.49068 7.75929C2.16639 8.57905 1.88266 9.54525 2.42854 10.2375C2.79476 10.7019 3.36244 11 3.99978 11C5.10435 11 5.99978 10.1046 5.99978 9C5.99978 10.1046 6.89522 11 7.99978 11C9.10435 11 9.99978 10.1046 9.99978 9C9.99978 10.1046 10.8952 11 11.9998 11C13.1044 11 13.9998 10.1046 13.9998 9C13.9998 10.1046 14.8952 11 15.9998 11C17.1044 11 17.9998 10.1046 17.9998 9C17.9998 10.1046 18.8952 11 19.9998 11C20.6371 11 21.2048 10.7019 21.5711 10.2375C22.117 9.54525 21.8333 8.57905 21.509 7.75929L20.1054 4.21114C19.5674 3.13531 19.2985 2.5974 18.8152 2.2987C18.3319 2 17.7305 2 16.5276 2Z"
+                                        fill="currentColor"></path>
+                                    <path fill-rule="evenodd" clip-rule="evenodd"
+                                        d="M20 21.25H22C22.4142 21.25 22.75 21.5858 22.75 22C22.75 22.4142 22.4142 22.75 22 22.75H2C1.58579 22.75 1.25 22.4142 1.25 22C1.25 21.5858 1.58579 21.25 2 21.25H4L4 12.5C4.74363 12.5 5.43309 12.2681 6 11.8727C6.56692 12.2681 7.25638 12.5 8 12.5C8.74363 12.5 9.43309 12.2681 10 11.8727C10.5669 12.2681 11.2564 12.5 12 12.5C12.7436 12.5 13.4331 12.2681 14 11.8727C14.5669 12.2681 15.2564 12.5 16 12.5C16.7436 12.5 17.4331 12.2681 18 11.8727C18.5669 12.2681 19.2564 12.5 20 12.5L20 21.25ZM9.5 21.25H14.5V18.5C14.5 17.5654 14.5 17.0981 14.299 16.75C14.1674 16.522 13.978 16.3326 13.75 16.2009C13.4019 16 12.9346 16 12 16C11.0654 16 10.5981 16 10.25 16.2009C10.022 16.3326 9.83261 16.522 9.70096 16.75C9.5 17.0981 9.5 17.5654 9.5 18.5V21.25Z"
+                                        fill="currentColor"></path>
+                                </g>
+                            </svg>
+                            <h3 class="ml-3">Recollida</h3>
+                        </button>
+                    </div>
+                    <div id="map-ubi" class="w-full h-[130px] bg-gray-200 mt-3 rounded">
+                        <!-- LOGICA DEL MAPA PARA MOSTRAR LA DIRECCIÓN DE ENTREGA DEL USUARIO -->
+                    </div>
+                    <button :disabled="!choosed" @click="toPay"
+                        class="btn-ok mt-3 w-full h-[60px] justify-center rounded-md border border-transparent px-4 py-2 text-xl font-semibold hover:bg-indigo-700 disabled:cursor-wait disabled:opacity-50">
+                        <h3>Continuar</h3>
                     </button>
-                    <img :src="item.imagen" alt="Product Image" class="w-[80px] h-[80px] mr-4" />
-                    <div class="flex flex-col">
-                        <div class="flex mb-2">
-                            <h3 class="mr-2 line-clamp-1 break-all max-sm:w-[178px]">{{ item.nombre }}</h3>
-                            <p>{{ item.precio.toFixed(2) }}€</p>
+                </div>
+            </div>
+
+            <div v-if="paymentView" class="w-full h-screen bg-white fixed inset-0 z-40">
+                <div class="border-b border-gray-300 flex items-center justify-center p-4 h-[80px]">
+                    <h3 class="text-2xl ml-4">Pagament</h3>
+                </div>
+                <div class="mt-80px p-4">
+                    <div id="allOrder">
+                        <div class="w-full flex justify-between">
+                            <h3 class="text-xl">Resum de la comanda</h3>
                         </div>
-                        <div class="text-lg font-bold">
-                            <button @click="comercioStore.decreaseProductQuantity(item.id)"> - </button>
-                            {{ item.cantidad }}
-                            <button @click="comercioStore.increaseProductQuantity(item.id)"> + </button>
+                        <div class="max-h-[250px] overflow-scroll border-y border-gray-300">
+                            <div v-for="(items) in groupedCesta">
+                                <div v-for="item in items" :key="item.id" class="flex mb-1">
+                                    <div id="contain-image" class="mr-4 min-w-[70px] min-h-[70px]">
+                                        <img :src="`http://localhost:8000/storage/${item.imagen}`" alt="Image" />
+                                    </div>
+                                    <div class="flex flex-col w-full justify-center">
+                                        <div class="flex justify-between">
+                                            <div class="w-[75%]">
+                                                <h3 class="text-lg font-medium line-clamp-2">{{ item.nombre }}</h3>
+                                            </div>
+                                            <p class="text-gray-400">x{{ item.cantidad }}</p>
+                                        </div>
+                                        <p>{{ item.cantidad * item.precio.toFixed(2) }}€</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="allTotal" class="mt-3">
+                        <div class="w-full flex justify-between border-b border-gray-300">
+                            <h3 class="text-xl">Resum total</h3>
+                        </div>
+                    </div>
+                    <div id="methodsPay" class="mt-3">
+                        <div class="w-full flex justify-between border-b border-gray-300">
+                            <h3 class="text-xl">Mètodes de pagament</h3>
                         </div>
                     </div>
                 </div>
-                <div class="text-right font-bold">
-                    <p>Total: {{ storeTotal(storeName).toFixed(2) }}€</p>
+                <div id="footer" class="flex items-center justify-between mt-auto border-t border-gray-300">
+                    <button
+                        class="btn-cancel w-[39%] h-[60px] justify-center border rounded-md border border-gray-400 px-4 py-2 text-xl text-gray-500 font-medium disabled:cursor-wait ">
+                        Cancel·lar
+                    </button>
+                    <button
+                        class="btn-ok w-[59%] h-[60px] justify-center rounded-md border border-transparent px-4 py-2 text-xl font-semibold disabled:cursor-wait disabled:opacity-50">
+                        Pagar
+                    </button>
                 </div>
             </div>
-            <div id="footer"
-                class="flex items-center justify-between p-4 mt-auto bg-gray-50 dark:bg-gray-800 shadow-footer">
+
+            <div v-if="cistellaView" class="mb-[80px] divide-y divide-gray-300 dark:divide-gray-600">
+                <div v-for="(items, storeName) in groupedCesta" :key="storeName" class="p-3">
+                    <div class="flex justify-between items-center border-b border-gray-200 m-4">
+                        <div class="flex items-center">
+                            <svg width="1.3em" height="1.3em" viewBox="0 0 24 24" fill="none"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                                <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+                                <g id="SVGRepo_iconCarrier">
+                                    <path fill-rule="evenodd" clip-rule="evenodd"
+                                        d="M7.30681 1.24996C6.50585 1.24969 5.95624 1.24951 5.46776 1.38342C4.44215 1.66458 3.58414 2.36798 3.1073 3.31853C2.88019 3.77127 2.77258 4.31024 2.61576 5.0957L1.99616 8.19383C1.76456 9.35186 2.08191 10.4718 2.74977 11.3115L2.74977 14.0564C2.74975 15.8942 2.74974 17.3498 2.9029 18.489C3.06053 19.6614 3.39265 20.6104 4.14101 21.3587C4.88937 22.1071 5.83832 22.4392 7.01074 22.5969C8.14996 22.75 9.60559 22.75 11.4434 22.75H12.5562C14.3939 22.75 15.8496 22.75 16.9888 22.5969C18.1612 22.4392 19.1102 22.1071 19.8585 21.3587C20.6069 20.6104 20.939 19.6614 21.0966 18.489C21.2498 17.3498 21.2498 15.8942 21.2498 14.0564V11.3115C21.9176 10.4718 22.235 9.35187 22.0034 8.19383L21.3838 5.0957C21.227 4.31024 21.1194 3.77127 20.8923 3.31853C20.4154 2.36798 19.5574 1.66458 18.5318 1.38342C18.0433 1.24951 17.4937 1.24969 16.6927 1.24996H7.30681ZM18.2682 12.75C18.7971 12.75 19.2969 12.6435 19.7498 12.4524V14C19.7498 15.9068 19.7482 17.2615 19.61 18.2891C19.4747 19.2952 19.2211 19.8749 18.7979 20.2981C18.3747 20.7213 17.795 20.975 16.7889 21.1102C16.3434 21.1701 15.8365 21.2044 15.2498 21.2239V18.4678C15.2498 18.028 15.2498 17.6486 15.2216 17.3373C15.1917 17.0082 15.1257 16.6822 14.9483 16.375C14.7508 16.0329 14.4668 15.7489 14.1248 15.5514C13.8176 15.3741 13.4916 15.308 13.1624 15.2782C12.8511 15.25 12.4718 15.25 12.032 15.25H11.9675C11.5278 15.25 11.1484 15.25 10.8371 15.2782C10.5079 15.308 10.182 15.3741 9.87477 15.5514C9.53272 15.7489 9.24869 16.0329 9.05121 16.375C8.87384 16.6822 8.80778 17.0082 8.77795 17.3373C8.74973 17.6486 8.74975 18.028 8.74977 18.4678L8.74977 21.2239C8.16304 21.2044 7.6561 21.1701 7.21062 21.1102C6.20453 20.975 5.62488 20.7213 5.20167 20.2981C4.77846 19.8749 4.52479 19.2952 4.38953 18.2891C4.25136 17.2615 4.24977 15.9068 4.24977 14V12.4523C4.70264 12.6435 5.20244 12.75 5.73132 12.75C7.00523 12.75 8.14422 12.1216 8.83783 11.1458C9.54734 12.1139 10.6929 12.75 11.9996 12.75C13.3063 12.75 14.452 12.1138 15.1615 11.1455C15.8551 12.1215 16.9942 12.75 18.2682 12.75ZM10.2498 21.248C10.6382 21.2499 11.0539 21.25 11.4998 21.25H12.4998C12.9457 21.25 13.3614 21.2499 13.7498 21.248V18.5C13.7498 18.0189 13.749 17.7082 13.7277 17.4727C13.7073 17.2476 13.6729 17.1659 13.6493 17.125C13.5835 17.011 13.4888 16.9163 13.3748 16.8505C13.3339 16.8269 13.2522 16.7925 13.027 16.772C12.7916 16.7507 12.4809 16.75 11.9998 16.75C11.5187 16.75 11.208 16.7507 10.9725 16.772C10.7474 16.7925 10.6656 16.8269 10.6248 16.8505C10.5108 16.9163 10.4161 17.011 10.3502 17.125C10.3267 17.1659 10.2922 17.2476 10.2718 17.4727C10.2505 17.7082 10.2498 18.0189 10.2498 18.5V21.248ZM8.67082 2.74999H7.41748C6.46302 2.74999 6.13246 2.75654 5.86433 2.83005C5.24897 2.99874 4.73416 3.42078 4.44806 3.99112C4.3234 4.23962 4.25214 4.56248 4.06496 5.4984L3.46703 8.48801C3.18126 9.91687 4.27415 11.25 5.73132 11.25C6.91763 11.25 7.91094 10.3511 8.02898 9.17063L8.09757 8.48474L8.10155 8.44273L8.67082 2.74999ZM9.59103 8.62499L10.1785 2.74999H13.8208L14.405 8.59198C14.5473 10.0151 13.4298 11.25 11.9996 11.25C10.5804 11.25 9.46911 10.0341 9.59103 8.62499ZM18.1352 2.83005C17.8671 2.75654 17.5365 2.74999 16.5821 2.74999H15.3285L15.9706 9.17063C16.0886 10.3511 17.0819 11.25 18.2682 11.25C19.7254 11.25 20.8183 9.91687 20.5325 8.48801L19.9346 5.4984C19.7474 4.56248 19.6762 4.23962 19.5515 3.99112C19.2654 3.42078 18.7506 2.99874 18.1352 2.83005Z"
+                                        fill="#000000"></path>
+                                </g>
+                            </svg>
+                            <h2 class="text-center font-bold text-xl ml-2">{{ storeName }}</h2>
+                        </div>
+                        <h3 class="font-semibold text-xl">{{ storeTotal(storeName).toFixed(2) }} €</h3>
+                    </div>
+                    <div v-for="item in items" :key="item.id" class="m-4 flex">
+                        <button @click="comercioStore.removeFromBasket(item.id)" class="mr-3">
+                            <svg viewBox="0 0 24 24" fill="none" width="1.3em" height="1.3em"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                                <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+                                <g id="SVGRepo_iconCarrier">
+                                    <path fill-rule="evenodd" clip-rule="evenodd"
+                                        d="M7 4C7 2.34315 8.34315 1 10 1H14C15.6569 1 17 2.34315 17 4V5H21C21.5523 5 22 5.44772 22 6C22 6.55228 21.5523 7 21 7H19.9394L19.1153 20.1871C19.0164 21.7682 17.7053 23 16.1211 23H7.8789C6.29471 23 4.98356 21.7682 4.88474 20.1871L4.06055 7H3C2.44772 7 2 6.55228 2 6C2 5.44772 2.44772 5 3 5H7V4ZM9 5H15V4C15 3.44772 14.5523 3 14 3H10C9.44772 3 9 3.44772 9 4V5ZM6.06445 7L6.88085 20.0624C6.91379 20.5894 7.35084 21 7.8789 21H16.1211C16.6492 21 17.0862 20.5894 17.1191 20.0624L17.9355 7H6.06445Z"
+                                        fill="#000000"></path>
+                                </g>
+                            </svg>
+                        </button>
+                        <div id="contain-image" class="mr-4 min-w-[80px] min-h-[100px]">
+                            <img :src="`http://localhost:8000/storage/${item.imagen}`" alt="Image" />
+                        </div>
+                        <div class="flex flex-col w-full justify-between">
+                            <div class="flex justify-between">
+                                <div class="w-[75%]">
+                                    <h3 class="text-lg font-medium line-clamp-2">{{ item.nombre }}</h3>
+                                </div>
+                                <p>{{ item.precio.toFixed(2) }}€</p>
+                            </div>
+                            <div id="btn-quantity" class="text-lg flex items-center mb-1">
+                                <button @click="comercioStore.decreaseProductQuantity(item.id)"
+                                    class="border w-[1.5em] h-[1.5em] flex items-center justify-center">
+                                    <svg width="1.1em" height="1.1em" viewBox="0 0 24 24"
+                                        xmlns="http://www.w3.org/2000/svg" fill="#000000">
+                                        <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                                        <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round">
+                                        </g>
+                                        <g id="SVGRepo_iconCarrier">
+                                            <g>
+                                                <path fill="none" d="M0 0h24v24H0z"></path>
+                                                <path d="M5 11h14v2H5z"></path>
+                                            </g>
+                                        </g>
+                                    </svg>
+                                </button>
+                                <h4 class="border-t border-b min-w-[1.5em] h-[1.5em] flex items-center justify-center">
+                                    {{ item.cantidad }}</h4>
+                                <button @click="comercioStore.increaseProductQuantity(item.id)"
+                                    class="border w-[1.5em] h-[1.5em] flex items-center justify-center">
+                                    <svg width="1em" height="1em" fill="#000000" viewBox="0 0 1920 1920"
+                                        xmlns="http://www.w3.org/2000/svg">
+                                        <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                                        <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round">
+                                        </g>
+                                        <g id="SVGRepo_iconCarrier">
+                                            <path
+                                                d="M915.744 213v702.744H213v87.842h702.744v702.744h87.842v-702.744h702.744v-87.842h-702.744V213z"
+                                                fill-rule="evenodd" stroke="black" stroke-width="80" fill="none"></path>
+                                        </g>
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="footer" class="flex items-center justify-between mt-auto border-t border-gray-300">
                 <div id="precio" class="font-semibold text-gray-800 dark:text-gray-200">
-                    <p class="text-gray-600 font-light">Precio total:</p>
+                    <p class="text-gray-600 font-light text-sm">Precio total:</p>
                     <h3 class="text-2xl">
-                        <p>{{ comercioStore.totalPrice.toFixed(2) }}€</p>
+                        <p>{{ comercioStore.totalPrice.toFixed(2) }} €</p>
                     </h3>
                 </div>
                 <div id="carrito" class="flex items-center space-x-4">
-                    <ButtonComp @click="comprar">
+                    <button id="btn-comprar" class="text-xl font-semibold" @click="comprar">
                         Checkout ({{ comercioStore.totalItems }})
-                    </ButtonComp>
+                    </button>
                 </div>
             </div>
         </div>
@@ -107,17 +329,79 @@ const comprar = () => {
 </template>
 
 <style scoped>
-header {
-    height: 100px;
+#chooseShipping {
+    width: 100%;
+    height: 400px;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    background-color: white;
 }
 
-header div {}
+.btn-ok {
+    background-color: #276BF2;
+    color: white;
+}
+
+.noSelected {
+    background-color: #F2F2F2;
+    color: #276BF2;
+}
+
+.selected {
+    background-color: #276BF2;
+    color: white;
+}
+
+#btn-quantity {
+    width: max-content;
+}
+
+#contain-image {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    border-radius: 5px;
+    border: 1px solid #dde0e2;
+}
+
+img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    object-position: center;
+}
+
+header {
+    height: 80px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    background-color: white;
+}
+
+#btn-comprar {
+    border: none;
+    display: flex;
+    color: white;
+    cursor: pointer;
+    padding: 10px 20px;
+    min-width: 200px;
+    border-radius: 5px;
+    align-items: center;
+    justify-content: center;
+    background-color: #1E2026;
+}
 
 #footer {
     position: fixed;
     bottom: 0;
     left: 0;
     right: 0;
-    margin: 0 auto;
+    background-color: white;
+    max-height: 80px;
+    box-sizing: border-box;
+    padding: 1rem;
 }
 </style>

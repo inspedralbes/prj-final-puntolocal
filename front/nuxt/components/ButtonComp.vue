@@ -1,8 +1,6 @@
 <template>
-    <button :data-testid="testId" :type="type" :disabled="disabled">
-        <h3 class="text-xl font-bold">
-            <slot></slot>
-        </h3>
+    <button :data-testid="testId" :type="type" :class="class" :disabled="disabled">
+        <slot></slot>
     </button>
 </template>
 
@@ -16,10 +14,10 @@ const props = defineProps({
         type: String,
         default: 'text',
     },
-    // class: {
-    //     type: String,
-    //     default: 'group relative flex w-full justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:cursor-wait disabled:opacity-50',
-    // },
+    class: {
+        type: String,
+        default: 'group relative flex w-full justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:cursor-wait disabled:opacity-50',
+    },
     disabled: {
         type: Boolean,
         default: false,
@@ -27,21 +25,4 @@ const props = defineProps({
 });
 </script>
 
-<style scoped>
-button {
-    border: none;
-    display: flex;
-    color: white;
-    cursor: pointer;
-    padding: 10px 20px;
-    min-width: 200px;
-    border-radius: 5px;
-    align-items: center;
-    justify-content: center;
-    background-color: #1E2026;
-}
-
-button:hover {
-    background-color: #447EF2;
-}
-</style>
+<style scoped></style>
