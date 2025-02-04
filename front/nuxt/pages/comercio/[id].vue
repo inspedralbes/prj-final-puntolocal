@@ -70,88 +70,80 @@
 
                 <h4 class="text-lg font-medium text-gray-700 mt-4">Horario:</h4>
                 <pre v-if="comercio.horario" class="mt-2 text-gray-600">{{ formatHorario(comercio.horario) }}</pre>
-
-                <h4 class="text-lg font-medium text-gray-700 mt-4">Imagenes:</h4>
-                <div class="mt-2">
-                    <img v-for="(imagen, index) in parsedImages(comercio.imagenes)" :key="index" :src="imagen"
-                        alt="Imagen del Comercio" class="w-40 h-40 object-cover rounded-lg mr-2 mb-2" />
-                </div>
             </div>
         </div>
     </div>
 </template>
 
 <script setup>
-definePageMeta({
-    layout: false,
-});
+    definePageMeta({
+        layout: false,
+    });
 
-import { useNuxtApp } from "#app";
-import { ref, onMounted } from "vue";
-import { useRoute, useRouter } from "vue-router";
-import loading from "../../components/loading.vue";
+    import { useNuxtApp } from "#app";
+    import { ref, onMounted } from "vue";
+    import { useRoute, useRouter } from "vue-router";
+    import loading from "../../components/loading.vue";
 
-const route = useRoute();
-const productos = ref([]);
-const router = useRouter();
-const comercio = ref(null);
-const isLoading = ref(true);
-const subcategorias = ref([]);
-const selectedSubcategorias = ref([]);
-const view = ref('productos');
-const { $communicationManager } = useNuxtApp();
+    const route = useRoute();
+    const productos = ref([]);
+    const router = useRouter();
+    const comercio = ref(null);
+    const isLoading = ref(true);
+    const subcategorias = ref([]);
+    const selectedSubcategorias = ref([]);
+    const view = ref('productos');
+    const { $communicationManager } = useNuxtApp();
 
-const fetchComercio = async () => {
-    const id = route.params.id;
-    try {
-        const response = await $communicationManager.getComercioById(id);
+    const fetchComercio = async () => {
+        const id = route.params.id;
+        try {
+            const response = await $communicationManager.getComercioById(id);
 
-        if (response) {
-            comercio.value = response;
-            productos.value = response.productos;
+            if (response) {
+                comercio.value = response;
+                productos.value = response.productos;
 
-            // Extraemos las subcategorías únicas de los productos
-            const subcats = response.productos.map(producto => producto.subcategoria);
-            subcategorias.value = [...new Map(subcats.map(sub => [sub.id, sub])).values()];
+                const subcats = response.productos.map(producto => producto.subcategoria);
+                subcategorias.value = [...new Map(subcats.map(sub => [sub.id, sub])).values()];
 
+                isLoading.value = false;
+            } else {
+                throw new Error("No se pudo obtener el comercio");
+            }
+        } catch (error) {
+            console.error("Error al obtener el comercio:", error);
             isLoading.value = false;
-        } else {
-            throw new Error("No se pudo obtener el comercio");
         }
-    } catch (error) {
-        console.error("Error al obtener el comercio:", error);
-        isLoading.value = false;
-    }
-};
+    };
 
-const formatPrice = (price) => {
-    return parseFloat(price).toFixed(2);
-};
+    const formatPrice = (price) => {
+        return parseFloat(price).toFixed(2);
+    };
 
-const toggleView = (newView) => {
-    view.value = newView;
-    console.log("Vista cambiada a:", view.value);
-};
+    const toggleView = (newView) => {
+        view.value = newView;
+        console.log("Vista cambiada a:", view.value);
+    };
 
-// Filtrar productos según las subcategorías seleccionadas
-const filteredProductos = computed(() => {
-    if (selectedSubcategorias.value.length === 0) {
-        return productos.value;
-    }
-    return productos.value.filter(producto =>
-        selectedSubcategorias.value.includes(producto.subcategoria.id)
-    );
-});
+    const filteredProductos = computed(() => {
+        if (selectedSubcategorias.value.length === 0) {
+            return productos.value;
+        }
+        return productos.value.filter(producto =>
+            selectedSubcategorias.value.includes(producto.subcategoria.id)
+        );
+    });
 
-const toggleSubcategoria = (subcategoria) => {
-    if (selectedSubcategorias.value.includes(subcategoria.id)) {
-        selectedSubcategorias.value = selectedSubcategorias.value.filter(id => id !== subcategoria.id);
-    } else {
-        selectedSubcategorias.value.push(subcategoria.id);
-    }
-};
+    const toggleSubcategoria = (subcategoria) => {
+        if (selectedSubcategorias.value.includes(subcategoria.id)) {
+            selectedSubcategorias.value = selectedSubcategorias.value.filter(id => id !== subcategoria.id);
+        } else {
+            selectedSubcategorias.value.push(subcategoria.id);
+        }
+    };
 
-onMounted(() => {
-    fetchComercio();
-});
+    onMounted(() => {
+        fetchComercio();
+    });
 </script>
