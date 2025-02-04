@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-
+use Illuminate\Support\Facades\Storage;
 
 use App\Models\Comercio;
 use Illuminate\Support\Facades\Mail;
@@ -167,6 +167,34 @@ class ComercioController extends Controller
 
         return response()->json([
             'message' => 'Imágenes actualizadas exitosamente.',
+            'comercio' => $comercio
+        ], 200);
+    }
+
+    public function deleteComercioImagen(Request $request, $id) {
+        $comercio = Comercio::find($id);
+        if (!$comercio) {
+            return response()->json(['error' => 'Comercio no encontrado'], 404);
+        }
+
+        $imageToRemove = $request->input('image'); // Path or filename
+        if (!$imageToRemove) {
+            return response()->json(['error' => 'No se proporcionó la imagen a eliminar'], 422);
+        }
+
+        $images = json_decode($comercio->imagenes, true) ?? [];
+        $index = array_search($imageToRemove, $images);
+        if ($index === false) {
+            return response()->json(['error' => 'La imagen no se encontró'], 404);
+        }
+
+        Storage::disk('public')->delete($images[$index]);
+        array_splice($images, $index, 1);
+        $comercio->imagenes = json_encode($images);
+        $comercio->save();
+
+        return response()->json([
+            'message' => 'Imagen eliminada correctamente.',
             'comercio' => $comercio
         ], 200);
     }

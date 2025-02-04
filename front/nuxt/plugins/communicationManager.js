@@ -657,7 +657,30 @@ export default defineNuxtPlugin(nuxtApp => {
         return { success: false, message: error.message };
       }
     },
-
+    async updateComercioImagenes(formData, id) {
+      try {
+        const response = await fetch(`${Host}/comercios/${id}/imagenes`, {
+          method: 'POST',
+          headers: {
+            'Authorization': this.authStore.token ? `Bearer ${this.authStore.token}` : ''
+          },
+          body: formData
+        });
+ 
+ 
+        if (!response.ok) {
+          console.error(`Error en la petición: ${response.status} ${response.statusText}`);
+          return null;
+        }
+ 
+ 
+        const jsonResponse = await response.json();
+        return jsonResponse;
+      } catch (error) {
+        console.error('Error al realizar la petición:', error);
+        return null;
+      }
+    }, 
 
     ///////////////////////////// PUT //////////////////////////////////
 
@@ -736,6 +759,32 @@ export default defineNuxtPlugin(nuxtApp => {
         return null;
       }
     },
+    
+    ///////////////////////////// DELETE //////////////////////////////////
+    
+    async deleteComercioImagen(id, imagePath) {
+      try {
+        const response = await fetch(`${Host}/comercios/${id}/imagenes`, {
+          method: 'DELETE',
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+            'Authorization': this.authStore.token ? `Bearer ${this.authStore.token}` : ''
+          },
+          body: JSON.stringify({ image: imagePath })
+        });
+        if (!response.ok) {
+          console.error(`Error en la petición: ${response.status} ${response.statusText}`);
+          return null;
+        }
+        const data = await response.json();
+        return data;
+      } catch (error) {
+        console.error('Error al realizar la petición:', error);
+        return null;
+      }
+    },
+    
   };
 
   // Inyectar el communicationManager en la app
