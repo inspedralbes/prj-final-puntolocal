@@ -72,7 +72,8 @@ class ComercioController extends Controller
         return response()->json($comercios, 200);
     }
 
-    public function getComercio($id) {
+    public function getComercio($id)
+    {
         $comercio = Comercio::find($id);
 
         if ($comercio == null) {
@@ -93,10 +94,10 @@ class ComercioController extends Controller
                 'precio' => $producto->precio,
                 'stock' => $producto->stock,
                 'imagen' => $producto->imagen,
-                'subcategoria' => [
+                'subcategoria' => $producto->subcategoria ? [
                     'id' => $producto->subcategoria->id,
                     'name' => $producto->subcategoria->name,
-                ],
+                ] : null,
             ];
         });
 

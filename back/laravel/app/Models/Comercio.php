@@ -23,8 +23,6 @@
             'descripcion',
             'gestion_stock',
             'puntaje_medio',
-            'imagenes',
-            'horario',
         ];
 
         public function categoria() {
