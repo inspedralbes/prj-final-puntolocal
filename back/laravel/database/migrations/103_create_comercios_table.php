@@ -22,7 +22,7 @@ return new class extends Migration {
             $table->string('calle_num');
             $table->string('ciudad');
             $table->string('provincia');
-            $table->string('codigo_postal');
+            $table->integer('codigo_postal');
 
             $table->unsignedBigInteger('categoria_id');
             $table->foreign('categoria_id')->references('id')->on('categorias')->onDelete('cascade');

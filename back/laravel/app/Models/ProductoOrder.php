@@ -3,6 +3,7 @@
 
     use Illuminate\Database\Eloquent\Factories\HasFactory;
     use Illuminate\Database\Eloquent\Model;
+    
     class ProductoOrder extends Model {
         use HasFactory;
         public $timestamps = false;
