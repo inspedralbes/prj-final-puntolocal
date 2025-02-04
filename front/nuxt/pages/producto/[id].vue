@@ -61,7 +61,7 @@
             </p>
         </div>
 
-        <div id="footer"
+        <div v-if="producto" id="footer"
             class="flex items-center justify-between pt-4 pb-4 pr-4 mt-auto bg-gray-50 dark:bg-gray-800 rounded-lg shadow-footer">
             <div id="precio" class="text-xl font-semibold text-gray-800 dark:text-gray-200 m-auto">
                 <h3 class="text-2xl font-bold">
@@ -76,8 +76,6 @@
     </div>
 </template>
 
-
-
 <script setup>
 definePageMeta({
     layout: false,
@@ -90,7 +88,7 @@ import ButtonBasketComp from "../../components/ButtonBasketComp.vue";
 
 const route = useRoute();
 const router = useRouter();
-const producto = ref(null);
+const producto = ref();
 const selectedSize = ref(null);
 const selectedColor = ref(null);
 const { $communicationManager } = useNuxtApp();

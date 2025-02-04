@@ -102,15 +102,15 @@ const props = defineProps({
     },
     title: {
         type: String,
-        // required: true,
+        required: true,
     },
     price: {
-        type: String,
-        // required: true,
+        type: Number,
+        required: true,
     },
     comercio: {
         type: String,
-        // required: true,
+        required: true,
     }
 });
 </script>

@@ -40,6 +40,8 @@ export const useComercioStore = defineStore('comercio', {
         const index = this.cesta.findIndex((item) => item.id === id);
         if (this.cesta[index].cantidad > 1) {
             this.cesta[index].cantidad -= 1;
+        } else if (this.cesta[index].cantidad === 1) {
+          this.removeFromBasket(id);
         }
         sessionStorage.setItem('cestaStorage', JSON.stringify(this.cesta));
     },
