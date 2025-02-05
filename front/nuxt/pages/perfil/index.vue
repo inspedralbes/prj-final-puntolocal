@@ -61,6 +61,8 @@ async function checkComercio() {
 
     if (res) {
         console.log('Tiene comercio')
+        console.log(res.comercio);
+        authStore.setComercio(res.comercio);
         return true
     } else {
         console.log('No tiene comercio')
