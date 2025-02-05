@@ -9,11 +9,10 @@
             </a>
 
             <a @click="toggleView('informacion')"
-                class="bg-transparent text-green-600 rounded-lg transition-all duration-300 ease-in-out text-lg font-semibold flex items-center">
+                class="text-right bg-transparent text-green-600 rounded-lg transition-all duration-300 ease-in-out text-lg font-semibold flex items-center">
                 Ver Información del Comercio
             </a>
         </div>
-
 
         <div v-if="view === 'productos'">
             <div v-if="subcategorias.length" class="overflow-x-auto pb-2 border-b border-gray-300">
@@ -46,53 +45,53 @@
             </div>
         </div>
 
-        <div v-if="view === 'informacion'" class="space-y-4">
-            <div>
-                <h4 class="font-semibold text-lg">Nombre del Comercio:</h4>
-                <p class="text-gray-700">{{ comercio.nombre }}</p>
+        <div v-if="view === 'informacion'" class="max-w-2xl mx-auto space-y-6">
+            <div class="bg-white p-4 rounded-lg shadow-md">
+                <h4 class="font-bold text-xl text-gray-800">🏢 Nombre del Comercio:</h4>
+                <p class="text-gray-600 text-lg">{{ comercio.nombre }}</p>
             </div>
 
-            <div>
-                <h4 class="font-semibold text-lg">Descripción:</h4>
-                <p class="text-gray-700">{{ comercio.descripcion }}</p>
+            <div v-if="comercio.imagenes" class="bg-white rounded-lg shadow-md">
+                <img :src="JSON.parse(comercio.imagenes)[0]" alt="Imagen del comercio"
+                    class="w-full h-64 object-cover rounded-lg shadow-md mt-2" />
             </div>
 
-            <div>
-                <h4 class="font-semibold text-lg">Dirección:</h4>
-                <p class="text-gray-700">
+            <div class="bg-white p-4 rounded-lg shadow-md">
+                <h4 class="font-bold text-xl text-gray-800">📝 Descripción:</h4>
+                <p class="text-gray-600 leading-relaxed">{{ comercio.descripcion }}</p>
+            </div>
+
+            <div class="bg-white p-4 rounded-lg shadow-md">
+                <h4 class="font-bold text-xl text-gray-800">📍 Dirección:</h4>
+                <p class="text-gray-600 leading-relaxed">
                     {{ comercio.calle_num }}, {{ comercio.num_puerta }}, Planta {{ comercio.num_planta }}<br>
                     {{ comercio.ciudad }}, {{ comercio.provincia }}, {{ comercio.codigo_postal }}
                 </p>
             </div>
 
-            <div>
-                <h4 class="font-semibold text-lg">Teléfono:</h4>
-                <p class="text-gray-700">{{ comercio.phone }}</p>
+            <div class="bg-white p-4 rounded-lg shadow-md flex items-center">
+                <h4 class="font-bold text-xl text-gray-800 flex-shrink-0">📞:</h4>
+                <p class="text-gray-600 text-lg ml-2">{{ comercio.phone }}</p>
             </div>
 
-            <div>
-                <h4 class="font-semibold text-lg">Email:</h4>
-                <p class="text-gray-700">{{ comercio.email }}</p>
+            <div class="bg-white p-4 rounded-lg shadow-md flex items-center">
+                <h4 class="font-bold text-xl text-gray-800 flex-shrink-0">📧:</h4>
+                <p class="text-gray-600 text-lg ml-2">{{ comercio.email }}</p>
             </div>
 
-            <div>
-                <h4 class="font-semibold text-lg">Horario:</h4>
-                <ul class="space-y-2">
-                    <li v-for="(horario, dia) in JSON.parse(comercio.horario)" :key="dia" class="text-gray-700">
-                        <strong>{{ dia }}:</strong> {{ horario }}
+            <div class="bg-white p-4 rounded-lg shadow-md">
+                <h4 class="font-bold text-xl text-gray-800">⏰ Horario:</h4>
+                <ul class="space-y-2 mt-2">
+                    <li v-for="(horario, dia) in JSON.parse(comercio.horario)" :key="dia"
+                        class="text-gray-600 flex items-center">
+                        <strong class="mr-2">{{ dia }}:</strong> {{ horario }}
                     </li>
                 </ul>
             </div>
 
-            <div>
-                <h4 class="font-semibold text-lg">Puntuación Media:</h4>
-                <p class="text-yellow-500">{{ comercio.puntaje_medio }} ⭐</p>
-            </div>
-
-            <div v-if="comercio.imagenes">
-                <h4 class="font-semibold text-lg">Imagen del Comercio:</h4>
-                <img :src="JSON.parse(comercio.imagenes)[0]" alt="Imagen del comercio"
-                    class="w-full h-64 object-cover rounded-lg shadow-md" />
+            <div class="bg-white p-4 rounded-lg shadow-md flex items-center">
+                <h4 class="font-bold text-xl text-gray-800 flex-shrink-0">⭐ Puntuación Media:</h4>
+                <p class="text-yellow-500 text-lg ml-2">{{ comercio.puntaje_medio }} / 5</p>
             </div>
         </div>
     </div>
