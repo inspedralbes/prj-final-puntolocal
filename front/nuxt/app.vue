@@ -30,7 +30,7 @@ body {
 }
 
 .color-secundario-1{
-  color: #6393F2;
+  color: #000000;
 }
 
 .color-secundario-2{

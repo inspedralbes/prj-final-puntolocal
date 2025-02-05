@@ -18,11 +18,12 @@ const comercios = ref({});
 const groups = reactive([]);
 const chooseShipping = ref(false);
 const choosed = ref(false);
+const payOption = ref(1);
 // const shipOption = ref(null);
-const shipOption = ref(2);
 // const paymentView = ref(false);
-const paymentView = ref(true);
 // const cistellaView = ref(true);
+const shipOption = ref(2);
+const paymentView = ref(true);
 const cistellaView = ref(false);
 
 const goBack = () => {
@@ -78,11 +79,44 @@ function chooseShip(event) {
     choosed.value = shipOption.value !== null;
 }
 
+function choosePayment(event) {
+    payOption.value = event.target.value;
+    console.log("Opción de pago:", payOption.value);
+}
+
 function toPay() {
     chooseShipping.value = !chooseShipping.value;
     togglePayment();
     console.log(shipOption.value);
 }
+
+function crearComanda() {
+    console.log(groupedCesta.value);
+    console.log(cestaFiltrada.value);
+    // console.log("Tipo de envío: ", shipOption.value);
+    // console.log("Tipo de pago:", payOption.value)
+    // goBack();
+}
+
+const cestaFiltrada = computed(() => {
+    return Object.keys(groupedCesta.value).map(comercio => ({
+        infoComercio: {
+            comercio: groupedCesta.value[comercio][0].comercio,
+            comercio_id: groupedCesta.value[comercio][0].comercio_id,
+        },
+        productos: groupedCesta.value[comercio].map(({ id, nombre, cantidad, precio }) => ({
+            id,
+            nombre,
+            cantidad,
+            precio,
+        })),
+        infoComanda: {
+            tipoEnvio: shipOption.value,
+            tipoPago: payOption.value,
+            total: storeTotal(comercio),
+        }
+    }));
+});
 
 </script>
 
@@ -110,7 +144,8 @@ function toPay() {
         <div v-if="Object.keys(groupedCesta).length === 0">
             <p>La cistella esta buida.</p>
         </div>
-        <div v-else class="mt-[80px]">
+        <div v-else class="mt-[80px] mb-[80px]">
+            <!-- PANTALLA DE ELEGIR TIPO DE ENVÍO  -->
             <div v-if="chooseShipping">
                 <div class="bg-gray-900/50 dark:bg-gray-900/80 fixed inset-0 z-40" @click="toggleCheckout"></div>
                 <div id="chooseShipping" class="fixed bottom-0 z-40 flex flex-col items-center justify-center p-4">
@@ -175,64 +210,163 @@ function toPay() {
                         <!-- LOGICA DEL MAPA PARA MOSTRAR LA DIRECCIÓN DE ENTREGA DEL USUARIO -->
                     </div>
                     <button :disabled="!choosed" @click="toPay"
-                        class="btn-ok mt-3 w-full h-[60px] justify-center rounded-md border border-transparent px-4 py-2 text-xl font-semibold hover:bg-indigo-700 disabled:cursor-wait disabled:opacity-50">
+                        class="mt-3 w-full h-[60px] justify-center rounded-md border border-transparent px-4 py-2 text-xl font-semibold hover:bg-indigo-700 disabled:cursor-wait"
+                        :class="{ 'btn-ok': choosed, 'bg-[#6393F2]': !choosed, 'text-white': !choosed }">
                         <h3>Continuar</h3>
                     </button>
                 </div>
             </div>
 
+            <!-- PAYMENT VIEW CON EL SUBTOTAL Y BOTÓN DE PAGAR -->
             <div v-if="paymentView" class="w-full h-screen bg-white fixed inset-0 z-40">
-                <div class="border-b border-gray-300 flex items-center justify-center p-4 h-[80px]">
+                <div class="flex items-center justify-center p-4 h-[80px] fixed inset-0 z-50 bg-white">
                     <h3 class="text-2xl ml-4">Pagament</h3>
                 </div>
-                <div class="mt-80px p-4">
-                    <div id="allOrder">
-                        <div class="w-full flex justify-between">
-                            <h3 class="text-xl">Resum de la comanda</h3>
+                <div class="mt-[80px] pb-[88px] p-2 h-screen bg-gray-100 overflow-scroll">
+                    <div id="allOrder" class="rounded-md bg-white p-2">
+                        <div class="w-full flex items-center">
+                            <svg width="1.5em" height="1.5em" viewBox="0 0 1024 1024" class="icon" version="1.1"
+                                xmlns="http://www.w3.org/2000/svg" fill="#000000">
+                                <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                                <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+                                <g id="SVGRepo_iconCarrier">
+                                    <path
+                                        d="M533 1024l-147.7-84.8-136.4 78.3h-11.3c-17.3 0-34.2-3.4-50.1-10.1-15.3-6.5-29.1-15.7-40.8-27.6-11.7-11.7-21-25.5-27.5-40.8-6.7-15.9-10.1-32.7-10.1-50.1V128.5c0-17.4 3.4-34.2 10.1-50.1 6.5-15.3 15.8-29.1 27.6-40.8 11.7-11.8 25.5-21 40.8-27.5C203.3 3.4 220.2 0 237.5 0h590.9c17.3 0 34.2 3.4 50.1 10.1 15.3 6.5 29.1 15.7 40.8 27.6 11.7 11.7 21 25.5 27.5 40.8 6.7 15.9 10.1 32.7 10.1 50.1V889c0 17.4-3.4 34.2-10.1 50.1-6.5 15.3-15.8 29.1-27.6 40.8-11.7 11.8-25.5 21-40.8 27.5-15.8 6.7-32.7 10.1-50 10.1h-11.3l-136.4-78.3L533 1024z m147.7-182.6l157.2 90.3c2.5-0.6 5-1.4 7.5-2.4 5.2-2.2 9.9-5.4 13.9-9.4 4.1-4.1 7.2-8.7 9.4-14 2.3-5.3 3.4-11.1 3.4-17V128.5c0-5.9-1.1-11.7-3.4-17-2.2-5.2-5.4-9.9-9.4-13.9-4.1-4.1-8.7-7.2-13.9-9.4-5.4-2.3-11.1-3.4-17-3.4H237.5c-5.9 0-11.6 1.1-17 3.4-5.2 2.2-9.9 5.4-13.9 9.4-4.1 4.1-7.2 8.7-9.4 14-2.3 5.3-3.4 11.1-3.4 17V889c0 5.9 1.1 11.7 3.4 17 2.2 5.2 5.4 9.9 9.4 13.9 4.1 4.1 8.7 7.2 13.9 9.4 2.4 1 4.9 1.8 7.5 2.4l157.2-90.3L533 926.2l147.7-84.8z"
+                                        fill="#276BF2"></path>
+                                    <path
+                                        d="M490.6 310.9H321c-23.4 0-42.4-19-42.4-42.4s19-42.4 42.4-42.4h169.6c23.4 0 42.4 19 42.4 42.4s-19 42.4-42.4 42.4zM702.5 487.6H321c-23.4 0-42.4-19-42.4-42.4s19-42.4 42.4-42.4h381.6c23.4 0 42.4 19 42.4 42.4-0.1 23.4-19 42.4-42.5 42.4z"
+                                        fill="#276BF2"></path>
+                                </g>
+                            </svg>
+                            <h3 class="text-xl ml-1">Resum de la comanda</h3>
                         </div>
-                        <div class="max-h-[250px] overflow-scroll border-y border-gray-300">
+                        <div class="my-3 max-h-[250px] overflow-scroll">
                             <div v-for="(items) in groupedCesta">
                                 <div v-for="item in items" :key="item.id" class="flex mb-1">
                                     <div id="contain-image" class="mr-4 min-w-[70px] min-h-[70px]">
-                                        <img :src="`http://localhost:8000/storage/${item.imagen}`" alt="Image" />
+                                        <img :src="`http://localhost:8000/storage/${item.imagen}`" alt="" />
                                     </div>
                                     <div class="flex flex-col w-full justify-center">
                                         <div class="flex justify-between">
                                             <div class="w-[75%]">
                                                 <h3 class="text-lg font-medium line-clamp-2">{{ item.nombre }}</h3>
                                             </div>
-                                            <p class="text-gray-400">x{{ item.cantidad }}</p>
+                                            <p class="text-gray-500">x{{ item.cantidad }}</p>
                                         </div>
                                         <p>{{ item.cantidad * item.precio.toFixed(2) }}€</p>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <div id="allTotal" class="mt-3">
-                        <div class="w-full flex justify-between border-b border-gray-300">
-                            <h3 class="text-xl">Resum total</h3>
+
+                        <hr class="border-t-2 border-gray-300 border-dashed">
+                        <div id="allTotal" class="mt-3">
+                            <div class="w-full flex flex-col">
+                                <div class="w-full flex justify-between">
+                                    <h3 class="text-base text-gray-500 font-normal">Subtotal</h3>
+                                    <h3 class="text-base text-gray-500">{{ comercioStore.totalPrice.toFixed(2) }} €</h3>
+                                </div>
+                                <div class="w-full flex justify-between">
+                                    <h3 class="text-base text-gray-500 font-normal">Descompte</h3>
+                                    <h3 class="text-base text-gray-500">0 €</h3>
+                                </div>
+                                <div v-if="shipOption === 1" class="w-full flex justify-between">
+                                    <h3 class="text-base text-gray-500 font-normal">Enviament</h3>
+                                    <h3 class="text-base text-gray-500">2,5 €</h3>
+                                </div>
+                            </div>
+                            <div class="border-t border-gray-300 mt-3 flex justify-between w-full">
+                                <h3 class="font-medium text-xl">
+                                    Total <span class="font-light text-xs text-gray-700">(IVA incl.)</span>
+                                </h3>
+                                <h3 class="font-medium text-xl">{{ comercioStore.totalPrice.toFixed(2) }} €</h3>
+                            </div>
                         </div>
                     </div>
-                    <div id="methodsPay" class="mt-3">
-                        <div class="w-full flex justify-between border-b border-gray-300">
-                            <h3 class="text-xl">Mètodes de pagament</h3>
+                    <div id="methodsPay" class="mt-3 mb-[80px] rounded-md bg-white p-2">
+                        <div class="w-full flex items-center mb-3">
+                            <svg width="1.7em" height="1.7em" viewBox="0 0 24 24" fill="none"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                                <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+                                <g id="SVGRepo_iconCarrier">
+                                    <path
+                                        d="M19 8V8C20.1046 8 21 8.89543 21 10V18C21 19.1046 20.1046 20 19 20H6C4.34315 20 3 18.6569 3 17V7C3 5.34315 4.34315 4 6 4H17C18.1046 4 19 4.89543 19 6V8ZM19 8H7M17 14H16"
+                                        stroke="#276BF2" stroke-width="2" stroke-linecap="round"
+                                        stroke-linejoin="round"></path>
+                                </g>
+                            </svg>
+                            <h3 class="ml-1 text-xl">Mètodes de pagament</h3>
+                        </div>
+                        <div>
+                            <label for="efectiu" name="status"
+                                class="font-medium text-lg h-14 relative hover:bg-zinc-100 flex items-center pl-3 gap-2 rounded-lg has-[:checked]:text-[#276BF2] has-[:checked]:bg-blue-50 has-[:checked]:ring-[#276BF2] has-[:checked]:ring-1 select-none">
+                                <div class="w-5 fill-[#276BF2]">
+                                    <svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" fill="currentColor"
+                                        class="bi bi-cash-coin">
+                                        <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                                        <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round">
+                                        </g>
+                                        <g id="SVGRepo_iconCarrier">
+                                            <path fill-rule="evenodd"
+                                                d="M11 15a4 4 0 1 0 0-8 4 4 0 0 0 0 8zm5-4a5 5 0 1 1-10 0 5 5 0 0 1 10 0z">
+                                            </path>
+                                            <path
+                                                d="M9.438 11.944c.047.596.518 1.06 1.363 1.116v.44h.375v-.443c.875-.061 1.386-.529 1.386-1.207 0-.618-.39-.936-1.09-1.1l-.296-.07v-1.2c.376.043.614.248.671.532h.658c-.047-.575-.54-1.024-1.329-1.073V8.5h-.375v.45c-.747.073-1.255.522-1.255 1.158 0 .562.378.92 1.007 1.066l.248.061v1.272c-.384-.058-.639-.27-.696-.563h-.668zm1.36-1.354c-.369-.085-.569-.26-.569-.522 0-.294.216-.514.572-.578v1.1h-.003zm.432.746c.449.104.655.272.655.569 0 .339-.257.571-.709.614v-1.195l.054.012z">
+                                            </path>
+                                            <path
+                                                d="M1 0a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h4.083c.058-.344.145-.678.258-1H3a2 2 0 0 0-2-2V3a2 2 0 0 0 2-2h10a2 2 0 0 0 2 2v3.528c.38.34.717.728 1 1.154V1a1 1 0 0 0-1-1H1z">
+                                            </path>
+                                            <path
+                                                d="M9.998 5.083 10 5a2 2 0 1 0-3.132 1.65 5.982 5.982 0 0 1 3.13-1.567z">
+                                            </path>
+                                        </g>
+                                    </svg>
+                                </div>
+                                Efectiu
+                                <input checked="" type="radio" name="status"
+                                    class="peer/html w-4 h-4 absolute accent-current right-3" id="efectiu" value="1"
+                                    @change="choosePayment" />
+                            </label>
+                            <label for="targeta"
+                                class="font-medium text-lg h-14 relative hover:bg-zinc-100 flex items-center pl-3 gap-2 rounded-lg has-[:checked]:text-blue-500 has-[:checked]:bg-blue-50 has-[:checked]:ring-blue-300 has-[:checked]:ring-1 select-none">
+                                <div class="w-5">
+                                    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                                        <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round">
+                                        </g>
+                                        <g id="SVGRepo_iconCarrier">
+                                            <path
+                                                d="M3 8C3 6.34315 4.34315 5 6 5H18C19.6569 5 21 6.34315 21 8V16C21 17.6569 19.6569 19 18 19H6C4.34315 19 3 17.6569 3 16V8Z"
+                                                stroke="currentColor" stroke-width="2"></path>
+                                            <path d="M3 10H21" stroke="currentColor" stroke-width="2"></path>
+                                            <path d="M14 15L17 15" stroke="currentColor" stroke-width="2"
+                                                stroke-linecap="round">
+                                            </path>
+                                        </g>
+                                    </svg>
+                                </div>
+                                Targeta
+                                <input type="radio" name="status" class="w-4 h-4 absolute accent-current right-3"
+                                    id="targeta" value="2" @change="choosePayment" />
+                            </label>
                         </div>
                     </div>
                 </div>
-                <div id="footer" class="flex items-center justify-between mt-auto border-t border-gray-300">
-                    <button
+                <div class="footer flex items-center justify-between mt-auto border-t border-gray-300 fixed">
+                    <button @click="togglePayment"
                         class="btn-cancel w-[39%] h-[60px] justify-center border rounded-md border border-gray-400 px-4 py-2 text-xl text-gray-500 font-medium disabled:cursor-wait ">
                         Cancel·lar
                     </button>
-                    <button
+                    <button @click="crearComanda"
                         class="btn-ok w-[59%] h-[60px] justify-center rounded-md border border-transparent px-4 py-2 text-xl font-semibold disabled:cursor-wait disabled:opacity-50">
                         Pagar
                     </button>
                 </div>
             </div>
 
-            <div v-if="cistellaView" class="mb-[80px] divide-y divide-gray-300 dark:divide-gray-600">
+            <!-- CISTELLA VIEW CON TODOS LOS PRODUCTOS -->
+            <div v-if="cistellaView" class="divide-y divide-gray-300 dark:divide-gray-600">
                 <div v-for="(items, storeName) in groupedCesta" :key="storeName" class="p-3">
                     <div class="flex justify-between items-center border-b border-gray-200 m-4">
                         <div class="flex items-center">
@@ -246,7 +380,7 @@ function toPay() {
                                         fill="#000000"></path>
                                 </g>
                             </svg>
-                            <h2 class="text-center font-bold text-xl ml-2">{{ storeName }}</h2>
+                            <h2 class="text-lg ml-2 truncate">{{ storeName }}</h2>
                         </div>
                         <h3 class="font-semibold text-xl">{{ storeTotal(storeName).toFixed(2) }} €</h3>
                     </div>
@@ -264,7 +398,7 @@ function toPay() {
                             </svg>
                         </button>
                         <div id="contain-image" class="mr-4 min-w-[80px] min-h-[100px]">
-                            <img :src="`http://localhost:8000/storage/${item.imagen}`" alt="Image" />
+                            <img :src="`http://localhost:8000/storage/${item.imagen}`" alt="" />
                         </div>
                         <div class="flex flex-col w-full justify-between">
                             <div class="flex justify-between">
@@ -311,7 +445,7 @@ function toPay() {
                 </div>
             </div>
 
-            <div id="footer" class="flex items-center justify-between mt-auto border-t border-gray-300">
+            <div class="footer flex items-center justify-between mt-auto border-t border-gray-300">
                 <div id="precio" class="font-semibold text-gray-800 dark:text-gray-200">
                     <p class="text-gray-600 font-light text-sm">Precio total:</p>
                     <h3 class="text-2xl">
@@ -394,7 +528,7 @@ header {
     background-color: #1E2026;
 }
 
-#footer {
+.footer {
     position: fixed;
     bottom: 0;
     left: 0;
