@@ -1,10 +1,17 @@
 <template>
-    <div v-if="show" class="popup">
-        <div class="popup-content">
-            <h3>{{ info.name }}</h3>
-            <p>Latitud: {{ info.lat }}</p>
-            <p>Longitud: {{ info.lon }}</p>
-            <button @click="cerrar">Cerrar</button>
+    <div v-if="show"
+        class="fixed top-1/4 left-1/2 transform -translate-x-1/2 bg-white border border-gray-300 p-6 shadow-lg z-50">
+        <div class="flex flex-col items-center w-full max-w-xs">
+            <h3 class="text-xl font-semibold mb-4">{{ info.name }}</h3>
+            <p class="text-sm mb-2">Latitud: {{ info.lat }}</p>
+            <p class="text-sm mb-4">Longitud: {{ info.lon }}</p>
+            <button @click="cerrar"
+                class="mt-2 w-full px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 transition duration-300">Cerrar
+            </button>
+            <button
+                class="mt-2 w-full px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition duration-300">
+                Ir al local
+            </button>
         </div>
     </div>
 </template>
@@ -24,6 +31,7 @@ const cerrar = () => {
     emit('cerrarPopup');
 };
 </script>
+
 
 <style scoped>
 .popup {
