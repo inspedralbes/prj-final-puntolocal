@@ -139,7 +139,7 @@ class ComercioController extends Controller
             'calle_num' => 'required|string|max:255',
             'ciudad' => 'required|string|max:255',
             'provincia' => 'required|string|max:255',
-            'codigo_postal' => 'required|integer',
+            'codigo_postal' => 'required|string',
             'num_planta' => 'required|integer',
             'num_puerta' => 'required|integer',
             'descripcion' => 'required|string|max:500',

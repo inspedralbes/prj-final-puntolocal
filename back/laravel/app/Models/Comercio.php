@@ -23,6 +23,7 @@
             'descripcion',
             'gestion_stock',
             'puntaje_medio',
+            'imagenes',
         ];
 
         public function categoria() {
