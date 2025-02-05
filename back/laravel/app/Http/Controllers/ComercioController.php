@@ -24,7 +24,7 @@ class ComercioController extends Controller
             'street_address' => 'required|string|max:255',
             'ciudad' => 'required|string|max:255',
             'provincia' => 'required|string|max:255',
-            'codigo_postal' => 'required|integer',
+            'codigo_postal' => 'required|string',
             'num_planta' => 'required|integer',
             'num_puerta' => 'required|integer',
             'descripcion' => 'required|string|max:500',
@@ -47,8 +47,8 @@ class ComercioController extends Controller
             'ciudad' => $request->ciudad,
             'provincia' => $request->provincia,
             'codigo_postal' => $request->codigo_postal,
-            'num_planta' => $request->numero_planta,
-            'num_puerta' => $request->numero_puerta,
+            'num_planta' => $request->num_planta,
+            'num_puerta' => $request->num_puerta,
             'categoria_id' => $request->categoria,
             'descripcion' => $request->descripcion,
             'gestion_stock' => $request->gestion_stock,
@@ -101,7 +101,7 @@ class ComercioController extends Controller
         $comercio = Comercio::find($id);
         if ($comercio == null) {
             return response()->json([
-                'error' => 'Comercio no encontrado'
+                'error' => 'Comerç no trobat'
             ], 404);
         }
 
@@ -122,14 +122,14 @@ class ComercioController extends Controller
 
         if ($validator->fails()) {
             return response()->json([
-                'error' => $validator->errors(),
+                'error' => 'Camp invàlid',
             ], 422);
         }
 
         $comercio->update($request->all());
 
         return response()->json([
-            'message' => 'Comercio actualizado exitosamente.',
+            'message' => 'Comerç actualitzat exitosament.',
             'comercio' => $comercio
         ], 200);
     }
@@ -138,7 +138,7 @@ class ComercioController extends Controller
         $comercio = Comercio::find($id);
         if ($comercio == null) {
             return response()->json([
-                'error' => 'Comercio no encontrado'
+                'error' => 'Comerç no trobat'
             ], 404);
         }
 
@@ -149,7 +149,7 @@ class ComercioController extends Controller
 
         if ($validator->fails()) {
             return response()->json([
-                'error' => $validator->errors(),
+                'error' => 'Camp invàlid',
             ], 422);
         }
 
@@ -166,7 +166,7 @@ class ComercioController extends Controller
         ]);
 
         return response()->json([
-            'message' => 'Imágenes actualizadas exitosamente.',
+            'message' => 'Imatges actualitzades exitosament.',
             'comercio' => $comercio
         ], 200);
     }
@@ -174,18 +174,18 @@ class ComercioController extends Controller
     public function deleteComercioImagen(Request $request, $id) {
         $comercio = Comercio::find($id);
         if (!$comercio) {
-            return response()->json(['error' => 'Comercio no encontrado'], 404);
+            return response()->json(['error' => 'Comerç no trobat'], 404);
         }
 
         $imageToRemove = $request->input('image'); // Path or filename
         if (!$imageToRemove) {
-            return response()->json(['error' => 'No se proporcionó la imagen a eliminar'], 422);
+            return response()->json(['error' => `No s'ha proporcionat la imatge a eliminar`], 422);
         }
 
         $images = json_decode($comercio->imagenes, true) ?? [];
         $index = array_search($imageToRemove, $images);
         if ($index === false) {
-            return response()->json(['error' => 'La imagen no se encontró'], 404);
+            return response()->json(['error' => `La imatge no s'ha trobat`], 404);
         }
 
         Storage::disk('public')->delete($images[$index]);
@@ -194,7 +194,7 @@ class ComercioController extends Controller
         $comercio->save();
 
         return response()->json([
-            'message' => 'Imagen eliminada correctamente.',
+            'message' => 'Imatge eliminada correctament.',
             'comercio' => $comercio
         ], 200);
     }

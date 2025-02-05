@@ -15,7 +15,7 @@ const formData = reactive({
     street_address: '',
     ciudad: '',
     provincia: '',
-    codigo_postal: null,
+    codigo_postal: '',
     num_planta: null,
     num_puerta: null,
     descripcion: '',
@@ -44,9 +44,7 @@ async function register() {
     }
 
     // Convertir valores necesarios a enteros
-    formData.codigo_postal = parseInt(formData.codigo_postal) || null;
-    formData.num_planta = parseInt(formData.num_planta) || null;
-    formData.num_puerta = parseInt(formData.num_puerta) || null;
+    //formData.codigo_postal = parseInt(formData.codigo_postal) || null;
 
     // Llamar al plugin communicationManager para registrar
     const response = await $communicationManager.registerStore(formData);

@@ -661,6 +661,191 @@ Esta API permite gestionar el registro de los comercios y obtener los datos de l
 
 ---
 
+### 5. Actualizar los datos de un comercio
+
+- **URL:** `/api/comercios/{id}`
+- **Método:** `PUT`
+- **Descripción:** Permite actualizar los datos de un comercio
+- **Parámetros:**
+  - `id`: (int, requerido) El ID del comercio que se desea modificar.
+  - `dataComercio` : (object, requerido) El objeto con la nueva información del comercio.
+- **Respuesta:**
+
+  - **Código de estado 200 OK**:
+
+    ```json
+    {
+      "message": "Comerç actualitzat exitosament.",
+      "comercio": {
+        "id": 12,
+        "nombre": "Test",
+        "idUser": 12,
+        "email": "test@test.com",
+        "email_verified_at": null,
+        "phone": "12345678",
+        "phone_verified_at": null,
+        "calle_num": "C/ Falsa, 123",
+        "ciudad": "Ciutadella",
+        "provincia": "Menorca",
+        "codigo_postal": "7760",
+        "categoria_id": 4,
+        "num_planta": 1,
+        "num_puerta": 4,
+        "descripcion": "sadasda.",
+        "gestion_stock": 1,
+        "puntaje_medio": 0,
+        "imagenes": [
+          "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAP4AAAD+CAIAAACV9C8GAACAAElEQVR4nOy9B5xdZZk/ft5y+u0zd....."
+        ],
+        "horario": null,
+        "created_at": "2025-02-05T08:18:33.000000Z",
+        "updated_at": "2025-02-05T08:22:41.000000Z"
+      }
+    }
+    ```
+
+  - **Código de estado 404 Not Found** (Si no esta registrado):
+
+    ```json
+    {
+      "message": "Comerç no trobat"
+    }
+    ```
+
+  - **Código de estado 422 Not Found** :
+
+    ```json
+    {
+      "message": "Camp invàlid."
+    }
+    ```
+
+---
+
+### 6. Actualiza la imagen del comercio
+
+- **URL:** `/api/comercios/{id}/imagenes`
+- **Método:** `POST`
+- **Descripción:** Permite actualizar la imagen de un comercio.
+- **Parámetros:**
+  - `id`: (int, requerido) El ID del comercio que se desea modificar.
+  - `formData`: (Object, requerido) Contiene la imagen selecionada por el usuario.
+- **Respuesta:**
+
+  - **Código de estado 200 OK**:
+
+    ```json
+    {
+      "message": "Imatges actualitzades exitosament.",
+      "comercio": {
+        "id": 12,
+        "nombre": "Test",
+        "idUser": 12,
+        "email": "test@test.com",
+        "email_verified_at": null,
+        "phone": "12345678",
+        "phone_verified_at": null,
+        "calle_num": "C/ Falsa, 123",
+        "ciudad": "Ciutadella",
+        "provincia": "Menorca",
+        "codigo_postal": "7760",
+        "categoria_id": 4,
+        "num_planta": 1,
+        "num_puerta": 4,
+        "descripcion": "sadasda.",
+        "gestion_stock": 1,
+        "puntaje_medio": 0,
+        "imagenes": "[\"comercios\\/dUXevKV6iftcdDBxPrJ8U3JzSywfgQAA0VoN3rHQ.png\"]",
+        "horario": null,
+        "created_at": "2025-02-05T08:18:33.000000Z",
+        "updated_at": "2025-02-05T08:22:41.000000Z"
+      }
+    }
+    ```
+
+  - **Código de estado 404 Not Found** (Si no esta registrado):
+
+    ```json
+    {
+      "message": "Comerç no trobat"
+    }
+    ```
+
+  - **Código de estado 422 Not Found** :
+
+    ```json
+    {
+      "message": "Camp invàlid."
+    }
+    ```
+
+---
+
+### 7. Eliminar imagen de un comercio
+
+- **URL:** `/api/comercios/{id}/imagenes`
+- **Método:** `DELETE`
+- **Descripción:** Permite eliminar la imagen de un comercio.
+- **Parámetros:**
+  - `id`: (int, requerido) El ID del comercio que se desea obtener.
+- **Respuesta:**
+
+  - **Código de estado 200 OK**:
+
+    ```json
+    {
+      "message": "Imatge eliminada correctament.",
+      "comercio": {
+        "id": 12,
+        "nombre": "Test",
+        "idUser": 12,
+        "email": "test@test.com",
+        "email_verified_at": null,
+        "phone": "12345678",
+        "phone_verified_at": null,
+        "calle_num": "C/ Falsa, 123",
+        "ciudad": "Ciutadella",
+        "provincia": "Menorca",
+        "codigo_postal": "7760",
+        "categoria_id": 4,
+        "num_planta": 1,
+        "num_puerta": 4,
+        "descripcion": "sadasda.",
+        "gestion_stock": 1,
+        "puntaje_medio": 0,
+        "imagenes": "[]",
+        "horario": null,
+        "created_at": "2025-02-05T08:18:33.000000Z",
+        "updated_at": "2025-02-05T08:49:05.000000Z"
+      }
+    }
+    ```
+  - **Código de estado 404 Not Found** (Si no esta registrado):
+
+    ```json
+    {
+      "message": "Comerç no trobat"
+    }
+    ```
+
+  - **Código de estado 422 Not Found** :
+
+    ```json
+    {
+      "message": "No s'ha proporcionat la imatge a eliminar"
+    }
+    ```
+  
+  - **Código de estado 404 Not Found** (Si no esta la imagen):
+
+    ```json
+    {
+      "message": "La imatge no s'ha trobat"
+    }
+    ```
+
+---
+
 <!-- CATEGORIAS -->
 
 # API de Categorias
@@ -926,16 +1111,16 @@ Esta API permite ver los pedidos de un comercio, su información, cambiar su est
         "created_at": "2025-01-31T08:13:39.000000Z",
         "updated_at": null,
         "tipo_envio": {
-            "id": 1,
-            "nombre": "Recollida",
-            "descripcion": null,
-            "created_at": null,
-            "updated_at": null
+          "id": 1,
+          "nombre": "Recollida",
+          "descripcion": null,
+          "created_at": null,
+          "updated_at": null
         },
         "estat_compra": {
-            "id": 5,
-            "nombre": "Cancelado",
-            "color": "#ff0000"
+          "id": 5,
+          "nombre": "Cancelado",
+          "color": "#ff0000"
         }
       }
     ]
@@ -946,6 +1131,7 @@ Esta API permite ver los pedidos de un comercio, su información, cambiar su est
     ```json
     []
     ```
+
 ---
 
 ### 3. Ver en que comercios realizó una orden el cliente
@@ -975,14 +1161,14 @@ Esta API permite ver los pedidos de un comercio, su información, cambiar su est
           "descripcion": null,
           "created_at": null,
           "updated_at": null
-      },
-      "estat_compra": {
-        "id": 1,
-        "nombre": "Pendiente",
-        "color": "#ffb300"
-      },
+        },
+        "estat_compra": {
+          "id": 1,
+          "nombre": "Pendiente",
+          "color": "#ffb300"
+        },
         "order_comercios": [
-        {
+          {
             "id": 3,
             "order_id": 1,
             "comercio_id": 11,
@@ -991,11 +1177,11 @@ Esta API permite ver los pedidos de un comercio, su información, cambiar su est
             "created_at": "2025-01-31T11:46:07.000000Z",
             "updated_at": null,
             "comercio": {
-                "id": 11,
-                "nombre": "Zemlak, Price and Frami"
+              "id": 11,
+              "nombre": "Zemlak, Price and Frami"
             }
-        }
-    ]
+          }
+        ]
       }
     ]
     ```
@@ -1007,6 +1193,7 @@ Esta API permite ver los pedidos de un comercio, su información, cambiar su est
       "message": "Comanda no encontrada."
     }
     ```
+
 ---
 
 ### 4. Ver información de una subcomanda de un cliente
@@ -1047,20 +1234,20 @@ Esta API permite ver los pedidos de un comercio, su información, cambiar su est
       },
       "productos_compra": [
         {
-        "id": 21,
-        "order_comercio_id": 1,
-        "producto_id": 14,
-        "cantidad": 9,
-        "precio": 49.27,
-        "producto":{
-          "id": 14,
-          "subcategoria_id": 30,
-          "comercio_id": 3,
-          "nombre": "Videocámara de acción",
-          "descripcion": "Videocámara de acción resistente al agua...",
-          "precio": 922.8,
-          "stock": null,
-          "imagen": null
+          "id": 21,
+          "order_comercio_id": 1,
+          "producto_id": 14,
+          "cantidad": 9,
+          "precio": 49.27,
+          "producto": {
+            "id": 14,
+            "subcategoria_id": 30,
+            "comercio_id": 3,
+            "nombre": "Videocámara de acción",
+            "descripcion": "Videocámara de acción resistente al agua...",
+            "precio": 922.8,
+            "stock": null,
+            "imagen": null
           }
         }
       ]
@@ -1073,7 +1260,6 @@ Esta API permite ver los pedidos de un comercio, su información, cambiar su est
     {
       "message": "No tienes ninguna orden con ID #134."
     }
-
     ```
 
 ---
