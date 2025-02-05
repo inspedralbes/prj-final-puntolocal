@@ -278,7 +278,7 @@ export default defineNuxtPlugin(nuxtApp => {
 
     async detalleCompra(compraId) {
       try {
-        const response = await fetch(`${Host}/comandes/${compraId}`, {
+        const response = await fetch(`${Host}/comandes/${compraId}/suborders`, {
           method: 'GET',
           headers: {
             'Accept': 'application/json',

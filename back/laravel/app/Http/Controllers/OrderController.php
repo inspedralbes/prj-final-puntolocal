@@ -71,7 +71,7 @@ class OrderController extends Controller {
     {
         try {
             $user = Auth::user();
-            $order = Order::with('tipoEnvio', 'estatCompra', 'orderComercios.comercio:id,nombre')->where('id', $id)->where('cliente_id', $user->id)->first();
+            $order = Order::with('tipoEnvio', 'estatCompra', 'orderComercios.estatCompra', 'orderComercios.productosCompra.producto:id,nombre,precio,imagen', 'orderComercios.comercio:id,nombre')->where('id', $id)->where('cliente_id', $user->id)->first();
 
             if (!$order) {
                 return response()->json(['message' => 'Comanda no encontrada.'], 404);
