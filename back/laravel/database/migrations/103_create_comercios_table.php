@@ -18,6 +18,8 @@ return new class extends Migration {
             $table->string('phone', 15)->nullable();
             $table->timestamp('phone_verified_at')->nullable();
 
+            $table->string('altitud')->nullable();
+            $table->string('latitud')->nullable();
             
             $table->string('calle_num');
             $table->string('ciudad');
