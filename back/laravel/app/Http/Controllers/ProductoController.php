@@ -212,32 +212,53 @@
             return response()->json(['data' => $productos], 200);
         }
         
-        //Busqueda por nombre de producto y la decripcion del producto
-        public function search(Request $request) {
-            $searchTerm = $request->input('search');
+        //Busqueda por nombre de producto y la decripcion del producto  
+        public function search(Request $request, $searchTerm) {
+            $validator = Validator::make(['search' => $searchTerm], [
+                'searchTerm' => 'required|integer',
+            ]);
 
-            $productos = Producto::with('subcategoria', 'comercio')
+            if (empty($searchTerm)) {
+                return response()->json(['message' => 'El término de búsqueda no puede estar vacío'], 400);
+            }
+        
+            // Buscar productos por nombre
+            $productosPorNombre = Producto::with('subcategoria', 'comercio')
                 ->where('nombre', 'like', '%' . $searchTerm . '%')
-                ->get()
-                ->map(function ($producto) {
-                    return [
-                        'id' => $producto->id,
-                        'nombre' => $producto->nombre,
-                        'descripcion' => $producto->descripcion,
-                        'subcategoria_id' => $producto->subcategoria_id,
-                        'subcategoria' => optional($producto->subcategoria)->name,
-                        'comercio_id' => $producto->comercio_id,
-                        'comercio' => $producto->comercio->nombre,
-                        'precio' => $producto->precio,
-                        'stock' => $producto->stock,
-                        'imagen' => $producto->imagen,
-                    ];
-                });
-
-            if ($productos->isEmpty()) {
+                ->get();
+        
+            // Obtener los IDs de los productos encontrados por nombre
+            $idsProductosPorNombre = $productosPorNombre->pluck('id')->toArray();
+        
+            // Buscar productos por descripción, excluyendo los que ya se encontraron por nombre
+            $productosPorDescripcion = Producto::with('subcategoria', 'comercio')
+                ->where('descripcion', 'like', '%' . $searchTerm . '%')
+                ->whereNotIn('id', $idsProductosPorNombre)
+                ->get();
+        
+            // Combinar los resultados
+            $productos = $productosPorNombre->concat($productosPorDescripcion);
+        
+            // Mapear los resultados para devolver la información requerida
+            $productosMapeados = $productos->map(function ($producto) {
+                return [
+                    'id' => $producto->id,
+                    'nombre' => $producto->nombre,
+                    'descripcion' => $producto->descripcion,
+                    'subcategoria_id' => $producto->subcategoria_id,
+                    'subcategoria' => optional($producto->subcategoria)->name,
+                    'comercio_id' => $producto->comercio_id,
+                    'comercio' => $producto->comercio->nombre,
+                    'precio' => $producto->precio,
+                    'stock' => $producto->stock,
+                    'imagen' => $producto->imagen,
+                ];
+            });
+        
+            if ($productosMapeados->isEmpty()) {
                 return response()->json(['message' => 'No hay productos que coincidan con tu búsqueda'], 200);
             }
-
-            return response()->json(['data' => $productos], 200);
+        
+            return response()->json(['data' => $productosMapeados], 200);
         }
     }
