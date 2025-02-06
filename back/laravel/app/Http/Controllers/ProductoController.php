@@ -211,4 +211,33 @@
 
             return response()->json(['data' => $productos], 200);
         }
+        
+        //Busqueda por nombre de producto y la decripcion del producto
+        public function search(Request $request) {
+            $searchTerm = $request->input('search');
+
+            $productos = Producto::with('subcategoria', 'comercio')
+                ->where('nombre', 'like', '%' . $searchTerm . '%')
+                ->get()
+                ->map(function ($producto) {
+                    return [
+                        'id' => $producto->id,
+                        'nombre' => $producto->nombre,
+                        'descripcion' => $producto->descripcion,
+                        'subcategoria_id' => $producto->subcategoria_id,
+                        'subcategoria' => optional($producto->subcategoria)->name,
+                        'comercio_id' => $producto->comercio_id,
+                        'comercio' => $producto->comercio->nombre,
+                        'precio' => $producto->precio,
+                        'stock' => $producto->stock,
+                        'imagen' => $producto->imagen,
+                    ];
+                });
+
+            if ($productos->isEmpty()) {
+                return response()->json(['message' => 'No hay productos que coincidan con tu búsqueda'], 200);
+            }
+
+            return response()->json(['data' => $productos], 200);
+        }
     }

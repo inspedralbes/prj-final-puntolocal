@@ -116,6 +116,8 @@ Route::middleware('auth:sanctum')->prefix('comandes')->group(function () {
 
         // Obtener un producto específico
         Route::get('/{id}', [ProductoController::class, 'show']);
+        
+        Route::get('/search/{search}', [ProductoController::class, 'search']);
     });
 
 

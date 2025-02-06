@@ -1,5 +1,6 @@
 import { useAuthStore } from '@/stores/authStore';
 import { createPinia, setActivePinia } from 'pinia';
+import BusquedaGeneral from '~/pages/busquedaGeneral.vue';
 
 const pinia = createPinia();
 setActivePinia(pinia);
@@ -705,6 +706,29 @@ export default defineNuxtPlugin(nuxtApp => {
         return null;
       }
     }, 
+
+    async busquedaGeneral(search) {
+      try {
+        const response = await fetch(`${Host}/producto/search/${search}`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': this.authStore.token ? `Bearer ${this.authStore.token}` : ''
+          },
+        });
+
+        if (!response.ok) {
+          console.error(`Error en la petición: ${response.status} ${response.statusText}`);
+          return null;
+        }
+
+        const jsonResponse = await response.json();
+        return jsonResponse;
+      } catch (error) {
+        console.error('Error al realizar la petición:', error);
+        return null;
+      }
+    },
 
     ///////////////////////////// PUT //////////////////////////////////
 
