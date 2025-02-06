@@ -56,14 +56,19 @@ function goToInfo() { navigateTo('/perfil/info'); }
 function goToEdit() { navigateTo('/perfil/perfilCliente'); }
 function goToCompras() { navigateTo('/perfil/compras'); }
 async function checkComercio() {
-    const { $communicationManager } = useNuxtApp();
-    const res = await $communicationManager.checkUserHasComercio(authStore.user.id);
-
-    if (res) {
-        console.log('Tiene comercio')
-        return true
-    } else {
-        console.log('No tiene comercio')
+    if(authStore?.user){
+        const { $communicationManager } = useNuxtApp();
+        const res = await $communicationManager.checkUserHasComercio(authStore.user.id);
+    
+        if (res) {
+            console.log('Tiene comercio')
+            return true
+        } else {
+            console.log('No tiene comercio')
+            return false
+        }
+    }else{
+        console.log('No está logueado')
         return false
     }
 }

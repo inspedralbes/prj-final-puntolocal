@@ -10,8 +10,10 @@
                 $table->unsignedBigInteger('cliente_id');
                 $table->foreign('cliente_id')->references('id')->on('cliente')->onDelete('cascade');
                 $table->float('total');
-                $table->unsignedBigInteger('tipo')->nullable();
-                $table->foreign('tipo')->references('id')->on('tipo_envios')->onDelete('cascade');
+                $table->unsignedBigInteger('tipo_envio')->nullable();
+                $table->foreign('tipo_envio')->references('id')->on('tipo_envios')->onDelete('cascade');
+                $table->unsignedBigInteger('tipo_pago')->nullable();
+                $table->foreign('tipo_pago')->references('id')->on('tipo_pagos')->onDelete('cascade');
                 $table->unsignedBigInteger('estat')->nullable();
                 $table->foreign('estat')->references('id')->on('estat_compras')->onDelete('cascade');
                 $table->timestamps();

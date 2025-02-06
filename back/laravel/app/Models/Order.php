@@ -7,7 +7,8 @@
         protected $fillable = [
             'cliente_id',
             'total',
-            'tipo',
+            'tipo_envio',
+            'tipo_pago',
             'estat',
         ];
 
@@ -16,7 +17,11 @@
         }
 
         public function tipoEnvio() {
-            return $this->belongsTo(TipoEnvio::class, 'tipo');
+            return $this->belongsTo(TipoEnvio::class, 'tipo_envio');
+        }
+
+        public function TipoPago() {
+            return $this->belongsTo(TipoPago::class, 'tipo_pago');
         }
 
         public function estatCompra() {

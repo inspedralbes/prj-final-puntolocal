@@ -60,6 +60,12 @@ Route::middleware('auth:sanctum')->prefix('comandes')->group(function () {
     Route::get('/suborder/{id}', [OrderComercioController::class, 'showData']);
 });
 
+// ==== SUBCOMANDES ===================
+Route::middleware('auth:sanctum')->prefix('suborders')->group(function () {
+    // Crear un nueva subcomanda
+    Route::post('/', [OrderComercioController::class, 'store']);
+});
+
 // ==== COMANDES COMERCIOS ===================
 Route::middleware('auth:sanctum')->prefix('admin/comandes')->group(function () {
     // Obtener todas las comandas de un comercio

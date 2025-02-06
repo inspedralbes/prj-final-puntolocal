@@ -8,7 +8,7 @@
         public function run(): void {
             DB::table('tipo_envios')->insert([
                 ['nombre' => 'Recollida'],
-                ['nombre' => 'Envio'],
+                ['nombre' => 'Enviament'],
             ]);
         }
     }
