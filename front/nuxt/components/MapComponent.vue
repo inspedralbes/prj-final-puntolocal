@@ -7,7 +7,7 @@
 
         <div>
             <button @click="getLocation" class="px-4 py-2 bg-blue-500 text-white rounded-lg">
-                Obtener Ubicación
+                Ver tiendas cerca de mi
             </button>
             <p v-if="location">Ubicación: {{ location }}</p>
         </div>
@@ -171,17 +171,22 @@ const getLocation = () => {
                 // Centrar el mapa en la ubicación exacta
                 map.value.getView().animate({
                     center: lonLat,
-                    zoom: 16, // Zoom más cercano
+                    zoom: 16,
                     duration: 1000
                 });
 
-                // Eliminar marcadores previos de ubicación del usuario
-                vectorSource.value.clear();
+                // ❌ No borrar los comercios, solo eliminar ubicación previa del usuario
+                vectorSource.value.getFeatures().forEach(feature => {
+                    if (feature.get('userLocation')) {
+                        vectorSource.value.removeFeature(feature);
+                    }
+                });
 
                 // Agregar un marcador rojo en la ubicación actual
                 const userMarker = new Feature({
                     geometry: new Point(lonLat),
-                    name: "Tu ubicación exacta"
+                    name: "Tu ubicación exacta",
+                    userLocation: true // Etiqueta especial para poder eliminarlo después sin afectar a los comercios
                 });
 
                 userMarker.setStyle(
@@ -198,18 +203,13 @@ const getLocation = () => {
 
                 // Dibujar un círculo verde con radio de 2.5 km
                 const circleFeature = new Feature(
-                    new CircleGeom(lonLat, 2500) // Radio en metros
+                    new CircleGeom(lonLat, 2500)
                 );
-                
+
                 circleFeature.setStyle(
                     new Style({
-                        stroke: new Stroke({
-                            color: 'green',
-                            width: 2
-                        }),
-                        fill: new Fill({
-                            color: 'rgba(0, 255, 0, 0.2)' // Transparente
-                        })
+                        stroke: new Stroke({ color: 'green', width: 2 }),
+                        fill: new Fill({ color: 'rgba(0, 255, 0, 0.2)' })
                     })
                 );
 
@@ -219,9 +219,9 @@ const getLocation = () => {
                 location.value = `Error: ${error.message}`;
             },
             {
-                enableHighAccuracy: true, // Mayor precisión
-                timeout: 10000, // Tiempo de espera máximo
-                maximumAge: 0 // No usar datos en caché
+                enableHighAccuracy: true,
+                timeout: 10000,
+                maximumAge: 0
             }
         );
     } else {
