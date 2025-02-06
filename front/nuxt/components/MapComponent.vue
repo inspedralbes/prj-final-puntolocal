@@ -1,20 +1,23 @@
 <template>
     <div>
-        <input 
-            v-model="codigoPostal" 
-            @keyup.enter="buscarPorCodigoPostal" 
-            placeholder="Introduce código postal" 
-        />
+        <input v-model="codigoPostal" @keyup.enter="buscarPorCodigoPostal" placeholder="Introduce código postal" />
         <button @click="buscarPorCodigoPostal">Buscar</button>
 
         <div ref="mapContainer" class="map-container"></div>
 
-        <!-- Popup con la información -->
+        <div>
+            <button @click="getLocation" class="px-4 py-2 bg-blue-500 text-white rounded-lg">
+                Obtener Ubicación
+            </button>
+            <p v-if="location">Ubicación: {{ location }}</p>
+        </div>
+
         <InfoMapa v-if="showPopup" :info="puebloSeleccionado" @cerrarPopup="cerrarPopup" />
     </div>
 </template>
 
 <script setup>
+
 import { onMounted, ref } from 'vue';
 import 'ol/ol.css';
 import Map from 'ol/Map';
@@ -36,6 +39,7 @@ import { click } from 'ol/events/condition';
 import InfoMapa from './InfoMapa.vue'; // Importar el componente InfoMapa
 
 const map = ref(null);
+const location = ref(null);
 const codigoPostal = ref("");
 const mapContainer = ref(null);
 const puebloSeleccionado = ref({});
@@ -151,6 +155,21 @@ const agregarMarcador = (lon, lat, name) => {
     });
 
     vectorSource.value.addFeature(marker);
+};
+
+const getLocation = () => {
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+            (position) => {
+                location.value = `Lat: ${position.coords.latitude}, Lng: ${position.coords.longitude}`;
+            },
+            (error) => {
+                location.value = `Error: ${error.message}`;
+            }
+        );
+    } else {
+        location.value = 'La geolocalización no es compatible con este navegador.';
+    }
 };
 
 const cerrarPopup = () => {
