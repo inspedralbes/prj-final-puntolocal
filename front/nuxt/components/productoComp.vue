@@ -2,7 +2,7 @@
     <div id="producto" :data-testid="testId">
         <div id="contain-image">
             <img :src="img">
-            <span id="contain-fav">
+            <span @click="actualizaFavoritos(id)" id="contain-fav">
                 <svg width="1.2em" height="1.2em" viewBox="0 0 24 24" fill="none" stroke="#333" stroke-width="2"
                     stroke-linecap="round" stroke-linejoin="round"
                     style="position: relative; top: 5px; margin-left: 5px; margin-right: 5px;">
@@ -111,6 +111,14 @@ const props = defineProps({
     comercio: {
         type: String,
         // required: true,
+    },
+    id: {
+        type: Number,
+        required: true,
     }
 });
+
+function actualizaFavoritos(productoID){
+    console.log(productoID)
+}
 </script>
