@@ -273,6 +273,67 @@ Esta API permite gestionar productos en un sistema de comercio, incluyendo la cr
     }
     ```
 
+  ***
+
+  ### 7. Buscar productos por un nombre
+
+- **URL:** `/api/producto/search/{search}`
+- **Método:** `PUT`
+- **Descripción:** Te permite obtener los productos que en su nombre o descripción coincida con el contenido de search.
+- **Parámetros (Cuerpo de la solicitud):**
+
+  - `search`: (string, requerido) Nombre del producto que se desea buscar.
+
+- **Respuesta:**
+
+  - **Código de estado 200 OK**:
+
+    ```json
+    [
+      {
+        "id": 4,
+        "nombre": "Juego de mesa para niños",
+        "descripcion": "Juego de mesa para niños con piezas grandes y coloridas, ideal para fomentar la creatividad y el trabajo en equipo mientras se divierten.",
+        "subcategoria_id": 48,
+        "subcategoria": "Juegos de Construcción",
+        "comercio_id": 2,
+        "comercio": "Glover LLC",
+        "precio": 310.39,
+        "stock": null,
+        "imagen": null
+      },
+      {
+        "id": 29,
+        "nombre": "Juego de pesas",
+        "descripcion": "Juego de pesas de diferentes tamaños, con un diseño compacto y fácil de almacenar, perfectas para mejorar tu fuerza y resistencia en casa.",
+        "subcategoria_id": 35,
+        "subcategoria": "Jugos y Extractos Naturales",
+        "comercio_id": 1,
+        "comercio": "Lesch and Sons",
+        "precio": 913.57,
+        "stock": null,
+        "imagen": null
+      }
+    ]
+    ```
+
+  - **Código de estado 200 OK** (Si no hay ningun producto que coincida con el search):
+
+    ```json
+    {
+      "message": "No hay productos que coincidan con tu búsqueda"
+    }
+    ```
+
+  - **Código de estado 400 Not Found** (Si search esta vacio):
+    ```json
+    {
+      "message": "El término de búsqueda no puede estar vacío"
+    }
+    ```
+
+---
+
 <!-- AUTH -->
 
 # API de Auth
@@ -820,6 +881,7 @@ Esta API permite gestionar el registro de los comercios y obtener los datos de l
       }
     }
     ```
+
   - **Código de estado 404 Not Found** (Si no esta registrado):
 
     ```json
@@ -835,12 +897,55 @@ Esta API permite gestionar el registro de los comercios y obtener los datos de l
       "message": "No s'ha proporcionat la imatge a eliminar"
     }
     ```
-  
+
   - **Código de estado 404 Not Found** (Si no esta la imagen):
 
     ```json
     {
       "message": "La imatge no s'ha trobat"
+    }
+    ```
+
+---
+
+### 8. Buscar comercios por un nombre
+
+- **URL:** `/api/comercios/search/{search}`
+- **Método:** `PUT`
+- **Descripción:** Te permite obtener los comercios que su nombre coincida con el contenido de search.
+- **Parámetros (Cuerpo de la solicitud):**
+
+  - `search`: (string, requerido) Nombre del comercio que se desea buscar.
+
+- **Respuesta:**
+
+  - **Código de estado 200 OK**:
+
+    ```json
+    [
+      {
+        "id": 2,
+        "nombre": "Glover LLC",
+        "categoria_id": 9,
+        "puntaje_medio": 1.9,
+        "imagenes": "[\"https://img.freepik.com/foto-gratis/logistica-transporte-buques-carga-contenedores-aviones-carga-puente-grua-funcionamiento-astillero-al-amanecer-antecedentes-logisticos-industria-importacion-exportacion-transporte-ai-generativo_123827-24177.jpg\"]",
+        "horario": "{\"lunes\": \"09:00 - 18:00\", \"jueves\": \"09:00 - 18:00\", \"martes\": \"09:00 - 18:00\", \"domingo\": \"Cerrado\", \"sábado\": \"10:00 - 14:00\", \"viernes\": \"09:00 - 18:00\", \"miércoles\": \"09:00 - 18:00\"}"
+      }
+    ]
+    ```
+
+  - **Código de estado 200 OK** (Si no hay ningun comercio que coincida con el search):
+
+    ```json
+    {
+      "message": "No hay comercios que coincidan con tu búsqueda"
+    }
+    ```
+
+  - **Código de estado 400 Not Found** (Si search esta vacio):
+    ```json
+    {
+      "message": "El término de búsqueda no puede estar vacío"
     }
     ```
 

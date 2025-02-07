@@ -225,4 +225,34 @@ class ComercioController extends Controller
             'comercio' => $comercio
         ], 200);
     }
+
+    public function search($search) {
+        $validator = Validator::make(['search' => $search], [
+            'searchTerm' => 'required|integer',
+        ]);
+
+        if (empty($search)) {
+            return response()->json(['message' => 'El término de búsqueda no puede estar vacío'], 400);
+        }
+        
+        $comercios = Comercio::where('nombre', 'like', "%$search%")->get();
+
+        if ($comercios->isEmpty()) {
+            return response()->json(['message' => 'No hay comercios que coincidan con tu búsqueda'], 200);
+        }
+
+        $comerciosMapeados = $comercios->map(function ($comercio) {
+            return [
+                'id' => $comercio->id,
+                'nombre' => $comercio->nombre,
+                'categoria_id' => $comercio->categoria_id,
+                'puntaje_medio' => $comercio->puntaje_medio,
+                'imagenes' => $comercio->imagenes,
+                'horario' => $comercio->horario,
+            ];
+        });
+
+
+        return response()->json(['data' => $comerciosMapeados], 200);
+    }
 }

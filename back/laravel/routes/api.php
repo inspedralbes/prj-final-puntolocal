@@ -42,6 +42,10 @@
         Route::delete('/{id}/imagenes', [ComercioController::class, 'deleteComercioImagen']);
     });
 
+    Route::prefix('comercios')->group(function () {
+        Route::get('/search/{search}', [ComercioController::class, 'search']);
+    });
+
 // ==== COMANDES ===================
 Route::middleware('auth:sanctum')->prefix('comandes')->group(function () {
     // Obtener todas las comandas de un usuario
