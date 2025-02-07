@@ -38,6 +38,25 @@ export default defineNuxtPlugin(nuxtApp => {
       }
     },
 
+    async getLocations() {
+      const response = await fetch(`${Host}/getLocations`, {
+        method: 'GET',
+        headers: {
+          'Accept': 'application/json', 
+          'Content-Type': 'application/json',
+          'Authorization': this.authStore.token ? `Bearer ${this.authStore.token}` : ''
+        }
+      });
+
+      if (!response.ok) {
+        console.error(`Error en la petición: ${response.status} ${response.statusText}`);
+        return null;
+      }
+
+      const producto = await response.json();
+      return producto;
+    },
+
     async getProductoById(id) {
       try {
         const response = await fetch(`${Host}/producto/${id}`, {

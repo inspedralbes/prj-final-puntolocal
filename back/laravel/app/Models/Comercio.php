@@ -23,6 +23,8 @@
             'descripcion',
             'gestion_stock',
             'puntaje_medio',
+            'altitud',
+            'latitud',
         ];
 
         public function categoria() {

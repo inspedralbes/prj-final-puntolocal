@@ -127,6 +127,8 @@ const fetchComercio = async () => {
             comercio.value = response.comercio;
             productos.value = response.productos;
 
+            console.log(comercio.value);
+
             const subcats = response.productos.map(producto => producto.subcategoria);
             subcategorias.value = [...new Map(subcats.map(sub => [sub.id, sub])).values()];
 

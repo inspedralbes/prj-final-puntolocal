@@ -4,10 +4,10 @@
         <button @click="buscarPorCodigoPostal">Buscar</button>
 
         <div ref="mapContainer" class="map-container"></div>
-
+        
         <div>
             <button @click="getLocation" class="px-4 py-2 bg-blue-500 text-white rounded-lg">
-                Ver tiendas cerca de mi
+                Ver tiendas cerca de mí
             </button>
             <p v-if="location">Ubicación: {{ location }}</p>
         </div>
@@ -28,7 +28,6 @@ import VectorLayer from 'ol/layer/Vector';
 import VectorSource from 'ol/source/Vector';
 import Feature from 'ol/Feature';
 import Point from 'ol/geom/Point';
-import CircleGeom from 'ol/geom/Circle';
 import Style from 'ol/style/Style';
 import CircleStyle from 'ol/style/Circle';
 import Fill from 'ol/style/Fill';
@@ -40,16 +39,16 @@ import InfoMapa from './InfoMapa.vue';
 const map = ref(null);
 const location = ref(null);
 const codigoPostal = ref("");
+const showPopup = ref(false);
 const mapContainer = ref(null);
 const puebloSeleccionado = ref({});
-const vectorSource = ref(new VectorSource()); // Fuente para los marcadores y círculos
-const showPopup = ref(false);
+const vectorSource = ref(new VectorSource());
+const { $communicationManager } = useNuxtApp();
 const API_URL = "https://nominatim.openstreetmap.org/search";
 
-const coordenadas = {
-    vilafranca: { la: 41.341365, lo: 1.690866, name: "Vilafranca del Penedès" },
-    castelldefels: { la: 41.3784, lo: 2.0834, name: "Los Pollos Hermanos" }
-};
+// Obtener las ubicaciones desde communicationManager
+const response = await $communicationManager.getLocations();
+console.log(response);
 
 onMounted(() => {
     const vectorLayer = new VectorLayer({ source: vectorSource.value });
@@ -61,48 +60,59 @@ onMounted(() => {
             vectorLayer
         ],
         view: new View({
-            center: fromLonLat([1.690866, 41.341365]),
+            center: fromLonLat([1.690866, 41.341365]), 
             zoom: 10
         })
     });
 
-    agregarMarcadoresPredefinidos();
+    agregarMarcadoresDesdeResponse();
 
     const selectClick = new Select({ condition: click });
     map.value.addInteraction(selectClick);
     selectClick.on('select', (e) => {
         const selectedFeature = e.selected[0];
         if (selectedFeature) {
+            const id = selectedFeature.get('id');
             const name = selectedFeature.get('name');
             const lonLat = selectedFeature.getGeometry().getCoordinates();
             const lon = lonLat[0];
             const lat = lonLat[1];
 
-            puebloSeleccionado.value = { name, lat, lon };
+            puebloSeleccionado.value = { id, name, lat, lon };
             showPopup.value = true;
         }
     });
 });
 
-const agregarMarcadoresPredefinidos = () => {
-    Object.values(coordenadas).forEach(({ lo, la, name }) => {
-        const marker = new Feature({
-            geometry: new Point(fromLonLat([lo, la])),
-            name: name
-        });
-        marker.setStyle(
-            new Style({
-                image: new CircleStyle({
-                    radius: 6,
-                    fill: new Fill({ color: 'blue' }),
-                    stroke: new Stroke({ color: 'white', width: 1 })
+// Agrega marcadores basados en response
+const agregarMarcadoresDesdeResponse = () => {
+    response.forEach(({ id, latitud, altitud, nombre }) => {
+        if (latitud && altitud) {
+            const lat = parseFloat(altitud); // Parece que altitud es en realidad latitud
+            const lon = parseFloat(latitud); // Parece que latitud es en realidad longitud
+
+            const marker = new Feature({
+                geometry: new Point(fromLonLat([lon, lat])),
+                id: id,
+                name: nombre
+            });
+
+            marker.setStyle(
+                new Style({
+                    image: new CircleStyle({
+                        radius: 6,
+                        fill: new Fill({ color: 'blue' }),
+                        stroke: new Stroke({ color: 'white', width: 1 })
+                    })
                 })
-            })
-        );
-        vectorSource.value.addFeature(marker);
+            );
+
+            vectorSource.value.addFeature(marker);
+        }
     });
 };
 
+// Buscar ubicación por código postal
 const buscarPorCodigoPostal = async () => {
     if (!codigoPostal.value) {
         alert("Introduce un código postal.");
@@ -139,6 +149,7 @@ const buscarPorCodigoPostal = async () => {
     }
 };
 
+// Agregar un marcador al mapa
 const agregarMarcador = (lon, lat, name) => {
     const marker = new Feature({
         geometry: new Point(fromLonLat([lon, lat])),
@@ -168,52 +179,25 @@ const getLocation = () => {
 
                 const lonLat = fromLonLat([lon, lat]);
 
-                // Centrar el mapa en la ubicación exacta
                 map.value.getView().animate({
                     center: lonLat,
                     zoom: 16,
                     duration: 1000
                 });
 
-                // ❌ No borrar los comercios, solo eliminar ubicación previa del usuario
                 vectorSource.value.getFeatures().forEach(feature => {
                     if (feature.get('userLocation')) {
                         vectorSource.value.removeFeature(feature);
                     }
                 });
 
-                // Agregar un marcador rojo en la ubicación actual
                 const userMarker = new Feature({
                     geometry: new Point(lonLat),
                     name: "Tu ubicación exacta",
-                    userLocation: true // Etiqueta especial para poder eliminarlo después sin afectar a los comercios
+                    userLocation: true
                 });
 
-                userMarker.setStyle(
-                    new Style({
-                        image: new CircleStyle({
-                            radius: 8,
-                            fill: new Fill({ color: 'red' }),
-                            stroke: new Stroke({ color: 'white', width: 2 })
-                        })
-                    })
-                );
-
                 vectorSource.value.addFeature(userMarker);
-
-                // Dibujar un círculo verde con radio de 2.5 km
-                const circleFeature = new Feature(
-                    new CircleGeom(lonLat, 2500)
-                );
-
-                circleFeature.setStyle(
-                    new Style({
-                        stroke: new Stroke({ color: 'green', width: 2 }),
-                        fill: new Fill({ color: 'rgba(0, 255, 0, 0.2)' })
-                    })
-                );
-
-                vectorSource.value.addFeature(circleFeature);
             },
             (error) => {
                 location.value = `Error: ${error.message}`;
@@ -228,7 +212,6 @@ const getLocation = () => {
         location.value = 'La geolocalización no es compatible con este navegador.';
     }
 };
-
 
 const cerrarPopup = () => {
     showPopup.value = false;

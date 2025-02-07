@@ -38,24 +38,26 @@
         Route::get('/{id}', [ComercioController::class, 'getComercio']);
         Route::get('/{id}/check', [ComercioController::class, 'checkUserHasComercio']);
     });
+    Route::get('/getLocations', [ComercioController::class, 'getLocations']);
 
-// ==== COMANDES ===================
-Route::middleware('auth:sanctum')->prefix('comandes')->group(function () {
-    // Obtener todas las comandas de un usuario
-    Route::get('/', [OrderController::class, 'index']);
-    
-    // Crear un nueva comanda
-    Route::post('/', [OrderController::class, 'store']);
-    
-    // Obtener ordenes de comercios a partir de una orden general
-    Route::get('/{id}/suborders', [OrderController::class, 'showOrdersComercios']);
 
-    // Obtener una comanda específica
-    Route::get('/{id}', [OrderController::class, 'show']);
+    // ==== COMANDES ===================
+    Route::middleware('auth:sanctum')->prefix('comandes')->group(function () {
+        // Obtener todas las comandas de un usuario
+        Route::get('/', [OrderController::class, 'index']);
+        
+        // Crear un nueva comanda
+        Route::post('/', [OrderController::class, 'store']);
+        
+        // Obtener ordenes de comercios a partir de una orden general
+        Route::get('/{id}/suborders', [OrderController::class, 'showOrdersComercios']);
 
-    // Ver información subcomanda del cliente
-    Route::get('/suborder/{id}', [OrderComercioController::class, 'showData']);
-});
+        // Obtener una comanda específica
+        Route::get('/{id}', [OrderController::class, 'show']);
+
+        // Ver información subcomanda del cliente
+        Route::get('/suborder/{id}', [OrderComercioController::class, 'showData']);
+    });
 
     // ==== COMANDES COMERCIOS ===================
     Route::middleware('auth:sanctum')->prefix('admin/comandes')->group(function () {
@@ -68,9 +70,9 @@ Route::middleware('auth:sanctum')->prefix('comandes')->group(function () {
         // Crear un nueva comanda
         Route::post('/', [OrderComercioController::class, 'store']);
 
-    // Actualizar una comanda
-    Route::post('/{id}', [OrderComercioController::class, 'update']);
-});
+        // Actualizar una comanda
+        Route::post('/{id}', [OrderComercioController::class, 'update']);
+    });
 
     // ==== ESTATS ===================
     Route::prefix('admin/estats')->group(function () {
