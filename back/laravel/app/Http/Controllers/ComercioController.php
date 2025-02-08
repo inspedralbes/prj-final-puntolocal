@@ -25,14 +25,16 @@
                 'descripcion' => 'required|string|max:500',
                 'categoria' => 'required|integer',
                 'gestion_stock' => 'required|integer',
+                'latitude' => 'required|numeric',
+                'longitude' => 'required|numeric',
             ]);
-
+        
             if ($validator->fails()) {
                 return response()->json([
                     'error' => $validator->errors()
                 ], 422);
             }
-
+        
             $cliente = Comercio::create([
                 'nombre' => $request->nombre,
                 'idUser' => $request->idUser,
@@ -42,26 +44,29 @@
                 'ciudad' => $request->ciudad,
                 'provincia' => $request->provincia,
                 'codigo_postal' => $request->codigo_postal,
-                'num_planta' => $request->numero_planta,
-                'num_puerta' => $request->numero_puerta,
+                'num_planta' => $request->num_planta,
+                'num_puerta' => $request->num_puerta,
                 'categoria_id' => $request->categoria,
                 'descripcion' => $request->descripcion,
                 'gestion_stock' => $request->gestion_stock,
                 'puntaje_medio' => 0,
+                'latitude' => $request->latitude,
+                'longitude' => $request->longitude,
             ]);
-
+        
             $verificationUrl = route('verification.verify', ['id' => $cliente->id, 'hash' => sha1($cliente->email)]);
-
+        
             // Mail::send('emails.verify', ['verificationUrl' => $verificationUrl], function ($message) use ($cliente) {
             //     $message->to($cliente->email)
             //             ->subject('Verificación de email | ·LOCAL');
             // });
-
+        
             return response()->json([
                 'message' => 'Cliente creado exitosamente. Por favor, verifica tu correo electrónico.',
                 'cliente' => $cliente
             ], 201);
         }
+        
 
         public function getComercios() {
             $comercios = Comercio::all();

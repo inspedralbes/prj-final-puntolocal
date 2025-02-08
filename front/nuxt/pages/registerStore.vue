@@ -1,18 +1,21 @@
 <script setup>
+    import 'ol/ol.css';
+    import { onMounted, reactive, ref } from 'vue';
     import { useNuxtApp, navigateTo } from '#app';
     import { useAuthStore } from '@/stores/authStore';
+
+    const categorias = ref('');
+    const authStore = useAuthStore();
 
     definePageMeta({
         layout: 'authentication',
     });
 
-    const authStore = useAuthStore();
-
     const formData = reactive({
         nombre: '',
         email: '',
         phone: '',
-        street_address: '',
+        street_address: '', // Calle o dirección completa
         ciudad: '',
         provincia: '',
         codigo_postal: '',
@@ -22,16 +25,39 @@
         categoria: null,
         idUser: null,
         gestion_stock: 0,
+        latitude: null,  // Coordenada de latitud
+        longitude: null  // Coordenada de longitud
     });
 
-    const categorias = ref('')
+    async function obtenerCoordenadas() {
+        const direccion = `${formData.street_address}, ${formData.ciudad}, ${formData.provincia}, ${formData.codigo_postal}`;
+        const url = `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(direccion)}&format=json&addressdetails=1&limit=1`;
+
+        try {
+            const response = await fetch(url);
+            const data = await response.json();
+            if (data && data[0]) {
+                const latitud = data[0].lat;
+                const longitud = data[0].lon;
+                console.log(`Coordenadas: Latitud: ${latitud}, Longitud: ${longitud}`);
+                return { lat: latitud, lon: longitud };
+            } else {
+                console.error("No se encontraron coordenadas para la dirección proporcionada.");
+                return null;
+            }
+        } catch (error) {
+            console.error("Error al obtener las coordenadas:", error);
+            return null;
+        }
+    }
 
     async function getCategoriasGenerales() {
         const { $communicationManager } = useNuxtApp();
         categorias.value = await $communicationManager.getCategorias();
     }
 
-    async function register() {
+    // Función encargada de realizar el registro con las coordenadas
+    async function realizarRegistro() {
         const { $communicationManager } = useNuxtApp();
 
         formData.codigo_postal = parseInt(formData.codigo_postal) || null;
@@ -39,7 +65,7 @@
         formData.num_puerta = parseInt(formData.num_puerta) || null;
         formData.categoria = parseInt(formData.categoria) || null;
         formData.gestion_stock = parseInt(formData.gestion_stock);
-        
+
         if (!formData.idUser) {
             console.error("Error: idUser no está definido.");
             return;
@@ -47,24 +73,42 @@
 
         for (const key in formData) {
             if (formData[key] === null || formData[key] === undefined || formData[key] === '') {
-                console.error(`És necessari completar el camp: ${key}`);
+                console.error(`Es necesario completar el campo: ${key}`);
                 return;
             }
         }
 
+        // Ahora que hemos validado los campos, se realiza el registro
         const response = await $communicationManager.registerStore(formData);
-
         if (response) {
             navigateTo('/perfil');
+        } else {
+            console.error("Error al registrar el comercio.");
         }
     }
 
+    async function register() {
+        // Intentamos obtener las coordenadas primero
+        const coordenadas = await obtenerCoordenadas();
+        if (coordenadas) {
+            // Si las coordenadas son válidas, las asignamos a formData
+            formData.latitude = coordenadas.lat;
+            formData.longitude = coordenadas.lon;
+
+            // Ahora llamamos a realizarRegistro que se encarga de subir los datos
+            await realizarRegistro();
+        } else {
+            // Si no se obtuvieron las coordenadas, mostramos un error
+            console.error("No se pudieron obtener las coordenadas, el registro no se completó.");
+        }
+    }
 
     onMounted(() => {
         getCategoriasGenerales();
         formData.idUser = authStore.user.id;
     });
 </script>
+
 
 <template>
     <div class="bg-gray-100">
