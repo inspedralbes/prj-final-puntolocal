@@ -109,11 +109,13 @@
             ], 200);
         }
 
-        public function getLocations(){
-            $comercios = Comercio::select('id','nombre','latitud','altitud')->get();
-
-            return response() -> json($comercios);
-        }
+        public function getLocations() {
+            $comercios = Comercio::select('id', 'nombre', 'latitude', 'longitude')
+                ->whereNotNull('ubicacion_verified_at')
+                ->get();
+        
+            return response()->json($comercios);
+        }        
 
         public function checkUserHasComercio($userId) {
             $comercio = Comercio::where('idUser', $userId)->first();

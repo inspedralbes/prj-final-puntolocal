@@ -4,7 +4,7 @@
         <button @click="buscarPorCodigoPostal">Buscar</button>
 
         <div ref="mapContainer" class="map-container"></div>
-        
+
         <div>
             <button @click="getLocation" class="px-4 py-2 bg-blue-500 text-white rounded-lg">
                 Ver tiendas cerca de mí
@@ -46,11 +46,7 @@ const vectorSource = ref(new VectorSource());
 const { $communicationManager } = useNuxtApp();
 const API_URL = "https://nominatim.openstreetmap.org/search";
 
-// Obtener las ubicaciones desde communicationManager
-const response = await $communicationManager.getLocations();
-console.log(response);
-
-onMounted(() => {
+onMounted(async () => {
     const vectorLayer = new VectorLayer({ source: vectorSource.value });
 
     map.value = new Map({
@@ -60,12 +56,12 @@ onMounted(() => {
             vectorLayer
         ],
         view: new View({
-            center: fromLonLat([1.690866, 41.341365]), 
+            center: fromLonLat([1.690866, 41.341365]),
             zoom: 10
         })
     });
 
-    agregarMarcadoresDesdeResponse();
+    await agregarMarcadoresDesdeResponse();
 
     const selectClick = new Select({ condition: click });
     map.value.addInteraction(selectClick);
@@ -84,35 +80,36 @@ onMounted(() => {
     });
 });
 
-// Agrega marcadores basados en response
-const agregarMarcadoresDesdeResponse = () => {
-    response.forEach(({ id, latitud, altitud, nombre }) => {
-        if (latitud && altitud) {
-            const lat = parseFloat(altitud); // Parece que altitud es en realidad latitud
-            const lon = parseFloat(latitud); // Parece que latitud es en realidad longitud
+const agregarMarcadoresDesdeResponse = async () => {
+    try {
+        const response = await $communicationManager.getLocations();
 
-            const marker = new Feature({
-                geometry: new Point(fromLonLat([lon, lat])),
-                id: id,
-                name: nombre
-            });
+        response.forEach(({ id, latitude, longitude, nombre }) => {
+            if (!isNaN(latitude) && !isNaN(longitude)) {
+                const marker = new Feature({
+                    geometry: new Point(fromLonLat([longitude, latitude])),
+                    id: id,
+                    name: nombre
+                });
 
-            marker.setStyle(
-                new Style({
-                    image: new CircleStyle({
-                        radius: 6,
-                        fill: new Fill({ color: 'blue' }),
-                        stroke: new Stroke({ color: 'white', width: 1 })
+                marker.setStyle(
+                    new Style({
+                        image: new CircleStyle({
+                            radius: 6,
+                            fill: new Fill({ color: 'blue' }),
+                            stroke: new Stroke({ color: 'white', width: 1 })
+                        })
                     })
-                })
-            );
+                );
 
-            vectorSource.value.addFeature(marker);
-        }
-    });
+                vectorSource.value.addFeature(marker);
+            }
+        });
+    } catch (error) {
+        console.error("Error obteniendo ubicaciones:", error);
+    }
 };
 
-// Buscar ubicación por código postal
 const buscarPorCodigoPostal = async () => {
     if (!codigoPostal.value) {
         alert("Introduce un código postal.");
@@ -149,7 +146,6 @@ const buscarPorCodigoPostal = async () => {
     }
 };
 
-// Agregar un marcador al mapa
 const agregarMarcador = (lon, lat, name) => {
     const marker = new Feature({
         geometry: new Point(fromLonLat([lon, lat])),
