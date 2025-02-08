@@ -1,79 +1,69 @@
 <script setup>
-import { useNuxtApp, navigateTo } from '#app';
-import { useAuthStore } from '@/stores/authStore';
+    import { useNuxtApp, navigateTo } from '#app';
+    import { useAuthStore } from '@/stores/authStore';
 
-definePageMeta({
-    layout: 'authentication',
-});
+    definePageMeta({
+        layout: 'authentication',
+    });
 
-const authStore = useAuthStore();
+    const authStore = useAuthStore();
 
-const formData = reactive({
-    nombre: '',
-    email: '',
-    phone: '',
-    street_address: '',
-    ciudad: '',
-    provincia: '',
-    codigo_postal: '',
-    num_planta: null,
-    num_puerta: null,
-    descripcion: '',
-    categoria: null,
-    idUser: null,
-    gestion_stock: 0,
-});
+    const formData = reactive({
+        nombre: '',
+        email: '',
+        phone: '',
+        street_address: '',
+        ciudad: '',
+        provincia: '',
+        codigo_postal: '',
+        num_planta: null,
+        num_puerta: null,
+        descripcion: '',
+        categoria: null,
+        idUser: null,
+        gestion_stock: 0,
+    });
 
-const categorias = ref('')
+    const categorias = ref('')
 
-async function getCategoriasGenerales() {
-    const { $communicationManager } = useNuxtApp();
-    categorias.value = await $communicationManager.getCategorias();
-}
-
-async function register() {
-    const { $communicationManager } = useNuxtApp();
-
-    // Convertir valores a números
-    formData.codigo_postal = parseInt(formData.codigo_postal) || null;
-    formData.num_planta = parseInt(formData.num_planta) || null;
-    formData.num_puerta = parseInt(formData.num_puerta) || null;
-    formData.categoria = parseInt(formData.categoria) || null;
-    formData.gestion_stock = parseInt(formData.gestion_stock);
-    
-    // Verificar que `idUser` esté definido
-    if (!formData.idUser) {
-        console.error("Error: idUser no está definido.");
-        return;
+    async function getCategoriasGenerales() {
+        const { $communicationManager } = useNuxtApp();
+        categorias.value = await $communicationManager.getCategorias();
     }
 
-    // Verificar si los campos están vacíos
-    for (const key in formData) {
-        if (formData[key] === null || formData[key] === undefined || formData[key] === '') {
-            console.error(`És necessari completar el camp: ${key}`);
+    async function register() {
+        const { $communicationManager } = useNuxtApp();
+
+        formData.codigo_postal = parseInt(formData.codigo_postal) || null;
+        formData.num_planta = parseInt(formData.num_planta) || null;
+        formData.num_puerta = parseInt(formData.num_puerta) || null;
+        formData.categoria = parseInt(formData.categoria) || null;
+        formData.gestion_stock = parseInt(formData.gestion_stock);
+        
+        if (!formData.idUser) {
+            console.error("Error: idUser no está definido.");
             return;
+        }
+
+        for (const key in formData) {
+            if (formData[key] === null || formData[key] === undefined || formData[key] === '') {
+                console.error(`És necessari completar el camp: ${key}`);
+                return;
+            }
+        }
+
+        const response = await $communicationManager.registerStore(formData);
+
+        if (response) {
+            navigateTo('/perfil');
         }
     }
 
-    console.log("Enviando datos:", formData);
 
-    // Llamar a la API
-    const response = await $communicationManager.registerStore(formData);
-
-    if (response) {
-        console.log("S'ha registrat correctament");
-        navigateTo('/perfil');
-    } else {
-        console.log("Hi ha hagut algun error, comprovi les seves dades");
-    }
-}
-
-
-onMounted(() => {
-    getCategoriasGenerales();
-    formData.idUser = authStore.user.id;
-});
-
+    onMounted(() => {
+        getCategoriasGenerales();
+        formData.idUser = authStore.user.id;
+    });
 </script>
 
 <template>
