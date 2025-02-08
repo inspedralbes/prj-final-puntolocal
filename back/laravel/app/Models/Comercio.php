@@ -1,6 +1,5 @@
 <?php
     namespace App\Models;
-
     use Illuminate\Database\Eloquent\Factories\HasFactory;
     use Illuminate\Database\Eloquent\Model;
 
@@ -23,7 +22,9 @@
             'descripcion',
             'gestion_stock',
             'puntaje_medio',
-            'imagenes',
+            'latitude',
+            'longitude',
+            'ubicacion_verified_at',
         ];
 
         public function categoria() {

@@ -1,68 +1,108 @@
 <script setup>
-import { useNuxtApp, navigateTo } from '#app';
-import { useAuthStore } from '@/stores/authStore';
+    import 'ol/ol.css';
+    import { onMounted, reactive, ref } from 'vue';
+    import { useNuxtApp, navigateTo } from '#app';
+    import { useAuthStore } from '@/stores/authStore';
 
-definePageMeta({
-    layout: 'authentication',
-});
+    const categorias = ref('');
+    const authStore = useAuthStore();
 
-const authStore = useAuthStore();
+    definePageMeta({
+        layout: 'authentication',
+    });
 
-const formData = reactive({
-    nombre: '',
-    email: '',
-    phone: '',
-    street_address: '',
-    ciudad: '',
-    provincia: '',
-    codigo_postal: '',
-    num_planta: null,
-    num_puerta: null,
-    descripcion: '',
-    categoria: null,
-    idUser: null,
-    gestion_stock: 0,
-});
+    const formData = reactive({
+        nombre: '',
+        email: '',
+        phone: '',
+        street_address: '',
+        ciudad: '',
+        provincia: '',
+        codigo_postal: '',
+        num_planta: null,
+        num_puerta: null,
+        descripcion: '',
+        categoria: null,
+        idUser: null,
+        gestion_stock: 0,
+        latitude: null,
+        longitude: null
+    });
 
-const categorias = ref('')
+    async function obtenerCoordenadas() {
+        const direccion = `${formData.street_address}, ${formData.ciudad}, ${formData.provincia}, ${formData.codigo_postal}`;
+        const url = `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(direccion)}&format=json&addressdetails=1&limit=1`;
 
-async function getCategoriasGenerales() {
-    const { $communicationManager } = useNuxtApp();
-    categorias.value = await $communicationManager.getCategorias();
-}
-
-async function register() {
-
-    const { $communicationManager } = useNuxtApp();
-
-    // Verificar si los campos están vacíos
-    for (const key in formData) {
-        if (formData[key] === null || formData[key] === undefined || formData[key] === '') {
-            console.error(`És necessari completar el camp: ${key}`);
-            return;
+        try {
+            const response = await fetch(url);
+            const data = await response.json();
+            if (data && data[0]) {
+                const latitud = data[0].lat;
+                const longitud = data[0].lon;
+                console.log(`Coordenadas: Latitud: ${latitud}, Longitud: ${longitud}`);
+                return { lat: latitud, lon: longitud };
+            } else {
+                console.error("No se encontraron coordenadas para la dirección proporcionada.");
+                return null;
+            }
+        } catch (error) {
+            console.error("Error al obtener las coordenadas:", error);
+            return null;
         }
     }
 
-    // Convertir valores necesarios a enteros
-    //formData.codigo_postal = parseInt(formData.codigo_postal) || null;
-
-    // Llamar al plugin communicationManager para registrar
-    const response = await $communicationManager.registerStore(formData);
-
-    if (response) {
-        console.log(`S'ha registrat correctament`)
-        navigateTo('/perfil')
-    } else {
-        console.log('Hi ha hagut algun error, comprovi les seves dades');
+    async function getCategoriasGenerales() {
+        const { $communicationManager } = useNuxtApp();
+        categorias.value = await $communicationManager.getCategorias();
     }
-}
 
-onMounted(() => {
-    getCategoriasGenerales();
-    formData.idUser = authStore.user.id;
-});
+    async function realizarRegistro() {
+        const { $communicationManager } = useNuxtApp();
 
+        formData.codigo_postal = parseInt(formData.codigo_postal) || null;
+        formData.num_planta = parseInt(formData.num_planta) || null;
+        formData.num_puerta = parseInt(formData.num_puerta) || null;
+        formData.categoria = parseInt(formData.categoria) || null;
+        formData.gestion_stock = parseInt(formData.gestion_stock);
+
+        if (!formData.idUser) {
+            console.error("Error: idUser no está definido.");
+            return;
+        }
+
+        for (const key in formData) {
+            if (formData[key] === null || formData[key] === undefined || formData[key] === '') {
+                console.error(`Es necesario completar el campo: ${key}`);
+                return;
+            }
+        }
+
+        const response = await $communicationManager.registerStore(formData);
+        if (response) {
+            navigateTo('/perfil');
+        } else {
+            console.error("Error al registrar el comercio.");
+        }
+    }
+
+    async function register() {
+        const coordenadas = await obtenerCoordenadas();
+        if (coordenadas) {
+            formData.latitude = coordenadas.lat;
+            formData.longitude = coordenadas.lon;
+
+            await realizarRegistro();
+        } else {
+            console.error("No se pudieron obtener las coordenadas, el registro no se completó.");
+        }
+    }
+
+    onMounted(() => {
+        getCategoriasGenerales();
+        formData.idUser = authStore.user.id;
+    });
 </script>
+
 
 <template>
     <div class="bg-gray-100">
@@ -80,7 +120,7 @@ onMounted(() => {
                                 <label for="nom" class="block text-sm font-medium text-gray-700">Nom</label>
                                 <div class="mt-1">
                                     <input id="nom" name="nom" v-model="formData.nombre" type="text" data-testid="nom"
-                                        required=""
+                                        required="" placeholder="Fleca barri"
                                         class="block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm">
                                 </div>
                             </div>
@@ -89,7 +129,7 @@ onMounted(() => {
                                     electrònic</label>
                                 <div class="mt-1">
                                     <input id="email" v-model="formData.email" type="text" data-testid="email"
-                                        required=""
+                                        required="" placeholder="fleca@barri.com"
                                         class="block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm">
                                 </div>
                             </div>
@@ -97,7 +137,7 @@ onMounted(() => {
                                 <label for="phone" class="block text-sm font-medium text-gray-700">Telèfon</label>
                                 <div class="mt-1">
                                     <input id="phone" v-model="formData.phone" type="text" data-testid="phone"
-                                        required=""
+                                        required="" placeholder="396135285"
                                         class="block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm">
                                 </div>
                             </div>
@@ -106,15 +146,7 @@ onMounted(() => {
                                     class="block text-sm font-medium text-gray-700">Adreça</label>
                                 <div class="mt-1">
                                     <input id="street_address" name="street_address" v-model="formData.street_address"
-                                        type="text" data-testid="street_address" required=""
-                                        class="block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm">
-                                </div>
-                            </div>
-                            <div>
-                                <label for="ciudad" class="block text-sm font-medium text-gray-700">Ciutat</label>
-                                <div class="mt-1">
-                                    <input id="ciudad" name="ciudad" v-model="formData.ciudad" type="text"
-                                        data-testid="ciudad" required=""
+                                        type="text" data-testid="street_address" required="" placeholder="Josep i Puig 4"
                                         class="block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm">
                                 </div>
                             </div>
@@ -127,11 +159,19 @@ onMounted(() => {
                                 </div>
                             </div>
                             <div>
+                                <label for="ciudad" class="block text-sm font-medium text-gray-700">Ciutat</label>
+                                <div class="mt-1">
+                                    <input id="ciudad" name="ciudad" v-model="formData.ciudad" type="text"
+                                        data-testid="ciudad" required=""
+                                        class="block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm">
+                                </div>
+                            </div>
+                            <div>
                                 <label for="codigo_postal" class="block text-sm font-medium text-gray-700">Codi
                                     Postal</label>
                                 <div class="mt-1">
                                     <input id="codigo_postal" name="codigo_postal" v-model="formData.codigo_postal"
-                                        type="text" data-testid="codigo_postal" required=""
+                                        type="text" data-testid="codigo_postal" required="" placeholder="07436"
                                         class="block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm">
                                 </div>
                             </div>
@@ -140,7 +180,7 @@ onMounted(() => {
                                     Planta</label>
                                 <div class="mt-1">
                                     <input id="numero_planta" name="numero_planta" v-model="formData.num_planta"
-                                        type="number" data-testid="numero_planta" required=""
+                                        type="number" data-testid="numero_planta" required="" placeholder="9"
                                         class="block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm">
                                 </div>
                             </div>
@@ -149,7 +189,7 @@ onMounted(() => {
                                     Porta</label>
                                 <div class="mt-1">
                                     <input id="numero_puerta" name="numero_puerta" v-model="formData.num_puerta"
-                                        type="number" data-testid="numero_puerta" required=""
+                                        type="number" data-testid="numero_puerta" required="" placeholder="3"
                                         class="block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm">
                                 </div>
                             </div>
@@ -198,7 +238,7 @@ onMounted(() => {
 </template>
 
 <style scoped>
-    .gapQueFunciona {
-        gap: 1rem;
-    }
+.gapQueFunciona {
+    gap: 1rem;
+}
 </style>
