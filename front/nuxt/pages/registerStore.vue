@@ -241,6 +241,11 @@ onMounted(() => {
                             </div>
                         </div>
                         <div>
+                            <p class="text-blue-600">
+                                Ver en donde se ha marcado mi tienda
+                            </p>
+                        </div>
+                        <div>
                             <ButtonComp test-id="register" @submit.prevent="register">
                                 Registrar-se
                             </ButtonComp>
@@ -253,7 +258,7 @@ onMounted(() => {
 </template>
 
 <style scoped>
-.gapQueFunciona {
-    gap: 1rem;
-}
+    .gapQueFunciona {
+        gap: 1rem;
+    }
 </style>
