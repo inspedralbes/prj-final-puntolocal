@@ -15,7 +15,7 @@
         nombre: '',
         email: '',
         phone: '',
-        street_address: '', // Calle o dirección completa
+        street_address: '',
         ciudad: '',
         provincia: '',
         codigo_postal: '',
@@ -25,8 +25,8 @@
         categoria: null,
         idUser: null,
         gestion_stock: 0,
-        latitude: null,  // Coordenada de latitud
-        longitude: null  // Coordenada de longitud
+        latitude: null,
+        longitude: null
     });
 
     async function obtenerCoordenadas() {
@@ -56,7 +56,6 @@
         categorias.value = await $communicationManager.getCategorias();
     }
 
-    // Función encargada de realizar el registro con las coordenadas
     async function realizarRegistro() {
         const { $communicationManager } = useNuxtApp();
 
@@ -78,7 +77,6 @@
             }
         }
 
-        // Ahora que hemos validado los campos, se realiza el registro
         const response = await $communicationManager.registerStore(formData);
         if (response) {
             navigateTo('/perfil');
@@ -88,17 +86,13 @@
     }
 
     async function register() {
-        // Intentamos obtener las coordenadas primero
         const coordenadas = await obtenerCoordenadas();
         if (coordenadas) {
-            // Si las coordenadas son válidas, las asignamos a formData
             formData.latitude = coordenadas.lat;
             formData.longitude = coordenadas.lon;
 
-            // Ahora llamamos a realizarRegistro que se encarga de subir los datos
             await realizarRegistro();
         } else {
-            // Si no se obtuvieron las coordenadas, mostramos un error
             console.error("No se pudieron obtener las coordenadas, el registro no se completó.");
         }
     }
@@ -126,7 +120,7 @@
                                 <label for="nom" class="block text-sm font-medium text-gray-700">Nom</label>
                                 <div class="mt-1">
                                     <input id="nom" name="nom" v-model="formData.nombre" type="text" data-testid="nom"
-                                        required=""
+                                        required="" placeholder="Fleca barri"
                                         class="block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm">
                                 </div>
                             </div>
@@ -135,7 +129,7 @@
                                     electrònic</label>
                                 <div class="mt-1">
                                     <input id="email" v-model="formData.email" type="text" data-testid="email"
-                                        required=""
+                                        required="" placeholder="fleca@barri.com"
                                         class="block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm">
                                 </div>
                             </div>
@@ -143,7 +137,7 @@
                                 <label for="phone" class="block text-sm font-medium text-gray-700">Telèfon</label>
                                 <div class="mt-1">
                                     <input id="phone" v-model="formData.phone" type="text" data-testid="phone"
-                                        required=""
+                                        required="" placeholder="396135285"
                                         class="block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm">
                                 </div>
                             </div>
@@ -152,15 +146,7 @@
                                     class="block text-sm font-medium text-gray-700">Adreça</label>
                                 <div class="mt-1">
                                     <input id="street_address" name="street_address" v-model="formData.street_address"
-                                        type="text" data-testid="street_address" required=""
-                                        class="block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm">
-                                </div>
-                            </div>
-                            <div>
-                                <label for="ciudad" class="block text-sm font-medium text-gray-700">Ciutat</label>
-                                <div class="mt-1">
-                                    <input id="ciudad" name="ciudad" v-model="formData.ciudad" type="text"
-                                        data-testid="ciudad" required=""
+                                        type="text" data-testid="street_address" required="" placeholder="Josep i Puig 4"
                                         class="block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm">
                                 </div>
                             </div>
@@ -173,11 +159,19 @@
                                 </div>
                             </div>
                             <div>
+                                <label for="ciudad" class="block text-sm font-medium text-gray-700">Ciutat</label>
+                                <div class="mt-1">
+                                    <input id="ciudad" name="ciudad" v-model="formData.ciudad" type="text"
+                                        data-testid="ciudad" required=""
+                                        class="block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm">
+                                </div>
+                            </div>
+                            <div>
                                 <label for="codigo_postal" class="block text-sm font-medium text-gray-700">Codi
                                     Postal</label>
                                 <div class="mt-1">
                                     <input id="codigo_postal" name="codigo_postal" v-model="formData.codigo_postal"
-                                        type="text" data-testid="codigo_postal" required=""
+                                        type="text" data-testid="codigo_postal" required="" placeholder="07436"
                                         class="block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm">
                                 </div>
                             </div>
@@ -186,7 +180,7 @@
                                     Planta</label>
                                 <div class="mt-1">
                                     <input id="numero_planta" name="numero_planta" v-model="formData.num_planta"
-                                        type="number" data-testid="numero_planta" required=""
+                                        type="number" data-testid="numero_planta" required="" placeholder="9"
                                         class="block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm">
                                 </div>
                             </div>
@@ -195,7 +189,7 @@
                                     Porta</label>
                                 <div class="mt-1">
                                     <input id="numero_puerta" name="numero_puerta" v-model="formData.num_puerta"
-                                        type="number" data-testid="numero_puerta" required=""
+                                        type="number" data-testid="numero_puerta" required="" placeholder="3"
                                         class="block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm">
                                 </div>
                             </div>
@@ -244,7 +238,7 @@
 </template>
 
 <style scoped>
-    .gapQueFunciona {
-        gap: 1rem;
-    }
+.gapQueFunciona {
+    gap: 1rem;
+}
 </style>

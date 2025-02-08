@@ -20,6 +20,7 @@ return new class extends Migration {
 
             $table->string('latitude')->nullable();
             $table->string('longitude')->nullable();
+            $table->timestamp('ubicacion_verified_at')->nullable();
             
             $table->string('calle_num');
             $table->string('ciudad');
