@@ -66,7 +66,6 @@
                 'cliente' => $cliente
             ], 201);
         }
-        
 
         public function getComercios() {
             $comercios = Comercio::all();

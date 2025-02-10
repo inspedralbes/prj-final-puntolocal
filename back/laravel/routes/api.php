@@ -102,6 +102,8 @@
     // ==== CATEGORIAS ===================
     Route::prefix('categorias')->group(function () {
         Route::get('/', [CategoriaController::class, 'index']);
+
+        Route::get('/{categoriaId}/comercios', [CategoriaController::class, 'ComerciosOfCategorias']);
     });
 
     // ==== SUBCATEGORIAS ===============
