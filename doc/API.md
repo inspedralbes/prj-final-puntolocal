@@ -909,7 +909,7 @@ Esta API permite ver los pedidos de un comercio, su información, cambiar su est
     ```
 
   - **Código de estado 500 Error** (Si se envía un campo erroneo):
-
+{"type":"excalidraw/clipboard","elements":[{"id":"LONnFuH7riG84q_iNxd6Q","type":"text","x":-499.5554866211305,"y":3334.666701941025,"width":700.6261138916057,"height":91.66666666666721,"angle":0,"strokeColor":"#1e1e1e","backgroundColor":"transparent","fillStyle":"solid","strokeWidth":4,"strokeStyle":"solid","roughness":0,"opacity":100,"groupIds":[],"frameId":null,"index":"aV","roundness":null,"seed":344444855,"version":87,"versionNonce":1816094425,"isDeleted":false,"boundElements":null,"updated":1738915299394,"link":null,"locked":false,"text":"nombre del comercio","fontSize":73.3333333333338,"fontFamily":5,"textAlign":"left","verticalAlign":"top","containerId":null,"originalText":"nombre del comercio","autoResize":true,"lineHeight":1.25}],"files":{}}
     ```json
     {
       "error": "Ocurrió un error al crear la orden: The tipo envio field is required. (and 2 more errors)"

@@ -3,16 +3,19 @@ definePageMeta({
     layout: false,
 });
 
+import { io } from "socket.io-client";
 import { computed, onMounted, ref } from 'vue';
 import { useComercioStore } from '@/stores/comercioStore';
 import { useNuxtApp } from '#app';
 import { useRoute, useRouter } from "vue-router";
 import shoppingBasketIcon from '../assets/shopping-basket.svg';
+import { Socket } from 'socket.io-client';
 
 const route = useRoute();
 const router = useRouter();
 const comercioStore = useComercioStore();
 const { $communicationManager } = useNuxtApp();
+const socket = io("http://localhost:8001");
 
 const comercios = ref({});
 const groups = reactive([]);
@@ -69,25 +72,25 @@ function togglePayment() {
 }
 
 const comprar = () => {
-    console.log(groupedCesta.value);
+    // console.log(groupedCesta.value);
     toggleCheckout();
 }
 
 function chooseShip(event) {
     shipOption.value = event.currentTarget.value;
-    console.log("Opción:", shipOption.value);
+    // console.log("Opción:", shipOption.value);
     choosed.value = shipOption.value !== null;
 }
 
 function choosePayment(event) {
     payOption.value = event.target.value;
-    console.log("Opción de pago:", payOption.value);
+    // console.log("Opción de pago:", payOption.value);
 }
 
 function toPay() {
     chooseShipping.value = !chooseShipping.value;
     togglePayment();
-    console.log(shipOption.value);
+    // console.log(shipOption.value);
 }
 
 async function crearComanda() {
@@ -108,12 +111,50 @@ async function crearComanda() {
                 })),
             }
         });
-        console.log('Comercio order:', subcomandaInfo.value);
+        // console.log('Comercio order:', subcomandaInfo.value);
         const createdSuborders = await $communicationManager.createSuborder(subcomandaInfo.value);
-        console.log(createdSuborders);
+        // console.log("Order:", createdOrder);
+        // console.log("Subcomandas:", createdSuborders);
+        function agruparOrderSuborders(order, suborders) {
+            return {
+                'order_id': order.data.orderCompleta.id,
+                'created_at': order.data.orderCompleta.created_at,
+                'tipo_envio': {
+                    'id': order.data.orderCompleta.tipo_envio.id,
+                    'nombre': order.data.orderCompleta.tipo_envio.nombre,
+                },
+                'tipo_pago': {
+                    'id': order.data.orderCompleta.tipo_pago.id,
+                    'nombre': order.data.orderCompleta.tipo_pago.nombre,
+                },
+                'cliente': {
+                    'id': order.data.orderCompleta.cliente.id,
+                    'nombre': order.data.orderCompleta.cliente.name,
+                    'apellidos': order.data.orderCompleta.cliente.apellidos
+                },
+                'subcomandes': suborders.data.subcomandes.map(subcomanda => ({
+                    'suborder_id': subcomanda.suborder.id,
+                    'comercio_id': subcomanda.suborder.comercio_id,
+                    'subtotal': subcomanda.suborder.subtotal,
+                    'estat_compra': {
+                        'id': subcomanda.suborder.estat_compra.id,
+                        'nombre': subcomanda.suborder.estat_compra.nombre
+                    }
+                }))
+            }
+        }
+        if(createdOrder && createdSuborders){
+            const orders = agruparOrderSuborders(createdOrder, createdSuborders);
+            // console.log(orders);
+            socket.emit("nuevaOrden", orders);
+        }
+        // subcomandaInfo.value.suborders.forEach(subcomanda => {
+        //     socket.emit("nuevaOrden", subcomanda);
+        //     // socket.emit("test");
+        // });
     }
-    comercioStore.emptyBasket();
-    goBack();
+    // comercioStore.emptyBasket();
+    // goBack();
 }
 
 const orderFiltrada = computed(() => ({
@@ -171,13 +212,15 @@ const subcomandaInfo = computed(() => {
             <NuxtLink to="/">
                 <button
                     class="flex items-center text-lg font-bold px-3 py-2 rounded-lg mt-2 border-2 text-white border-[#276BF2] bg-[#447EF2]">
-                    <svg width="1.7em" height="1.7em" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <svg width="1.7em" height="1.7em" viewBox="0 0 24 24" fill="none"
+                        xmlns="http://www.w3.org/2000/svg">
                         <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
                         <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
                         <g id="SVGRepo_iconCarrier">
                             <path
                                 d="M4.78571 5H18.2251C19.5903 5 20.5542 6.33739 20.1225 7.63246L18.4558 12.6325C18.1836 13.4491 17.4193 14 16.5585 14H6.07142M4.78571 5L4.74531 4.71716C4.60455 3.73186 3.76071 3 2.76541 3H2M4.78571 5L6.07142 14M6.07142 14L6.25469 15.2828C6.39545 16.2681 7.23929 17 8.23459 17H17M17 17C15.8954 17 15 17.8954 15 19C15 20.1046 15.8954 21 17 21C18.1046 21 19 20.1046 19 19C19 17.8954 18.1046 17 17 17ZM11 19C11 20.1046 10.1046 21 9 21C7.89543 21 7 20.1046 7 19C7 17.8954 7.89543 17 9 17C10.1046 17 11 17.8954 11 19Z"
-                                stroke="currentColor" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round"></path>
+                                stroke="currentColor" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round">
+                            </path>
                         </g>
                     </svg>
                     <span class="ml-1">
@@ -248,7 +291,8 @@ const subcomandaInfo = computed(() => {
                             <h3 class="ml-3">Recollida</h3>
                         </button>
                     </div>
-                    <div id="map-ubi" class="w-full h-[130px] bg-gray-200 mt-3 rounded flex items-center justify-center overflow-hidden">
+                    <div id="map-ubi"
+                        class="w-full h-[130px] bg-gray-200 mt-3 rounded flex items-center justify-center overflow-hidden">
                         <img src="../assets/mapubi.png" alt="plano ubicación">
                         <!-- LOGICA DEL MAPA PARA MOSTRAR LA DIRECCIÓN DE ENTREGA DEL USUARIO -->
                     </div>
@@ -296,7 +340,7 @@ const subcomandaInfo = computed(() => {
                                             </div>
                                             <p class="text-gray-500">x{{ item.cantidad }}</p>
                                         </div>
-                                        <p>{{ item.cantidad * item.precio.toFixed(2) }}€</p>
+                                        <p>{{ (item.cantidad * item.precio).toFixed(2) }}€</p>
                                     </div>
                                 </div>
                             </div>

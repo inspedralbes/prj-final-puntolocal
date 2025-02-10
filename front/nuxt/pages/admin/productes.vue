@@ -677,7 +677,7 @@ async function crearProducto() {
 onMounted(async () => {
     document.addEventListener('keydown', closeAll);
     subcategorias.value = await fetchSubcategorias(comercio?.value?.categoria_id);
-    console.log(comercio?.value?.categoria_id);
+    // console.log(comercio?.value?.categoria_id);
 
     // console.log('Comercio (toRaw):', toRaw(authStore.comercio)); // Muestra el objeto real
     // console.log('Comercio (JSON):', JSON.stringify(authStore.comercio, null, 2)); // JSON legible
@@ -687,6 +687,6 @@ onMounted(async () => {
 onBeforeMount(async () => {
     const data = await $communicationManager.getByComercio();
     Object.assign(productos, data);
-    console.log(productos);
+    // console.log(productos);
 });
 </script>

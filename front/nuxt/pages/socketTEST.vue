@@ -1,23 +1,23 @@
 <script setup>
 import { ref, onMounted } from "vue";
-import { io } from "socket.io-client";
+// import { io } from "socket.io-client";
 
-const socket = io("http://localhost:8001");
-const mensajes = ref([]);
-const nuevoMensaje = ref("");
+// const socket = io("http://localhost:8001");
+// const mensajes = ref([]);
+// const nuevoMensaje = ref("");
 
-onMounted(() => {
-  socket.on("mensaje", (data) => {
-    mensajes.value.push(data);
-  });
-});
+// onMounted(() => {
+//   socket.on("mensaje", (data) => {
+//     mensajes.value.push(data);
+//   });
+// });
 
-const enviarMensaje = () => {
-  if (nuevoMensaje.value.trim()) {
-    socket.emit("mensaje", nuevoMensaje.value);
-    nuevoMensaje.value = "";
-  }
-};
+// const enviarMensaje = () => {
+//   if (nuevoMensaje.value.trim()) {
+//     socket.emit("mensaje", nuevoMensaje.value);
+//     nuevoMensaje.value = "";
+//   }
+// };
 </script>
 
 <template>

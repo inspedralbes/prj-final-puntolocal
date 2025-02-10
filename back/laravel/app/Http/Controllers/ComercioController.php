@@ -95,4 +95,14 @@ class ComercioController extends Controller
             ], 404);
         }
     }
+
+    public function getUserID($id) {
+        $comercio = Comercio::find($id);
+        if(!$comercio) {
+            return response()->json([
+                'message' => 'No existeix cap comerç amb aquest id.'
+            ], 404);
+        }
+        return response()->json(['usuario_id' => $comercio->id],200);
+    }
 }

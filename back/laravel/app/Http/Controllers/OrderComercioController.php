@@ -75,12 +75,16 @@ class OrderComercioController extends Controller
                         'created_at' => now()
                     ]);
 
+                    $suborderCompleta = OrderComercio::where('id', $suborderCreated->id)->with('estatCompra')->first();
+
+                    // $suborder
+
                     $productos = [];
 
                     if (isset($suborder['productos']) && is_array($suborder['productos'])) {
-                        $productos = collect($suborder['productos'])->map(function ($producto) use ($suborderCreated) {
+                        $productos = collect($suborder['productos'])->map(function ($producto) use ($suborderCompleta) {
                             return [
-                                'order_comercio_id' => $suborderCreated->id,
+                                'order_comercio_id' => $suborderCompleta->id,
                                 'producto_id' => $producto['id'],
                                 'cantidad' => $producto['cantidad'],
                                 'precio' => $producto['precio'],
@@ -90,7 +94,7 @@ class OrderComercioController extends Controller
                     }
 
                     $subordersCreadas[] = [
-                        'suborder' => $suborderCreated->toArray(),
+                        'suborder' => $suborderCompleta->toArray(),
                         'productos' => $productos->toArray()
                     ];
                 }
@@ -114,7 +118,7 @@ class OrderComercioController extends Controller
             $user = Auth::user();
             $comercio = Comercio::where('idUser', $user->id)->first();
 
-            $order = OrderComercio::with('estatCompra', 'order:id,tipo_envio,tipo_pago,cliente_id', 'order.tipoEnvio', 'order.tipoPago', 'order.cliente', 'productosCompra.producto')->where('comercio_id', $comercio->id)->where('order_id', $id)->first();
+            $order = OrderComercio::with('estatCompra', 'order:id,tipo_envio,tipo_pago,cliente_id', 'order.tipoEnvio', 'order.tipoPago', 'order.cliente', 'productosCompra.producto')->where('comercio_id', $comercio->id)->where('id', $id)->first();
 
             if (!$order) {
                 return response()->json(['message' => 'No tienes ninguna orden con ID #' . $id . '.'], 404);

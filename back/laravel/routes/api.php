@@ -41,6 +41,10 @@ Route::middleware('auth:sanctum')->prefix('comercios')->group(function () {
     Route::get('/', [ComercioController::class, 'getComercios']);
     Route::get('/{id}/check', [ComercioController::class, 'checkUserHasComercio']);
 });
+Route::prefix('comercios')->group(function () {
+    // Obtener UserID de un comercio específico
+    Route::get('/getUserid/{id}', [ComercioController::class,'getUserID']);
+});
 
 // ==== COMANDES ===================
 Route::middleware('auth:sanctum')->prefix('comandes')->group(function () {
