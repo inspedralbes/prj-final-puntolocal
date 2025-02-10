@@ -13,7 +13,7 @@
         props: {
             producto: {
                 type: Object,
-                required: true
+                // required: true
             }
         },
         data() {

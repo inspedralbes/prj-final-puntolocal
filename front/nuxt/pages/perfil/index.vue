@@ -57,7 +57,7 @@ function goToEdit() { navigateTo('/perfil/perfilCliente'); }
 function goToCompras() { navigateTo('/perfil/compras'); }
 async function checkComercio() {
     const { $communicationManager } = useNuxtApp();
-    const res = await $communicationManager.checkUserHasComercio(authStore.user.id);
+    const res = await $communicationManager.checkUserHasComercio(authStore?.user?.id);
 
     if (res) {
         console.log('Tiene comercio')
