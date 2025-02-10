@@ -79,8 +79,10 @@ Route::middleware('auth:sanctum')->prefix('suborders')->group(function () {
 
 // ==== COMANDES COMERCIOS ===================
 Route::middleware('auth:sanctum')->prefix('admin/comandes')->group(function () {
-    // Obtener todas las comandas de un comercio
+    // Obtener todas las comandas activas de un comercio
     Route::get('/', [OrderComercioController::class, 'index']);
+
+    Route::get('/historial', [OrderComercioController::class, 'historialOrders']);
 
     // Obtener una comanda específica
     Route::get('/{id}', [OrderComercioController::class, 'show']);

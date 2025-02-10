@@ -472,9 +472,7 @@ async function guardarEstat(id) {
     const order = orders.value.find(order => order.id === id);
     order.estat = order.estat_compra.id;
     estatsOriginals[order.id] = order.estat;
-    // console.log(order);
     const data = await $communicationManager.updateOrder(order);
-    // console.log(data);
 }
 
 onMounted(async () => {
@@ -490,7 +488,7 @@ onMounted(async () => {
 })
 
 onBeforeMount(async () => {
-    const data = await $communicationManager.getOrders();
+    const data = await $communicationManager.getHistorialOrders();
     // console.log(data.data);
     orders.value.push(...data.data);
     orders.value.forEach(order => {

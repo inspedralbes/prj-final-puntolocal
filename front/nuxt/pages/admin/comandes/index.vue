@@ -139,8 +139,7 @@
                                     </td>
 
                                     <td class="p-4 space-x-2 whitespace-nowrap flex">
-                                        <NuxtLink v-if="order?.id" :to="`/admin/comandes/${order.id}`"
-                                            id="viewOrder"
+                                        <NuxtLink v-if="order?.id" :to="`/admin/comandes/${order.id}`" id="viewOrder"
                                             class="inline-flex items-center bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
                                             <svg class="w-4 h-4 mr-2" viewBox="0 0 24 24" fill="none"
                                                 xmlns="http://www.w3.org/2000/svg">
@@ -472,7 +471,14 @@ async function guardarEstat(id) {
     const order = orders.value.find(order => order.id === id);
     order.estat = order.estat_compra.id;
     estatsOriginals[order.id] = order.estat;
-    // console.log(order);
+
+    if (estatsOriginals[order.id] === 4 || estatsOriginals[order.id] === 5) {
+        delete estatsOriginals[order.id];
+    }
+    
+    orders.value = orders.value.filter(order => order.estat !== 4 && order.estat !== 5);
+
+    console.log(estatsOriginals);
     const data = await $communicationManager.updateOrder(order);
     // console.log(data);
 }

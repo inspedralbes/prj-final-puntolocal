@@ -20,7 +20,33 @@ class OrderComercioController extends Controller
             $user = Auth::user();
             $comercio = Comercio::where('idUser', $user->id)->first();
 
-            $orders = OrderComercio::with('estatCompra', 'order:id,tipo_envio,tipo_pago,cliente_id', 'order.tipoEnvio', 'order.tipoPago', 'order.cliente')->where('comercio_id', $comercio->id)->get();
+            $orders = OrderComercio::with('estatCompra', 'order:id,tipo_envio,tipo_pago,cliente_id', 'order.tipoEnvio', 'order.tipoPago', 'order.cliente')
+            ->where('comercio_id', $comercio->id)
+            ->whereHas('estatCompra', function($query) {
+                $query->whereIn('id', [1, 2, 3]);
+            })->get();
+
+            if (!$orders) {
+                return response()->json(['message' => 'No tiene ninguna orden'], 404);
+            }
+
+            return response()->json($orders, 200);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Ocurrió un error al obtener los detalles de la compra: ' . $e->getMessage()], 500);
+        }
+    }
+
+    public function historialOrders()
+    {
+        try {
+            $user = Auth::user();
+            $comercio = Comercio::where('idUser', $user->id)->first();
+
+            $orders = OrderComercio::with('estatCompra', 'order:id,tipo_envio,tipo_pago,cliente_id', 'order.tipoEnvio', 'order.tipoPago', 'order.cliente')
+            ->where('comercio_id', $comercio->id)
+            ->whereHas('estatCompra', function($query) {
+                $query->whereIn('id', [4, 5]);
+            })->get();
 
             if (!$orders) {
                 return response()->json(['message' => 'No tiene ninguna orden'], 404);
