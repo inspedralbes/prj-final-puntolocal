@@ -49,6 +49,19 @@ class ClientesTableSeeder extends Seeder
             "numero_puerta" => 1,
         ]);
         DB::table("cliente")->insert([
+            "name" => "Agustín Enzo",
+            "apellidos" => "Noviello",
+            "email" => "comercio@comercio.cat",
+            "phone" => "123456789",
+            'password' => Hash::make(value: "12345678"),
+            "street_address" => "Carrer Confiança 32",
+            "ciudad" => "Castelldefels",
+            "provincia" => "Barcelona",
+            "codigo_postal" => "08860",
+            "numero_planta" => 1,
+            "numero_puerta" => 1,
+        ]);
+        DB::table("cliente")->insert([
             "name" => "Lorenzo",
             "apellidos" => "Moll",
             "email" => "lorenzo@gmail.com",

@@ -10,6 +10,7 @@
         public function run(): void {
             $this->call(EstatsTableSeeder::class);
             $this->call(TipoEnviosTableSeeder::class);
+            $this->call(TiposPagoTableSeeder::class);
             $this->call(ClientesTableSeeder::class);
             $this->call(CategoriasTableSeeder::class);
             $this->call(SubcategoriasTableSeeder::class);
@@ -17,8 +18,8 @@
             $this->call(ProductosTableSeeder::class);
 
             // ORDERS
-            $this->call(OrdersTableSeeder::class);
-            $this->call(OrderComerciosTableSeeder::class);
-            $this->call(ProductosCompraTableSeeder::class);
+            // $this->call(OrdersTableSeeder::class);
+            // $this->call(OrderComerciosTableSeeder::class);
+            // $this->call(ProductosCompraTableSeeder::class);
         }
     }

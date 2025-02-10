@@ -5,7 +5,7 @@
             <div class="w-full mt-16">
                 <div class="mb-4">
                     <h1 class="text-xl font-semibold text-gray-900 sm:text-2xl dark:text-white">Comanda ID: {{
-                        actualOrder?.order_id }}</h1>
+                        actualOrder?.id }}</h1>
                     <h3 class="pt-2 text-base font-medium text-gray-900 whitespace-nowrap dark:text-white">{{
                         formatFecha(actualOrder.created_at) }}</h3>
                 </div>
@@ -81,14 +81,14 @@
 
                                 <!-- Fila 2 - Descuento -->
                                 <div class="w-full flex justify-between items-center mb-2">
-                                    <span class="font-small text-gray-900 dark:text-white">Cap descompte</span>
-                                    <span class="font-small text-gray-900 dark:text-white">-0.00 €</span>
+                                    <span class="font-small text-gray-900 dark:text-white">Descompte</span>
+                                    <span class="font-small text-gray-900 dark:text-white">0.00 €</span>
                                 </div>
 
                                 <!-- Fila 3 - Comisión -->
                                 <div class="w-full flex justify-between items-center mb-2">
                                     <span class="font-small text-gray-900 dark:text-white">Taxes</span>
-                                    <span class="font-small text-gray-900 dark:text-white">-0.00 €</span>
+                                    <span class="font-small text-gray-900 dark:text-white">0.00 €</span>
                                 </div>
 
                                 <!-- Total -->

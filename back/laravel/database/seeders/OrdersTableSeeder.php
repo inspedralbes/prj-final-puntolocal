@@ -23,7 +23,8 @@ class OrdersTableSeeder extends Seeder
                 "cliente_id" => 11,
                 "estat" => $faker->numberBetween(1,5),
                 'total' => $faker->randomFloat(2, 5, 1000),
-                'tipo' => $faker->numberBetween(1, 2),
+                'tipo_envio' => $faker->numberBetween(1, 2),
+                'tipo_pago' => $faker->numberBetween(1, 2),
                 'created_at' => now(),
             ]);
         }

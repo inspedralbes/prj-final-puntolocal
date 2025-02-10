@@ -139,7 +139,7 @@
                                     </td>
 
                                     <td class="p-4 space-x-2 whitespace-nowrap flex">
-                                        <NuxtLink v-if="order?.order?.id" :to="`/admin/comandes/${order.order.id}`"
+                                        <NuxtLink v-if="order?.id" :to="`/admin/comandes/${order.id}`"
                                             id="viewOrder"
                                             class="inline-flex items-center bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
                                             <svg class="w-4 h-4 mr-2" viewBox="0 0 24 24" fill="none"
@@ -389,12 +389,27 @@
 
 <script setup>
 const { $communicationManager } = useNuxtApp();
+import socket from '~/socket';
+const auth = useAuthStore();
 
 definePageMeta({
     layout: 'admin',
 });
 
 const backgroundShadow = ref(false);
+
+console.log("Socket Connected: ", socket.connected);
+
+socket.on('connect', () => {
+    console.log("Socket conectado con id: ", socket.id);
+});
+
+if (socket.connected) {
+    // console.log("Socket está conectado correctamente.");
+    socket.emit("identificarUsuario", { user_id: auth.user.id });
+} else {
+    console.log("Socket no está conectado.");
+}
 
 const isOpen = reactive({
     'info': false,
@@ -405,7 +420,7 @@ function toggleCard(menu) {
     backgroundShadow.value = !backgroundShadow.value
 }
 
-const orders = reactive([]);
+const orders = ref([]);
 const actualOrder = reactive({});
 const estats = reactive([]);
 const estatsOriginals = reactive([])
@@ -446,21 +461,20 @@ const formatApellido = (apellidos) => {
 // }
 
 function isDisabled(id) {
-    const order = orders.find(order => order.id === id);
-    if(estatsOriginals[id] !== order.estat_compra.id){
+    const order = orders.value.find(order => order.id === id);
+    if (estatsOriginals[id] !== order.estat_compra.id) {
         return false;
     }
     return true;
 }
 
 async function guardarEstat(id) {
-    const order = orders.find(order => order.id === id);
+    const order = orders.value.find(order => order.id === id);
     order.estat = order.estat_compra.id;
     estatsOriginals[order.id] = order.estat;
-    console.log(order);
+    // console.log(order);
     const data = await $communicationManager.updateOrder(order);
-    console.log(data);
-    
+    // console.log(data);
 }
 
 onMounted(async () => {
@@ -468,13 +482,18 @@ onMounted(async () => {
     const data = await $communicationManager.getEstats();
     estats.push(...data.data);
     // console.log(estats);
-
+    socket.on("nuevaOrdenRecibida", (newSuborder) => {
+        // console.log("entra en nuevaOrdenRecibida");
+        orders.value.push(newSuborder);
+        estatsOriginals[newSuborder.id] = newSuborder.estat_compra.id;
+    });
 })
 
 onBeforeMount(async () => {
     const data = await $communicationManager.getOrders();
-    orders.push(...data.data);
-    orders.forEach(order => {
+    // console.log(data.data);
+    orders.value.push(...data.data);
+    orders.value.forEach(order => {
         estatsOriginals[order.id] = order.estat;
     });
     // console.log(orders);

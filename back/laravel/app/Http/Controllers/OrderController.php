@@ -10,7 +10,7 @@ class OrderController extends Controller {
     public function index() {
         try {
             $user = Auth::user();
-            $orders = Order::with('tipoEnvio', 'estatCompra', )->orderBy("created_at","desc")->where('cliente_id', $user->id)->get();
+            $orders = Order::with( 'tipoEnvio', 'tipoPago', 'estatCompra', )->orderBy("created_at","desc")->where('cliente_id', $user->id)->get();
 
             if(empty($orders)){
                 return response()->json(['message' => 'No tiene órdenes'], 404);
@@ -29,13 +29,41 @@ class OrderController extends Controller {
 
     public function store(Request $request)
     {
-        //
+        try {
+            $user = Auth::user();
+
+            $validated = $request->validate([
+                'tipo_envio' => 'required|exists:tipo_envios,id',
+                'tipo_pago' => 'required|exists:tipo_pagos,id',
+                'total' => 'required|numeric',
+            ]);
+
+            $order = Order::create([
+                'tipo_envio' => $validated['tipo_envio'],
+                'tipo_pago' => $validated['tipo_pago'],
+                'total' => $validated['total'],
+                'cliente_id' => $user->id,
+                'estat' => 1,
+            ]);
+
+            $orderCompleta = Order::where("id", $order->id)->with('cliente:id,name,apellidos','tipoEnvio', 'tipoPago', 'estatCompra')->first();
+
+            return response()->json([
+                'message' => 'Orden creada con éxito.',
+                'order' => $order,
+                'orderCompleta' => $orderCompleta
+            ], 201);
+            
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Ocurrió un error al crear la orden: ' . $e->getMessage()], 500);
+        }
     }
 
     public function show($id) {
         try {
             $order = Order::with([
-                'tipoEnvio', 
+                'tipoEnvio',
+                'tipoPago',
                 'estatCompra', 
                 'cliente', 
                 'orderComercios.comercio',
@@ -66,12 +94,11 @@ class OrderController extends Controller {
         }
     }
     
-
     public function showOrdersComercios($id)
     {
         try {
             $user = Auth::user();
-            $order = Order::with('tipoEnvio', 'estatCompra', 'orderComercios.estatCompra', 'orderComercios.productosCompra.producto:id,nombre,precio,imagen', 'orderComercios.comercio:id,nombre')->where('id', $id)->where('cliente_id', $user->id)->first();
+            $order = Order::with('tipoEnvio', 'tipoPago', 'estatCompra', 'orderComercios.estatCompra', 'orderComercios.comercio:id,nombre')->where('id', $id)->where('cliente_id', $user->id)->first();
 
             if (!$order) {
                 return response()->json(['message' => 'Comanda no encontrada.'], 404);
@@ -99,6 +126,7 @@ class OrderController extends Controller {
     //     }
     // }
 
+    
     public function edit(Order $order)
     {
         //
@@ -113,6 +141,7 @@ class OrderController extends Controller {
     {
         //
     }
+
     public function comprasCliente($clienteId)
     {
         try {
@@ -159,6 +188,4 @@ class OrderController extends Controller {
             return response()->json(['error' => 'Ocurrió un error al obtener los detalles de la compra: ' . $e->getMessage()], 500);
         }
     }
-
-
 }

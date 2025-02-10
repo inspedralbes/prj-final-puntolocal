@@ -1,154 +1,165 @@
 <?php
-    use Illuminate\Http\Request;
-    use Illuminate\Support\Facades\Route;
-    use App\Http\Controllers\OrderController;
-    use App\Http\Controllers\ClienteController;
-    use App\Http\Controllers\ProductoController;
-    use App\Http\Controllers\ComercioController;
-    use App\Http\Controllers\Auth\AuthController;
-    use App\Http\Controllers\CategoriaController;
-    use App\Http\Controllers\EstatCompraController;
-    use App\Http\Controllers\SubcategoriaController;
-    use App\Http\Controllers\OrderComercioController;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\OrderController;
+use App\Http\Controllers\ClienteController;
+use App\Http\Controllers\ProductoController;
+use App\Http\Controllers\ComercioController;
+use App\Http\Controllers\Auth\AuthController;
+use App\Http\Controllers\CategoriaController;
+use App\Http\Controllers\EstatCompraController;
+use App\Http\Controllers\SubcategoriaController;
+use App\Http\Controllers\OrderComercioController;
 
-    Route::get('/user', function (Request $request) {
-        return $request->user();
-    })->middleware('auth:sanctum');
-
-
-    // ==== AUTH ===================
-    Route::prefix('auth')->group(function () {
-        Route::post('register', [AuthController::class, 'registrar']);
-        Route::post('login', [AuthController::class, 'login']);
-        Route::middleware('auth:sanctum')->post('logout', [AuthController::class, 'logout']);
-        Route::middleware('auth:sanctum')->post('change-password', [AuthController::class, 'changePassword']);
-    });
-
-    // ==== CLIENTES ===================
-    Route::middleware('auth:sanctum')->prefix('cliente')->group(function () {
-        Route::get('/{id}', [ClienteController::class, 'getCliente']);
-        Route::put('/{id}/datos-personales', [ClienteController::class, 'updateDatosPersonales']);
-        Route::put('/{id}/datos-facturacion', [ClienteController::class, 'updateDatosFacturacion']);
-    });
-
-    // ==== COMERCIOS ===================
-    Route::middleware('auth:sanctum')->prefix('comercios')->group(function () {
-        Route::post('/', [ComercioController::class, 'RegistrarComercio']);
-        Route::get('/', [ComercioController::class, 'getComercios']);
-        Route::get('/{id}', [ComercioController::class, 'getComercio']);
-        Route::get('/{id}/check', [ComercioController::class, 'checkUserHasComercio']);
-        Route::put('/{id}', [ComercioController::class, 'updateComercio']);
-        Route::post('/{id}/imagenes', [ComercioController::class, 'updateComercioImagenes']);
-        Route::delete('/{id}/imagenes', [ComercioController::class, 'deleteComercioImagen']);
-    });
-
-    Route::prefix('comercios')->group(function () {
-        Route::get('/search/{search}', [ComercioController::class, 'search']);
-    });
-    Route::get('/getLocations', [ComercioController::class, 'getLocations']);
+Route::get('/user', function (Request $request) {
+    return $request->user();
+})->middleware('auth:sanctum');
 
 
-    // ==== COMANDES ===================
-    Route::middleware('auth:sanctum')->prefix('comandes')->group(function () {
-        // Obtener todas las comandas de un usuario
-        Route::get('/', [OrderController::class, 'index']);
-        
-        // Crear un nueva comanda
-        Route::post('/', [OrderController::class, 'store']);
-        
-        // Obtener ordenes de comercios a partir de una orden general
-        Route::get('/{id}/suborders', [OrderController::class, 'showOrdersComercios']);
+// ==== AUTH ===================
+Route::prefix('auth')->group(function () {
+    Route::post('register', [AuthController::class, 'registrar']);
+    Route::post('login', [AuthController::class, 'login']);
+    Route::middleware('auth:sanctum')->post('logout', [AuthController::class, 'logout']);
+    Route::middleware('auth:sanctum')->post('change-password', [AuthController::class, 'changePassword']);
+});
 
-        // Obtener una comanda específica
-        Route::get('/{id}', [OrderController::class, 'show']);
+// ==== CLIENTES ===================
+Route::middleware('auth:sanctum')->prefix('cliente')->group(function () {
+    Route::get('/{id}', [ClienteController::class, 'getCliente']);
+    Route::put('/{id}/datos-personales', [ClienteController::class, 'updateDatosPersonales']);
+    Route::put('/{id}/datos-facturacion', [ClienteController::class, 'updateDatosFacturacion']);
+});
 
-        // Ver información subcomanda del cliente
-        Route::get('/suborder/{id}', [OrderComercioController::class, 'showData']);
-    });
+Route::prefix('comercios')->group(function () {
+    Route::get('/{id}', [ComercioController::class, 'getComercio']);
+});
 
-    // ==== COMANDES COMERCIOS ===================
-    Route::middleware('auth:sanctum')->prefix('admin/comandes')->group(function () {
-        // Obtener todas las comandas de un comercio
-        Route::get('/', [OrderComercioController::class, 'index']);
+// ==== COMERCIOS ===================
+Route::middleware('auth:sanctum')->prefix('comercios')->group(function () {
+    Route::post('/', [ComercioController::class, 'RegistrarComercio']);
+    Route::get('/', [ComercioController::class, 'getComercios']);
+    Route::get('/{id}/check', [ComercioController::class, 'checkUserHasComercio']);
+    Route::put('/{id}', [ComercioController::class, 'updateComercio']);
+    Route::post('/{id}/imagenes', [ComercioController::class, 'updateComercioImagenes']);
+    Route::delete('/{id}/imagenes', [ComercioController::class, 'deleteComercioImagen']);
+});
 
-        // Obtener una comanda específica
-        Route::get('/{id}', [OrderComercioController::class, 'show']);
-
-        // Crear un nueva comanda
-        Route::post('/', [OrderComercioController::class, 'store']);
-
-        // Actualizar una comanda
-        Route::post('/{id}', [OrderComercioController::class, 'update']);
-    });
-
-    // ==== ESTATS ===================
-    Route::prefix('admin/estats')->group(function () {
-        // Obtener todos los estados que puede tener un pedido
-        Route::get('/', [EstatCompraController::class, 'index']);
-    });
+Route::prefix('comercios')->group(function () {
+    Route::get('/{id}', [ComercioController::class, 'getComercio']);
+    Route::get('/search/{search}', [ComercioController::class, 'search']);
+    Route::get('/getUserid/{id}', [ComercioController::class, 'getUserID']);
+});
+Route::get('/getLocations', [ComercioController::class, 'getLocations']);
 
 
-    // Route::middleware('auth:sanctum')->prefix('admin/estats')->group(function () {
-    //     // Obtener una comanda específica
-    //     Route::get('/{id}', [OrderComercioController::class, 'show']);
+// ==== COMANDES ===================
+Route::middleware('auth:sanctum')->prefix('comandes')->group(function () {
+    // Obtener todas las comandas de un usuario
+    Route::get('/', [OrderController::class, 'index']);
 
-    //     // Crear un nueva comanda
-    //     Route::post('/', [OrderComercioController::class, 'store']);
+    // Crear un nueva comanda
+    Route::post('/', [OrderController::class, 'store']);
 
-    //     // Actualizar una comanda
-    //     Route::post('/{id}', [OrderComercioController::class, 'update']);
-    // });
+    // Obtener ordenes de comercios a partir de una orden general
+    Route::get('/{id}/suborders', [OrderController::class, 'showOrdersComercios']);
 
-    // ==== CATEGORIAS ===================
-    Route::prefix('categorias')->group(function () {
-        Route::get('/', [CategoriaController::class, 'index']);
-    });
+    // Obtener una comanda específica
+    Route::get('/{id}', [OrderController::class, 'show']);
 
-    // ==== SUBCATEGORIAS ===============
-    Route::prefix('subcategorias')->group(function () {
-        Route::get('/{categoria_id}', [SubcategoriaController::class, 'show']);
-    });
+    // Ver información subcomanda del cliente
+    Route::get('/suborder/{id}', [OrderComercioController::class, 'showData']);
+});
 
-    // ==== PRODUCTO ====================
-    Route::prefix('producto')->group(function () {
-        // Obtener todos los productos
-        Route::get('/', [ProductoController::class, 'index']);
+// ==== SUBCOMANDES ===================
+Route::middleware('auth:sanctum')->prefix('suborders')->group(function () {
+    // Crear un nueva subcomanda
+    Route::post('/', [OrderComercioController::class, 'store']);
+});
 
-        // Obtener 8 productos aleatorios
-        Route::get('/random', [ProductoController::class, 'randomProducts']);
+// ==== COMANDES COMERCIOS ===================
+Route::middleware('auth:sanctum')->prefix('admin/comandes')->group(function () {
+    // Obtener todas las comandas de un comercio
+    Route::get('/', [OrderComercioController::class, 'index']);
 
-        // Obtener todos los productos de un comercio específico
-        Route::get('/comercio/{comercioID}', [ProductoController::class, 'getByComercio']);
+    // Obtener una comanda específica
+    Route::get('/{id}', [OrderComercioController::class, 'show']);
 
-        // Obtener un producto específico
-        Route::get('/{id}', [ProductoController::class, 'show']);
-        
-        Route::get('/search/{search}', [ProductoController::class, 'search']);
-    });
+    // Crear un nueva comanda
+    Route::post('/', [OrderComercioController::class, 'store']);
+
+    // Actualizar una comanda
+    Route::post('/{id}', [OrderComercioController::class, 'update']);
+});
+
+// ==== ESTATS ===================
+Route::prefix('admin/estats')->group(function () {
+    // Obtener todos los estados que puede tener un pedido
+    Route::get('/', [EstatCompraController::class, 'index']);
+});
 
 
-    Route::middleware('auth:sanctum')->prefix('producto')->group(function () {
-        // Crear un nuevo producto
-        Route::post('/', [ProductoController::class, 'store']);
+// Route::middleware('auth:sanctum')->prefix('admin/estats')->group(function () {
+//     // Obtener una comanda específica
+//     Route::get('/{id}', [OrderComercioController::class, 'show']);
 
-        // Actualizar un producto específico
-        Route::post('{id}', [ProductoController::class, 'update']);
+//     // Crear un nueva comanda
+//     Route::post('/', [OrderComercioController::class, 'store']);
 
-        // Eliminar un producto específico
-        Route::delete('{id}', [ProductoController::class, 'destroy']);
-    });
+//     // Actualizar una comanda
+//     Route::post('/{id}', [OrderComercioController::class, 'update']);
+// });
 
-    // ==== SUBCATEGORIAS ===============
-    Route::prefix('subcategorias')->group(function () {
-        // Ver subcategorias
-        Route::get('/{categoria_id}', [SubcategoriaController::class, 'show']);
-    });
+// ==== CATEGORIAS ===================
+Route::prefix('categorias')->group(function () {
+    Route::get('/', [CategoriaController::class, 'index']);
+});
 
-    // ==== CLIENTES ====================
-    Route::middleware('auth:sanctum')->prefix('clientes')->group(function () {
-        Route::get('{id}', [ClienteController::class, 'obtenerDatosCliente']);
+// ==== SUBCATEGORIAS ===============
+Route::prefix('subcategorias')->group(function () {
+    Route::get('/{categoria_id}', [SubcategoriaController::class, 'show']);
+});
 
-        Route::get('{id}/compras', [OrderController::class, 'comprasCliente']);
+// ==== PRODUCTO ====================
+Route::prefix('producto')->group(function () {
+    // Obtener todos los productos
+    Route::get('/', [ProductoController::class, 'index']);
 
-        Route::get('compras/{id}', [OrderController::class, 'detalleCompra']);
-    });
+    // Obtener 8 productos aleatorios
+    Route::get('/random', [ProductoController::class, 'randomProducts']);
+
+    // Obtener todos los productos de un comercio específico
+    Route::get('/comercio/{comercioID}', [ProductoController::class, 'getByComercio']);
+
+    // Obtener un producto específico
+    Route::get('/{id}', [ProductoController::class, 'show']);
+
+    Route::get('/search/{search}', [ProductoController::class, 'search']);
+});
+
+
+Route::middleware('auth:sanctum')->prefix('producto')->group(function () {
+    // Crear un nuevo producto
+    Route::post('/', [ProductoController::class, 'store']);
+
+    // Actualizar un producto específico
+    Route::post('{id}', [ProductoController::class, 'update']);
+
+    // Eliminar un producto específico
+    Route::delete('{id}', [ProductoController::class, 'destroy']);
+});
+
+// ==== SUBCATEGORIAS ===============
+Route::prefix('subcategorias')->group(function () {
+    // Ver subcategorias
+    Route::get('/{categoria_id}', [SubcategoriaController::class, 'show']);
+});
+
+// ==== CLIENTES ====================
+Route::middleware('auth:sanctum')->prefix('clientes')->group(function () {
+    Route::get('{id}', [ClienteController::class, 'obtenerDatosCliente']);
+
+    Route::get('{id}/compras', [OrderController::class, 'comprasCliente']);
+
+    Route::get('compras/{id}', [OrderController::class, 'detalleCompra']);
+});

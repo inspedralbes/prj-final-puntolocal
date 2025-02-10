@@ -18,7 +18,7 @@ class ComerciosTableSeeder extends Seeder
     {
         $faker = Faker::create();
 
-        $cantidad = 11;
+        $cantidad = 12;
 
         for ($i = 0; $i < $cantidad; $i++) {
             DB::table('comercios')->insert([

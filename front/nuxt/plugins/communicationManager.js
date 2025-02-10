@@ -89,7 +89,7 @@ export default defineNuxtPlugin(nuxtApp => {
           headers: {
             'Accept': 'application/json',
             'Content-Type': 'application/json',
-            'Authorization': this.authStore.token ? `Bearer ${this.authStore.token}` : ''
+            // 'Authorization': this.authStore.token ? `Bearer ${this.authStore.token}` : ''
           }
         });
 
@@ -644,7 +644,7 @@ export default defineNuxtPlugin(nuxtApp => {
           method: 'DELETE',
           headers: {
             'Accept': 'application/json',
-            'Authorization': `Bearer ${authStore.token}`,
+            'Authorization': `Bearer ${this.authStore.token}`,
           },
         });
 
@@ -728,7 +728,7 @@ export default defineNuxtPlugin(nuxtApp => {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
-            'Authorization': `Bearer ${authStore.token}`
+            'Authorization': `Bearer ${this.authStore.token}`
           },
           body: JSON.stringify({ estat: order.estat }),
         });
@@ -745,6 +745,7 @@ export default defineNuxtPlugin(nuxtApp => {
         return { success: false, message: error.message };
       }
     },
+
     async updateComercioImagenes(formData, id) {
       try {
         const response = await fetch(`${Host}/comercios/${id}/imagenes`, {
@@ -770,8 +771,55 @@ export default defineNuxtPlugin(nuxtApp => {
       }
     }, 
 
-    ///////////////////////////// PUT //////////////////////////////////
+    async createOrder(order) {
+      try {
+        const response = await fetch(`${Host}/comandes`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${this.authStore.token}`,
+          },
+          body: JSON.stringify(order),
+        });
 
+        if(!response.ok){
+          console.error(`Error en la petición: ${response.status} ${response.statusText}`);
+          return null;
+        }
+
+        const data = await response.json();
+        return {success: true, data: data}
+      } catch (error) {
+        console.error('Error al realizar la petición:', error);
+        return { success: false, message: error.message };
+      }
+    },
+
+    async createSuborder(subcomandes) {
+      try {
+        const response = await fetch(`${Host}/suborders`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${this.authStore.token}`,
+          },
+          body: JSON.stringify(subcomandes),
+        });
+
+        if(!response.ok){
+          console.error(`Error en la petición: ${response.status} ${response.statusText}`);
+          return null;
+        }
+
+        const data = await response.json();
+        return {success: true, data: data}
+      } catch (error) {
+        console.error('Error al realizar la petición:', error);
+        return { success: false, message: error.message };
+      }
+    },
+
+    ///////////////////////////// PUT //////////////////////////////////
 
     async updateDatosPersonales(json, id) {
       try {
@@ -780,7 +828,7 @@ export default defineNuxtPlugin(nuxtApp => {
           headers: {
             'Accept': 'application/json',
             'Content-Type': 'application/json',
-            'Authorization': this.authStore.token ? `Bearer ${this.authStore.token}` : ''
+            'Authorization': `Bearer ${this.authStore.token}`
           },
           body: JSON.stringify(json)
         });
@@ -857,7 +905,7 @@ export default defineNuxtPlugin(nuxtApp => {
           headers: {
             'Accept': 'application/json',
             'Content-Type': 'application/json',
-            'Authorization': this.authStore.token ? `Bearer ${this.authStore.token}` : ''
+            'Authorization': `Bearer ${this.authStore.token}`
           },
           body: JSON.stringify({ image: imagePath })
         });
@@ -871,8 +919,7 @@ export default defineNuxtPlugin(nuxtApp => {
         console.error('Error al realizar la petición:', error);
         return null;
       }
-    },
-    
+    }
   };
 
   // Inyectar el communicationManager en la app

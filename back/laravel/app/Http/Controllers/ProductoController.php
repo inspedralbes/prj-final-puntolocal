@@ -194,13 +194,13 @@
                 return response()->json(['message' => 'No hay productos'], 200);
             }
 
-            $productos = $productos->shuffle()->take(8)->map(function ($producto) {
+            $productos = $productos->shuffle()->take(10)->map(function ($producto) {
                 return [
                     "id" => $producto->id,
                     "nombre" => $producto->nombre,
                     "descripcion" => $producto->descripcion,
                     "subcategoria_id" => $producto->subcategoria_id,
-                    "subcategoria" => $producto->subcategoria ? $producto->subcategoria->name : null,
+                    "subcategoria" => $producto->subcategoria?->name,
                     "comercio_id" => $producto->comercio_id,
                     "comercio" => $producto->comercio->nombre,
                     "precio" => $producto->precio,

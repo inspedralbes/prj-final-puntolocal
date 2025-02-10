@@ -8,10 +8,9 @@
 
         protected $fillable = [
             'nombre',
-            'descripcion',
         ];
 
         public function orders() {
-            return $this->hasMany(Order::class, 'tipo_envio_id');
+            return $this->hasMany(Order::class, 'tipo_pago');
         }
     }

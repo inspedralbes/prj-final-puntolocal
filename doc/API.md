@@ -1169,30 +1169,99 @@ Esta API permite ver los pedidos de un comercio, su información, cambiar su est
 
 ## Endpoints
 
-### 1. Crear una comanda
+### 1A. Crear una comanda general
 
 - **URL:** `/api/comandes/`
 - **Método:** `POST`
 - **Descripción:** Permite crear una nueva comanda al usuario.
-- **Parámetros:** PENDIENTE
-- **Respuesta: (RESPUESTAS DE PLANTILLA, NO SON LAS CORRECTAS)**
+- **Parámetros:**
+  - `tipo_envio`: (int, requerido) El ID del tipo de envío de la orden (1- Recollida | 2- Enviament).
+  - `tipo_pago`: (int, requerido) El ID del tipo de pago de la orden (1- Efectiu | 2- Targeta).
+  - `total`: (int, requerido) El total de toda la orden incluyendo todas las subcomandas.
+- **Respuesta:**
 
   - **Código de estado 200 OK**:
 
     ```json
     {
-      PENDIENTE
+      "message": "Orden creada con éxito.",
+      "producto": {
+        "tipo_envio": 2,
+        "tipo_pago": 1,
+        "total": 200,
+        "cliente_id": 11,
+        "estat": 1,
+        "updated_at": "2025-02-05T20:16:51.000000Z",
+        "created_at": "2025-02-05T20:16:51.000000Z",
+        "id": 21
+      }
     }
     ```
 
-  - **Código de estado 404 Not Found** (Si no esta registrado):
+  - **Código de estado 500 Error** (Si se envía un campo erroneo):
+    ```json
+    {
+      "error": "Ocurrió un error al crear la orden: The tipo envio field is required. (and 2 more errors)"
+    }
+    ```
+
+---
+
+### 1B. Crear subcomandas
+
+- **URL:** `/api/suborders/`
+- **Método:** `POST`
+- **Descripción:** Permite crear las subcomandas de la comanda general y sus productos.
+- **Parámetros:**
+  - `order_id`: (int, requerido) El ID de la orden padre. 
+  - `subcomandes`: (array, requerido) Un array con todas las subcomandas.
+    - `comercio_id`: (int, requerido) ID del comercio al que pertenece.
+    - `subtotal`: (int, requerido)
+    - `productos`: (array, requerido)
+      - `id`: (int, requerido) ID del producto.
+      - `cantidad`: (int, requerido, min: 1).
+      - `precio`: (int, requerido) Precio del producto AL MOMENTO DE LA COMPRA.
+- **Respuesta:**
+
+  - **Código de estado 201 Oreated**:
+
+    ```json
+    "subcomandes": [
+      {
+        "suborder": {
+          "order_id": 1,
+          "comercio_id": 2,
+          "subtotal": 100,
+          "estat": 1,
+          "updated_at": "2025-02-06T19:38:13.000000Z",
+          "created_at": "2025-02-06T19:38:13.000000Z",
+          "id": 4
+        },
+        "productos": [
+          {
+            "order_comercio_id": 4,
+            "producto_id": 10,
+            "cantidad": 5,
+            "precio": 10
+          },
+          {
+            "order_comercio_id": 4,
+            "producto_id": 12,
+            "cantidad": 2,
+            "precio": 5
+          }
+        ]
+      }
+    ]
+    ```
+
+  - **Código de estado 500 Error** (Si se envía un campo erroneo o un ID no válido):
 
     ```json
     {
-      PENDIENTE
+      "error": "Ocurrió un error al crear la subcomanda: The order id field is required."
     }
     ```
-
 ---
 
 ### 2. Ver comandas generales del usuario logueado
@@ -1211,16 +1280,23 @@ Esta API permite ver los pedidos de un comercio, su información, cambiar su est
         "id": 5,
         "cliente_id": 10,
         "total": 255.07,
-        "tipo": 1,
+        "tipo_envio": 1,
+        "tipo_pago": 1,
         "estat": 5,
         "created_at": "2025-01-31T08:13:39.000000Z",
         "updated_at": null,
         "tipo_envio": {
-          "id": 1,
-          "nombre": "Recollida",
-          "descripcion": null,
-          "created_at": null,
-          "updated_at": null
+            "id": 1,
+            "nombre": "Recollida",
+            "descripcion": null,
+            "created_at": null,
+            "updated_at": null
+        },
+        "tipo_pago": {
+            "id": 1,
+            "nombre": "Efectiu",
+            "created_at": null,
+            "updated_at": null
         },
         "estat_compra": {
           "id": 5,
@@ -1256,7 +1332,8 @@ Esta API permite ver los pedidos de un comercio, su información, cambiar su est
         "id": 7,
         "cliente_id": 11,
         "total": 86.65,
-        "tipo": 2,
+        "tipo_envio": 2,
+        "tipo_pago": 1,
         "estat": 1,
         "created_at": "2025-01-31T11:46:07.000000Z",
         "updated_at": null,
@@ -1264,6 +1341,12 @@ Esta API permite ver los pedidos de un comercio, su información, cambiar su est
           "id": 2,
           "nombre": "Envio",
           "descripcion": null,
+          "created_at": null,
+          "updated_at": null
+        },
+        "tipo_pago": {
+          "id": 1,
+          "nombre": "Efectiu",
           "created_at": null,
           "updated_at": null
         },
@@ -1291,7 +1374,7 @@ Esta API permite ver los pedidos de un comercio, su información, cambiar su est
     ]
     ```
 
-  - **Código de estado 404 Not Found** (Si no tiene comandas):
+  - **Código de estado 404 Not Found** (Si no existe la comanda):
 
     ```json
     {
@@ -1328,11 +1411,18 @@ Esta API permite ver los pedidos de un comercio, su información, cambiar su est
       },
       "order": {
         "id": 9,
-        "tipo": 1,
+        "tipo_envio": 1,
         "tipo_envio": {
           "id": 1,
           "nombre": "Recollida",
           "descripcion": null,
+          "created_at": null,
+          "updated_at": null
+        },
+        "tipo_pago": 1,
+        "tipo_pago": {
+          "id": 1,
+          "nombre": "Efectiu",
           "created_at": null,
           "updated_at": null
         }

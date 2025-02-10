@@ -7,8 +7,8 @@
     class TipoEnviosTableSeeder extends Seeder {
         public function run(): void {
             DB::table('tipo_envios')->insert([
+                ['nombre' => 'Enviament'],
                 ['nombre' => 'Recollida'],
-                ['nombre' => 'Envio'],
             ]);
         }
     }

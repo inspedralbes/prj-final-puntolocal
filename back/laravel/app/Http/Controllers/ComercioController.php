@@ -117,16 +117,26 @@
             return response()->json($comercios);
         }        
 
-        public function checkUserHasComercio($userId) {
-            $comercio = Comercio::where('idUser', $userId)->first();
-            if ($comercio) {
-                return response()->json([
-                    'message' => 'El usuario tiene un comercio.'
-                ], 200);
-            } else {
-                return response()->json([
-                    'message' => 'El usuario no tiene un comercio.'
-                ], 404);
-            }
+    public function checkUserHasComercio($userId) {
+        $comercio = Comercio::where('idUser', $userId)->first();
+        if ($comercio) {
+            return response()->json([
+                'message' => 'El usuario tiene un comercio.'
+            ], 200);
+        } else {
+            return response()->json([
+                'message' => 'El usuario no tiene un comercio.'
+            ], 404);
         }
     }
+
+    public function getUserID($id) {
+        $comercio = Comercio::find($id);
+        if(!$comercio) {
+            return response()->json([
+                'message' => 'No existeix cap comerç amb aquest id.'
+            ], 404);
+        }
+        return response()->json(['usuario_id' => $comercio->id],200);
+    }
+}
