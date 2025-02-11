@@ -21,8 +21,23 @@
                 </h3>
             </div>
 
-            <div id="corazon" class="w-8 h-8 flex items-center justify-center cursor-pointer">
-                <svg width="1.5em" height="1.5em" viewBox="0 0 24 24" fill="none" stroke="#333" stroke-width="2"
+            <div id="corazon" @click="actualizaFavoritos(producto.id)"
+                class="w-8 h-8 flex items-center justify-center cursor-pointer">
+                <!-- <svg width="1.5em" height="1.5em" viewBox="0 0 24 24" fill="none" stroke="#333" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <path
+                        d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z">
+                    </path>
+                </svg> -->
+                
+
+                <svg v-if="authStore.favoritos.has(producto?.id)" width="1.5em" height="1.5em" viewBox="0 0 24 24" fill="#ea4823" stroke="#ea4823" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <path
+                        d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z">
+                    </path>
+                </svg>
+                <svg v-else width="1.5em" height="1.5em" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="3"
                     stroke-linecap="round" stroke-linejoin="round">
                     <path
                         d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z">
@@ -75,57 +90,73 @@
 </template>
 
 <script setup>
-    definePageMeta({
-        layout: false,
-    });
+definePageMeta({
+    layout: false,
+});
 
-    import { useNuxtApp } from "#app";
-    import { ref, onMounted } from "vue";
-    import { useRoute, useRouter } from "vue-router";
-    import ButtonBasketComp from "../../components/ButtonBasketComp.vue";
+import { useNuxtApp } from "#app";
+import { ref, onMounted } from "vue";
+import { useRoute, useRouter } from "vue-router";
+import ButtonBasketComp from "../../components/ButtonBasketComp.vue";
 
-    const route = useRoute();
-    const router = useRouter();
-    const producto = ref(null);
-    const selectedSize = ref(null);
-    const selectedColor = ref(null);
-    const { $communicationManager } = useNuxtApp();
+const route = useRoute();
+const router = useRouter();
+const producto = ref(null);
+const selectedSize = ref(null);
+const selectedColor = ref(null);
+const authStore = useAuthStore();
+const { $communicationManager } = useNuxtApp();
 
-    const fetchProducto = async () => {
-        try {
-            const id = route.params.id;
-            const response = await $communicationManager.getProductoById(id);
-            if (response) {
-                producto.value = response;
-                console.log(producto.value);
-                if (producto.value.varientes && producto.value.varientes.length > 0) {
-                    selectedColor.value = producto.value.varientes[0].color;
-                    selectedSize.value = producto.value.varientes[0];
-                }
+const fetchProducto = async () => {
+    try {
+        const id = route.params.id;
+        const response = await $communicationManager.getProductoById(id);
+        if (response) {
+            producto.value = response;
+            console.log(producto.value);
+            if (producto.value.varientes && producto.value.varientes.length > 0) {
+                selectedColor.value = producto.value.varientes[0].color;
+                selectedSize.value = producto.value.varientes[0];
             }
-        } catch (error) {
-            console.error("Error obteniendo el producto:", error);
         }
-    };
+    } catch (error) {
+        console.error("Error obteniendo el producto:", error);
+    }
+};
 
-    const goBack = () => {
-        router.back();
-    };
+const goBack = () => {
+    router.back();
+};
 
-    const irAComercio = () => {
-        if (producto.value && producto.value.comercio_id) {
-            router.push(`/comercio/${producto.value.comercio_id}`);
-        } else {
-            console.error("No se encontró el ID del comercio.");
+const irAComercio = () => {
+    if (producto.value && producto.value.comercio_id) {
+        router.push(`/comercio/${producto.value.comercio_id}`);
+    } else {
+        console.error("No se encontró el ID del comercio.");
+    }
+};
+
+async function actualizaFavoritos(productoID) {
+    const { $communicationManager } = useNuxtApp();
+    console.log(productoID) 
+    try {
+        const response = await $communicationManager.updateFavorito(authStore.user.id, productoID);
+
+        if (response) {
+            authStore.toggleFavorito(productoID)
         }
-    };
 
-    onMounted(() => {
-        fetchProducto();
-    });
+    } catch (error) {
+        console.error("Error en la petición:", error);
+    }
+}
+
+onMounted(() => {
+    fetchProducto();
+});
 </script>
 
 
 <style scoped>
-    @import '../../assets/productoConcreto.css';
+@import '../../assets/productoConcreto.css';
 </style>

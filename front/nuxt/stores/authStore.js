@@ -67,7 +67,7 @@ export const useAuthStore = defineStore('auth', {
     setFavoritos(favoritos) {
       this.favoritos = new Set(favoritos);
       if (typeof window !== 'undefined') {
-        localStorage.setItem('favoritos', JSON.stringify(favoritos));
+        localStorage.setItem('favoritos', JSON.stringify([...this.favoritos]));
       }
     },
     toggleFavorito(id) {
@@ -75,6 +75,9 @@ export const useAuthStore = defineStore('auth', {
         this.favoritos.delete(id);
       } else {
         this.favoritos.add(id);
+      }
+      if (typeof window !== 'undefined') {
+        localStorage.setItem('favoritos', JSON.stringify([...this.favoritos])); // Guardar el Set como Array
       }
     },
     
