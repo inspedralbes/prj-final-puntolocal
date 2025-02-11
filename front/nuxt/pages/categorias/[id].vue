@@ -40,6 +40,7 @@
     import { useRouter, useRoute } from 'vue-router';
     import { ref, onMounted } from 'vue';
     import loading from '../../components/loading.vue';
+    import { useAuthStore } from '../../stores/authStore';
     import productoComp from '../../components/productoComp.vue';
     
     const route = useRoute();
@@ -47,7 +48,10 @@
     const comercios = ref([]);
     const productos = ref([]);
     const isLoading = ref(true);
+    const authStrore = useAuthStore();
     const { $communicationManager } = useNuxtApp();
+
+    console.log(authStrore.user.codigo_postal);
 
     async function getComerciosCategoria() {
         try {
