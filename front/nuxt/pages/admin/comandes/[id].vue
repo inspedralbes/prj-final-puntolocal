@@ -3,17 +3,28 @@
         <div
             class="pl-4 pt-4 bg-white block sm:flex items-center justify-between border-b border-gray-200 lg:mt-1.5 dark:bg-gray-800 dark:border-gray-700">
             <div class="w-full mt-16">
-                <div class="mb-4">
-                    <h1 class="text-xl font-semibold text-gray-900 sm:text-2xl dark:text-white">Comanda ID: {{
+                <div class="mb-4 flex items-center">
+                    <div @click="goBack" class="text-xl text-gray-700 dark:text-gray-300 cursor-pointer">
+                        <svg width="1.5em" height="1.5em" viewBox="0 0 1024 1024" class="icon"
+                            xmlns="http://www.w3.org/2000/svg" fill="#000000">
+                            <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                            <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+                            <g id="SVGRepo_iconCarrier">
+                                <path fill="#000000" d="M224 480h640a32 32 0 110 64H224a32 32 0 010-64z"></path>
+                                <path fill="#000000"
+                                    d="M237.248 512l265.408 265.344a32 32 0 01-45.312 45.312l-288-288a32 32 0 010-45.312l288-288a32 32 0 1145.312 45.312L237.248 512z">
+                                </path>
+                            </g>
+                        </svg>
+                    </div>
+                    <h1 class="ml-2 text-xl font-semibold text-gray-900 sm:text-2xl dark:text-white">Comanda ID: {{
                         actualOrder?.id }}</h1>
-                    <h3 class="pt-2 text-base font-medium text-gray-900 whitespace-nowrap dark:text-white">{{
+                    <h3 class="ml-2 pt-2 text-base font-medium text-gray-900 whitespace-nowrap dark:text-white">{{
                         formatFecha(actualOrder.created_at) }}</h3>
                 </div>
                 <!-- Barra de búsqueda + botones -->
             </div>
         </div>
-
-
 
 
         <div class="px-4 pt-4 grid gap-4 xl:grid-cols-2 2xl:grid-cols-3">
@@ -58,17 +69,17 @@
                         </div>
                     </div>
                 </div>
-                <div
-                    class="p-4 mb-4 bg-white border border-gray-200 shadow-sm dark:border-gray-700 sm:p-6 dark:bg-gray-800">
+                <div class="p-4 bg-white border border-gray-200 shadow-sm dark:border-gray-700 sm:p-6 dark:bg-gray-800">
                     <div class="mb-4">
                         <div class="flex-shrink-0">
                             <span
-                                class="text-xl font-bold leading-none text-gray-900 sm:text-2xl dark:text-white truncate">Total
-                                de la comanda</span>
+                                class="text-xl font-bold leading-none text-gray-900 sm:text-2xl dark:text-white truncate">
+                                Total de la comanda
+                            </span>
                             <h3 class="text-base font-light dark:text-gray-500 truncate">
                                 Desglose completo del importe de la comanda</h3>
                         </div>
-                        <div class="flex p-[0.85rem]">
+                        <div class="flex mt-4">
                             <div class="w-full">
                                 <!-- Fila 1 - Subtotal -->
                                 <div class="w-full flex justify-between items-center mb-2">
@@ -76,7 +87,8 @@
                                         <span class="font-small text-gray-900 dark:text-white">{{
                                             actualOrder?.productos_compra?.length }} ítems</span>
                                     </div>
-                                    <span class="font-small text-gray-900 dark:text-white">{{ subtotal.toFixed(2) }} €</span>
+                                    <span class="font-small text-gray-900 dark:text-white">{{ subtotal.toFixed(2) }}
+                                        €</span>
                                 </div>
 
                                 <!-- Fila 2 - Descuento -->
@@ -118,7 +130,7 @@
                 </div> -->
                 <div
                     class="p-4 mb-4 bg-white border border-gray-200 shadow-sm dark:border-gray-700 sm:p-6 dark:bg-gray-800">
-                    <h3 class="flex items-center mb-4 text-lg font-semibold text-gray-900 dark:text-white">
+                    <h3 class="flex items-center text-lg font-semibold text-gray-900 dark:text-white">
                         Informació del cliente
                     </h3>
                     <div id="fullWidthTabContent" class="">
@@ -147,8 +159,9 @@
                             </h3>
                             <h3 class="font-small py-1 text-gray-900 dark:text-white flex items-center truncate">
                                 <span class="mr-1">
-                                    <svg width="1em" height="1em" fill="currentColor" viewBox="0 0 35 35" data-name="Layer 2"
-                                        id="ee13b174-13f0-43ea-b921-f168b1054f8d" xmlns="http://www.w3.org/2000/svg">
+                                    <svg width="1em" height="1em" fill="currentColor" viewBox="0 0 35 35"
+                                        data-name="Layer 2" id="ee13b174-13f0-43ea-b921-f168b1054f8d"
+                                        xmlns="http://www.w3.org/2000/svg">
                                         <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
                                         <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round">
                                         </g>
@@ -186,9 +199,9 @@
                         </div>
                     </div>
                 </div>
-                <div
+                <div v-if="actualOrder?.order?.tipo_envio?.id === 1"
                     class="p-4 mb-4 bg-white border border-gray-200 shadow-sm dark:border-gray-700 sm:p-6 dark:bg-gray-800">
-                    <h3 class="flex items-center mb-4 text-lg font-semibold text-gray-900 dark:text-white">
+                    <h3 class="flex items-center text-lg font-semibold text-gray-900 dark:text-white">
                         Direcció d'envio
                     </h3>
                     <div id="fullWidthTabContent" class="">
@@ -241,57 +254,64 @@
                                         </g>
                                     </svg>
                                 </span>
-                                {{ actualOrder?.order?.cliente?.codigo_postal }}, {{ actualOrder?.order?.cliente?.ciudad }},
+                                {{ actualOrder?.order?.cliente?.codigo_postal }}, {{ actualOrder?.order?.cliente?.ciudad
+                                }},
                                 {{ actualOrder?.order?.cliente?.provincia }}
                             </h3>
                         </div>
                     </div>
                 </div>
                 <div
-                    class="p-4 bg-white border border-gray-200 shadow-sm dark:border-gray-700 sm:p-6 dark:bg-gray-800">
+                    class="p-4 mb-4 bg-white border border-gray-200 shadow-sm dark:border-gray-700 sm:p-6 dark:bg-gray-800">
                     <div class="flex items-center justify-between mb-4">
-                        <h3 class="flex items-center mb-4 text-lg font-semibold text-gray-900 dark:text-white">Linea de tiempo</h3>
+                        <h3 class="flex items-center text-lg font-semibold text-gray-900 dark:text-white">Línia de temps
+                        </h3>
                     </div>
                     <ol class="relative border-l border-gray-200 dark:border-gray-700 pt-4">
                         <li class="mb-10 ml-4">
-                            <div
-                                class="absolute w-3 h-3 bg-gray-600 rounded-full mt-1.5 -left-1.5 border border-white dark:border-gray-800 dark:bg-gray-300">
+                            <div class="absolute w-3 h-3 rounded-full mt-1.5 -left-1.5 border border-white dark:border-gray-800 dark:bg-gray-100"
+                                :class="actualOrder?.estat_compra?.id >= 1 ? 'bg-[#276BF2]' : 'bg-gray-200'">
                             </div>
-                            <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
-                                Pedido recibido
+                            <h3 class="text-lg font-semibold text-gray-900 dark:text-white"
+                                :class="actualOrder?.estat_compra?.id >= 1 ? 'font-semibold' : 'font-medium'">
+                                Comanda rebuda
                             </h3>
                             <time class="mb-1 text-sm font-normal leading-none text-gray-400 dark:text-gray-500">
+
                                 Abril 2025
                             </time>
                         </li>
                         <li class="mb-10 ml-4">
-                            <div
-                                class="absolute w-3 h-3 bg-gray-200 rounded-full mt-1.5 -left-1.5 border border-white dark:border-gray-800 dark:bg-gray-700">
+                            <div class="absolute w-3 h-3 rounded-full mt-1.5 -left-1.5 border border-white dark:border-gray-800 dark:bg-gray-100"
+                                :class="actualOrder?.estat_compra?.id >= 2 ? 'bg-[#276BF2]' : 'bg-gray-200'">
                             </div>
-                            <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
-                                Listo para recoger
+                            <h3 class="text-lg text-gray-900 dark:text-white"
+                                :class="actualOrder?.estat_compra?.id >= 2 ? 'font-semibold' : 'font-medium'">
+                                Llest per a recollir
                             </h3>
                             <time class="mb-1 text-sm font-normal leading-none text-gray-400 dark:text-gray-500">
                                 Abril 2023
                             </time>
                         </li>
-                        <li class="mb-10 ml-4">
-                            <div
-                                class="absolute w-3 h-3 bg-gray-200 rounded-full mt-1.5 -left-1.5 border border-white dark:border-gray-800 dark:bg-gray-700">
+                        <li class="mb-10 ml-4" v-if="actualOrder?.order?.tipo_envio?.id === 1">
+                            <div class="absolute w-3 h-3 rounded-full mt-1.5 -left-1.5 border border-white dark:border-gray-800 dark:bg-gray-100"
+                                :class="actualOrder?.estat_compra?.id >= 3 ? 'bg-[#276BF2]' : 'bg-gray-200'">
                             </div>
-                            <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
-                                En reparto
+                            <h3 class="text-lg text-gray-900 dark:text-white"
+                                :class="actualOrder?.estat_compra?.id >= 3 ? 'font-semibold' : 'font-medium'">
+                                En repartiment
                             </h3>
                             <time class="mb-1 text-sm font-normal leading-none text-gray-400 dark:text-gray-500">
                                 Abril 2025
                             </time>
                         </li>
                         <li class="ml-4">
-                            <div
-                                class="absolute w-3 h-3 bg-gray-200 rounded-full mt-1.5 -left-1.5 border border-white dark:border-gray-800 dark:bg-gray-700">
+                            <div class="absolute w-3 h-3 rounded-full mt-1.5 -left-1.5 border border-white dark:border-gray-800 dark:bg-gray-100"
+                                :class="actualOrder?.estat_compra?.id >= 4 ? 'bg-[#276BF2]' : 'bg-gray-200'">
                             </div>
-                            <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
-                                Entregado
+                            <h3 class="text-lg text-gray-900 dark:text-white"
+                                :class="actualOrder?.estat_compra?.id >= 4 ? 'font-semibold' : 'font-medium'">
+                                Lliurat
                             </h3>
                             <time class="mb-1 text-sm font-normal leading-none text-gray-400 dark:text-gray-500">
                                 Abril 2023
@@ -328,6 +348,7 @@
 </style>
 
 <script setup>
+import { useRoute, useRouter } from 'vue-router';
 const { $communicationManager } = useNuxtApp();
 
 definePageMeta({
@@ -335,6 +356,7 @@ definePageMeta({
 });
 
 const route = useRoute();
+const router = useRouter();
 const actualOrder = reactive({});
 
 const subtotal = computed(() => {
@@ -365,8 +387,14 @@ const formatApellido = (apellidos) => {
     return `${apellidos[0].toUpperCase()}.`; // Toma la primera letra y agrega un punto
 };
 
+const goBack = () => {
+    router.back();
+};
+
 onBeforeMount(async () => {
     const data = await $communicationManager.infoOrder(route.params.id);
     Object.assign(actualOrder, data.data);
+    console.log(actualOrder);
+    console.log(actualOrder.estat_compra.id);
 })
 </script>

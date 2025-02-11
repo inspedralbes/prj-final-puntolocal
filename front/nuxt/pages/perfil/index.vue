@@ -60,7 +60,7 @@ async function checkComercio() {
         const { $communicationManager } = useNuxtApp();
         const res = await $communicationManager.checkUserHasComercio(authStore.user.id);
     
-        if (res) {
+        if (res && res.comercio) {
             console.log('Tiene comercio');
             authStore.setComercio(res.comercio);
             return true

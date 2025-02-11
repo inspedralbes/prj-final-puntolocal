@@ -52,7 +52,7 @@ const route = useRoute();
 const router = useRouter();
 const socket = io("http://localhost:8001");
 
-if (auth.comercio) {
+if (auth?.comercio) {
   socket.on("connect", () => {
     socket.emit("identificarUsuario", { user_id: auth.user.id });
   });

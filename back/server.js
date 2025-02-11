@@ -43,7 +43,6 @@ io.on("connection", (socket) => {
   });
 
   socket.on("nuevaOrden", async (data) => {
-    // console.log(data);
     for (const suborder of data.subcomandes) {
       const suborderData = {
         'comercio_id': suborder.comercio_id,

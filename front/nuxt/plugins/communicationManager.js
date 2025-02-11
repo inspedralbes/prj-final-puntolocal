@@ -43,7 +43,7 @@ export default defineNuxtPlugin(nuxtApp => {
       const response = await fetch(`${Host}/getLocations`, {
         method: 'GET',
         headers: {
-          'Accept': 'application/json', 
+          'Accept': 'application/json',
           'Content-Type': 'application/json',
           'Authorization': this.authStore.token ? `Bearer ${this.authStore.token}` : ''
         }
@@ -777,21 +777,21 @@ export default defineNuxtPlugin(nuxtApp => {
           },
           body: formData
         });
- 
- 
+
+
         if (!response.ok) {
           console.error(`Error en la petición: ${response.status} ${response.statusText}`);
           return null;
         }
- 
- 
+
+
         const jsonResponse = await response.json();
         return jsonResponse;
       } catch (error) {
         console.error('Error al realizar la petición:', error);
         return null;
       }
-    }, 
+    },
 
     async createOrder(order) {
       try {
@@ -804,13 +804,13 @@ export default defineNuxtPlugin(nuxtApp => {
           body: JSON.stringify(order),
         });
 
-        if(!response.ok){
+        if (!response.ok) {
           console.error(`Error en la petición: ${response.status} ${response.statusText}`);
           return null;
         }
 
         const data = await response.json();
-        return {success: true, data: data}
+        return { success: true, data: data }
       } catch (error) {
         console.error('Error al realizar la petición:', error);
         return { success: false, message: error.message };
@@ -828,13 +828,13 @@ export default defineNuxtPlugin(nuxtApp => {
           body: JSON.stringify(subcomandes),
         });
 
-        if(!response.ok){
+        if (!response.ok) {
           console.error(`Error en la petición: ${response.status} ${response.statusText}`);
           return null;
         }
 
         const data = await response.json();
-        return {success: true, data: data}
+        return { success: true, data: data }
       } catch (error) {
         console.error('Error al realizar la petición:', error);
         return { success: false, message: error.message };
@@ -917,9 +917,9 @@ export default defineNuxtPlugin(nuxtApp => {
         return null;
       }
     },
-    
+
     ///////////////////////////// DELETE //////////////////////////////////
-    
+
     async deleteComercioImagen(id, imagePath) {
       try {
         const response = await fetch(`${Host}/comercios/${id}/imagenes`, {

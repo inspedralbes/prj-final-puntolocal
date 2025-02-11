@@ -59,7 +59,7 @@ export const useAuthStore = defineStore('auth', {
       if (typeof window !== 'undefined') {
         localStorage.setItem('comercio', JSON.stringify(comercio));
       }
-    }
+    },
   },
   persist: {
     enabled: true,
