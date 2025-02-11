@@ -19,44 +19,6 @@
                             </div>
                         </form>
                         <div class="flex items-center w-full sm:justify-end">
-                            <div class="flex pl-2 space-x-1">
-                                <a href="#"
-                                    class="inline-flex justify-center p-1 text-gray-500 rounded cursor-pointer hover:text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
-                                    <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20"
-                                        xmlns="http://www.w3.org/2000/svg">
-                                        <path fill-rule="evenodd"
-                                            d="M11.49 3.17c-.38-1.56-2.6-1.56-2.98 0a1.532 1.532 0 01-2.286.948c-1.372-.836-2.942.734-2.106 2.106.54.886.061 2.042-.947 2.287-1.561.379-1.561 2.6 0 2.978a1.532 1.532 0 01.947 2.287c-.836 1.372.734 2.942 2.106 2.106a1.532 1.532 0 012.287.947c.379 1.561 2.6 1.561 2.978 0a1.533 1.533 0 012.287-.947c1.372.836 2.942-.734 2.106-2.106a1.533 1.533 0 01.947-2.287c1.561-.379 1.561-2.6 0-2.978a1.532 1.532 0 01-.947-2.287c.836-1.372-.734-2.942-2.106-2.106a1.532 1.532 0 01-2.287-.947zM10 13a3 3 0 100-6 3 3 0 000 6z"
-                                            clip-rule="evenodd"></path>
-                                    </svg>
-                                </a>
-                                <a href="#"
-                                    class="inline-flex justify-center p-1 text-gray-500 rounded cursor-pointer hover:text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
-                                    <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20"
-                                        xmlns="http://www.w3.org/2000/svg">
-                                        <path fill-rule="evenodd"
-                                            d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z"
-                                            clip-rule="evenodd"></path>
-                                    </svg>
-                                </a>
-                                <a href="#"
-                                    class="inline-flex justify-center p-1 text-gray-500 rounded cursor-pointer hover:text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
-                                    <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20"
-                                        xmlns="http://www.w3.org/2000/svg">
-                                        <path fill-rule="evenodd"
-                                            d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
-                                            clip-rule="evenodd"></path>
-                                    </svg>
-                                </a>
-                                <a href="#"
-                                    class="inline-flex justify-center p-1 text-gray-500 rounded cursor-pointer hover:text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
-                                    <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20"
-                                        xmlns="http://www.w3.org/2000/svg">
-                                        <path
-                                            d="M10 6a2 2 0 110-4 2 2 0 010 4zM10 12a2 2 0 110-4 2 2 0 010 4zM10 18a2 2 0 110-4 2 2 0 010 4z">
-                                        </path>
-                                    </svg>
-                                </a>
-                            </div>
                         </div>
                     </div>
                 </div>
@@ -104,7 +66,8 @@
                                 </tr>
                             </thead>
                             <tbody class="bg-white divide-y divide-gray-200 dark:bg-gray-800 dark:divide-gray-700">
-                                <tr v-for="order in orders" class="hover:bg-gray-100 dark:hover:bg-gray-700">
+                                <tr v-for="order in orders" class="hover:bg-gray-100 dark:hover:bg-gray-700"
+                                :class="{ 'bg-green-100': order.estat_compra.id === 4, 'bg-red-100': order.estat_compra.id === 5, 'hover:bg-green-200': order.estat_compra.id === 4, 'hover:bg-red-200': order.estat_compra.id === 5 }">
                                     <td
                                         class="p-4 text-base font-medium text-gray-900 whitespace-nowrap dark:text-white">
                                         #{{ order.id }}</td>
@@ -126,16 +89,9 @@
                                         {{ order.subtotal }}</td>
                                     <td
                                         class="p-4 text-base font-medium text-gray-900 whitespace-nowrap dark:text-white">
-
-                                        <!-- {{ order.estat_compra.nombre }} -->
-                                        <select id="estat" v-model="order.estat_compra.id"
-                                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
-                                            <option v-for="estat in estats" :key="estat.id" :value="estat.id"
-                                                data-v-inspector="pages/admin/productes.vue:358:29">
-                                                {{ estat.nombre }}
-                                            </option>
-                                        </select>
-
+                                        <div class="p-2 rounded-md">
+                                            {{ order.estat_compra.nombre }}
+                                        </div>
                                     </td>
 
                                     <td class="p-4 space-x-2 whitespace-nowrap flex">
@@ -166,7 +122,7 @@
                                             </svg>
                                             Veure comanda
                                         </NuxtLink>
-                                        <button type="button" id="updateOrderEstat" :disabled="isDisabled(order.id)"
+                                        <!-- <button type="button" id="updateOrderEstat" :disabled="isDisabled(order.id)"
                                             @click="guardarEstat(order.id)"
                                             class="inline-flex items-center bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded disabled:opacity-50 disabled:cursor-not-allowed">
                                             <svg class="w-4 h-4 mr-2" viewBox="0 0 24 24" fill="none"
@@ -181,7 +137,7 @@
                                                 </g>
                                             </svg>
                                             Guardar
-                                        </button>
+                                        </button> -->
                                     </td>
                                 </tr>
                             </tbody>
@@ -190,162 +146,6 @@
                 </div>
             </div>
         </div>
-        <!-- <div v-if="backgroundShadow" class="bg-gray-900/50 dark:bg-gray-900/80 fixed inset-0 z-40"></div>
-        <div v-if="isOpen['info']"
-            class="fixed left-0 right-0 z-50 items-center justify-center overflow-x-hidden overflow-y-auto top-4 md:inset-0 h-modal sm:h-full flex"
-            id="edit-user-modal" aria-modal="true" role="dialog">
-            <div class="relative w-full h-full max-w-2xl px-4 md:h-auto">
-                <div class="relative bg-white rounded-lg shadow dark:bg-gray-800">
-                    <div class="flex items-start justify-between p-5 border-b rounded-t dark:border-gray-700">
-                        <h3 class="text-xl font-bold dark:text-white">
-                            #{{ actualOrder.order_id }} Informació comanda
-                        </h3>
-                        <button type="button" @click="toggleCard('info')"
-                            class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-700 dark:hover:text-white"
-                            data-modal-toggle="edit-user-modal">
-                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"
-                                xmlns="http://www.w3.org/2000/svg">
-                                <path fill-rule="evenodd"
-                                    d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
-                                    clip-rule="evenodd"></path>
-                            </svg>
-                        </button>
-                    </div>
-
-                    <div v-if="actualOrder && actualOrder.order" class="contain-data">
-                        <h3 class="text-xl font-semibold dark:text-white mb-2">Productes</h3>
-                        <div class="contain-products divide-y divide-gray-200 dark:divide-gray-600">
-                            <div class="producto" v-for="productoOrder in actualOrder.productos_compra">
-                                <div class="flex">
-                                    <div class="contain-image rounded-md">
-                                        <img class="image object-cover w-full h-full"
-                                            src="https://cdn-images.farfetch-contents.com/22/90/42/91/22904291_52923841_600.jpg"
-                                            alt="image">
-                                    </div>
-                                    <div class="contain-text">
-                                        <h3 class="font-medium text-gray-900 dark:text-white">{{
-                                            productoOrder.producto.nombre }} <span
-                                                class="font-large font-bold text-md text-gray-200 ml-1">x {{
-                                                productoOrder.cantidad }} UDS</span></h3>
-                                        <h4 class="font-small text-gray-900 dark:text-white">Opciones de producto</h4>
-                                    </div>
-                                </div>
-                                <div>
-                                    <h2 class="text-base font-medium text-gray-900 dark:text-white"> {{
-                                        (productoOrder.precio * productoOrder.cantidad).toFixed(2) }} €</h2>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="contain-products flex justify-end">
-                            <h3 class="px-3 py-1">
-                                <span class="text-l font-semibold dark:text-white mt-3 mb-2">
-                                    Subtotal:
-                                </span>
-                                <span class="text-xl font-bold dark:text-white mt-3 mb-2">
-                                    {{ subtotal }} €
-                                </span>
-                            </h3>
-                        </div>
-                        <h3 class="text-xl font-semibold dark:text-white mt-3 mb-2">Informació de comanda</h3>
-                        <div>
-                            <h3>
-                                <span class="font-medium text-gray-900 dark:text-white">
-                                    Cliente:
-                                </span>
-                                <span class="font-small text-gray-900 dark:text-white">
-                                    {{ actualOrder.order.cliente.name }} {{
-                                        formatApellido(actualOrder.order.cliente.apellidos) }}
-                                </span>
-                            </h3>
-                            <h3>
-                                <span class="font-medium text-gray-900 dark:text-white">
-                                    Fecha y hora:
-                                </span>
-                                <span class="font-small text-gray-900 dark:text-white">
-                                    {{ formatFecha(actualOrder.created_at) }}
-                                </span>
-                            </h3>
-                            <h3>
-                                <span class="font-medium text-gray-900 dark:text-white">
-                                    Tipo:
-                                </span>
-                                <span class="font-small text-gray-900 dark:text-white">
-                                    {{ actualOrder.order.tipo_envio.nombre }}
-                                </span>
-                            </h3>
-                            <span v-if="actualOrder.order.tipo === 2">
-                                <h3>
-                                    <span class="font-medium text-gray-900 dark:text-white">
-                                        Dirección de entrega:
-                                    </span>
-                                    <span class="font-small text-gray-900 dark:text-white">
-                                        {{ actualOrder.order.cliente.street_address }}, {{
-                                        actualOrder.order.cliente.numero_planta }}º {{
-                                        actualOrder.order.cliente.numero_puerta }}
-                                    </span>
-                                </h3>
-                                <h3>
-                                    <span class="font-medium text-gray-900 dark:text-white">
-                                        Comentario:
-                                    </span>
-                                    <span class="font-small text-gray-900 dark:text-white">
-                                        Comentario de prueba
-                                    </span>
-                                </h3>
-                            </span>
-                        </div>
-                    </div>
-                    <div class="p-6 space-y-6">
-                        <div class="overflow-x-auto max-h-[400px]">
-                            <div class="space-y-4">
-                                <div
-                                    class="flex items-center p-4 bg-white rounded-lg shadow-sm hover:bg-gray-100 dark:bg-gray-800 dark:hover:bg-gray-700 transition-colors">
-                                    <div class="h-16 w-16 flex-shrink-0">
-                                        <img class="h-full w-full object-cover rounded"
-                                            alt="Product image">
-                                    </div>
-
-                                    <div class="ml-4 flex-1">
-                                        <h3 class="font-medium text-gray-900 dark:text-white">
-                                            product.name
-                                            <span class="text-sm text-gray-500 ml-1">
-                                                x product.quantity unidades
-                                            </span>
-                                        </h3>
-                                    </div>
-
-                                    <div class="ml-4">
-                                        <span class="text-base font-medium text-gray-900 dark:text-white">
-                                             product.price.toFixed(2) €
-                                        </span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div style="width: 100px;">
-                            <div>
-                                <label for="nom-producte"
-                                    class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Nom del
-                                    producte</label>
-                                <input type="text" name="nom-producte" id="nom-producte"
-                                    class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                                    v-model="actualOrder.id" placeholder="Samarreta blanca" required>
-                            </div>
-                        </div>
-
-                        <div style="width: 100px;"
-                            class="items-center pt-5 border-t border-gray-200 rounded-b dark:border-gray-700">
-                            <button
-                                class="inline-flex items-center bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-8 rounded">
-                                Guardar
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-        </div> -->
     </main>
 </template>
 
@@ -452,13 +252,6 @@ const formatApellido = (apellidos) => {
     if (!apellidos) return ""; // Maneja casos donde no hay apellidos
     return `${apellidos[0].toUpperCase()}.`; // Toma la primera letra y agrega un punto
 };
-
-// async function showOrder(id) {
-//     toggleCard('info');
-//     const data = await $communicationManager.infoOrder(id);
-//     Object.assign(actualOrder, data.data);
-//     console.log(actualOrder);
-// }
 
 function isDisabled(id) {
     const order = orders.value.find(order => order.id === id);

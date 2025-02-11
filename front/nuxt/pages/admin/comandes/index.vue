@@ -18,7 +18,7 @@
                                     placeholder="Buscar comandes...">
                             </div>
                         </form>
-                        <div class="flex items-center w-full sm:justify-end">
+                        <!-- <div class="flex items-center w-full sm:justify-end">
                             <div class="flex pl-2 space-x-1">
                                 <a href="#"
                                     class="inline-flex justify-center p-1 text-gray-500 rounded cursor-pointer hover:text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
@@ -57,7 +57,7 @@
                                     </svg>
                                 </a>
                             </div>
-                        </div>
+                        </div> -->
                     </div>
                 </div>
             </div>
@@ -189,162 +189,6 @@
                 </div>
             </div>
         </div>
-        <!-- <div v-if="backgroundShadow" class="bg-gray-900/50 dark:bg-gray-900/80 fixed inset-0 z-40"></div>
-        <div v-if="isOpen['info']"
-            class="fixed left-0 right-0 z-50 items-center justify-center overflow-x-hidden overflow-y-auto top-4 md:inset-0 h-modal sm:h-full flex"
-            id="edit-user-modal" aria-modal="true" role="dialog">
-            <div class="relative w-full h-full max-w-2xl px-4 md:h-auto">
-                <div class="relative bg-white rounded-lg shadow dark:bg-gray-800">
-                    <div class="flex items-start justify-between p-5 border-b rounded-t dark:border-gray-700">
-                        <h3 class="text-xl font-bold dark:text-white">
-                            #{{ actualOrder.order_id }} Informació comanda
-                        </h3>
-                        <button type="button" @click="toggleCard('info')"
-                            class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-700 dark:hover:text-white"
-                            data-modal-toggle="edit-user-modal">
-                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"
-                                xmlns="http://www.w3.org/2000/svg">
-                                <path fill-rule="evenodd"
-                                    d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
-                                    clip-rule="evenodd"></path>
-                            </svg>
-                        </button>
-                    </div>
-
-                    <div v-if="actualOrder && actualOrder.order" class="contain-data">
-                        <h3 class="text-xl font-semibold dark:text-white mb-2">Productes</h3>
-                        <div class="contain-products divide-y divide-gray-200 dark:divide-gray-600">
-                            <div class="producto" v-for="productoOrder in actualOrder.productos_compra">
-                                <div class="flex">
-                                    <div class="contain-image rounded-md">
-                                        <img class="image object-cover w-full h-full"
-                                            src="https://cdn-images.farfetch-contents.com/22/90/42/91/22904291_52923841_600.jpg"
-                                            alt="image">
-                                    </div>
-                                    <div class="contain-text">
-                                        <h3 class="font-medium text-gray-900 dark:text-white">{{
-                                            productoOrder.producto.nombre }} <span
-                                                class="font-large font-bold text-md text-gray-200 ml-1">x {{
-                                                productoOrder.cantidad }} UDS</span></h3>
-                                        <h4 class="font-small text-gray-900 dark:text-white">Opciones de producto</h4>
-                                    </div>
-                                </div>
-                                <div>
-                                    <h2 class="text-base font-medium text-gray-900 dark:text-white"> {{
-                                        (productoOrder.precio * productoOrder.cantidad).toFixed(2) }} €</h2>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="contain-products flex justify-end">
-                            <h3 class="px-3 py-1">
-                                <span class="text-l font-semibold dark:text-white mt-3 mb-2">
-                                    Subtotal:
-                                </span>
-                                <span class="text-xl font-bold dark:text-white mt-3 mb-2">
-                                    {{ subtotal }} €
-                                </span>
-                            </h3>
-                        </div>
-                        <h3 class="text-xl font-semibold dark:text-white mt-3 mb-2">Informació de comanda</h3>
-                        <div>
-                            <h3>
-                                <span class="font-medium text-gray-900 dark:text-white">
-                                    Cliente:
-                                </span>
-                                <span class="font-small text-gray-900 dark:text-white">
-                                    {{ actualOrder.order.cliente.name }} {{
-                                        formatApellido(actualOrder.order.cliente.apellidos) }}
-                                </span>
-                            </h3>
-                            <h3>
-                                <span class="font-medium text-gray-900 dark:text-white">
-                                    Fecha y hora:
-                                </span>
-                                <span class="font-small text-gray-900 dark:text-white">
-                                    {{ formatFecha(actualOrder.created_at) }}
-                                </span>
-                            </h3>
-                            <h3>
-                                <span class="font-medium text-gray-900 dark:text-white">
-                                    Tipo:
-                                </span>
-                                <span class="font-small text-gray-900 dark:text-white">
-                                    {{ actualOrder.order.tipo_envio.nombre }}
-                                </span>
-                            </h3>
-                            <span v-if="actualOrder.order.tipo === 2">
-                                <h3>
-                                    <span class="font-medium text-gray-900 dark:text-white">
-                                        Dirección de entrega:
-                                    </span>
-                                    <span class="font-small text-gray-900 dark:text-white">
-                                        {{ actualOrder.order.cliente.street_address }}, {{
-                                        actualOrder.order.cliente.numero_planta }}º {{
-                                        actualOrder.order.cliente.numero_puerta }}
-                                    </span>
-                                </h3>
-                                <h3>
-                                    <span class="font-medium text-gray-900 dark:text-white">
-                                        Comentario:
-                                    </span>
-                                    <span class="font-small text-gray-900 dark:text-white">
-                                        Comentario de prueba
-                                    </span>
-                                </h3>
-                            </span>
-                        </div>
-                    </div>
-                    <div class="p-6 space-y-6">
-                        <div class="overflow-x-auto max-h-[400px]">
-                            <div class="space-y-4">
-                                <div
-                                    class="flex items-center p-4 bg-white rounded-lg shadow-sm hover:bg-gray-100 dark:bg-gray-800 dark:hover:bg-gray-700 transition-colors">
-                                    <div class="h-16 w-16 flex-shrink-0">
-                                        <img class="h-full w-full object-cover rounded"
-                                            alt="Product image">
-                                    </div>
-
-                                    <div class="ml-4 flex-1">
-                                        <h3 class="font-medium text-gray-900 dark:text-white">
-                                            product.name
-                                            <span class="text-sm text-gray-500 ml-1">
-                                                x product.quantity unidades
-                                            </span>
-                                        </h3>
-                                    </div>
-
-                                    <div class="ml-4">
-                                        <span class="text-base font-medium text-gray-900 dark:text-white">
-                                             product.price.toFixed(2) €
-                                        </span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div style="width: 100px;">
-                            <div>
-                                <label for="nom-producte"
-                                    class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Nom del
-                                    producte</label>
-                                <input type="text" name="nom-producte" id="nom-producte"
-                                    class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                                    v-model="actualOrder.id" placeholder="Samarreta blanca" required>
-                            </div>
-                        </div>
-
-                        <div style="width: 100px;"
-                            class="items-center pt-5 border-t border-gray-200 rounded-b dark:border-gray-700">
-                            <button
-                                class="inline-flex items-center bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-8 rounded">
-                                Guardar
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-        </div> -->
     </main>
 </template>
 
@@ -452,13 +296,6 @@ const formatApellido = (apellidos) => {
     return `${apellidos[0].toUpperCase()}.`; // Toma la primera letra y agrega un punto
 };
 
-// async function showOrder(id) {
-//     toggleCard('info');
-//     const data = await $communicationManager.infoOrder(id);
-//     Object.assign(actualOrder, data.data);
-//     console.log(actualOrder);
-// }
-
 function isDisabled(id) {
     const order = orders.value.find(order => order.id === id);
     if (estatsOriginals[id] !== order.estat_compra.id) {
@@ -475,21 +312,16 @@ async function guardarEstat(id) {
     if (estatsOriginals[order.id] === 4 || estatsOriginals[order.id] === 5) {
         delete estatsOriginals[order.id];
     }
-    
     orders.value = orders.value.filter(order => order.estat !== 4 && order.estat !== 5);
 
-    console.log(estatsOriginals);
     const data = await $communicationManager.updateOrder(order);
-    // console.log(data);
 }
 
 onMounted(async () => {
     document.addEventListener('keydown', closeAll);
     const data = await $communicationManager.getEstats();
     estats.push(...data.data);
-    // console.log(estats);
     socket.on("nuevaOrdenRecibida", (newSuborder) => {
-        // console.log("entra en nuevaOrdenRecibida");
         orders.value.push(newSuborder);
         estatsOriginals[newSuborder.id] = newSuborder.estat_compra.id;
     });
@@ -497,12 +329,10 @@ onMounted(async () => {
 
 onBeforeMount(async () => {
     const data = await $communicationManager.getOrders();
-    // console.log(data.data);
     orders.value.push(...data.data);
     orders.value.forEach(order => {
         estatsOriginals[order.id] = order.estat;
     });
-    // console.log(orders);
 })
 
 const closeAll = (e) => {

@@ -145,13 +145,8 @@ async function crearComanda() {
         }
         if(createdOrder && createdSuborders){
             const orders = agruparOrderSuborders(createdOrder, createdSuborders);
-            // console.log(orders);
             socket.emit("nuevaOrden", orders);
         }
-        // subcomandaInfo.value.suborders.forEach(subcomanda => {
-        //     socket.emit("nuevaOrden", subcomanda);
-        //     // socket.emit("test");
-        // });
     }
     // comercioStore.emptyBasket();
     // goBack();
