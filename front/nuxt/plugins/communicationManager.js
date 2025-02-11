@@ -63,6 +63,30 @@ export default defineNuxtPlugin(nuxtApp => {
       }
     },
 
+    async getProductosDeCategorias(idCategoria) {
+      try {
+        const response = await fetch(Host + `/producto/categoria/${idCategoria}`, {
+          method: 'GET',
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+            'Authorization': this.authStore.token ? `Bearer ${this.authStore.token}` : ''
+          },
+        });
+        if (response.ok) {
+          const json = await response.json();
+          return json;
+        } else {
+          console.error(`Error en la petición: ${response.status} ${response.statusText}`)
+          return null;
+        }
+
+      } catch (error) {
+        console.error('Error al realizar la petición:', error);
+        return null;
+      }
+    },
+
     async getLocations() {
       const response = await fetch(`${Host}/getLocations`, {
         method: 'GET',

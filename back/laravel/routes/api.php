@@ -122,10 +122,11 @@
         // Obtener todos los productos de un comercio específico
         Route::get('/comercio/{comercioID}', [ProductoController::class, 'getByComercio']);
 
-        // Obtener un producto específico
         Route::get('/{id}', [ProductoController::class, 'show']);
         
         Route::get('/search/{search}', [ProductoController::class, 'search']);
+
+        Route::get('/categoria/{categoriaID}', [CategoriaController::class, 'getProductosPorCategoria']);
     });
 
 

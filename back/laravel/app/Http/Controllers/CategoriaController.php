@@ -6,7 +6,6 @@
 
     class CategoriaController extends Controller {
         public function index() {
-            //
             $categorias = Categoria::all();
             return response()->json($categorias);
         }
@@ -15,33 +14,28 @@
             $categoria = Categoria::with('comercios')->find($categoriaId);
 
             if(!$categoria) {
-                return response() -> json(['message' => 'No s\'ha trobar la categoria']);
+                return response() -> json(['message' => 'No s\'han trobat categorias']);
             }
 
             return response()->json($categoria->comercios,200);
         }
 
-        public function create() {
-            //
+        public function getProductosPorCategoria($categoriaId) {
+            $productos = Categoria::where('id', $categoriaId)
+                ->with('comercios.productos')
+                ->get()
+                ->pluck('comercios')
+                ->flatten()
+                ->pluck('productos')
+                ->flatten()
+                ->map(function ($producto) {
+                    $comercio = \App\Models\Comercio::find($producto->comercio_id);
+                    $producto->comercio_nombre = $comercio ? $comercio->nombre : 'Desconocido';
+        
+                    return $producto;
+                });
+        
+            return response()->json($productos);
         }
-
-        public function store(Request $request) {
-            //
-        }
-
-        public function show(Categoria $categoria) {
-            //
-        }
-
-        public function edit(Categoria $categoria) {
-            //
-        }
-
-        public function update(Request $request, Categoria $categoria) {
-            //
-        }
-
-        public function destroy(Categoria $categoria) {
-            //
-        }
+        
     }
