@@ -11,7 +11,7 @@ class Favorito extends Model
 
     protected $table = 'favoritos';
 
-    protected $fillable = ['user_id', 'product_id'];
+    protected $fillable = ['cliente_id', 'producto_id'];
 
     public function cliente()
     {

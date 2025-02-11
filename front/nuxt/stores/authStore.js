@@ -6,6 +6,7 @@ export const useAuthStore = defineStore('auth', {
     token: typeof window !== 'undefined' ? localStorage.getItem('token') || null : null, 
     user: typeof window !== 'undefined' ? JSON.parse(localStorage.getItem('user')) || null : null,
     comercio: typeof window !== 'undefined' ? JSON.parse(localStorage.getItem('comercio')) || null : null,
+    favoritos: typeof window !== 'undefined' ? new Set(JSON.parse(localStorage.getItem('favoritos')) || []) : new Set(),
   }),
   getters: {
     userName: (state) => state.user ? state.user.name : '',
@@ -30,11 +31,13 @@ export const useAuthStore = defineStore('auth', {
       this.user = null;
       this.token = null;
       this.comercio = null;
+      this.favoritos = null
       if (typeof window !== 'undefined') {
         localStorage.removeItem('isAuthenticated');
         localStorage.removeItem('token'); 
         localStorage.removeItem('user'); 
         localStorage.removeItem('comercio'); 
+        localStorage.removeItem('favoritos');
       }
     },
     initialize() {
@@ -43,6 +46,7 @@ export const useAuthStore = defineStore('auth', {
         const token = localStorage.getItem('token');
         const user = JSON.parse(localStorage.getItem('user'));
         const comercio = JSON.parse(localStorage.getItem('comercio'));
+        const favoritos = JSON.parse(localStorage.getItem('favoritos'));
         if (token && user && comercio) {
           this.login(user, token, comercio);
         }
@@ -59,7 +63,21 @@ export const useAuthStore = defineStore('auth', {
       if (typeof window !== 'undefined') {
         localStorage.setItem('comercio', JSON.stringify(comercio));
       }
-    }
+    },
+    setFavoritos(favoritos) {
+      this.favoritos = new Set(favoritos);
+      if (typeof window !== 'undefined') {
+        localStorage.setItem('favoritos', JSON.stringify(favoritos));
+      }
+    },
+    toggleFavorito(id) {
+      if (this.favoritos.has(id)) {
+        this.favoritos.delete(id);
+      } else {
+        this.favoritos.add(id);
+      }
+    },
+    
   },
   persist: {
     enabled: true,
