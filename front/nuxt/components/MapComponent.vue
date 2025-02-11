@@ -138,7 +138,7 @@ const buscarPorCodigoPostal = async () => {
 
             map.value.getView().animate({
                 center: fromLonLat([lon, lat]),
-                zoom: 12,
+                zoom: 14,
                 duration: 1000
             });
         } else {
@@ -156,15 +156,6 @@ const agregarMarcador = (lon, lat, name) => {
         name: name
     });
 
-    marker.setStyle(
-        new Style({
-            image: new CircleStyle({
-                radius: 6,
-                fill: new Fill({ color: 'red' }),
-                stroke: new Stroke({ color: 'white', width: 1 })
-            })
-        })
-    );
 
     vectorSource.value.addFeature(marker);
 };
@@ -213,5 +204,5 @@ const cerrarPopup = () => {
 </script>
 
 <style scoped>
-    @import url('../assets/mapa.css');
+@import url('../assets/mapa.css');
 </style>
