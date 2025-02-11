@@ -13,12 +13,11 @@
             <div class="overflow-x-auto whitespace-nowrap">
                 <ul class="flex space-x-4">
                     <li v-for="comercio in comercios" :key="comercio.id"
-                        class="min-w-[300px] bg-white shadow-lg rounded-xl p-4 border border-gray-200 flex-shrink-0">
+                        class="min-w-[300px] bg-white shadow-lg p-4 border border-gray-200 flex-shrink-0">
                         <h3 class="text-lg font-semibold text-gray-800">{{ comercio.nombre }}</h3>
-                        <p class="text-sm"><strong>Dirección:</strong> {{ comercio.calle_num }}, {{ comercio.ciudad }}
+                        <p class="text-sm"><strong>Dirección:</strong> 
+                            {{ comercio.calle_num }}, {{ comercio.ciudad }}
                         </p>
-                        <p class="text-sm"><strong>Teléfono:</strong> {{ comercio.phone }}</p>
-                        <p class="text-sm"><strong>Email:</strong> {{ comercio.email }}</p>
                         <p class="text-sm"><strong>Puntaje Medio:</strong> ⭐ {{ comercio.puntaje_medio }}</p>
                     </li>
                 </ul>
