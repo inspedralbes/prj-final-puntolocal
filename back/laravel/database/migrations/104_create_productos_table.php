@@ -15,6 +15,7 @@ return new class extends Migration {
             $table->string('nombre');
             $table->text('descripcion');
             $table->float('precio');
+            $table->boolean('visible')->default(true);
             $table->integer('stock')->nullable();
             $table->string('imagen')->nullable()->comment('Nombre del archivo de la imagen principal del producto');
         });

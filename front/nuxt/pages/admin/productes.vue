@@ -102,11 +102,7 @@
                                     </th>
                                     <th scope="col"
                                         class="p-4 text-xs font-medium text-left text-gray-500 uppercase dark:text-gray-400">
-                                        Stock
-                                    </th>
-                                    <th scope="col"
-                                        class="p-4 text-xs font-medium text-left text-gray-500 uppercase dark:text-gray-400">
-                                        Descompte
+                                        Visible
                                     </th>
                                     <th scope="col"
                                         class="p-4 text-xs font-medium text-left text-gray-500 uppercase dark:text-gray-400">
@@ -140,12 +136,22 @@
                                     <td
                                         class="p-4 text-base font-medium text-gray-900 whitespace-nowrap dark:text-white">
                                         {{ producto.precio }}€</td>
-                                    <td
+                                    <!-- <td
                                         class="p-4 text-base font-medium text-gray-900 whitespace-nowrap dark:text-white">
                                         {{ producto.stock ? producto.stock : 'N/A' }}</td>
                                     <td
                                         class="p-4 text-base font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                        {{ producto.descuento ? producto.descuento : 'No' }}</td>
+                                        {{ producto.descuento ? producto.descuento : 'No' }}</td> -->
+                                    <td
+                                        class="p-4 text-base font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                        <label class="relative inline-block">
+                                            <input type="checkbox" @click="cambiarVisibilidad(producto.id)" class="peer invisible" :checked="producto.visible === 1" />
+                                            <span
+                                                class="absolute top-0 left-0 w-9 h-5 cursor-pointer rounded-full bg-slate-200 border border-slate-300 transition-all duration-100 peer-checked:bg-[#276BF2]"></span>
+                                            <span
+                                                class="absolute top-0.5 left-0.5 w-4 h-4 bg-white rounded-full z-10 transition-all duration-100 peer-checked:translate-x-4"></span>
+                                        </label>
+                                    </td>
 
                                     <td class="p-4 space-x-2 whitespace-nowrap">
                                         <button type="button" id="updateProductButton" @click="editarProd(producto.id)"
@@ -186,54 +192,6 @@
                 </div>
             </div>
         </div>
-
-        <!-- Footer de paginación -->
-        <!-- <div
-            class="sticky bottom-0 right-0 items-center w-full p-4 bg-white border-t border-gray-200 sm:flex sm:justify-between dark:bg-gray-800 dark:border-gray-700">
-            <div class="flex items-center mb-4 sm:mb-0">
-                <a href="#"
-                    class="inline-flex justify-center p-1 text-gray-500 rounded cursor-pointer hover:text-gray-900 hover:bg-gray-100 dark:hover:bg-gray-700 dark:hover:text-white">
-                    <svg class="w-7 h-7" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                        <path fill-rule="evenodd"
-                            d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z"
-                            clip-rule="evenodd"></path>
-                    </svg>
-                </a>
-                <a href="#"
-                    class="inline-flex justify-center p-1 mr-2 text-gray-500 rounded cursor-pointer hover:text-gray-900 hover:bg-gray-100 dark:hover:bg-gray-700 dark:hover:text-white">
-                    <svg class="w-7 h-7" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                        <path fill-rule="evenodd"
-                            d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
-                            clip-rule="evenodd"></path>
-                    </svg>
-                </a>
-                <span class="text-sm font-normal text-gray-500 dark:text-gray-400">Showing <span
-                        class="font-semibold text-gray-900 dark:text-white">1-20</span> of <span
-                        class="font-semibold text-gray-900 dark:text-white">2290</span></span>
-            </div>
-            <div class="flex items-center space-x-3">
-                <a href="#"
-                    class="inline-flex items-center justify-center flex-1 px-3 py-2 text-sm font-medium text-center text-white rounded-lg bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">
-                    <svg class="w-5 h-5 mr-1 -ml-1" fill=" currentColor" viewBox="0 0 20 20"
-                        xmlns="http://www.w3.org/2000/svg">
-                        <path fill-rule="evenodd"
-                            d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z"
-                            clip-rule="evenodd"></path>
-                    </svg>
-                    Previous
-                </a>
-                <a href="#"
-                    class="inline-flex items-center justify-center flex-1 px-3 py-2 text-sm font-medium text-center text-white rounded-lg bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">
-                    Next
-                    <svg class="w-5 h-5 ml-1 -mr-1" fill="currentColor" viewBox="0 0 20 20"
-                        xmlns="http://www.w3.org/2000/svg">
-                        <path fill-rule="evenodd"
-                            d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
-                            clip-rule="evenodd"></path>
-                    </svg>
-                </a>
-            </div>
-        </div> -->
 
         <div v-if="backgroundShadow" class="bg-gray-900/50 dark:bg-gray-900/80 fixed inset-0 z-40"></div>
         <!-- Edit Product Drawer -->
@@ -308,8 +266,7 @@
                             del producte</label>
                         <input type="file" accept="image/*" @change="handleImageEditar" id="imagenPrincipal"
                             name="imagenPrincipal"
-                            class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                            />
+                            class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" />
                         <div v-if="productoActual.imagen" class="image-preview">
                             <p class="text-white">Vista prèvia de la imatge:</p>
                             <div class="image-container">
@@ -509,6 +466,7 @@ const productoActual = ref({
     'subcategoria_id': '',
     'precio': '',
     'stock': '',
+    'visible': '',
     'comercio_id': '',
     'comercio': '',
     'imagen': '',
@@ -563,6 +521,16 @@ async function eliminarProducto(id) {
         }
     } else {
         console.log('Error: ' + data.message);
+    }
+}
+
+async function cambiarVisibilidad(id) {
+    const data = ref();
+    setTimeout(async () => {
+        data.value = await $communicationManager.cambiarVisibilidad(id);
+    }, 500);
+    if (data.success && productos[id]) {
+        productos[id].visible = !productos[id].visible
     }
 }
 
@@ -622,10 +590,10 @@ async function guardarProd() {
     formData.append("subcategoria_id", productoActual.value.subcategoria_id);
     formData.append("comercio_id", comercio.value.id);
     formData.append("precio", productoActual.value.precio);
-    if(productoActual.value.stock){
+    if (productoActual.value.stock) {
         formData.append("stock", productoActual.value.stock);
     }
-    if(productoActual.value.imagen !== null && productoActual.value.imagen.file){
+    if (productoActual.value.imagen !== null && productoActual.value.imagen.file) {
         formData.append("imagen", productoActual.value.imagen.file);
     }
 
@@ -656,9 +624,9 @@ async function crearProducto() {
 
     if (result && result.success) {
         toggleCard('crear');
-        productoNuevo.value.id = result.data.producto.id;
-        // productoNuevo.
-        console.log(productoNuevo.value);
+        productoNuevo.value = result.data.producto;
+        productoNuevo.value.subcategoria = result.data.producto.subcategoria.name;
+        console.log("PRODUCTO NUEVO:", productoNuevo.value);
         productos.push(productoNuevo.value);
         productoNuevo.value = {
             'nombre': '',
@@ -687,6 +655,6 @@ onMounted(async () => {
 onBeforeMount(async () => {
     const data = await $communicationManager.getByComercio();
     Object.assign(productos, data);
-    // console.log(productos);
+    console.log(productos);
 });
 </script>

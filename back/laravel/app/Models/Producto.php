@@ -14,6 +14,7 @@
             'descripcion',
             'precio',
             'stock',
+            'visible',
             'imagen'
         ];
 

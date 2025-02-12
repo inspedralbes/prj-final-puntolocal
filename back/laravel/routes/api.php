@@ -112,12 +112,12 @@ Route::prefix('admin/estats')->group(function () {
 //     Route::post('/{id}', [OrderComercioController::class, 'update']);
 // });
 
-    // ==== CATEGORIAS ===================
-    Route::prefix('categorias')->group(function () {
-        Route::get('/', [CategoriaController::class, 'index']);
+// ==== CATEGORIAS ===================
+Route::prefix('categorias')->group(function () {
+    Route::get('/', [CategoriaController::class, 'index']);
 
-        Route::get('/{categoriaId}/comercios', [CategoriaController::class, 'ComerciosOfCategorias']);
-    });
+    Route::get('/{categoriaId}/comercios', [CategoriaController::class, 'ComerciosOfCategorias']);
+});
 
 // ==== SUBCATEGORIAS ===============
 Route::prefix('subcategorias')->group(function () {
@@ -135,12 +135,12 @@ Route::prefix('producto')->group(function () {
     // Obtener todos los productos de un comercio específico
     Route::get('/comercio/{comercioID}', [ProductoController::class, 'getByComercio']);
 
-        Route::get('/{id}', [ProductoController::class, 'show']);
-        
-        Route::get('/search/{search}', [ProductoController::class, 'search']);
+    Route::get('/{id}', [ProductoController::class, 'show']);
 
-        Route::get('/categoria/{categoriaID}', [CategoriaController::class, 'getProductosPorCategoria']);
-    });
+    Route::get('/search/{search}', [ProductoController::class, 'search']);
+
+    Route::get('/categoria/{categoriaID}', [CategoriaController::class, 'getProductosPorCategoria']);
+});
 
 
 Route::middleware('auth:sanctum')->prefix('producto')->group(function () {
@@ -149,6 +149,9 @@ Route::middleware('auth:sanctum')->prefix('producto')->group(function () {
 
     // Actualizar un producto específico
     Route::post('{id}', [ProductoController::class, 'update']);
+
+    // Actualizar visibilidad de un producto específico
+    Route::post('/visible/{id}', [ProductoController::class,'updateVisibility']);
 
     // Eliminar un producto específico
     Route::delete('{id}', [ProductoController::class, 'destroy']);

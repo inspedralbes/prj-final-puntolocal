@@ -50,7 +50,7 @@
                                     class="flex px-4 py-3 border-b hover:bg-gray-100 dark:hover:bg-gray-600 dark:border-gray-600">
                                     <div class="flex-shrink-0">
                                         <img class="rounded-full w-11 h-11"
-                                            src="https://flowbite-admin-dashboard.vercel.app/images/users/bonnie-green.png"
+                                            src="#"
                                             alt="Jese image">
                                         <div
                                             class="absolute flex items-center justify-center w-5 h-5 ml-6 -mt-5 border border-white rounded-full bg-primary-700 dark:border-gray-700">
@@ -235,7 +235,7 @@
                             <ul id="dropdown-categories" :class="{ hidden: isHidden['categories'] }"
                                 class="py-2 space-y-2">
                                 <li>
-                                    <a href="https://flowbite-admin-dashboard.vercel.app/layouts/stacked/"
+                                    <a href="#"
                                         class="flex items-center p-2 text-base text-gray-900 transition duration-75 rounded-lg pl-11 group hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-700">
                                         Afegir categoria
                                     </a>
@@ -305,11 +305,11 @@
                             </button>
                             <ul id="dropdown-pages" :class="{ hidden: isHidden['clientes'] }" class="py-2 space-y-2">
                                 <li>
-                                    <a href="https://flowbite-admin-dashboard.vercel.app/pages/pricing/"
+                                    <a href="#"
                                         class="flex items-center p-2 text-base text-gray-900 transition duration-75 rounded-lg pl-11 group hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-700">Lista</a>
                                 </li>
                                 <li>
-                                    <a href="https://flowbite-admin-dashboard.vercel.app/pages/maintenance/"
+                                    <a href="#"
                                         class="flex items-center p-2 text-base text-gray-900 transition duration-75 rounded-lg pl-11 group hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-700">Reseñas</a>
                                 </li>
                             </ul>
@@ -336,11 +336,11 @@
                             </button>
                             <ul id="dropdown-auth" :class="{ hidden: isHidden['marketing'] }" class="py-2 space-y-2">
                                 <li>
-                                    <a href="https://flowbite-admin-dashboard.vercel.app/authentication/sign-in/"
+                                    <a href="#"
                                         class="flex items-center p-2 text-base text-gray-900 transition duration-75 rounded-lg pl-11 group hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-700">Promociones</a>
                                 </li>
                                 <li>
-                                    <a href="https://flowbite-admin-dashboard.vercel.app/authentication/sign-up/"
+                                    <a href="#"
                                         class="flex items-center p-2 text-base text-gray-900 transition duration-75 rounded-lg pl-11 group hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-700">Campañas</a>
                                 </li>
                             </ul>
@@ -370,12 +370,12 @@
                             <ul id="dropdown-playground" :class="{ hidden: isHidden['configuracion'] }"
                                 class="space-y-2 py-2">
                                 <li>
-                                    <a href="https://flowbite-admin-dashboard.vercel.app/playground/stacked/"
+                                    <a href="#"
                                         class="text-base text-gray-900 rounded-lg flex items-center p-2 group hover:bg-gray-100 transition duration-75 pl-11 dark:text-gray-200 dark:hover:bg-gray-700 ">Perfil
                                         del negocio</a>
                                 </li>
                                 <li>
-                                    <a href="https://flowbite-admin-dashboard.vercel.app/playground/sidebar/"
+                                    <a href="#"
                                         class="text-base text-gray-900 rounded-lg flex items-center p-2 group hover:bg-gray-100 transition duration-75 pl-11 dark:text-gray-200 dark:hover:bg-gray-700 ">Horarios</a>
                                 </li>
                                 <li>

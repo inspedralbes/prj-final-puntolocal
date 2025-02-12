@@ -11,7 +11,7 @@
 
     class ProductoController extends Controller {
         public function index() {
-            $productos = Producto::with('subcategoria', 'comercio')->get()->map(function ($producto) {
+            $productos = Producto::with('subcategoria', 'comercio')->where('visible', 1)->get()->map(function ($producto) {
                 return [
                     "id" => $producto->id,
                     "nombre" => $producto->nombre,
@@ -21,7 +21,8 @@
                     "comercio_id" => $producto->comercio_id,
                     "comercio" => $producto->comercio->nombre,
                     "precio" => $producto->precio,
-                    "stock" => $producto->stock
+                    "stock" => $producto->stock,
+                    "visible" => $producto->visible
                 ];
             });
             if ($productos->isEmpty()) {
@@ -42,7 +43,8 @@
                     "comercio_id" => $producto->comercio_id,
                     "comercio" => $producto->comercio->nombre,
                     "precio" => $producto->precio,
-                    "stock" => $producto->stock
+                    "stock" => $producto->stock,
+                    "visible" => $producto->visible,
                 ];
             });
 
@@ -88,6 +90,8 @@
                 'imagen' => $imagenPath,
             ]);
 
+            $producto = Producto::with('subcategoria:id,name')->findOrFail($producto->id);
+
             return response()->json([
                 'message' => 'Producto creado con éxito.',
                 'producto' => $producto,
@@ -111,6 +115,7 @@
                 "comercio" => $producto->comercio->nombre,
                 "precio" => $producto->precio,
                 "stock" => $producto->stock,
+                "visible" => $producto->visible,
                 "imagen" => $producto->imagen,
             ], 200);
         }
@@ -165,6 +170,35 @@
             }
         }
 
+        public function updateVisibility($id) {
+            $user = Auth::user();
+
+            try {
+                $producto = Producto::with('comercio')->findOrFail($id);
+
+                if ($producto->comercio->idUser !== $user->id) {
+                    return response()->json([
+                        'error' => 'No tienes permiso para editar este producto.',
+                    ], 403);
+                }
+
+                $producto->update([
+                    'visible' => !$producto->visible,
+                ]);
+
+                return response()->json([
+                    'success' => true,
+                    'data' => $producto
+                ], 200);
+
+            } catch (\Exception $e) {
+                return response()->json([
+                    'success' => false,
+                    'details' => $e->getMessage()
+                ], 500);
+            }
+        }
+
         public function destroy($id) {
             $user = Auth::user();
 
@@ -188,7 +222,7 @@
         }
 
         public function randomProducts() {
-            $productos = Producto::with('subcategoria', 'comercio')->get();
+            $productos = Producto::with('subcategoria', 'comercio')->where('visible', 1)->get();
 
             if ($productos->isEmpty()) {
                 return response()->json(['message' => 'No hay productos'], 200);
@@ -205,6 +239,7 @@
                     "comercio" => $producto->comercio->nombre,
                     "precio" => $producto->precio,
                     "stock" => $producto->stock,
+                    "visible" => $producto->visible,
                     "imagen" => $producto->imagen,
                 ];
             });
@@ -225,6 +260,7 @@
             // Buscar productos por nombre
             $productosPorNombre = Producto::with('subcategoria', 'comercio')
                 ->where('nombre', 'like', '%' . $searchTerm . '%')
+                ->where('visible', 1)
                 ->get();
         
             // Obtener los IDs de los productos encontrados por nombre
@@ -233,6 +269,7 @@
             // Buscar productos por descripción, excluyendo los que ya se encontraron por nombre
             $productosPorDescripcion = Producto::with('subcategoria', 'comercio')
                 ->where('descripcion', 'like', '%' . $searchTerm . '%')
+                ->where('visible', 1)
                 ->whereNotIn('id', $idsProductosPorNombre)
                 ->get();
         
@@ -251,6 +288,7 @@
                     'comercio' => $producto->comercio->nombre,
                     'precio' => $producto->precio,
                     'stock' => $producto->stock,
+                    'visible' => $producto->visible,
                     'imagen' => $producto->imagen,
                 ];
             });

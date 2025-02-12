@@ -134,7 +134,8 @@ class ProductosTableSeeder extends Seeder
                 "comercio_id" => $faker->numberBetween(8, 12),
                 "nombre" => $productos[$prodID],
                 "descripcion" => $descripciones[$prodID],
-                'precio' => $faker->randomFloat(2, 5, 1000),
+                "precio" => $faker->randomFloat(2, 5, 1000),
+                "visible" => $faker->numberBetween(0,1)
             ]);
         }
     }
