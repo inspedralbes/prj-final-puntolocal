@@ -33,8 +33,9 @@
                     $producto->comercio_nombre = $comercio ? $comercio->nombre : 'Desconocido';
         
                     return $producto;
-                });
+                }) -> toArray();
         
+            shuffle($productos);
             return response()->json($productos);
         }
         
