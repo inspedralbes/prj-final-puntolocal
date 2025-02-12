@@ -4,7 +4,7 @@ import BusquedaGeneral from '~/pages/busquedaGeneral.vue';
 
 const pinia = createPinia();
 setActivePinia(pinia);
-const Host = 'http://localhost:8000/api';
+const Host = 'http://holabarri.cat/api';
 const auth = useAuthStore();
 const comercio = auth.comercio;
 
