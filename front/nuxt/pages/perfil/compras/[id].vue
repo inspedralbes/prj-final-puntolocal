@@ -28,15 +28,14 @@
                         <strong>Producto:</strong> {{ producto.producto.nombre }} <br>
                         <strong>Quantitat:</strong> {{ producto.cantidad }} <br>
                         <strong>Preu per unitat:</strong> {{ producto.precio }} € <br>
-                        <div class="flex items-center">
-                            <div :style="{ backgroundColor: order.estat_compra?.color }"
-                                class="w-4 h-4 rounded-full mr-2">
-                            </div>
-                            <p class="text-lg text-gray-700">
-                                <strong>Estat:</strong> {{ order.estat_compra?.nombre }}
-                            </p>
-                        </div>
                     </p>
+                    <div class="flex items-center">
+                        <div :style="{ backgroundColor: order.estat_compra?.color }" class="w-4 h-4 rounded-full mr-2">
+                        </div>
+                        <p class="text-lg text-gray-700">
+                            <strong>Estat:</strong> {{ order.estat_compra?.nombre }}
+                        </p>
+                    </div>
                 </div>
 
                 <div class="text-lg text-gray-700 mb-4">

@@ -61,8 +61,8 @@ if (auth?.comercio) {
     console.log(orden);
     if (confirm("Nova comanda rebuda, vols veure'l?")) {
       setTimeout(() => {
-        if (orden?.order?.id) {
-          router.push(`/admin/comandes/${orden.order.id}`);
+        if (orden?.id) {
+          router.push(`/admin/comandes/${orden.id}`);
         }
       }, 500);
     }
