@@ -1,6 +1,6 @@
 <template>
     <div id="producto" :data-testid="testId">
-        <div id="contain-image">
+        <div id="contain-image" :class="customClass">
             <img :src="img">
             <span id="contain-fav">
                 <svg width="1.2em" height="1.2em" viewBox="0 0 24 24" fill="none" stroke="#333" stroke-width="2"
@@ -44,7 +44,6 @@
 }
 
 #contain-image {
-    width: 100%;
     height: 160px;
     position: relative;
     display: flex;
@@ -111,6 +110,10 @@ const props = defineProps({
     comercio: {
         type: String,
         required: true,
+    },
+    customClass: {
+        type: String,
+        default: '',
     }
 });
 </script>

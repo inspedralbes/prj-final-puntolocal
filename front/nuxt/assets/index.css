@@ -19,17 +19,15 @@
     object-position: center;
 }
 
-#contain-categorias {
-    width: 100%;
-    display: flex;
-    overflow: scroll;
-    align-items: center;
-    box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
-}
-
-#contain-categorias::-webkit-scrollbar {
+#categorias::-webkit-scrollbar {
     display: none;
 }
+
+.scrollbar-none::-webkit-scrollbar{
+    display: none;
+}
+
+.no-scrol
 
 #categorias {
     padding-right: 20px;
