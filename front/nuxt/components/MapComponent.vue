@@ -1,15 +1,19 @@
 <template>
     <div>
-        <input v-model="codigoPostal" @keyup.enter="buscarPorCodigoPostal" placeholder="Introduce código postal" />
-        <button @click="buscarPorCodigoPostal">Buscar</button>
+        <div id="divBuscador">
+            <input v-model="codigoPostal" @keyup.enter="buscarPorCodigoPostal" placeholder="Código Postal" />
+            <button @click="buscarPorCodigoPostal" id="buscar">
+                <img src="../assets/lupa-white.svg" alt="Lupa" />
+            </button>
+        </div>
 
         <div ref="mapContainer" class="map-container"></div>
 
         <div>
-            <button @click="getLocation" class="px-4 py-2 bg-blue-500 text-white rounded-lg">
-                Ver tiendas cerca de mí
+            <button @click="getLocation" id="btnLocation">
+                <img src="../assets/location.svg" alt="Location">
             </button>
-            <p v-if="location">Ubicación: {{ location }}</p>
+            <!--<p v-if="location">Ubicación: {{ location }}</p>-->
         </div>
 
         <InfoMapa v-if="showPopup" :info="puebloSeleccionado" @cerrarPopup="cerrarPopup" />
@@ -134,7 +138,7 @@ const buscarPorCodigoPostal = async () => {
 
             map.value.getView().animate({
                 center: fromLonLat([lon, lat]),
-                zoom: 12,
+                zoom: 14,
                 duration: 1000
             });
         } else {
@@ -152,15 +156,6 @@ const agregarMarcador = (lon, lat, name) => {
         name: name
     });
 
-    marker.setStyle(
-        new Style({
-            image: new CircleStyle({
-                radius: 6,
-                fill: new Fill({ color: 'red' }),
-                stroke: new Stroke({ color: 'white', width: 1 })
-            })
-        })
-    );
 
     vectorSource.value.addFeature(marker);
 };
@@ -187,12 +182,6 @@ const getLocation = () => {
                     }
                 });
 
-                const userMarker = new Feature({
-                    geometry: new Point(lonLat),
-                    name: "Tu ubicación exacta",
-                    userLocation: true
-                });
-
                 vectorSource.value.addFeature(userMarker);
             },
             (error) => {
@@ -215,19 +204,5 @@ const cerrarPopup = () => {
 </script>
 
 <style scoped>
-.map-container {
-    width: 100%;
-    height: 400px;
-    margin-top: 10px;
-}
-
-input {
-    padding: 5px;
-    margin-right: 5px;
-}
-
-button {
-    padding: 5px;
-    cursor: pointer;
-}
+@import url('../assets/mapa.css');
 </style>

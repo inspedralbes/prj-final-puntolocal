@@ -17,7 +17,8 @@
                 <div id="contain-categorias" class="w-full overflow-x-auto bg-gray-100 dark:bg-gray-800 py-4">
                     <div id="categorias" class="flex space-x-6 px-4 items-center">
                         <div v-for="categoria in categorias" :key="categoria.id"
-                            class="flex flex-col items-center justify-center">
+                            class="flex flex-col items-center justify-center cursor-pointer"
+                            @click="irACategoria(categoria.id)">
                             <div class="w-20 h-20 rounded-lg shadow-md bg-cover bg-center dark:shadow-sm dark:shadow-white"
                                 :style="{ backgroundImage: `url(${categoria.imagenes})` }">
                             </div>
@@ -98,6 +99,10 @@
         } catch (error) {
             console.error("Error en la petición:", error);
         }
+    }
+
+    function irACategoria(id) {
+        router.push(`/categorias/${id}`);
     }
 
     function mostrarIdProducto(id) {
