@@ -1150,6 +1150,52 @@ Esta API permite gestionar los clientes.
 
 ---
 
+## 4. Obtener productos favoritos del usuario autenticado
+
+- **URL:** `/api/cliente/{id}/favoritos`
+- **Método:** `GET`
+- **Descripción:** Permite obtener la lista de productos favoritos de un cliente autenticado.
+- **Parámetros:**
+  - `id`: (int, requerido) El ID del cliente cuyos productos favoritos se desean obtener.
+- **Respuesta:**
+
+  - **Código de estado 200 OK**:
+
+    ```json
+    [1, 2, 3]
+    ```
+
+---
+
+## 5. Añadir o quitar productos de favoritos
+
+- **URL:** `/api/cliente/{id}/favoritos`
+- **Método:** `POST`
+- **Descripción:** Permite añadir o quitar un producto de los favoritos de un cliente autenticado.
+- **Parámetros:**
+  - `id`: (int, requerido) El ID del cliente.
+  - `producto_id`: (int, requerido) El ID del producto que se desea añadir o quitar de favoritos.
+- **Respuesta:**
+
+  - **Código de estado 200 OK**:
+
+    Si el producto fue añadido o quitado correctamente:
+
+    ```json
+    {
+      "message": "Producto añadido a favoritos"
+    }
+    ```
+
+    o
+
+    ```json
+    {
+      "message": "Producto eliminado de favoritos"
+    }
+    ```
+---
+
 <!-- COMANDES -->
 
 # API de Comandes
