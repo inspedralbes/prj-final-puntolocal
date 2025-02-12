@@ -32,6 +32,7 @@ Route::middleware('auth:sanctum')->prefix('cliente')->group(function () {
     Route::put('/{id}/datos-facturacion', [ClienteController::class, 'updateDatosFacturacion']);
     Route::get('{id}/favoritos', [FavoritoController::class, 'index']);
     Route::post('{id}/favoritos', [FavoritoController::class, 'toggleFavorito']);
+    Route::get('{id}/favoritos-info', [FavoritoController::class, 'getFavoritosInformacion']);
 });
 
 // ==== COMERCIOS ===================

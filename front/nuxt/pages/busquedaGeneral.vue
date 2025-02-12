@@ -12,7 +12,7 @@
                 <div v-for="(product, index) in Object.values(productos)" :key="index"
                     class="p-4 border rounded shadow-md">
                     <div class="flex">
-                        <img :src="product.imagen" class="min-h-[150px] min-w-[140px] border" />
+                        <img :src="`http://localhost:8000/storage/${product.imagen}`" class="h-[240px]  w-[150px] border" />
                         <div class="flex flex-col ml-5">
                             <h2 class="text-xl font-bold mb-2 line-clamp-2 break-all">{{ product.nombre }}</h2>
                             <div class="flex mt-2">

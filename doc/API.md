@@ -1194,6 +1194,37 @@ Esta API permite gestionar los clientes.
       "message": "Producto eliminado de favoritos"
     }
     ```
+
+---
+
+## 6. Obtener productos favoritos con detalles
+
+- **URL:** `/api/cliente/{id}/favoritos-info`
+- **Método:** `GET`
+- **Descripción:** Obtiene la lista de productos favoritos del usuario autenticado con información detallada.
+- **Parámetros:**
+  - `id`: (int, requerido) El ID del cliente cuyos productos favoritos se desean obtener.
+- **Respuesta:**
+
+  - **Código de estado 200 OK**:
+
+    ```json
+    [
+      {
+        "id": 29,
+        "subcategoria_id": 62,
+        "comercio_id": 2,
+        "nombre": "Kit de jardiner\u00eda",
+        "descripcion": "Kit de jardiner\u00eda que incluye herramientas esenciales como pala, rastrillo y guantes, ideal para quienes disfrutan del cuidado de plantas y flores en el hogar.",
+        "precio": 923.08,
+        "stock": null,
+        "imagen": null
+      },
+      {
+        "...."
+      }
+    ]
+    ```
 ---
 
 <!-- COMANDES -->

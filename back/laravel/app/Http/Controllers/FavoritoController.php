@@ -3,15 +3,17 @@
 namespace App\Http\Controllers;
 
 use App\Models\Favorito;
+use App\Models\Producto;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;
 
-    class FavoritoController extends Controller {    
-        
-       // Obtener productos favoritos del usuario autenticado
+class FavoritoController extends Controller
+{
+
+    // Obtener productos favoritos del usuario autenticado
     public function index()
     {
         $favoritos = Favorito::where('cliente_id', Auth::id())->pluck('producto_id');
@@ -40,4 +42,15 @@ use Illuminate\Support\Facades\Auth;
         }
     }
 
+    public function getFavoritosInformacion()
+    {
+        $favoritos = Favorito::where('cliente_id', Auth::id())->pluck('producto_id');
+
+        // Obtener los productos favoritos con más detalles
+        $productos = Producto::whereIn('id', $favoritos)->get();
+
+        return response()->json($productos);
     }
+
+
+}

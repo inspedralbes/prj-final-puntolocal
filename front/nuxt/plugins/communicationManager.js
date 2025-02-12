@@ -392,6 +392,29 @@ export default defineNuxtPlugin(nuxtApp => {
       }
     },
 
+    async getFavoritosInfo(clienteID) {
+      try {
+        const response = await fetch(`${Host}/cliente/${clienteID}/favoritos-info`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': this.authStore.token ? `Bearer ${this.authStore.token}` : '',
+          },
+        });
+
+        if (!response.ok) {
+          console.error(`Error en la petición: ${response.status} ${response.statusText}`);
+          return null;
+        }
+
+        const jsonResponse = await response.json();
+        return jsonResponse;
+      } catch (error) {
+        console.error('Error al realizar la petición:', error);
+        return null;
+      }
+    },
+
     ///////////////////////////// POST //////////////////////////////////
     async register(json) {
       try {
