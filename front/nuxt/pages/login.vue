@@ -1,73 +1,21 @@
-<script setup>
-import { navigateTo } from '#app';
-import { useAuthStore } from '@/stores/authStore';
-import { errorMessages } from 'vue/compiler-sfc';
-definePageMeta({
-    layout: 'default',
-});
-
-
-const authStore = useAuthStore();
-const errorMessage = ref('');
-const formData = reactive({
-    email: '',
-    password: '',
-});
-
-async function login() {
-    const { $communicationManager } = useNuxtApp(); // Acceder al communicationManager
-
-    // Verificar si los campos están vacíos
-    if (!formData.email || !formData.password) {
-        console.error('És necessari completar tots els camps');
-        errorMessage.value = 'És necessari completar tots els camps';
-        return;
-    }
-
-    // Verificar que la contraseña tenga al menos 8 caracteres
-    if (formData.password.length < 8) {
-        console.error('La contrasenya es incorrecta');
-        errorMessage.value = 'La contrasenya es incorrecta';
-        return;
-    }
-    // Llamar al plugin communicationManager para registrar
-    const response = await $communicationManager.login(formData);
-
-    if (response) {
-        authStore.login(response.user, response.token, response.comercio);
-        navigateTo('/');
-    } else {
-        console.log('Hi ha hagut algun error, revisi les seves dades');
-        errorMessage.value = 'Hi ha hagut algun error, revisi les seves dades';
-    }
-}
-
-function loginWithGoogle() {
-    window.location.href = `http://localhost:8000/auth/google`;
-};
-
-onBeforeMount(() => {
-    if (authStore.isAuthenticated) {
-        navigateTo('/');
-    }
-});
-</script>
-
 <template>
-    <div class="bg-gray-100">
-        <div class="flex min-h-[85vh] flex-col justify-center py-12 sm:px-6 lg:px-8">
-            <div class="text-center sm:mx-auto sm:w-full sm:max-w-md">
-                <h1 class="text-3xl font-extrabold text-gray-900">
-                    Inicia sessió
-                </h1>
+    <div class="bg-[#276BF2] w-full h-screen flex flex-col">
+        <div class="flex flex-col items-center justify-center w-full h-[30%]"
+            :class="{ 'move-up': moveUp, 'container-superior': moveUp, 'activated-sup': shown }">
+            <h1 class="font-extrabold text-5xl text-white italic mt-[72vh]">{{ shown ? 'HolaBarri' : displayedText }}</h1>
+            <p class="text-white text-xl tracking-wide subtitulo" :class="{ 'show-lema': showLema, 'activaded-subt': shown }">El teu barri a mà</p>
+        </div>
+        <div v-show="!registerShow" class="bg-white rounded-t-xl flex-grow container-form  overflow-scroll"
+            :class="{ 'move-up-form': showForm, 'container-form': moveUp, 'activated-form': shown }">
+            <div>
+                <h3 class="mt-5 text-center font-bold text-3xl">Benvingut</h3>
             </div>
-            <div class="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
-                <div class="bg-white mx-5 px-4 pb-4 pt-8 sm:rounded-lg sm:px-10 sm:pb-6 sm:shadow rounded-md">
+            <div class="sm:mx-auto sm:w-full sm:max-w-md">
+                <div class="bg-white px-4 pt-8 sm:rounded-lg sm:px-10 sm:shadow rounded-md mb-8">
                     <form @submit.prevent="login" class="space-y-6">
                         <div>
                             <label for="email" class="block text-sm font-medium text-gray-700">Correu
-                                electrònic /
-                                Usuari</label>
+                                electrònic</label>
                             <div class="mt-1">
                                 <input id="email" v-model="formData.email" type="text" data-testid="username"
                                     required=""
@@ -144,7 +92,7 @@ onBeforeMount(() => {
                     </div>
                     <div class="m-auto mt-6 w-fit md:mt-8">
                         <span class="m-auto">No tens compte?
-                            <NuxtLink class="font-semibold text-indigo-600" to="/register">Crear compte</NuxtLink>
+                            <NuxtLink class="font-semibold text-[#276BF2]" to="/register">Crear compte</NuxtLink>
                         </span>
                     </div>
                 </div>
@@ -152,3 +100,135 @@ onBeforeMount(() => {
         </div>
     </div>
 </template>
+
+<script setup>
+definePageMeta({
+    layout: false,
+});
+
+import { navigateTo } from '#app';
+import { useAuthStore } from '@/stores/authStore';
+import { errorMessages } from 'vue/compiler-sfc';
+
+
+const authStore = useAuthStore();
+const errorMessage = ref('');
+const registerShow = ref(false);
+const formData = reactive({
+    email: '',
+    password: '',
+});
+
+const fullText = 'HolaBarri';
+const displayedText = ref('');
+const moveUp = ref(false);
+const showForm = ref(false);
+const showLema = ref(false);
+const shown = ref(true);
+
+async function login() {
+    const { $communicationManager } = useNuxtApp(); // Acceder al communicationManager
+
+    // Verificar si los campos están vacíos
+    if (!formData.email || !formData.password) {
+        console.error('És necessari completar tots els camps');
+        errorMessage.value = 'És necessari completar tots els camps';
+        return;
+    }
+
+    // Verificar que la contraseña tenga al menos 8 caracteres
+    if (formData.password.length < 8) {
+        console.error('La contrasenya es incorrecta');
+        errorMessage.value = 'La contrasenya es incorrecta';
+        return;
+    }
+    // Llamar al plugin communicationManager para registrar
+    const response = await $communicationManager.login(formData);
+
+    if (response) {
+        authStore.login(response.user, response.token, response.comercio);
+        navigateTo('/');
+    } else {
+        console.log('Hi ha hagut algun error, revisi les seves dades');
+        errorMessage.value = 'Hi ha hagut algun error, revisi les seves dades';
+    }
+}
+
+function loginWithGoogle() {
+    window.location.href = `http://localhost:8000/auth/google`;
+};
+
+const typeWriter = (index) => {
+    if (index < fullText.length) {
+        setTimeout(() => {
+            displayedText.value += fullText[index];
+            typeWriter(index + 1);
+        }, 90);
+    }
+};
+
+onMounted(() => {
+    if (!localStorage.getItem("animationShown")) {
+        typeWriter(0);
+        setTimeout(() => {
+            moveUp.value = true;
+            showForm.value = true;
+            setTimeout(() => {
+                showLema.value = true;
+            }, 200);
+        }, fullText.length * 90 + 500);
+        shown.value = false;
+        localStorage.setItem("animationShown", "true");
+    }
+});
+
+onBeforeMount(() => {
+    if (authStore.isAuthenticated) {
+        navigateTo('/');
+    }
+});
+</script>
+
+<style scoped>
+.container-superior {
+    transition: transform 0.8s ease-in-out;
+}
+
+.move-up {
+    transform: translateY(-36.5vh);
+}
+
+.activated-sup {
+    transform: translateY(-36.5vh);
+}
+
+.container-form {
+    transform: translateY(100%);
+    transition: transform 0.8s ease-in-out;
+}
+
+.move-up-form {
+    transform: translateY(0%);
+}
+
+.activated-form {
+    transform: translateY(0%);
+}
+
+.subtitulo {
+    visibility: hidden;
+    opacity: 0;
+    transition: opacity 0.6s ease-in-out;
+    will-change: opacity;
+}
+
+.show-lema {
+    visibility: visible;
+    opacity: 1;
+}
+
+.activaded-subt {
+    visibility: visible;
+    opacity: 1;
+}
+</style>

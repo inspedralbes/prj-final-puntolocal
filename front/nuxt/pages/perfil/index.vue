@@ -77,6 +77,7 @@ async function goToLogout() {
     const { $communicationManager } = useNuxtApp();
     await $communicationManager.logout();
     authStore.logout();
+    localStorage.removeItem('animationShown');
     navigateTo('/login');
 }
 function goToComercio() {

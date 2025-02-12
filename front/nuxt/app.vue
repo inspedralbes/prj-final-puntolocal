@@ -15,6 +15,7 @@
 <style>
 body {
   font-family: "Lato", serif;
+  font-display: swap;
 }
 
 .color-principal-1 {
@@ -40,6 +41,21 @@ body {
 .color-secundario-3 {
   color: #F2F2F2;
 }
+
+.page-enter-active,
+.page-leave-active {
+  transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
+}
+
+.page-enter-from {
+  opacity: 0;
+  transform: translateY(-20px);
+}
+
+.page-leave-to {
+  opacity: 0;
+  transform: translateY(20px);
+}
 </style>
 
 <script setup>
@@ -52,22 +68,28 @@ const route = useRoute();
 const router = useRouter();
 const socket = io("http://localhost:8001");
 
-if (auth?.comercio) {
-  socket.on("connect", () => {
-    socket.emit("identificarUsuario", { user_id: auth.user.id });
-  });
+onMounted(() => {
+  if (auth?.comercio) {
+    socket.on("connect", () => {
+      socket.emit("identificarUsuario", { user_id: auth.user.id });
+    });
 
-  socket.on("nuevaOrdenRecibida", (orden) => {
-    console.log(orden);
-    if (confirm("Nova comanda rebuda, vols veure'l?")) {
-      setTimeout(() => {
-        if (orden?.id) {
-          router.push(`/admin/comandes/${orden.id}`);
-        }
-      }, 500);
-    }
-  });
-}
+    socket.on("nuevaOrdenRecibida", (orden) => {
+      console.log(orden);
+      if (confirm("Nova comanda rebuda, vols veure'l?")) {
+        setTimeout(() => {
+          if (orden?.id) {
+            router.push(`/admin/comandes/${orden.id}`);
+          }
+        }, 500);
+      }
+    });
+  }
+})
+
+window.addEventListener('beforeunload', () => {
+  localStorage.removeItem("animationShown");
+});
 
 function test() {
   socket.emit("test");

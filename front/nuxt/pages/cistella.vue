@@ -1,6 +1,6 @@
 <script setup>
 definePageMeta({
-    layout: false,
+    layout: false
 });
 
 import { io } from "socket.io-client";
