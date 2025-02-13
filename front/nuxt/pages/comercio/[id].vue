@@ -30,7 +30,7 @@
             <div id="productos" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-[30px]">
                 <div v-for="(producto, index) in filteredProductos" :key="producto.producto_id"
                     class="border rounded-lg p-4 shadow-md hover:shadow-lg transition">
-                    <img :src="producto.imagen ? `http://localhost:8000/storage/${producto.imagen}` : 'http://localhost:8000/storage/productos/default-image.webp'"
+                    <img :src="producto.imagen ? `${baseUrl}/storage/${producto.imagen}` : `${baseUrl}/storage/productos/default-image.webp`"
                         alt="Imagen del producto" class="w-full h-48 object-cover mb-4 rounded-md" />
                     <h3 class="font-semibold text-xl mb-2">{{ producto.nombre }}</h3>
                     <p class="text-gray-600 mb-4">{{ producto.descripcion }}</p>
@@ -107,6 +107,10 @@ import { useNuxtApp } from "#app";
 import { ref, onMounted, computed } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import loading from "../../components/loading.vue";
+
+import { useRuntimeConfig } from "#imports";
+const config = useRuntimeConfig();
+const baseUrl = config.public.apiBaseUrl;
 
 const route = useRoute();
 const productos = ref([]);

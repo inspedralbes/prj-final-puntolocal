@@ -34,7 +34,7 @@
                     <h1 class="text-xl font-semibold text-gray-900 dark:text-white mb-4">Últimes tendències</h1>
                     <div id="productos" class="grid grid-cols-2 gap-4">
                         <productoComp v-for="(producto, index) in productos" :key="index" :id="producto.id"
-                            :img="producto.imagen ? `http://localhost:8000/storage/${producto.imagen}` : 'http://localhost:8000/storage/productos/default-image.webp'"
+                            :img="producto.imagen ? `${baseUrl}/storage/${producto.imagen}` : `${baseUrl}/storage/productos/default-image.webp`"
                             :title="producto.nombre" :price="producto.precio" :comercio="producto.comercio"
                             price-class="text-gray-900 dark:text-white" @click="mostrarIdProducto(producto.id)">
                         </productoComp>
@@ -49,6 +49,10 @@
     import { ref, onMounted, watch } from "vue";
     import { useRouter } from "vue-router";
     import { useAuthStore } from "~/stores/authStore";
+
+    import { useRuntimeConfig } from "#imports";
+    const config = useRuntimeConfig();
+    const baseUrl = config.public.apiBaseUrl;
 
     const productos = ref([]);
     const categorias = ref([]);

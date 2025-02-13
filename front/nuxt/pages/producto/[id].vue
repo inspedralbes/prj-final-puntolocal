@@ -45,7 +45,7 @@
         </div>
 
         <div id="imgs" class="h-[400px] w-full max-w-[900px] mx-auto overflow-hidden">
-            <img :src="producto?.imagen ? `http://localhost:8000/storage/${producto.imagen}` : 'http://localhost:8000/storage/productos/default-image.webp'"
+            <img :src="producto?.imagen ? `${baseUrl}/storage/${producto.imagen}` : `${baseUrl}/storage/productos/default-image.webp`"
                 alt="Imagen del producto" class="h-full w-full object-contain" />
         </div>
 
@@ -104,6 +104,10 @@
     const selectedColor = ref(null);
     const { $communicationManager } = useNuxtApp();
 
+    import { useRuntimeConfig } from "#imports";
+    const config = useRuntimeConfig();
+    const baseUrl = config.public.apiBaseUrl;
+    
     const fetchProducto = async () => {
         try {
             const id = route.params.id;

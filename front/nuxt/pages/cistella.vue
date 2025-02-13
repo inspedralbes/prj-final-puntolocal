@@ -3,6 +3,11 @@ definePageMeta({
     layout: false,
 });
 
+
+import { useRuntimeConfig } from "#imports";
+const config = useRuntimeConfig();
+const baseUrl = config.public.apiBaseUrl;
+
 import { io } from "socket.io-client";
 import { computed, onMounted, ref } from 'vue';
 import { useAuthStore } from '@/stores/authStore';
@@ -213,7 +218,7 @@ async function login() {
 }
 
 function loginWithGoogle() {
-    window.location.href = `http://localhost:8000/auth/google`;
+    window.location.href = `${baseUrl}/auth/google`;
 };
 
 </script>
@@ -471,7 +476,7 @@ function loginWithGoogle() {
                             <div v-for="(items) in groupedCesta">
                                 <div v-for="item in items" :key="item.id" class="flex mb-1">
                                     <div id="contain-image" class="mr-4 min-w-[70px] min-h-[70px]">
-                                        <img :src="`http://localhost:8000/storage/${item.imagen}`" alt="" />
+                                        <img :src="`${baseUrl}/storage/${item.imagen}`" alt="" />
                                     </div>
                                     <div class="flex flex-col w-full justify-center">
                                         <div class="flex justify-between">
@@ -625,7 +630,7 @@ function loginWithGoogle() {
                             </svg>
                         </button>
                         <div id="contain-image" class="mr-4 min-w-[80px] min-h-[100px]">
-                            <img :src="`http://localhost:8000/storage/${item.imagen}`" alt="" />
+                            <img :src="`${baseUrl}/storage/${item.imagen}`" alt="" />
                         </div>
                         <div class="flex flex-col w-full justify-between">
                             <div class="flex justify-between">

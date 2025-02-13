@@ -6,6 +6,10 @@ definePageMeta({
     layout: 'admin',
 });
 
+import { useRuntimeConfig } from "#imports";
+const config = useRuntimeConfig();
+const baseUrl = config.public.apiBaseUrl;
+
 let formData = reactive({});
 let formComercio = reactive({});
 const authStore = useAuthStore();
@@ -25,7 +29,7 @@ async function getComercioData() {
         if (response.comercio.imagenes) {
             try {
                 const parsed = JSON.parse(response.comercio.imagenes);
-                response.comercio.imagenes = parsed.map(img => `http://localhost:8000/storage/${img}`);
+                response.comercio.imagenes = parsed.map(img => `${baseUrl}/storage/${img}`);
             } catch (error) {
                 console.error("Error parsing imagenes:", error);
             }
@@ -129,7 +133,7 @@ function handleImageUpload(event) {
 async function removeImage(index) {
     const { $communicationManager } = useNuxtApp();
     const fullUrl = formComercio.imagenes[index];
-    const prefix = 'http://localhost:8000/storage/';
+    const prefix = `${baseUrl}/storage/`;
     const imagePath = fullUrl.replace(prefix, '');
 
     const response = await $communicationManager.deleteComercioImagen(authStore.comercio.id, imagePath);

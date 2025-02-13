@@ -28,7 +28,7 @@
             <h2 class="text-xl font-bold mb-4">Últimes tendències</h2>
             <div class="grid grid-cols-2 gap-4">
                 <producto-comp v-for="producto in productos" :key="producto.id"
-                    :img="producto.imagen ? `http://localhost:8000/storage/${producto.imagen}` : 'http://localhost:8000/storage/productos/default-image.webp'"
+                    :img="producto.imagen ? `${baseUrl}/storage/${producto.imagen}` : `${baseUrl}/storage/productos/default-image.webp`"
                     :title="producto.nombre" :price="producto.precio" :comercio="producto.comercio_nombre" />
             </div>
         </div>
@@ -41,6 +41,10 @@
     import loading from '../../components/loading.vue';
     import { useAuthStore } from '../../stores/authStore';
     import productoComp from '../../components/productoComp.vue';
+    
+    import { useRuntimeConfig } from "#imports";
+    const config = useRuntimeConfig();
+    const baseUrl = config.public.apiBaseUrl;
     
     const route = useRoute();
     const router = useRouter();

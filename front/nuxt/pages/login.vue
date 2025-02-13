@@ -6,6 +6,9 @@ definePageMeta({
     layout: 'default',
 });
 
+import { useRuntimeConfig } from "#imports";
+const config = useRuntimeConfig();
+const baseUrl = config.public.apiBaseUrl;
 
 const authStore = useAuthStore();
 const errorMessage = ref('');
@@ -43,7 +46,7 @@ async function login() {
 }
 
 function loginWithGoogle() {
-    window.location.href = `http://localhost:8000/auth/google`;
+    window.location.href = `${baseUrl}/auth/google`;
 };
 
 onBeforeMount(() => {
