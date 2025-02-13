@@ -66,8 +66,11 @@
 </template>
 
 <script setup>
+import { ref } from 'vue';
+import { useRouter } from 'vue-router';
 
 const search = ref('');
+const router = useRouter();
 
 function goSearch() {
     if (search.value.trim() !== '') {
@@ -75,12 +78,9 @@ function goSearch() {
     }
 }
 
-
 function redirectToMap() {
-    this.$router.push('/mapa');
+    router.push('/mapa');
 }
-
-
 </script>
 
 <style>
