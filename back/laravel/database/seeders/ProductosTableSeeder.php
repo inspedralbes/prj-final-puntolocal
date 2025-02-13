@@ -126,16 +126,19 @@ class ProductosTableSeeder extends Seeder
 
         $cantidad = 30;
 
-        
+        $productosConImagen = array_rand(range(0, $cantidad - 1), 2);
+
         for ($i = 0; $i < $cantidad; $i++) {
-            $prodID = $faker->numberBetween(1, 50);
+            $prodID = $faker->numberBetween(0, count($productos) - 1);
+
             DB::table("productos")->insert([
                 "subcategoria_id" => $faker->numberBetween(1, 105),
                 "comercio_id" => $faker->numberBetween(8, 12),
                 "nombre" => $productos[$prodID],
-                "descripcion" => $descripciones[$prodID],
+                "descripcion" => $faker->sentence(15),
                 "precio" => $faker->randomFloat(2, 5, 1000),
-                "visible" => $faker->numberBetween(0,1)
+                "visible" => $faker->numberBetween(0, 1),
+                "imagen" => in_array($i, $productosConImagen) ? "productos/pepa.jpg" : null,
             ]);
         }
     }
