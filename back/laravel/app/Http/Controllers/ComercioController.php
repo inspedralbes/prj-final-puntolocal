@@ -145,4 +145,6 @@ class ComercioController extends Controller
         }
         return response()->json(['usuario_id' => $comercio->id], 200);
     }
+
+    
 }
