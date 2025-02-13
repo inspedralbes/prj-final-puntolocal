@@ -52,6 +52,10 @@
 
 
 <script setup>
+definePageMeta({
+    layout: 'footer-only'
+});
+
 import { ref, onMounted } from "vue";
 import { useRouter, useRoute } from "vue-router";
 import Loading from "../../../components/loading.vue";

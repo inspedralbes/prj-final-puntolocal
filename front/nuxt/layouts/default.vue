@@ -5,14 +5,8 @@
                 <div class="w-full mx-auto bg-white flex justify-around items-center">
                     <input class="px-5 py-2 mx-5 w-full rounded-md border bg-gray-50 focus:outline-none focus:ring-0"
                         type="text" name="search" id="search" placeholder="Buscar...">
-                    <div class="rounded-full bg-[#447EF2] p-2">
-                        <!-- <svg @click="redirectToMap" width="2em" height="2em" viewBox="0 0 24 24" fill="none"
-                            xmlns="http://www.w3.org/2000/svg">
-                            <path
-                                d="M5.7 15C4.03377 15.6353 3 16.5205 3 17.4997C3 19.4329 7.02944 21 12 21C16.9706 21 21 19.4329 21 17.4997C21 16.5205 19.9662 15.6353 18.3 15M12 9H12.01M18 9C18 13.0637 13.5 15 12 18C10.5 15 6 13.0637 6 9C6 5.68629 8.68629 3 12 3C15.3137 3 18 5.68629 18 9ZM13 9C13 9.55228 12.5523 10 12 10C11.4477 10 11 9.55228 11 9C11 8.44772 11.4477 8 12 8C12.5523 8 13 8.44772 13 9Z"
-                                stroke="#FFFFFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-                        </svg> -->
-                        <svg @click="redirectToMap" fill="#FFFFFF" width="1.2em" height="1.2em" version="1.1"
+                    <div class="rounded-full bg-[#447EF2] p-2 cursor-pointer" @click="redirectToMap">
+                        <svg fill="#FFFFFF" width="1.2em" height="1.2em" version="1.1"
                             id="Layer_1I" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
                             viewBox="0 0 512 512" xml:space="preserve" stroke="#FFFFFF">
                             <g id="SVGRepo_bgCarrier" stroke-width="0"></g>

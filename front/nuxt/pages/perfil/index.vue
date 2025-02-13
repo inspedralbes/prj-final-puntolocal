@@ -58,7 +58,6 @@ import Loading from "../../../components/loading.vue";
 const authStore = useAuthStore();
 const hasComercio = ref(false);
 const loading = ref(true);
-console.log(authStore.user);
 const user = authStore.user;
 
 onMounted(async () => {
@@ -79,17 +78,12 @@ async function checkComercio() {
         const { $communicationManager } = useNuxtApp();
         const res = await $communicationManager.checkUserHasComercio(authStore.user.id);
 
-        if (res && res.comercio) {
-            console.log('Tiene comercio');
+        if (res && res.success) {
             authStore.setComercio(res.comercio);
             return true
         } else {
-            console.log('No tiene comercio')
             return false
         }
-    } else {
-        console.log('No está logueado')
-        return false
     }
 }
 async function goToLogout() {

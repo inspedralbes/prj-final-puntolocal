@@ -22,11 +22,11 @@
                         <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
                         <g id="SVGRepo_iconCarrier">
                             <path d="M8 12L8 8C8 5.79086 9.79086 4 12 4V4C14.2091 4 16 5.79086 16 8L16 12"
-                                :stroke="route.path === '/cistella' ? '#276BF2' : '#000000'" stroke-width="2"
+                                :stroke="route.path.startsWith('/cistella') ? '#276BF2' : '#000000'" stroke-width="2"
                                 stroke-linecap="round"></path>
                             <path
                                 d="M3.69435 12.6678C3.83942 10.9269 3.91196 10.0565 4.48605 9.52824C5.06013 9 5.9336 9 7.68053 9H16.3195C18.0664 9 18.9399 9 19.514 9.52824C20.088 10.0565 20.1606 10.9269 20.3057 12.6678L20.8195 18.8339C20.904 19.8474 20.9462 20.3542 20.6491 20.6771C20.352 21 19.8435 21 18.8264 21H5.1736C4.15655 21 3.64802 21 3.35092 20.6771C3.05382 20.3542 3.09605 19.8474 3.18051 18.8339L3.69435 12.6678Z"
-                                :stroke="route.path === '/cistella' ? '#276BF2' : '#000000'" stroke-width="2"></path>
+                                :stroke="route.path.startsWith('/cistella') ? '#276BF2' : '#000000'" stroke-width="2"></path>
                         </g>
                     </svg>
                     <p class="text-sm" :class="route.path === '/cistella' ? 'text-[#276BF2]' : 'text-[#000000]'">Cistella</p>
@@ -36,11 +36,11 @@
                         stroke="black">
                         <path
                             d="M5 21C5 17.134 8.13401 14 12 14C15.866 14 19 17.134 19 21M16 7C16 9.20914 14.2091 11 12 11C9.79086 11 8 9.20914 8 7C8 4.79086 9.79086 3 12 3C14.2091 3 16 4.79086 16 7Z"
-                            :stroke="route.path === '/perfil' ? '#276BF2' : '#000000'" stroke-width="2"
+                            :stroke="route.path.startsWith('/perfil') ? '#276BF2' : '#000000'" stroke-width="2"
                             stroke-linecap="round" stroke-linejoin="round">
                         </path>
                     </svg>
-                    <p class="text-sm" :class="route.path === '/perfil' ? 'text-[#276BF2]' : 'text-[#000000]'">Perfil</p>
+                    <p class="text-sm" :class="route.path.startsWith('/perfil') ? 'text-[#276BF2]' : 'text-[#000000]'">Perfil</p>
                 </NuxtLink>
             </nav>
         </footer>

@@ -621,6 +621,7 @@ async function crearProducto() {
         console.log(`${key}:`, value);
     }
     const result = await $communicationManager.createProducto(formData);
+    console.log(formData);
 
     if (result && result.success) {
         toggleCard('crear');

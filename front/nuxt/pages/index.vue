@@ -116,7 +116,6 @@ watch(isDarkMode, (newValue) => {
 async function fetchProductos() {
     try {
         const response = await $communicationManager.getProductos();
-        console.log(response);
         if (response && response.data) {
             productos.value = response.data;
         } else {

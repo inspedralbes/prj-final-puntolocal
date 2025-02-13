@@ -9,7 +9,7 @@ import { ref } from 'vue';
 import Loading from "@/components/loading.vue";
 
 definePageMeta({
-    layout: 'default',
+    layout: 'footer-only'
 });
 
 const authStore = useAuthStore();

@@ -5,7 +5,8 @@ export default defineNuxtRouteMiddleware((to) => {
 
   if (!authStore.isAuthenticated && to.path !== '/login' && to.path !== '/register') {
     return navigateTo('/login');
-  } else if (!authStore.comercio && to.path !== '/admin') {
-    return navigateTo('/');
   }
+  // else if (!authStore.comercio && to.path !== '/admin') {
+  //   return navigateTo('/');
+  // }
 });
