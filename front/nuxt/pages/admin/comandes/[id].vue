@@ -4,7 +4,7 @@
             class="pl-4 pt-4 bg-white block sm:flex items-center justify-between border-b border-gray-200 lg:mt-1.5 dark:bg-gray-800 dark:border-gray-700">
             <div class="w-full mt-16">
                 <div class="mb-4 flex items-center">
-                    <div @click="goBack" class="text-xl text-gray-700 dark:text-gray-300 cursor-pointer">
+                    <div @click="navigateTo('/admin/comandes')" class="text-xl text-gray-700 dark:text-gray-300 cursor-pointer">
                         <svg width="1.5em" height="1.5em" viewBox="0 0 1024 1024" class="icon"
                             xmlns="http://www.w3.org/2000/svg" fill="#000000">
                             <g id="SVGRepo_bgCarrier" stroke-width="0"></g>

@@ -5,6 +5,8 @@
     href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap"
     rel="stylesheet">
   <div>
+    <Alert v-if="showAlert" :title="'Nova comanda rebuda'" :text="'Vols veure\'l?'" @confirmed="handleConfirmed"
+      @canceled="handleCanceled" />
     <NuxtRouteAnnouncer />
     <NuxtLayout>
       <NuxtPage />
@@ -46,28 +48,44 @@ body {
 import { useAuthStore } from '../../stores/authStore';
 import { useRoute, useRouter } from "vue-router";
 import { io } from "socket.io-client";
+import Alert from "@/components/Alert.vue";
 
 const auth = useAuthStore();
 const route = useRoute();
 const router = useRouter();
 const socket = io("http://localhost:8001");
+const showAlert = ref(false);
+const orden = ref(null);
 
 if (auth?.comercio) {
   socket.on("connect", () => {
     socket.emit("identificarUsuario", { user_id: auth.user.id });
   });
 
-  socket.on("nuevaOrdenRecibida", (orden) => {
-    console.log(orden);
-    if (confirm("Nova comanda rebuda, vols veure'l?")) {
-      setTimeout(() => {
-        if (orden?.id) {
-          router.push(`/admin/comandes/${orden.id}`);
-        }
-      }, 500);
-    }
+  socket.on("nuevaOrdenRecibida", (newOrden) => {
+    console.log(newOrden);
+    orden.value = newOrden;
+    showAlert.value = true;
   });
 }
+
+// Función para manejar la confirmación
+const handleConfirmed = () => {
+  console.log("Usuari va dir SÍ");
+  // Aquí haces la redirección cuando el usuario confirma
+  console.log('orden',orden.value)
+  setTimeout(() => {
+    if (orden?.value?.id) {
+      router.push(`/admin/comandes/${orden?.value?.id}`);
+    }
+  }, 500);
+  showAlert.value = false;  // Ocultar la alerta después de la acción
+};
+
+// Función para manejar la cancelación
+const handleCanceled = () => {
+  showAlert.value = false; // Ocultar la alerta después de la acción
+};
 
 function test() {
   socket.emit("test");
