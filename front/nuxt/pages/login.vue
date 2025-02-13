@@ -1,61 +1,5 @@
 <script setup>
-import { navigateTo } from '#app';
-import { useAuthStore } from '@/stores/authStore';
-import { errorMessages } from 'vue/compiler-sfc';
-definePageMeta({
-    layout: 'default',
-});
 
-import { useRuntimeConfig } from "#imports";
-const config = useRuntimeConfig();
-const baseUrl = config.public.apiBaseUrl;
-
-const authStore = useAuthStore();
-const errorMessage = ref('');
-const formData = reactive({
-    email: '',
-    password: '',
-});
-
-async function login() {
-    const { $communicationManager } = useNuxtApp(); // Acceder al communicationManager
-
-    // Verificar si los campos están vacíos
-    if (!formData.email || !formData.password) {
-        console.error('És necessari completar tots els camps');
-        errorMessage.value = 'És necessari completar tots els camps';
-        return;
-    }
-
-    // Verificar que la contraseña tenga al menos 8 caracteres
-    if (formData.password.length < 8) {
-        console.error('La contrasenya es incorrecta');
-        errorMessage.value = 'La contrasenya es incorrecta';
-        return;
-    }
-    // Llamar al plugin communicationManager para registrar
-    const response = await $communicationManager.login(formData);
-
-    if (response) {
-        authStore.login(response.user, response.token, response.comercio);
-        const res = await $communicationManager.getFavoritos(response.user.id);
-        authStore.setFavoritos(res);
-        navigateTo('/');
-    } else {
-        console.log('Hi ha hagut algun error, revisi les seves dades');
-        errorMessage.value = 'Hi ha hagut algun error, revisi les seves dades';
-    }
-}
-
-function loginWithGoogle() {
-    window.location.href = `${baseUrl}/auth/google`;
-};
-
-onBeforeMount(() => {
-    if (authStore.isAuthenticated) {
-        navigateTo('/');
-    }
-});
 </script>
 
 <template>
@@ -65,7 +9,7 @@ onBeforeMount(() => {
             <h1 class="font-extrabold text-5xl text-white italic mt-[72vh]">{{ shown ? 'HolaBarri' : displayedText }}</h1>
             <p class="text-white text-xl tracking-wide subtitulo" :class="{ 'show-lema': showLema, 'activaded-subt': shown }">El teu barri a mà</p>
         </div>
-        <div v-show="!registerShow" class="bg-white rounded-t-xl flex-grow container-form  overflow-scroll"
+        <div class="bg-white rounded-t-xl flex-grow container-form  overflow-scroll"
             :class="{ 'move-up-form': showForm, 'container-form': moveUp, 'activated-form': shown }">
             <div>
                 <h3 class="mt-5 text-center font-bold text-3xl">Benvingut</h3>
@@ -170,10 +114,12 @@ import { navigateTo } from '#app';
 import { useAuthStore } from '@/stores/authStore';
 import { errorMessages } from 'vue/compiler-sfc';
 
+import { useRuntimeConfig } from "#imports";
+const config = useRuntimeConfig();
+const baseUrl = config.public.apiBaseUrl;
 
 const authStore = useAuthStore();
 const errorMessage = ref('');
-const registerShow = ref(false);
 const formData = reactive({
     email: '',
     password: '',
@@ -207,6 +153,8 @@ async function login() {
 
     if (response) {
         authStore.login(response.user, response.token, response.comercio);
+        const res = await $communicationManager.getFavoritos(response.user.id);
+        authStore.setFavoritos(res);
         navigateTo('/');
     } else {
         console.log('Hi ha hagut algun error, revisi les seves dades');
@@ -215,7 +163,7 @@ async function login() {
 }
 
 function loginWithGoogle() {
-    window.location.href = `http://localhost:8000/auth/google`;
+    window.location.href = `${baseUrl}/auth/google`;
 };
 
 const typeWriter = (index) => {
@@ -239,12 +187,6 @@ onMounted(() => {
         }, fullText.length * 90 + 500);
         shown.value = false;
         localStorage.setItem("animationShown", "true");
-    }
-});
-
-onBeforeMount(() => {
-    if (authStore.isAuthenticated) {
-        navigateTo('/');
     }
 });
 </script>

@@ -44,23 +44,10 @@ body {
   color: #F2F2F2;
 }
 
-.page-enter-active,
-.page-leave-active {
-  transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
-}
-
-.page-enter-from {
-  opacity: 0;
-  transform: translateY(-20px);
-}
-
-.page-leave-to {
-  opacity: 0;
-  transform: translateY(20px);
-}
 </style>
 
 <script setup>
+import { onMounted } from 'vue';
 import { useAuthStore } from '../../stores/authStore';
 import { useRoute, useRouter } from "vue-router";
 import { io } from "socket.io-client";
@@ -84,7 +71,7 @@ onMounted(() => {
     orden.value = newOrden;
     showAlert.value = true;
   });
-}
+}});
 
 // Función para manejar la confirmación
 const handleConfirmed = () => {

@@ -4,12 +4,11 @@
             <div class="mx-auto flex max-w-7xl items-center justify-between p-2 py-4 lg:px-8" aria-label="Global">
                 <div class="w-full mx-auto bg-white flex justify-around items-center">
                     <input class="px-5 py-2 mx-5 w-full rounded-md border bg-gray-50 focus:outline-none focus:ring-0"
-                        type="text" name="search" id="search" placeholder="Buscar..."
-                        v-model="search" @keyup.enter="goSearch()">
+                        type="text" name="search" id="search" placeholder="Buscar..." v-model="search"
+                        @keyup.enter="goSearch()">
                     <div class="rounded-full bg-[#447EF2] p-2 cursor-pointer" @click="redirectToMap">
-                        <svg fill="#FFFFFF" width="1.2em" height="1.2em" version="1.1"
-                            id="Layer_1I"
-                        xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+                        <svg fill="#FFFFFF" width="1.2em" height="1.2em" version="1.1" id="Layer_1I"
+                            xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
                             viewBox="0 0 512 512" xml:space="preserve" stroke="#FFFFFF">
                             <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
                             <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
@@ -56,7 +55,8 @@
                                 :stroke="route.path === '/cistella' ? '#276BF2' : '#000000'" stroke-width="2"></path>
                         </g>
                     </svg>
-                    <p class="text-sm" :class="route.path === '/cistella' ? 'text-[#276BF2]' : 'text-[#000000]'">Cistella</p>
+                    <p class="text-sm" :class="route.path === '/cistella' ? 'text-[#276BF2]' : 'text-[#000000]'">
+                        Cistella</p>
                 </NuxtLink>
                 <NuxtLink to="/favoritos" class="flex flex-col items-center text-gray-300 hover:text-white">
                     <svg width="1.5em" height="1.5em" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2"
@@ -65,6 +65,8 @@
                             d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z">
                         </path>
                     </svg>
+                    <p class="text-sm" :class="route.path === '/favoritos' ? 'text-[#276BF2]' : 'text-[#000000]'">
+                        Favorits</p>
                 </NuxtLink>
                 <NuxtLink to="/perfil" class="flex flex-col items-center text-gray-300 hover:text-white">
                     <svg class="w-6 h-6 mb-1" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
@@ -75,7 +77,8 @@
                             stroke-linecap="round" stroke-linejoin="round">
                         </path>
                     </svg>
-                    <p class="text-sm" :class="route.path === '/perfil' ? 'text-[#276BF2]' : 'text-[#000000]'">Perfil</p>
+                    <p class="text-sm" :class="route.path === '/perfil' ? 'text-[#276BF2]' : 'text-[#000000]'">Perfil
+                    </p>
                 </NuxtLink>
             </nav>
         </footer>

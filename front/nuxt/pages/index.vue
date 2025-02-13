@@ -65,13 +65,13 @@
                         <productoComp v-for="(producto, index) in productos" :key="index" :id="producto.id"
                             :img="producto.imagen ? `http://localhost:8000/storage/${producto.imagen}` : 'http://localhost:8000/storage/productos/default-image.webp'"
                             :title="producto.nombre" :price="producto.precio" :comercio="producto.comercio"
-                            :customClass="'w-full'" price-class="text-gray-900 dark:text-white"
+                            :customClass="'w-[170px]'" price-class="text-gray-900 dark:text-white"
                             @click="mostrarIdProducto(producto.id)">
                         </productoComp>
                     </div>
                     <h1 class="text-xl mt-5 font-semibold text-gray-900 dark:text-white mb-4 ml-4">Per a tu</h1>
                     <div id="productos" class="grid grid-cols-2 gap-4 px-4">
-                        <productoComp v-for="(producto, index) in productos" :key="index" :id="producto.id"
+                        <productoComp v-for="(producto, index) in productos" :key="index" :productoId="producto.id"
                             :img="producto.imagen ? `${baseUrl}/storage/${producto.imagen}` : `${baseUrl}/storage/productos/default-image.webp`"
                             :title="producto.nombre" :price="producto.precio" :comercio="producto.comercio"
                             :customClass="'w-full'" price-class="text-gray-900 dark:text-white"
