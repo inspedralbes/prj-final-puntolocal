@@ -38,6 +38,8 @@ async function login() {
 
     if (response) {
         authStore.login(response.user, response.token, response.comercio);
+        const res = await $communicationManager.getFavoritos(response.user.id);
+        authStore.setFavoritos(res);
         navigateTo('/');
     } else {
         console.log('Hi ha hagut algun error, revisi les seves dades');
