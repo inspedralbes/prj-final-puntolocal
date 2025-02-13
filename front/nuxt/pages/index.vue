@@ -46,74 +46,103 @@
 </template>
 
 <script setup>
-    import { ref, onMounted, watch } from "vue";
-    import { useRouter } from "vue-router";
-    import { useAuthStore } from "~/stores/authStore";
+import { ref, onMounted, watch } from "vue";
+import { useRouter } from "vue-router";
+import { useAuthStore } from "~/stores/authStore";
 
-    import { useRuntimeConfig } from "#imports";
-    const config = useRuntimeConfig();
-    const baseUrl = config.public.apiBaseUrl;
+import { useRuntimeConfig } from "#imports";
+const config = useRuntimeConfig();
+const baseUrl = config.public.apiBaseUrl;
 
-    const productos = ref([]);
-    const categorias = ref([]);
-    const router = useRouter();
-    const authStore = useAuthStore();
-    const { $communicationManager } = useNuxtApp();
-    const isDarkMode = ref(window.matchMedia("(prefers-color-scheme: dark)").matches);
+const productos = ref([]);
+const categorias = ref([]);
+const router = useRouter();
+const authStore = useAuthStore();
+const { $communicationManager } = useNuxtApp();
+const isDarkMode = ref(window.matchMedia("(prefers-color-scheme: dark)").matches);
+import Swal from 'sweetalert2'
 
-    onMounted(() => {
-        const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
-        const handleChange = (event) => {
-            isDarkMode.value = event.matches;
-        };
-        mediaQuery.addEventListener("change", handleChange);
+onMounted(() => {
+    const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
+    const handleChange = (event) => {
+        isDarkMode.value = event.matches;
+    };
+    mediaQuery.addEventListener("change", handleChange);
 
-        document.body.classList.toggle('dark', isDarkMode.value);
+    document.body.classList.toggle('dark', isDarkMode.value);
 
-        fetchProductos();
-        fetchCategorias();
-    });
+    fetchProductos();
+    fetchCategorias();
+});
 
-    watch(isDarkMode, (newValue) => {
-        document.body.classList.toggle('dark', newValue);
-    });
+watch(isDarkMode, (newValue) => {
+    document.body.classList.toggle('dark', newValue);
+});
 
-    async function fetchProductos() {
-        try {
-            const response = await $communicationManager.getProductos();
-            console.log(response);
-            if (response && response.data) {
-                productos.value = response.data;
+const mostrarAlerta = () => {
+    Swal.fire({
+        title: "Nova comanda rebuda",
+        text: "Vols veure'l?",
+        icon: "info",
+        position: "top-end",
+        showConfirmButton: true,
+        showCancelButton: true,
+        confirmButtonText: "Sí",
+        cancelButtonText: "No",
+        toast: true,
+        timer: 3000,
+        timerProgressBar: true,
+        width: "320px", // 🔹 Ajusta el tamaño
+        customClass: {
+            popup: "horizontal-alert", // Clases personalizadas
+            icon: "small-icon", // Clases para el icono
+        },
+    })
+        .then((result) => {
+            if (result.isConfirmed) {
+                console.log("Usuari va dir SÍ");
             } else {
-                console.error("Error al obtener los productos");
+                console.log("Usuari va dir NO");
             }
-        } catch (error) {
-            console.error("Error en la petición:", error);
+        });
+};
+
+async function fetchProductos() {
+    try {
+        const response = await $communicationManager.getProductos();
+        console.log(response);
+        if (response && response.data) {
+            productos.value = response.data;
+        } else {
+            console.error("Error al obtener los productos");
         }
+    } catch (error) {
+        console.error("Error en la petición:", error);
     }
+}
 
-    async function fetchCategorias() {
-        try {
-            const responseCategorias = await $communicationManager.getCategoriasGenerales();
-            if (responseCategorias) {
-                categorias.value = responseCategorias;
-            } else {
-                console.error("Error al obtener las categorías");
-            }
-        } catch (error) {
-            console.error("Error en la petición:", error);
+async function fetchCategorias() {
+    try {
+        const responseCategorias = await $communicationManager.getCategoriasGenerales();
+        if (responseCategorias) {
+            categorias.value = responseCategorias;
+        } else {
+            console.error("Error al obtener las categorías");
         }
+    } catch (error) {
+        console.error("Error en la petición:", error);
     }
+}
 
-    function irACategoria(id) {
-        router.push(`/categorias/${id}`);
-    }
+function irACategoria(id) {
+    router.push(`/categorias/${id}`);
+}
 
-    function mostrarIdProducto(id) {
-        router.push(`/producto/${id}`);
-    }
+function mostrarIdProducto(id) {
+    router.push(`/producto/${id}`);
+}
 </script>
 
 <style scoped>
-    @import '../assets/index.css';
+/* @import '../assets/index.css'; */
 </style>
