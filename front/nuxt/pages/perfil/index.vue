@@ -3,21 +3,21 @@
         <Loading />
     </div>
     <div v-else>
-        <header class="flex items-center p-4 max-h-[75px]">
-            <div class="flex items-center">
-                <h3 class="text-2xl ml-4">Perfil</h3>
+        <header class="flex items-center p-4 max-h-[75px] bg-[#276BF2]">
+            <div class="flex items-center text-center">
+                <h3 class="text-2xl ml-4 text-white">Perfil</h3>
             </div>
         </header>
-        <div class="flex flex-col items-center bg-gray-100 min-h-screen">
+        <div class="flex flex-col items-center bg-white min-h-screen">
             <div id="contain-perfil"
-                class="bg-white w-full flex flex-col py-4 border-b rounded-b-xl mb-2 items-center">
-                <div class="w-[100px] h-[100px] bg-gray-200 rounded-full overflow-hidden">
+                class=" bg-[#276BF2] w-full flex flex-col py-4 border-b rounded-b-xl mb-2 items-center">
+                <div class="w-[100px] h-[100px] bg-white rounded-full overflow-hidden">
                     <img src="#" alt="">
                 </div>
-                <p class="mt-2 text-xl">{{ user.name }} {{ user.apellidos }}</p>
+                <p class="mt-2 text-xl text-white">{{ user.name }} {{ user.apellidos }}</p>
             </div>
 
-            <div class="bg-white shadow-lg rounded-2xl py-6 px-4 w-full max-w-md text-center">
+            <div class="py-6 px-4 w-full max-w-md text-center">
                 <div class="space-y-4">
                     <button class="w-full bg-[#447EF2] text-white py-2 rounded-md hover:bg-blue-600" @click="goToInfo">
                         Información personal
@@ -27,12 +27,12 @@
                         Editar informació
                     </button>
 
-                    <button class="w-full bg-[#276BF2] text-white py-2 rounded-md hover:bg-blue-600"
+                    <button class="w-full bg-[#447EF2] text-white py-2 rounded-md hover:bg-blue-600"
                         @click="goToCompras">
                         Veure les meves compres
                     </button>
 
-                    <button class="w-full bg-[#276BF2] text-white py-2 rounded-md hover:bg-blue-600"
+                    <button class="w-full bg-[#447EF2] text-white py-2 rounded-md hover:bg-blue-600"
                         @click="goToComercio">
                         {{ hasComercio ? 'Panel de Control del Comercio' : 'Crear Comercio' }}
                     </button>
