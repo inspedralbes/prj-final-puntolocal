@@ -1,24 +1,3 @@
-#banner {
-    width: 100%;
-    height: 260px;
-    display: flex;
-    overflow: hidden;
-    position: relative;
-    align-items: center;
-}
-
-#carousel {
-    display: flex;
-    align-items: center;
-}
-
-#carousel img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    object-position: center;
-}
-
 #categorias::-webkit-scrollbar {
     display: none;
 }

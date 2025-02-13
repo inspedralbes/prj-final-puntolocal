@@ -1,6 +1,6 @@
 <script setup>
 definePageMeta({
-    layout: false
+    layout: 'footer-only'
 });
 
 import { io } from "socket.io-client";
@@ -219,21 +219,8 @@ function loginWithGoogle() {
 </script>
 
 <template>
-    <header class="border-b border-gray-300 flex items-center p-4">
+    <header class="border-b flex items-center p-4 max-h-[75px]">
         <div class="flex items-center">
-            <div @click="goBack" class="text-xl text-gray-700 dark:text-gray-300 cursor-pointer">
-                <svg width="1.5em" height="1.5em" viewBox="0 0 1024 1024" class="icon"
-                    xmlns="http://www.w3.org/2000/svg" fill="#000000">
-                    <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
-                    <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
-                    <g id="SVGRepo_iconCarrier">
-                        <path fill="#000000" d="M224 480h640a32 32 0 110 64H224a32 32 0 010-64z"></path>
-                        <path fill="#000000"
-                            d="M237.248 512l265.408 265.344a32 32 0 01-45.312 45.312l-288-288a32 32 0 010-45.312l288-288a32 32 0 1145.312 45.312L237.248 512z">
-                        </path>
-                    </g>
-                </svg>
-            </div>
             <h3 class="text-2xl ml-4">Cistella</h3>
         </div>
     </header>

@@ -1,36 +1,5 @@
 <template>
     <div class="layout-container">
-        <header class="sticky top-0 left-0 w-full bg-white z-10">
-            <div class="mx-auto flex max-w-7xl items-center justify-between p-2 py-4 lg:px-8" aria-label="Global">
-                <div class="w-full mx-auto bg-white flex justify-around items-center">
-                    <input class="px-5 py-2 mx-5 w-full rounded-md border bg-gray-50 focus:outline-none focus:ring-0"
-                        type="text" name="search" id="search" placeholder="Buscar...">
-                    <div class="rounded-full bg-[#447EF2] p-2">
-                        <!-- <svg @click="redirectToMap" width="2em" height="2em" viewBox="0 0 24 24" fill="none"
-                            xmlns="http://www.w3.org/2000/svg">
-                            <path
-                                d="M5.7 15C4.03377 15.6353 3 16.5205 3 17.4997C3 19.4329 7.02944 21 12 21C16.9706 21 21 19.4329 21 17.4997C21 16.5205 19.9662 15.6353 18.3 15M12 9H12.01M18 9C18 13.0637 13.5 15 12 18C10.5 15 6 13.0637 6 9C6 5.68629 8.68629 3 12 3C15.3137 3 18 5.68629 18 9ZM13 9C13 9.55228 12.5523 10 12 10C11.4477 10 11 9.55228 11 9C11 8.44772 11.4477 8 12 8C12.5523 8 13 8.44772 13 9Z"
-                                stroke="#FFFFFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-                        </svg> -->
-                        <svg @click="redirectToMap" fill="#FFFFFF" width="1.2em" height="1.2em" version="1.1"
-                            id="Layer_1I" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
-                            viewBox="0 0 512 512" xml:space="preserve" stroke="#FFFFFF">
-                            <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
-                            <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
-                            <g id="SVGRepo_iconCarrier">
-                                <g>
-                                    <g>
-                                        <path
-                                            d="M256,0C154.739,0,72.348,82.386,72.348,183.652c0,70.241,18.514,94.635,169.771,320.929 C245.217,509.217,250.424,512,256,512s10.782-2.783,13.881-7.418c151.251-226.216,169.771-251.423,169.771-320.929 C439.652,82.386,357.261,0,256,0z M256,267.13c-46.032,0-83.478-37.446-83.478-83.478c0-46.032,37.446-83.478,83.478-83.478 s83.478,37.446,83.478,83.478C339.478,229.684,302.032,267.13,256,267.13z">
-                                        </path>
-                                    </g>
-                                </g>
-                            </g>
-                        </svg>
-                    </div>
-                </div>
-            </div>
-        </header>
         <main class="flex-grow">
             <slot />
         </main>
@@ -79,13 +48,8 @@
 </template>
 
 <script setup>
-import { useRoute, useRouter } from 'vue-router';
+import { useRoute } from 'vue-router';
 const route = useRoute();
-const router = useRouter();
-
-function redirectToMap() {
-    router.push('/mapa');
-}
 </script>
 
 <style>
