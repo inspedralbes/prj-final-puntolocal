@@ -126,10 +126,13 @@ class ComercioController extends Controller
         $comercio = Comercio::where('idUser', $userId)->first();
         if ($comercio) {
             return response()->json([
-                'message' => 'El usuario tiene un comercio.'
+                'success' => true,
+                'message' => 'El usuario tiene un comercio.',
+                'comercio' => $comercio
             ], 200);
         } else {
             return response()->json([
+                'success' => false,
                 'message' => 'El usuario no tiene un comercio.'
             ], 404);
         }

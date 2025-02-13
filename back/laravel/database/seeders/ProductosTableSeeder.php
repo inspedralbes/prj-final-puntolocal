@@ -132,7 +132,7 @@ class ProductosTableSeeder extends Seeder
             $prodID = $faker->numberBetween(0, count($productos) - 1);
 
             DB::table("productos")->insert([
-                "subcategoria_id" => $faker->numberBetween(1, 105),
+                "subcategoria_id" => $faker->numberBetween(1, 91),
                 "comercio_id" => $faker->numberBetween(8, 12),
                 "nombre" => $productos[$prodID],
                 "descripcion" => $faker->sentence(15),

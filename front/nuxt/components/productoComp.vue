@@ -1,6 +1,6 @@
 <template>
     <div id="producto" :data-testid="testId">
-        <div id="contain-image">
+        <div id="contain-image" :class="customClass">
             <img :src="img">
             <span @click.stop="actualizaFavoritos(id)" id="contain-fav">
                 <!-- Si el producto está en favoritos, muestra el icono rojo -->
@@ -56,7 +56,6 @@
 }
 
 #contain-image {
-    width: 100%;
     height: 160px;
     position: relative;
     display: flex;
@@ -131,6 +130,10 @@ const props = defineProps({
     id: {
         type: Number,
         required: true,
+    },
+    customClass: {
+        type: String,
+        default: '',
     }
 });
 

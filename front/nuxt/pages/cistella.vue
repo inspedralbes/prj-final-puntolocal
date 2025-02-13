@@ -1,6 +1,6 @@
 <script setup>
 definePageMeta({
-    layout: false,
+    layout: 'footer-only'
 });
 
 
@@ -170,8 +170,8 @@ async function crearComanda() {
         }
     }
 
-    // comercioStore.emptyBasket();
-    // goBack();
+    goBack();
+    comercioStore.emptyBasket();
 }
 
 const orderFiltrada = computed(() => ({
@@ -224,21 +224,8 @@ function loginWithGoogle() {
 </script>
 
 <template>
-    <header class="border-b border-gray-300 flex items-center p-4">
+    <header class="border-b flex items-center p-4 max-h-[75px]">
         <div class="flex items-center">
-            <div @click="goBack" class="text-xl text-gray-700 dark:text-gray-300 cursor-pointer">
-                <svg width="1.5em" height="1.5em" viewBox="0 0 1024 1024" class="icon"
-                    xmlns="http://www.w3.org/2000/svg" fill="#000000">
-                    <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
-                    <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
-                    <g id="SVGRepo_iconCarrier">
-                        <path fill="#000000" d="M224 480h640a32 32 0 110 64H224a32 32 0 010-64z"></path>
-                        <path fill="#000000"
-                            d="M237.248 512l265.408 265.344a32 32 0 01-45.312 45.312l-288-288a32 32 0 010-45.312l288-288a32 32 0 1145.312 45.312L237.248 512z">
-                        </path>
-                    </g>
-                </svg>
-            </div>
             <h3 class="text-2xl ml-4">Cistella</h3>
         </div>
     </header>
@@ -475,7 +462,7 @@ function loginWithGoogle() {
                         <div class="my-3 max-h-[250px] overflow-scroll">
                             <div v-for="(items) in groupedCesta">
                                 <div v-for="item in items" :key="item.id" class="flex mb-1">
-                                    <div id="contain-image" class="mr-4 min-w-[70px] min-h-[70px]">
+                                    <div id="contain-image" class="mr-4 min-w-[70px] min-h-[70px] max-w-[70px] max-h-[70px] overflow-hidden">
                                         <img :src="`${baseUrl}/storage/${item.imagen}`" alt="" />
                                     </div>
                                     <div class="flex flex-col w-full justify-center">
@@ -598,8 +585,8 @@ function loginWithGoogle() {
             </div>
 
             <!-- CISTELLA VIEW CON TODOS LOS PRODUCTOS -->
-            <div v-if="true" class="divide-y divide-gray-300 dark:divide-gray-600">
-                <div v-for="(items, storeName) in groupedCesta" :key="storeName" class="p-3">
+            <div class="divide-y divide-gray-300 dark:divide-gray-600 pb-2">
+                <div v-for="(items, storeName) in groupedCesta" :key="storeName" class="px-3 pt-1">
                     <div class="flex justify-between items-center border-b border-gray-200 m-4">
                         <div class="flex items-center">
                             <svg width="1.3em" height="1.3em" viewBox="0 0 24 24" fill="none"
@@ -629,7 +616,7 @@ function loginWithGoogle() {
                                 </g>
                             </svg>
                         </button>
-                        <div id="contain-image" class="mr-4 min-w-[80px] min-h-[100px]">
+                        <div id="contain-image" class="mr-4 min-w-[80px] min-h-[100px] max-2-[80px] max-h[100px] overflow-hidden">
                             <img :src="`${baseUrl}/storage/${item.imagen}`" alt="" />
                         </div>
                         <div class="flex flex-col w-full justify-between">
@@ -637,7 +624,7 @@ function loginWithGoogle() {
                                 <div class="w-[75%]">
                                     <h3 class="text-lg font-medium line-clamp-2">{{ item.nombre }}</h3>
                                 </div>
-                                <p>{{ item.precio.toFixed(2) }}€</p>
+                                <p>{{ item?.precio?.toFixed(2) }}€</p>
                             </div>
                             <div id="btn-quantity" class="text-lg flex items-center mb-1">
                                 <button @click="comercioStore.decreaseProductQuantity(item.id)"
@@ -666,7 +653,7 @@ function loginWithGoogle() {
                                         </g>
                                         <g id="SVGRepo_iconCarrier">
                                             <path
-                                                d="M915.744 213v702.744H213v87.842h702.744v702.744h87.842v-702.744h702.744v-87.842h-702.744V213z"
+                                                d="M91f5.744 213v702.744H213v87.842h702.744v702.744h87.842v-702.744h702.744v-87.842h-702.744V213z"
                                                 fill-rule="evenodd" stroke="black" stroke-width="80" fill="none"></path>
                                         </g>
                                     </svg>
@@ -677,7 +664,7 @@ function loginWithGoogle() {
                 </div>
             </div>
 
-            <div class="footer flex items-center justify-between mt-auto border-t border-gray-300">
+            <div class="footer flex items-center justify-between mt-auto border-t border-gray-300 mb-[60px]">
                 <div id="precio" class="font-semibold text-gray-800 dark:text-gray-200">
                     <p class="text-gray-600 font-light text-sm">Precio total:</p>
                     <h3 class="text-2xl">
@@ -685,7 +672,7 @@ function loginWithGoogle() {
                     </h3>
                 </div>
                 <div id="carrito" class="flex items-center space-x-4">
-                    <button id="btn-comprar" class="text-xl font-semibold" @click="comprar">
+                    <button id="btn-comprar" class="text-xl font-semibold bg-[#276BF2]" @click="comprar">
                         Checkout ({{ comercioStore.totalItems }})
                     </button>
                 </div>
@@ -757,7 +744,6 @@ header {
     border-radius: 5px;
     align-items: center;
     justify-content: center;
-    background-color: #1E2026;
 }
 
 .footer {

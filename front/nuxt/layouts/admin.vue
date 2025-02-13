@@ -1,30 +1,36 @@
-<template class="bg-gray-800">
+<template>
     <header>
         <nav class="fixed z-30 w-full bg-white border-b border-gray-200 dark:bg-gray-800 dark:border-gray-700">
             <div class="px-3 py-3 lg:px-5 lg:pl-3">
                 <div class="flex items-center justify-between">
                     <div class="flex items-center justify-start">
-                        <button id="toggleSidebarMobile" aria-expanded="true" aria-controls="sidebar"
-                            class="p-2 text-gray-600 rounded cursor-pointer lg:hidden hover:text-gray-900 hover:bg-gray-100 focus:bg-gray-100 dark:focus:bg-gray-700 focus:ring-2 focus:ring-gray-100 dark:focus:ring-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
-                            <svg id="toggleSidebarMobileHamburger" class="w-6 h-6" fill="currentColor"
-                                viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                        <button @click="toggleSidebar" id="toggleSidebarMobile" aria-expanded="true"
+                            aria-controls="sidebar" class="p-2 text-gray-600 rounded cursor-pointer lg:hidden hover:text-gray-900 hover:bg-gray-100 
+               focus:bg-gray-100 dark:focus:bg-gray-700 focus:ring-2 focus:ring-gray-100 
+               dark:focus:ring-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
+
+                            <svg v-show="!sidebarOpen" class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20"
+                                xmlns="http://www.w3.org/2000/svg">
                                 <path fill-rule="evenodd"
                                     d="M3 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 10a1 1 0 011-1h6a1 1 0 110 2H4a1 1 0 01-1-1zM3 15a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z"
-                                    clip-rule="evenodd"></path>
+                                    clip-rule="evenodd">
+                                </path>
                             </svg>
-                            <svg id="toggleSidebarMobileClose" class="hidden w-6 h-6" fill="currentColor"
-                                viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+
+                            <svg v-show="sidebarOpen" class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20"
+                                xmlns="http://www.w3.org/2000/svg">
                                 <path fill-rule="evenodd"
                                     d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
-                                    clip-rule="evenodd"></path>
+                                    clip-rule="evenodd">
+                                </path>
                             </svg>
                         </button>
                         <h2
                             class="text-xl font-bold leading-none text-gray-900 sm:text-2xl dark:text-white ml-2 md:mr-14">
-                            Panel de comerç - {{ comercio.nombre }}</h2>
+                            Panel de comerç</h2>
                     </div>
                     <div class="flex items-center">
-                        <button type="button" data-dropdown-toggle="notification-dropdown"
+                        <!-- <button type="button" data-dropdown-toggle="notification-dropdown"
                             @click="toggleDropdown('notifications')"
                             class="toggle-button-notifications p-2 text-gray-500 rounded-lg hover:text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-700">
                             <span class="sr-only">View notifications</span>
@@ -35,8 +41,8 @@
                                     d="M10 2a6 6 0 00-6 6v3.586l-.707.707A1 1 0 004 14h12a1 1 0 00.707-1.707L16 11.586V8a6 6 0 00-6-6zM10 18a3 3 0 01-3-3h6a3 3 0 01-3 3z">
                                 </path>
                             </svg>
-                        </button>
-                        <div v-if="isOpen['notifications']"
+                        </button> -->
+                        <!-- <div v-if="isOpen['notifications']"
                             class="dropdown-notifications z-20 z-50 max-w-sm my-4 overflow-hidden text-base list-none bg-white divide-y divide-gray-100 rounded shadow-lg dark:divide-gray-600 dark:bg-gray-700 block"
                             id="notification-dropdown"
                             style="position: absolute; inset: 0px auto auto 0px; margin: 0px; transform: translate(1521px, 65px);"
@@ -88,40 +94,64 @@
                                     View all
                                 </div>
                             </a>
-                        </div>
+                        </div> -->
 
                         <div class="flex items-center ml-2">
                             <div id="profile">
                                 <button type="button"
-                                    class="toggle-button-settings flex text-sm bg-gray-800 rounded-full focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600"
+                                    class="toggle-button-settings flex text-sm bg-gray-100 p-2 rounded-full focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600"
                                     id="user-menu-button-2" aria-expanded="false" data-dropdown-toggle="dropdown-2"
                                     @click="toggleDropdown('settings')">
                                     <span class="sr-only">Open user menu</span>
-                                    <img class="w-8 h-8 rounded-full"
-                                        src="https://flowbite.com/docs/images/people/profile-picture-5.jpg"
-                                        alt="user photo">
+                                    <svg height="1.5em" width="1.5em" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                                        <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round">
+                                        </g>
+                                        <g id="SVGRepo_iconCarrier">
+                                            <path d="M22 22H2" stroke="#1C274C" stroke-width="1.5"
+                                                stroke-linecap="round"></path>
+                                            <path d="M20 22V11" stroke="#1C274C" stroke-width="1.5"
+                                                stroke-linecap="round"></path>
+                                            <path d="M4 22V11" stroke="#1C274C" stroke-width="1.5"
+                                                stroke-linecap="round"></path>
+                                            <path
+                                                d="M16.5278 2H7.47214C6.26932 2 5.66791 2 5.18461 2.2987C4.7013 2.5974 4.43234 3.13531 3.89443 4.21114L2.49081 7.75929C2.16652 8.57905 1.88279 9.54525 2.42867 10.2375C2.79489 10.7019 3.36257 11 3.99991 11C5.10448 11 5.99991 10.1046 5.99991 9C5.99991 10.1046 6.89534 11 7.99991 11C9.10448 11 9.99991 10.1046 9.99991 9C9.99991 10.1046 10.8953 11 11.9999 11C13.1045 11 13.9999 10.1046 13.9999 9C13.9999 10.1046 14.8953 11 15.9999 11C17.1045 11 17.9999 10.1046 17.9999 9C17.9999 10.1046 18.8953 11 19.9999 11C20.6373 11 21.205 10.7019 21.5712 10.2375C22.1171 9.54525 21.8334 8.57905 21.5091 7.75929L20.1055 4.21114C19.5676 3.13531 19.2986 2.5974 18.8153 2.2987C18.332 2 17.7306 2 16.5278 2Z"
+                                                stroke="#1C274C" stroke-width="1.5" stroke-linejoin="round"></path>
+                                            <path
+                                                d="M9.5 21.5V18.5C9.5 17.5654 9.5 17.0981 9.70096 16.75C9.83261 16.522 10.022 16.3326 10.25 16.201C10.5981 16 11.0654 16 12 16C12.9346 16 13.4019 16 13.75 16.201C13.978 16.3326 14.1674 16.522 14.299 16.75C14.5 17.0981 14.5 17.5654 14.5 18.5V21.5"
+                                                stroke="#1C274C" stroke-width="1.5" stroke-linecap="round"></path>
+                                        </g>
+                                    </svg>
                                 </button>
                             </div>
 
                             <div v-if="isOpen['settings']"
                                 class="dropdown-settings z-50 my-4 text-base list-none bg-white divide-y divide-gray-100 rounded shadow dark:bg-gray-700 dark:divide-gray-600 block"
-                                id="dropdown-2"
-                                style="position: absolute; inset: 0px auto auto 0px; margin: 0px; transform: translate(1713px, 61px);"
+                                id="dropdown-2" style="position: absolute; margin: 0px; right: 10px; top: 60px"
                                 data-popper-placement="bottom">
                                 <div class="px-4 py-3" role="none">
                                     <p class="text-sm text-gray-900 dark:text-white" role="none">
-                                        Neil Sims
+                                        {{ comercio.nombre }}
                                     </p>
                                     <p class="text-sm font-medium text-gray-900 truncate dark:text-gray-300"
                                         role="none">
-                                        neil.sims@flowbite.com
+                                        {{ comercio.email }}
                                     </p>
                                 </div>
                                 <ul class="py-1" role="none">
                                     <li>
-                                        <a href="#"
+                                        <NuxtLink to="/"
                                             class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white"
-                                            role="menuitem">Sign out</a>
+                                            role="menuitem">
+                                            Tornar als comerços
+                                        </NuxtLink>
+                                    </li>
+                                    <li>
+                                        <NuxtLink @click="goToLogout()"
+                                            class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white cursor-pointer"
+                                            role="menuitem">
+                                            Tancar sessió
+                                        </NuxtLink>
                                     </li>
                                 </ul>
                             </div>
@@ -131,8 +161,8 @@
             </div>
         </nav>
     </header>
-    <aside id="sidebar"
-        class="fixed top-0 left-0 z-20 flex flex-col flex-shrink-0 hidden w-64 h-full pt-16 font-normal duration-75 lg:flex transition-width"
+    <aside id="sidebar" :class="sidebarOpen ? 'flex' : 'hidden lg:flex'"
+        class="fixed top-0 left-0 z-20 flex-col flex-shrink-0 w-64 h-full pt-16 font-normal duration-75 transition-width bg-white border-r border-gray-200 dark:bg-gray-800 dark:border-gray-700"
         aria-label="Sidebar">
         <div
             class="relative flex flex-col flex-1 min-h-0 pt-0 bg-white border-r border-gray-200 dark:bg-gray-800 dark:border-gray-700">
@@ -140,24 +170,6 @@
                 <div
                     class="flex-1 px-3 space-y-1 bg-white divide-y divide-gray-200 dark:bg-gray-800 dark:divide-gray-700">
                     <ul class="pb-2 space-y-2">
-                        <li>
-                            <form id="buscadorMobile" action="#" method="GET" class="lg:hidden">
-                                <label for="mobile-search" class="sr-only">Search</label>
-                                <div class="relative">
-                                    <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                                        <svg class="w-5 h-5 text-gray-500" fill="currentColor" viewBox="0 0 20 20"
-                                            xmlns="http://www.w3.org/2000/svg">
-                                            <path fill-rule="evenodd"
-                                                d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
-                                                clip-rule="evenodd"></path>
-                                        </svg>
-                                    </div>
-                                    <input type="text" name="email" id="mobile-search"
-                                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full pl-10 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-gray-200 dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                                        placeholder="Search">
-                                </div>
-                            </form>
-                        </li>
                         <li>
                             <NuxtLink to="/admin"
                                 class="flex items-center p-2 text-base text-gray-900 rounded-lg hover:bg-gray-100 group dark:text-gray-200 dark:hover:bg-gray-700">
@@ -202,14 +214,30 @@
                                     </NuxtLink>
                                 </li>
                                 <li>
-                                    <NuxtLink to=""
-                                        class="flex items-center p-2 text-base text-gray-900 transition duration-75 rounded-lg pl-11 group hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-700">
-                                        Inventaris
+                                    <NuxtLink to="" disabled
+                                        class="flex justify-between items-center p-2 text-base text-gray-500 bg-gray-50 transition duration-75 rounded-lg pl-11 group cursor-not-allowed dark:text-gray-200 dark:hover:bg-gray-700">
+                                        <p>Inventaris</p>
+                                        <svg fill="#c1c1c1" width="1em" height="1em" version="1.1" id="Layer_1"
+                                            xmlns="http://www.w3.org/2000/svg"
+                                            xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 491.52 491.52"
+                                            xml:space="preserve">
+                                            <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                                            <g id="SVGRepo_tracerCarrier" stroke-linecap="round"
+                                                stroke-linejoin="round"></g>
+                                            <g id="SVGRepo_iconCarrier">
+                                                <g>
+                                                    <g>
+                                                        <path
+                                                            d="M399.4,203.578h-19.801h-0.005v-69.744C379.593,60.039,319.556,0,245.759,0c-73.793,0-133.832,60.039-133.832,133.835 v69.744H92.122c-15.656,0-28.35,12.692-28.35,28.349v17.246v196.751v17.245c0,15.658,12.693,28.35,28.35,28.35H245.76H399.4 c15.656,0,28.348-12.692,28.348-28.35v-17.245V249.174v-17.246C427.748,216.27,415.056,203.578,399.4,203.578z M275.935,406.648 h-60.349l10.801-51.467c-10.101-6.428-16.848-17.652-16.848-30.512c0-20.003,16.218-36.219,36.221-36.219 c20.004,0,36.219,16.216,36.219,36.219c0,12.86-6.745,24.084-16.845,30.51L275.935,406.648z M331.84,203.578h-86.08h-86.075 h-0.005v-69.744c0-47.469,38.613-86.081,86.08-86.081c47.469,0,86.08,38.613,86.08,86.081V203.578z">
+                                                        </path>
+                                                    </g>
+                                                </g>
+                                            </g>
+                                        </svg>
                                     </NuxtLink>
                                 </li>
                             </ul>
                         </li>
-
                         <!--  ======= CATEGORIES ================================  -->
                         <li>
                             <button type="button"
@@ -235,10 +263,27 @@
                             <ul id="dropdown-categories" :class="{ hidden: isHidden['categories'] }"
                                 class="py-2 space-y-2">
                                 <li>
-                                    <a href="#"
-                                        class="flex items-center p-2 text-base text-gray-900 transition duration-75 rounded-lg pl-11 group hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-700">
+                                    <NuxtLink to="" disabled
+                                        class="flex justify-between items-center p-2 text-base text-gray-500 bg-gray-50 transition duration-75 rounded-lg pl-11 group cursor-not-allowed dark:text-gray-200 dark:hover:bg-gray-700">
                                         Afegir categoria
-                                    </a>
+                                        <svg fill="#c1c1c1" width="1em" height="1em" version="1.1" id="Layer_1"
+                                            xmlns="http://www.w3.org/2000/svg"
+                                            xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 491.52 491.52"
+                                            xml:space="preserve">
+                                            <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                                            <g id="SVGRepo_tracerCarrier" stroke-linecap="round"
+                                                stroke-linejoin="round"></g>
+                                            <g id="SVGRepo_iconCarrier">
+                                                <g>
+                                                    <g>
+                                                        <path
+                                                            d="M399.4,203.578h-19.801h-0.005v-69.744C379.593,60.039,319.556,0,245.759,0c-73.793,0-133.832,60.039-133.832,133.835 v69.744H92.122c-15.656,0-28.35,12.692-28.35,28.349v17.246v196.751v17.245c0,15.658,12.693,28.35,28.35,28.35H245.76H399.4 c15.656,0,28.348-12.692,28.348-28.35v-17.245V249.174v-17.246C427.748,216.27,415.056,203.578,399.4,203.578z M275.935,406.648 h-60.349l10.801-51.467c-10.101-6.428-16.848-17.652-16.848-30.512c0-20.003,16.218-36.219,36.221-36.219 c20.004,0,36.219,16.216,36.219,36.219c0,12.86-6.745,24.084-16.845,30.51L275.935,406.648z M331.84,203.578h-86.08h-86.075 h-0.005v-69.744c0-47.469,38.613-86.081,86.08-86.081c47.469,0,86.08,38.613,86.08,86.081V203.578z">
+                                                        </path>
+                                                    </g>
+                                                </g>
+                                            </g>
+                                        </svg>
+                                    </NuxtLink>
                                 </li>
                             </ul>
                         </li>
@@ -274,7 +319,7 @@
                                     </NuxtLink>
                                 </li>
                                 <li>
-                                    <NuxtLink to="/admin/comandes/historial" 
+                                    <NuxtLink to="/admin/comandes/historial"
                                         class="text-base text-gray-900 rounded-lg flex items-center p-2 group hover:bg-gray-100 transition duration-75 pl-11 dark:text-gray-200 dark:hover:bg-gray-700 ">
                                         Historial
                                     </NuxtLink>
@@ -305,12 +350,50 @@
                             </button>
                             <ul id="dropdown-pages" :class="{ hidden: isHidden['clientes'] }" class="py-2 space-y-2">
                                 <li>
-                                    <a href="#"
-                                        class="flex items-center p-2 text-base text-gray-900 transition duration-75 rounded-lg pl-11 group hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-700">Lista</a>
+                                    <NuxtLink to="" disabled
+                                        class="flex justify-between items-center p-2 text-base text-gray-500 bg-gray-50 transition duration-75 rounded-lg pl-11 group cursor-not-allowed dark:text-gray-200 dark:hover:bg-gray-700">
+                                        Lista
+                                        <svg fill="#c1c1c1" width="1em" height="1em" version="1.1" id="Layer_1"
+                                            xmlns="http://www.w3.org/2000/svg"
+                                            xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 491.52 491.52"
+                                            xml:space="preserve">
+                                            <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                                            <g id="SVGRepo_tracerCarrier" stroke-linecap="round"
+                                                stroke-linejoin="round"></g>
+                                            <g id="SVGRepo_iconCarrier">
+                                                <g>
+                                                    <g>
+                                                        <path
+                                                            d="M399.4,203.578h-19.801h-0.005v-69.744C379.593,60.039,319.556,0,245.759,0c-73.793,0-133.832,60.039-133.832,133.835 v69.744H92.122c-15.656,0-28.35,12.692-28.35,28.349v17.246v196.751v17.245c0,15.658,12.693,28.35,28.35,28.35H245.76H399.4 c15.656,0,28.348-12.692,28.348-28.35v-17.245V249.174v-17.246C427.748,216.27,415.056,203.578,399.4,203.578z M275.935,406.648 h-60.349l10.801-51.467c-10.101-6.428-16.848-17.652-16.848-30.512c0-20.003,16.218-36.219,36.221-36.219 c20.004,0,36.219,16.216,36.219,36.219c0,12.86-6.745,24.084-16.845,30.51L275.935,406.648z M331.84,203.578h-86.08h-86.075 h-0.005v-69.744c0-47.469,38.613-86.081,86.08-86.081c47.469,0,86.08,38.613,86.08,86.081V203.578z">
+                                                        </path>
+                                                    </g>
+                                                </g>
+                                            </g>
+                                        </svg>
+                                    </NuxtLink>
                                 </li>
                                 <li>
-                                    <a href="#"
-                                        class="flex items-center p-2 text-base text-gray-900 transition duration-75 rounded-lg pl-11 group hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-700">Reseñas</a>
+                                    <NuxtLink to="" disabled
+                                        class="flex justify-between items-center p-2 text-base text-gray-500 bg-gray-50 transition duration-75 rounded-lg pl-11 group cursor-not-allowed dark:text-gray-200 dark:hover:bg-gray-700">
+                                        Reseñas
+                                        <svg fill="#c1c1c1" width="1em" height="1em" version="1.1" id="Layer_1"
+                                            xmlns="http://www.w3.org/2000/svg"
+                                            xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 491.52 491.52"
+                                            xml:space="preserve">
+                                            <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                                            <g id="SVGRepo_tracerCarrier" stroke-linecap="round"
+                                                stroke-linejoin="round"></g>
+                                            <g id="SVGRepo_iconCarrier">
+                                                <g>
+                                                    <g>
+                                                        <path
+                                                            d="M399.4,203.578h-19.801h-0.005v-69.744C379.593,60.039,319.556,0,245.759,0c-73.793,0-133.832,60.039-133.832,133.835 v69.744H92.122c-15.656,0-28.35,12.692-28.35,28.349v17.246v196.751v17.245c0,15.658,12.693,28.35,28.35,28.35H245.76H399.4 c15.656,0,28.348-12.692,28.348-28.35v-17.245V249.174v-17.246C427.748,216.27,415.056,203.578,399.4,203.578z M275.935,406.648 h-60.349l10.801-51.467c-10.101-6.428-16.848-17.652-16.848-30.512c0-20.003,16.218-36.219,36.221-36.219 c20.004,0,36.219,16.216,36.219,36.219c0,12.86-6.745,24.084-16.845,30.51L275.935,406.648z M331.84,203.578h-86.08h-86.075 h-0.005v-69.744c0-47.469,38.613-86.081,86.08-86.081c47.469,0,86.08,38.613,86.08,86.081V203.578z">
+                                                        </path>
+                                                    </g>
+                                                </g>
+                                            </g>
+                                        </svg>
+                                    </NuxtLink>
                                 </li>
                             </ul>
                         </li>
@@ -336,12 +419,50 @@
                             </button>
                             <ul id="dropdown-auth" :class="{ hidden: isHidden['marketing'] }" class="py-2 space-y-2">
                                 <li>
-                                    <a href="#"
-                                        class="flex items-center p-2 text-base text-gray-900 transition duration-75 rounded-lg pl-11 group hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-700">Promociones</a>
+                                    <NuxtLink to="" disabled
+                                        class="flex justify-between items-center p-2 text-base text-gray-500 bg-gray-50 transition duration-75 rounded-lg pl-11 group cursor-not-allowed dark:text-gray-200 dark:hover:bg-gray-700">
+                                        Promociones
+                                        <svg fill="#c1c1c1" width="1em" height="1em" version="1.1" id="Layer_1"
+                                            xmlns="http://www.w3.org/2000/svg"
+                                            xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 491.52 491.52"
+                                            xml:space="preserve">
+                                            <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                                            <g id="SVGRepo_tracerCarrier" stroke-linecap="round"
+                                                stroke-linejoin="round"></g>
+                                            <g id="SVGRepo_iconCarrier">
+                                                <g>
+                                                    <g>
+                                                        <path
+                                                            d="M399.4,203.578h-19.801h-0.005v-69.744C379.593,60.039,319.556,0,245.759,0c-73.793,0-133.832,60.039-133.832,133.835 v69.744H92.122c-15.656,0-28.35,12.692-28.35,28.349v17.246v196.751v17.245c0,15.658,12.693,28.35,28.35,28.35H245.76H399.4 c15.656,0,28.348-12.692,28.348-28.35v-17.245V249.174v-17.246C427.748,216.27,415.056,203.578,399.4,203.578z M275.935,406.648 h-60.349l10.801-51.467c-10.101-6.428-16.848-17.652-16.848-30.512c0-20.003,16.218-36.219,36.221-36.219 c20.004,0,36.219,16.216,36.219,36.219c0,12.86-6.745,24.084-16.845,30.51L275.935,406.648z M331.84,203.578h-86.08h-86.075 h-0.005v-69.744c0-47.469,38.613-86.081,86.08-86.081c47.469,0,86.08,38.613,86.08,86.081V203.578z">
+                                                        </path>
+                                                    </g>
+                                                </g>
+                                            </g>
+                                        </svg>
+                                    </NuxtLink>
                                 </li>
                                 <li>
-                                    <a href="#"
-                                        class="flex items-center p-2 text-base text-gray-900 transition duration-75 rounded-lg pl-11 group hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-700">Campañas</a>
+                                    <NuxtLink to="" disabled
+                                        class="flex justify-between items-center p-2 text-base text-gray-500 bg-gray-50 transition duration-75 rounded-lg pl-11 group cursor-not-allowed dark:text-gray-200 dark:hover:bg-gray-700">
+                                        Campañas
+                                        <svg fill="#c1c1c1" width="1em" height="1em" version="1.1" id="Layer_1"
+                                            xmlns="http://www.w3.org/2000/svg"
+                                            xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 491.52 491.52"
+                                            xml:space="preserve">
+                                            <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                                            <g id="SVGRepo_tracerCarrier" stroke-linecap="round"
+                                                stroke-linejoin="round"></g>
+                                            <g id="SVGRepo_iconCarrier">
+                                                <g>
+                                                    <g>
+                                                        <path
+                                                            d="M399.4,203.578h-19.801h-0.005v-69.744C379.593,60.039,319.556,0,245.759,0c-73.793,0-133.832,60.039-133.832,133.835 v69.744H92.122c-15.656,0-28.35,12.692-28.35,28.349v17.246v196.751v17.245c0,15.658,12.693,28.35,28.35,28.35H245.76H399.4 c15.656,0,28.348-12.692,28.348-28.35v-17.245V249.174v-17.246C427.748,216.27,415.056,203.578,399.4,203.578z M275.935,406.648 h-60.349l10.801-51.467c-10.101-6.428-16.848-17.652-16.848-30.512c0-20.003,16.218-36.219,36.221-36.219 c20.004,0,36.219,16.216,36.219,36.219c0,12.86-6.745,24.084-16.845,30.51L275.935,406.648z M331.84,203.578h-86.08h-86.075 h-0.005v-69.744c0-47.469,38.613-86.081,86.08-86.081c47.469,0,86.08,38.613,86.08,86.081V203.578z">
+                                                        </path>
+                                                    </g>
+                                                </g>
+                                            </g>
+                                        </svg>
+                                    </NuxtLink>
                                 </li>
                             </ul>
                         </li>
@@ -370,18 +491,55 @@
                             <ul id="dropdown-playground" :class="{ hidden: isHidden['configuracion'] }"
                                 class="space-y-2 py-2">
                                 <li>
-                                    <a href="#"
-                                        class="text-base text-gray-900 rounded-lg flex items-center p-2 group hover:bg-gray-100 transition duration-75 pl-11 dark:text-gray-200 dark:hover:bg-gray-700 ">Perfil
-                                        del negocio</a>
-                                </li>
-                                <li>
-                                    <a href="#"
-                                        class="text-base text-gray-900 rounded-lg flex items-center p-2 group hover:bg-gray-100 transition duration-75 pl-11 dark:text-gray-200 dark:hover:bg-gray-700 ">Horarios</a>
-                                </li>
-                                <li>
                                     <NuxtLink to="/admin/perfilComercio"
                                         class="text-base text-gray-900 rounded-lg flex items-center p-2 group hover:bg-gray-100 transition duration-75 pl-11 dark:text-gray-200 dark:hover:bg-gray-700 ">
                                         Dades del comerç
+                                    </NuxtLink>
+                                </li>
+                                <li>
+                                    <NuxtLink to="" disabled
+                                        class="flex justify-between items-center p-2 text-base text-gray-500 bg-gray-50 transition duration-75 rounded-lg pl-11 group cursor-not-allowed dark:text-gray-200 dark:hover:bg-gray-700">
+                                        Horarios
+                                        <svg fill="#c1c1c1" width="1em" height="1em" version="1.1" id="Layer_1"
+                                            xmlns="http://www.w3.org/2000/svg"
+                                            xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 491.52 491.52"
+                                            xml:space="preserve">
+                                            <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                                            <g id="SVGRepo_tracerCarrier" stroke-linecap="round"
+                                                stroke-linejoin="round"></g>
+                                            <g id="SVGRepo_iconCarrier">
+                                                <g>
+                                                    <g>
+                                                        <path
+                                                            d="M399.4,203.578h-19.801h-0.005v-69.744C379.593,60.039,319.556,0,245.759,0c-73.793,0-133.832,60.039-133.832,133.835 v69.744H92.122c-15.656,0-28.35,12.692-28.35,28.349v17.246v196.751v17.245c0,15.658,12.693,28.35,28.35,28.35H245.76H399.4 c15.656,0,28.348-12.692,28.348-28.35v-17.245V249.174v-17.246C427.748,216.27,415.056,203.578,399.4,203.578z M275.935,406.648 h-60.349l10.801-51.467c-10.101-6.428-16.848-17.652-16.848-30.512c0-20.003,16.218-36.219,36.221-36.219 c20.004,0,36.219,16.216,36.219,36.219c0,12.86-6.745,24.084-16.845,30.51L275.935,406.648z M331.84,203.578h-86.08h-86.075 h-0.005v-69.744c0-47.469,38.613-86.081,86.08-86.081c47.469,0,86.08,38.613,86.08,86.081V203.578z">
+                                                        </path>
+                                                    </g>
+                                                </g>
+                                            </g>
+                                        </svg>
+                                    </NuxtLink>
+                                </li>
+                                <li>
+                                    <NuxtLink to="" disabled
+                                        class="flex justify-between items-center p-2 text-base text-gray-500 bg-gray-50 transition duration-75 rounded-lg pl-11 group cursor-not-allowed dark:text-gray-200 dark:hover:bg-gray-700">
+                                        Perfil del negocio
+                                        <svg fill="#c1c1c1" width="1em" height="1em" version="1.1" id="Layer_1"
+                                            xmlns="http://www.w3.org/2000/svg"
+                                            xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 491.52 491.52"
+                                            xml:space="preserve">
+                                            <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                                            <g id="SVGRepo_tracerCarrier" stroke-linecap="round"
+                                                stroke-linejoin="round"></g>
+                                            <g id="SVGRepo_iconCarrier">
+                                                <g>
+                                                    <g>
+                                                        <path
+                                                            d="M399.4,203.578h-19.801h-0.005v-69.744C379.593,60.039,319.556,0,245.759,0c-73.793,0-133.832,60.039-133.832,133.835 v69.744H92.122c-15.656,0-28.35,12.692-28.35,28.349v17.246v196.751v17.245c0,15.658,12.693,28.35,28.35,28.35H245.76H399.4 c15.656,0,28.348-12.692,28.348-28.35v-17.245V249.174v-17.246C427.748,216.27,415.056,203.578,399.4,203.578z M275.935,406.648 h-60.349l10.801-51.467c-10.101-6.428-16.848-17.652-16.848-30.512c0-20.003,16.218-36.219,36.221-36.219 c20.004,0,36.219,16.216,36.219,36.219c0,12.86-6.745,24.084-16.845,30.51L275.935,406.648z M331.84,203.578h-86.08h-86.075 h-0.005v-69.744c0-47.469,38.613-86.081,86.08-86.081c47.469,0,86.08,38.613,86.08,86.081V203.578z">
+                                                        </path>
+                                                    </g>
+                                                </g>
+                                            </g>
+                                        </svg>
                                     </NuxtLink>
                                 </li>
                             </ul>
@@ -398,8 +556,16 @@
 </template>
 
 <script setup>
-const auth = useAuthStore();
-const comercio = auth.comercio;
+import { nextTick } from 'vue';
+
+const authStore = useAuthStore();
+const comercio = authStore.comercio;
+
+const sidebarOpen = ref(false);
+
+const toggleSidebar = () => {
+    sidebarOpen.value = !sidebarOpen.value;
+};
 
 const isHidden = reactive({
     'productes': true,
@@ -410,7 +576,7 @@ const isHidden = reactive({
     'configuracion': true,
 });
 
-const isOpen = reactive({
+const isOpen = ref({
     'settings': false,
     'notifications': false,
 });
@@ -419,23 +585,35 @@ function toggleHidden(menu) {
     isHidden[menu] = !isHidden[menu];
 }
 
-function toggleDropdown(menu) {
-    isOpen[menu] = !isOpen[menu]
+async function toggleDropdown(menu) {
+    isOpen.value[menu] = !isOpen.value[menu];
+    await nextTick();
 }
 
 const handleClickOutside = (event) => {
-    // Cerrar todos los menús si el clic no es en ninguno de ellos
-    if (event.target.closest('.toggle-button-settings') || event.target.closest('.dropdown-settings')) {
-        isOpen['settings'] = true;
-        isOpen['notifications'] = false;
-    } else if (event.target.closest('.toggle-button-notifications') || event.target.closest('.dropdown-notifications')) {
-        isOpen['settings'] = false;
-        isOpen['notifications'] = true;
-    } else {
-        isOpen['settings'] = false;
-        isOpen['notifications'] = false;
+    if (!isOpen.value['settings'] && !isOpen.value['notifications']) {
+        return;
     }
+
+    if (event.target.closest('.toggle-button-settings') || event.target.closest('.dropdown-settings')) {
+        return;
+    }
+
+    if (event.target.closest('.toggle-button-notifications') || event.target.closest('.dropdown-notifications')) {
+        return;
+    }
+
+    isOpen.value['settings'] = false;
+    isOpen.value['notifications'] = false;
 };
+
+async function goToLogout() {
+    const { $communicationManager } = useNuxtApp();
+    await $communicationManager.logout();
+    authStore.logout();
+    localStorage.removeItem('animationShown');
+    navigateTo('/login');
+}
 
 onMounted(() => {
     document.addEventListener('click', handleClickOutside);

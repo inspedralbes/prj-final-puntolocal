@@ -17,6 +17,7 @@
 <style>
 body {
   font-family: "Lato", serif;
+  font-display: swap;
 }
 
 .color-principal-1 {
@@ -42,6 +43,21 @@ body {
 .color-secundario-3 {
   color: #F2F2F2;
 }
+
+.page-enter-active,
+.page-leave-active {
+  transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
+}
+
+.page-enter-from {
+  opacity: 0;
+  transform: translateY(-20px);
+}
+
+.page-leave-to {
+  opacity: 0;
+  transform: translateY(20px);
+}
 </style>
 
 <script setup>
@@ -57,10 +73,11 @@ const socket = io("http://localhost:8001");
 const showAlert = ref(false);
 const orden = ref(null);
 
-if (auth?.comercio) {
-  socket.on("connect", () => {
-    socket.emit("identificarUsuario", { user_id: auth.user.id });
-  });
+onMounted(() => {
+  if (auth?.comercio) {
+    socket.on("connect", () => {
+      socket.emit("identificarUsuario", { user_id: auth.user.id });
+    });
 
   socket.on("nuevaOrdenRecibida", (newOrden) => {
     console.log(newOrden);
