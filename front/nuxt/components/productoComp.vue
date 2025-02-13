@@ -4,7 +4,7 @@
             <img :src="img">
             <span @click.stop="actualizaFavoritos(id)" id="contain-fav">
                 <!-- Si el producto está en favoritos, muestra el icono rojo -->
-                <svg v-if="authStore.favoritos.has(id)" width="1.2em" height="1.2em" viewBox="0 0 24 24" fill="#ea4823"
+                <svg v-if="authStore?.favoritos?.has(id)" width="1.2em" height="1.2em" viewBox="0 0 24 24" fill="#ea4823"
                     stroke="#ea4823" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
                     style="position: relative; top: 5px; margin-left: 5px; margin-right: 5px;">
                     <path
