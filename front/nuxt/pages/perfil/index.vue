@@ -19,25 +19,25 @@
 
             <div class="py-6 px-4 w-full max-w-md text-center">
                 <div class="space-y-4">
-                    <button class="w-full bg-[#447EF2] text-white py-2 rounded-md hover:bg-blue-600" @click="goToInfo">
+                    <button class="w-full bg-[#447EF2] text-white py-2 rounded-md hover:bg-blue-50" @click="goToInfo">
                         Información personal
                     </button>
 
-                    <button class="w-full bg-[#447EF2] text-white py-2 rounded-md hover:bg-blue-600" @click="goToEdit">
+                    <button class="w-full bg-[#447EF2] text-white py-2 rounded-md hover:bg-blue-50" @click="goToEdit">
                         Editar informació
                     </button>
 
-                    <button class="w-full bg-[#447EF2] text-white py-2 rounded-md hover:bg-blue-600"
+                    <button class="w-full bg-[#447EF2] text-white py-2 rounded-md hover:bg-blue-50"
                         @click="goToCompras">
                         Veure les meves compres
                     </button>
 
-                    <button class="w-full bg-[#447EF2] text-white py-2 rounded-md hover:bg-blue-600"
+                    <button class="w-full bg-[#447EF2] text-white py-2 rounded-md hover:bg-blue-50"
                         @click="goToComercio">
                         {{ hasComercio ? 'Panel de Control del Comercio' : 'Crear Comercio' }}
                     </button>
 
-                    <button class="w-full border border-red-500 text-red-500 py-2 rounded-md hover:bg-red-600" @click="goToLogout">
+                    <button class="w-full border border-red-500 text-red-500 py-2 rounded-md hover:bg-gray-50" @click="goToLogout">
                         Tancar sessió
                     </button>
 
