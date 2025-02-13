@@ -2,13 +2,25 @@
     <div id="producto" :data-testid="testId">
         <div id="contain-image">
             <img :src="img">
-            <span id="contain-fav">
-                <svg width="1.2em" height="1.2em" viewBox="0 0 24 24" fill="none" stroke="#333" stroke-width="2"
-                    stroke-linecap="round" stroke-linejoin="round"
+            <span @click.stop="actualizaFavoritos(id)" id="contain-fav">
+                <!-- Si el producto está en favoritos, muestra el icono rojo -->
+                <svg v-if="authStore.favoritos.has(id)" width="1.2em" height="1.2em" viewBox="0 0 24 24" fill="#ea4823"
+                    stroke="#ea4823" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
                     style="position: relative; top: 5px; margin-left: 5px; margin-right: 5px;">
-                    <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z">
+                    <path
+                        d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z">
                     </path>
                 </svg>
+
+                <!-- Si el producto NO está en favoritos, muestra el icono sin color -->
+                <svg v-else width="1.2em" height="1.2em" viewBox="0 0 24 24" fill="none" stroke="#333" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round"
+                    style="position: relative; top: 5px; margin-left: 5px; margin-right: 5px;">
+                    <path
+                        d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z">
+                    </path>
+                </svg>
+
             </span>
             <span id="contain-nom">
                 <h3>{{ comercio }}</h3>
@@ -56,10 +68,14 @@
 }
 
 img {
-    max-width: 100%; /* Limita el ancho al tamaño del contenedor */
-    max-height: 100%; /* Limita la altura al tamaño del contenedor */
-    object-fit: contain; /* Mantiene la proporción de la imagen */
-    object-position: center; /* Centra la imagen dentro del contenedor */
+    max-width: 100%;
+    /* Limita el ancho al tamaño del contenedor */
+    max-height: 100%;
+    /* Limita la altura al tamaño del contenedor */
+    object-fit: contain;
+    /* Mantiene la proporción de la imagen */
+    object-position: center;
+    /* Centra la imagen dentro del contenedor */
 }
 
 #contain-fav {
@@ -83,7 +99,7 @@ img {
     max-width: 150px;
 }
 
-#contain-nom h3{
+#contain-nom h3 {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -110,7 +126,28 @@ const props = defineProps({
     },
     comercio: {
         type: String,
+        // required: true,
+    },
+    id: {
+        type: Number,
         required: true,
     }
 });
+
+const authStore = useAuthStore();
+
+async function actualizaFavoritos(productoID) {
+    const { $communicationManager } = useNuxtApp();
+
+    try {
+        const response = await $communicationManager.updateFavorito(authStore.user.id, productoID);
+
+        if (response) {
+            authStore.toggleFavorito(productoID)
+        }
+
+    } catch (error) {
+        console.error("Error en la petición:", error);
+    }
+}
 </script>

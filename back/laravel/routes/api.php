@@ -10,6 +10,7 @@ use App\Http\Controllers\CategoriaController;
 use App\Http\Controllers\EstatCompraController;
 use App\Http\Controllers\SubcategoriaController;
 use App\Http\Controllers\OrderComercioController;
+use App\Http\Controllers\FavoritoController;
 
 Route::get('/user', function (Request $request) {
     return $request->user();
@@ -29,6 +30,9 @@ Route::middleware('auth:sanctum')->prefix('cliente')->group(function () {
     Route::get('/{id}', [ClienteController::class, 'getCliente']);
     Route::put('/{id}/datos-personales', [ClienteController::class, 'updateDatosPersonales']);
     Route::put('/{id}/datos-facturacion', [ClienteController::class, 'updateDatosFacturacion']);
+    Route::get('{id}/favoritos', [FavoritoController::class, 'index']);
+    Route::post('{id}/favoritos', [FavoritoController::class, 'toggleFavorito']);
+    Route::get('{id}/favoritos-info', [FavoritoController::class, 'getFavoritosInformacion']);
 });
 
 Route::prefix('comercios')->group(function () {
