@@ -1,6 +1,6 @@
 <template>
     <header>
-        <h1 class="font-bold text-2xl m-4">Mis Favoritos</h1>
+        <h1 class="font-bold text-2xl m-4">Els meus favorits</h1>
     </header>
     <hr class="mb-2">
     <div v-if="authStore.isAuthenticated">

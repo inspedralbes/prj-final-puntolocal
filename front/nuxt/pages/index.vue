@@ -63,8 +63,8 @@
                     </div>
                     <div class="flex space-x-1 pl-4 items-center overflow-x-auto scrollbar-none">
                         <productoComp v-for="(producto, index) in productos" :key="index" :id="producto.id"
-                            :img="producto.imagen ? `http://localhost:8000/storage/${producto.imagen}` : 'http://localhost:8000/storage/productos/default-image.webp'"
-                            :title="producto.nombre" :price="producto.precio" :comercio="producto.comercio"
+                        :img="producto.imagen ? `${baseUrl}/storage/${producto.imagen}` : `${baseUrl}/storage/productos/default-image.webp`"
+                        :title="producto.nombre" :price="producto.precio" :comercio="producto.comercio"
                             :customClass="'w-[170px]'" price-class="text-gray-900 dark:text-white"
                             @click="mostrarIdProducto(producto.id)">
                         </productoComp>
