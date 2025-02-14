@@ -3,6 +3,7 @@
 
     namespace App\Http\Controllers\Auth;
 
+    use \App\Models\User;
     use App\Http\Controllers\Controller;
     use Illuminate\Http\Request;
     use Illuminate\Auth\Events\Verified;
@@ -10,7 +11,7 @@
 
     class VerificationController extends Controller {
         public function verify(Request $request, $id, $hash) {
-            $user = \App\Models\User::findOrFail($id);
+            $user = User::findOrFail($id);
 
             if ($user->hasVerifiedEmail()) {
                 return redirect()->route('home')->with('message', 'Correo ya verificado.');

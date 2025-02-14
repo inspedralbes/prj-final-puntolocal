@@ -3,12 +3,16 @@
     "name": "laravel/laravel",
     "type": "project",
     "description": "The skeleton application for the Laravel framework.",
-    "keywords": ["laravel", "framework"],
+    "keywords": [
+        "laravel",
+        "framework"
+    ],
     "license": "MIT",
     "require": {
         "php": "^8.2",
         "laravel/framework": "^11.31",
         "laravel/sanctum": "^4.0",
+        "laravel/socialite": "^5.17",
         "laravel/tinker": "^2.9"
     },
     "require-dev": {
@@ -25,7 +29,11 @@
             "App\\": "app/",
             "Database\\Factories\\": "database/factories/",
             "Database\\Seeders\\": "database/seeders/"
-        }
+        },
+        "exclude-from-classmap": [
+            "vendor/league/flysystem-local/*",
+            "vendor/laravel/pint/*"
+        ]
     },
     "autoload-dev": {
         "psr-4": {

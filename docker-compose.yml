@@ -32,17 +32,17 @@
         - db
       command: bash -c "composer install && php artisan key:generate && php artisan migrate:fresh --seed && php artisan serve --host=0.0.0.0"
 
-    # node:
-    #   image: node:current
-    #   restart: always
-    #   depends_on:
-    #     - db
-    #   ports:
-    #     - 8001:3000
-    #   volumes:
-    #     - ./back/node:/home/node/app #en produccion no se debe hacer esto, se debe hacer un copy
-    #   working_dir: /home/node/app
-    #   command: bash -c "npm install && npm start"
+    node:
+      image: node:current
+      restart: always
+      depends_on:
+        - db
+      ports:
+        - 8001:3000
+      volumes:
+        - ./back:/home/node/app
+      working_dir: /home/node/app
+      command: bash -c "npm install && node server.js"
 
     nuxt:
       build: ./front/nuxt

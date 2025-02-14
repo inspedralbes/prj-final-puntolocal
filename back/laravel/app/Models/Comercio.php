@@ -1,44 +1,41 @@
 <?php
     namespace App\Models;
-
     use Illuminate\Database\Eloquent\Factories\HasFactory;
     use Illuminate\Database\Eloquent\Model;
 
     class Comercio extends Model {
         use HasFactory;
 
-        protected $table = 'comercio';
-
         protected $fillable = [
-            'name',
-            'email',
+            'nombre',
+            'idUser',
             'phone',
-            'password',
-            'street_address',
+            'email',
+            'email_verified_at',
+            'calle_num',
             'ciudad',
             'provincia',
             'codigo_postal',
-            'numero_planta',
-            'numero_puerta',
-            'categorias_generales',
+            'num_planta',
+            'num_puerta',
+            'categoria_id',
             'descripcion',
             'gestion_stock',
             'puntaje_medio',
+            'latitude',
+            'longitude',
+            'ubicacion_verified_at',
         ];
 
-        public function cliente() {
-            return $this->belongsTo(Cliente::class, 'id_cliente');
+        public function categoria() {
+            return $this->belongsTo(Categoria::class, 'categoria_id', 'id');
         }
 
-        public function categoriaGeneral() {
-            return $this->belongsTo(CategoriaGeneral::class, 'categorias_generales');
+        public function productos() {
+            return $this->hasMany(Producto::class,'comercio_id');
         }
 
-        public function imagenes() {
-            return $this->hasMany(ImagenLocal::class, 'id_comercio');
-        }
-
-        public function horarios() {
-            return $this->hasMany(HorarioLocal::class, 'id_comercio');
+        public function orders() {
+            return $this->hasMany(Order::class,'comercio_id');
         }
     }

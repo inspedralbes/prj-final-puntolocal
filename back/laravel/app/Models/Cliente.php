@@ -4,9 +4,10 @@
     use Illuminate\Database\Eloquent\Factories\HasFactory;
     use Illuminate\Foundation\Auth\User as Authenticatable;
     use Illuminate\Notifications\Notifiable;
+    use Laravel\Sanctum\HasApiTokens; 
 
     class Cliente extends Authenticatable {
-        use HasFactory, Notifiable;
+        use HasFactory, Notifiable, HasApiTokens;
 
         protected $table = 'cliente';
 
@@ -23,11 +24,7 @@
             'phone_verified_at' => 'datetime',
         ];
 
-        public function categoriaGeneral() {
-            return $this->belongsTo(CategoriaGeneral::class, 'categorias_generales');
-        }
-
         public function comercios() {
-            return $this->hasMany(Comercio::class, 'id_cliente');
+            return $this->hasMany(Comercio::class, 'idUser');
         }
     }
