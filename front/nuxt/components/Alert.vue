@@ -1,6 +1,6 @@
 <template>
     <div>
-      <!-- Este componente no se mostrará visualmente, es para manejar alertas con SweetAlert2 -->
+      <!-- Este componente no se mostrará , es para manejar alertas con SweetAlert2 -->
     </div>
   </template>
   
