@@ -22,6 +22,7 @@ export default {
             loading.value = true;
             const urlParams = new URLSearchParams(window.location.search);
             const userParam = urlParams.get('user');
+            console.log(window.location.href);  // Imprime la URL completa
 
             if (userParam) {
                 try {
@@ -35,12 +36,12 @@ export default {
                 } catch (error) {
                     console.log('Hubo un problema con el inicio de sesión.');
                     loading.value = false;
-                    navigateTo('/login');
+                    //navigateTo('/login');
                 }
             } else {
                 console.log('Inicio de sesión fallido.');
                 loading.value = false;
-                navigateTo('/login');
+                //navigateTo('/login');
             }
         }
 
