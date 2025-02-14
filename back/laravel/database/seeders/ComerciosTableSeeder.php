@@ -39,9 +39,9 @@
                         'sábado' => '10:00 - 14:00',
                         'domingo' => 'Cerrado',
                     ]),
-                    'latitude' => $i === 0 ? '41.383741' : null,
-                    'longitude' => $i === 0 ? '2.101861' : null,
-                    'ubicacion_verified_at' => $i === 0 ? now() : null,
+                    'latitude' => $i === 8 ? '41.383741' : null,
+                    'longitude' => $i === 8 ? '2.101861' : null,
+                    'ubicacion_verified_at' => $i === 8 ? now() : null,
                 ]);
             }
         }
