@@ -462,7 +462,7 @@ function loginWithGoogle() {
                         <div class="my-3 max-h-[250px] overflow-scroll">
                             <div v-for="(items) in groupedCesta">
                                 <div v-for="item in items" :key="item.id" class="flex mb-1">
-                                    <div id="contain-image" class="mr-4 min-w-[70px] min-h-[70px] max-w-[70px] max-h-[70px] overflow-hidden">
+                                    <div id="contain-image" class="mr-4 max-w-[70px] max-h-[70px] overflow-hidden">
                                         <img :src="`${baseUrl}/storage/${item.imagen}`" alt="" />
                                     </div>
                                     <div class="flex flex-col w-full justify-center">
@@ -616,7 +616,7 @@ function loginWithGoogle() {
                                 </g>
                             </svg>
                         </button>
-                        <div id="contain-image" class="mr-4 min-w-[80px] min-h-[100px] max-2-[80px] max-h[100px] overflow-hidden">
+                        <div id="contain-image" class="mr-4 min-w-[100px] min-h-[100px] overflow-hidden">
                             <img :src="`${baseUrl}/storage/${item.imagen}`" alt="" />
                         </div>
                         <div class="flex flex-col w-full justify-between">
@@ -646,17 +646,20 @@ function loginWithGoogle() {
                                     {{ item.cantidad }}</h4>
                                 <button @click="comercioStore.increaseProductQuantity(item.id)"
                                     class="border w-[1.5em] h-[1.5em] flex items-center justify-center">
-                                    <svg width="1em" height="1em" fill="#000000" viewBox="0 0 1920 1920"
-                                        xmlns="http://www.w3.org/2000/svg">
-                                        <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
-                                        <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round">
-                                        </g>
-                                        <g id="SVGRepo_iconCarrier">
-                                            <path
-                                                d="M91f5.744 213v702.744H213v87.842h702.744v702.744h87.842v-702.744h702.744v-87.842h-702.744V213z"
-                                                fill-rule="evenodd" stroke="black" stroke-width="80" fill="none"></path>
-                                        </g>
-                                    </svg>
+                                    <!--
+                                        <svg width="1em" height="1em" fill="#000000" viewBox="0 0 1920 1920"
+                                            xmlns="http://www.w3.org/2000/svg">
+                                            <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                                            <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round">
+                                            </g>
+                                            <g id="SVGRepo_iconCarrier">
+                                                <path
+                                                    d="M91f5.744 213v702.744H213v87.842h702.744v702.744h87.842v-702.744h702.744v-87.842h-702.744V213z"
+                                                    fill-rule="evenodd" stroke="black" stroke-width="80" fill="none"></path>
+                                            </g>
+                                        </svg>
+                                    -->
+                                        +
                                 </button>
                             </div>
                         </div>
@@ -755,5 +758,16 @@ header {
     max-height: 80px;
     box-sizing: border-box;
     padding: 1rem;
+}
+
+#contain-image {
+    height: 160px;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    border-radius: 10px;
+    border: 1px solid #dde0e2;
 }
 </style>

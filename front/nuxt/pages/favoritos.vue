@@ -11,7 +11,7 @@
             <div class="grid grid-cols-2 m-3 gap-2">
                 <div v-for="(producto, index) in favoritos" :key="producto.id"
                     class="bg-white rounded-lg shadow-md overflow-hidden">
-                    <img :src="`http://localhost:8000/storage/${producto.imagen}`" :alt=producto.nombre
+                    <img :src="`${baseUrl}/storage/${producto.imagen}`" :alt=producto.nombre
                         class="w-full h-32 object-cover">
                     <div class="p-3">
                         <h3 class="font-medium text-gray-800 text-sm line-clamp-2 break-all">{{ producto.nombre }}</h3>
@@ -61,6 +61,10 @@
 <script setup>
 import { useAuthStore } from '@/stores/authStore';
 import Loading from "@/components/loading.vue";
+
+import { useRuntimeConfig } from "#imports";
+const config = useRuntimeConfig();
+const baseUrl = config.public.apiBaseUrl;
 
 definePageMeta({
     layout: 'default',

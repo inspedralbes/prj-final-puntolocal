@@ -53,7 +53,7 @@
             </div>
         </div>
 
-        <div class="bg-white rounded-b-md mb-4">
+        <div class="bg-white rounded-b-md mb-4 mt-20">
             <div id="imgs" class="h-[400px] w-full max-w-[900px] mx-auto overflow-hidden">
                 <img :src="producto?.imagen ? `${baseUrl}/storage/${producto.imagen}` : `${baseUrl}/storage/productos/default-image.webp`"
                     alt="Imagen del producto" class="h-full w-full object-contain" />
@@ -221,6 +221,7 @@ const clicked = ref(false);
 import { useRuntimeConfig } from "#imports";
 const config = useRuntimeConfig();
 const baseUrl = config.public.apiBaseUrl;
+
 const authStore = useAuthStore();
 
 const fetchProducto = async () => {
