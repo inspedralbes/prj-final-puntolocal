@@ -9,10 +9,8 @@ use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 
-class ComercioController extends Controller
-{
-    public function RegistrarComercio(Request $request)
-    {
+class ComercioController extends Controller {
+    public function RegistrarComercio(Request $request) {
         $validator = Validator::make($request->all(), [
             'nombre' => 'required|string|max:255',
             'idUser' => 'required|integer',
@@ -114,7 +112,7 @@ class ComercioController extends Controller
 
     public function getLocations()
     {
-        $comercios = Comercio::select('id', 'nombre', 'latitude', 'longitude')
+        $comercios = Comercio::select('id', 'nombre', 'latitude', 'longitude', 'puntaje_medio')
             ->whereNotNull('ubicacion_verified_at')
             ->get();
 

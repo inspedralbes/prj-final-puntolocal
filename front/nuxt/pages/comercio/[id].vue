@@ -122,6 +122,12 @@ const selectedSubcategorias = ref([]);
 const view = ref('productos');
 const { $communicationManager } = useNuxtApp();
 
+const mostrarIdProducto = (id) => {
+    console.log("ID del producto:", id);
+    router.push(`/producto/${id}`);
+};
+
+
 const fetchComercio = async () => {
     const id = route.params.id;
     try {

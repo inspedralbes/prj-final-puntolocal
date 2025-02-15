@@ -47,3 +47,13 @@ input {
     background: white;
     border-radius: 100px;
 }
+
+#retrocederBtn{
+    left: 20px;
+    bottom: 30px;
+    padding: 10px;
+    z-index: 9999;
+    position: fixed;
+    border-radius: 100px;
+    background: white;
+}

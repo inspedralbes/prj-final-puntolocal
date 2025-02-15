@@ -1,5 +1,17 @@
 <template>
     <div>
+        <div @click="goBack" class="text-xl text-gray-700 dark:text-gray-300 cursor-pointer" id="retrocederBtn">
+            <svg width="1.5em" height="1.5em" viewBox="0 0 1024 1024" class="icon" xmlns="http://www.w3.org/2000/svg"
+                fill="#000000">
+                <g id="SVGRepo_iconCarrier">
+                    <path fill="#000000" d="M224 480h640a32 32 0 110 64H224a32 32 0 010-64z"></path>
+                    <path fill="#000000"
+                        d="M237.248 512l265.408 265.344a32 32 0 01-45.312 45.312l-288-288a32 32 0 010-45.312l288-288a32 32 0 1145.312 45.312L237.248 512z">
+                    </path>
+                </g>
+            </svg>
+        </div>
+
         <div id="divBuscador">
             <input v-model="codigoPostal" @keyup.enter="buscarPorCodigoPostal" placeholder="Código Postal" />
             <button @click="buscarPorCodigoPostal" id="buscar">
@@ -13,7 +25,6 @@
             <button @click="getLocation" id="btnLocation">
                 <img src="../assets/location.svg" alt="Location">
             </button>
-            <!--<p v-if="location">Ubicación: {{ location }}</p>-->
         </div>
 
         <InfoMapa v-if="showPopup" :info="puebloSeleccionado" @cerrarPopup="cerrarPopup" />
@@ -39,8 +50,11 @@ import Stroke from 'ol/style/Stroke';
 import Select from 'ol/interaction/Select';
 import { click } from 'ol/events/condition';
 import InfoMapa from './InfoMapa.vue';
+import { useRoute, useRouter } from "vue-router";
+import { defaults as defaultControls } from 'ol/control';
 
 const map = ref(null);
+const router = useRouter();
 const location = ref(null);
 const codigoPostal = ref("");
 const showPopup = ref(false);
@@ -60,9 +74,10 @@ onMounted(async () => {
             vectorLayer
         ],
         view: new View({
-            center: fromLonLat([1.690866, 41.341365]),
+            center: fromLonLat([2.15899, 41.38879]),
             zoom: 10
-        })
+        }),
+        controls: defaultControls({ zoom: false })
     });
 
     await agregarMarcadoresDesdeResponse();
@@ -83,6 +98,10 @@ onMounted(async () => {
         }
     });
 });
+
+const goBack = () => {
+    router.back();
+};
 
 const agregarMarcadoresDesdeResponse = async () => {
     try {
@@ -204,5 +223,5 @@ const cerrarPopup = () => {
 </script>
 
 <style scoped>
-@import url('../assets/mapa.css');
+    @import url('../assets/mapa.css');
 </style>
