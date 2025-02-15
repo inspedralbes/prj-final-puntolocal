@@ -6,10 +6,20 @@
 
             <p v-if="info.puntaje_medio" class="text-m text-gray-600"> ⭐ {{ info.puntaje_medio }} / 5</p>
 
-            <p class="text-sm text-gray-600 mt-2">Horario hoy: {{ horarioDelDia }}</p>
-            <p class="text-sm font-bold" :class="estadoLocal === 'Abierto' ? 'text-green-600' : 'text-red-600'">
-                {{ estadoLocal }}
-            </p>
+            <div class="flex w-full items-center text-center gap-5">
+
+                <p class="w-1/2 text-sm font-bold py-2 text-right gap-10"
+                    :class="estadoLocal === 'Abierto' ? 'text-green-600' : 'text-red-600'">
+                    {{ estadoLocal }}
+                </p>
+
+
+                <p class="w-1/2 text-sm text-gray-600 py-2 border-gray-300 text-left">
+                    {{ horarioDelDia }}
+                </p>
+
+            </div>
+
 
             <button @click="cerrar" id="cerrar">x</button>
             <button @click="infoDelComercio">Ir al local</button>
