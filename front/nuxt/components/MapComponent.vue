@@ -25,6 +25,7 @@
             <button @click="getLocation" id="btnLocation">
                 <img src="../assets/location.svg" alt="Location">
             </button>
+            <!--<p v-if="location">Ubicación: {{ location }}</p>-->
         </div>
 
         <InfoMapa v-if="showPopup" :info="puebloSeleccionado" @cerrarPopup="cerrarPopup" />
@@ -92,8 +93,9 @@ onMounted(async () => {
             const lonLat = selectedFeature.getGeometry().getCoordinates();
             const lon = lonLat[0];
             const lat = lonLat[1];
+            const puntaje = selectedFeature.get('puntaje_medio');
 
-            puebloSeleccionado.value = { id, name, lat, lon };
+            puebloSeleccionado.value = { id, name, lat, lon, puntaje_medio: puntaje }; // Aquí pasas el puntaje
             showPopup.value = true;
         }
     });
@@ -107,12 +109,13 @@ const agregarMarcadoresDesdeResponse = async () => {
     try {
         const response = await $communicationManager.getLocations();
 
-        response.forEach(({ id, latitude, longitude, nombre }) => {
+        response.forEach(({ id, latitude, longitude, nombre, puntaje_medio }) => {
             if (!isNaN(latitude) && !isNaN(longitude)) {
                 const marker = new Feature({
                     geometry: new Point(fromLonLat([longitude, latitude])),
                     id: id,
-                    name: nombre
+                    name: nombre,
+                    puntaje_medio: puntaje_medio
                 });
 
                 marker.setStyle(
@@ -132,6 +135,7 @@ const agregarMarcadoresDesdeResponse = async () => {
         console.error("Error obteniendo ubicaciones:", error);
     }
 };
+
 
 const buscarPorCodigoPostal = async () => {
     if (!codigoPostal.value) {
@@ -223,5 +227,5 @@ const cerrarPopup = () => {
 </script>
 
 <style scoped>
-    @import url('../assets/mapa.css');
+@import url('../assets/mapa.css');
 </style>
