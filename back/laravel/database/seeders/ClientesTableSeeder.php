@@ -18,7 +18,7 @@ class ClientesTableSeeder extends Seeder
     {
         $faker = Faker::create();
 
-        $cantidad = 10;
+        $cantidad = 7;
 
         for ($i = 0; $i < $cantidad; $i++) {
             DB::table("cliente")->insert([
