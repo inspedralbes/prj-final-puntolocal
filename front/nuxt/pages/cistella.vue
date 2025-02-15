@@ -21,7 +21,8 @@ const route = useRoute();
 const router = useRouter();
 const comercioStore = useComercioStore();
 const { $communicationManager } = useNuxtApp();
-const socket = io("http://localhost:8001");
+// const socket = io("http://localhost:8001");
+const socket = io("https://holabarri.cat")
 
 const authStore = useAuthStore();
 const errorMessage = ref('');
