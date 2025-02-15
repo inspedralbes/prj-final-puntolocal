@@ -63,7 +63,7 @@
                                 <span class="bg-white px-2 text-gray-500">O continua amb</span>
                             </div>
                         </div>
-                        <div class="mt-6 grid grid-cols-2 gap-3">
+                        <div class="mt-6">
                             <button @click="loginWithGoogle"
                                 class="inline-flex w-full items-center justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-500 shadow-sm hover:bg-gray-50 disabled:cursor-wait disabled:opacity-50">
                                 <span class="sr-only">Inicia sessió amb Google</span>
@@ -81,15 +81,6 @@
                                             d="m10.000263 8.268785l9.847767 0l0 3.496233l-9.847767 0z"
                                             fill-rule="evenodd"></path>
                                     </g>
-                                </svg>
-                            </button>
-                            <button
-                                class="inline-flex w-full justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-500 shadow-sm hover:bg-gray-50 disabled:cursor-wait disabled:opacity-50">
-                                <span class="sr-only">Inicia sessió amb Facebook</span>
-                                <svg class="h-6 w-6" fill="currentColor" xmlns="http://www.w3.org/2000/svg"
-                                    width="800px" height="800px" viewBox="2 2 28 28" version="1.1">
-                                    <path
-                                        d="M21.95 5.005l-3.306-.004c-3.206 0-5.277 2.124-5.277 5.415v2.495H10.05v4.515h3.317l-.004 9.575h4.641l.004-9.575h3.806l-.003-4.514h-3.803v-2.117c0-1.018.241-1.533 1.566-1.533l2.366-.001.01-4.256z" />
                                 </svg>
                             </button>
                         </div>
