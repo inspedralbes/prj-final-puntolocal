@@ -40,7 +40,7 @@ class ClientesTableSeeder extends Seeder
             "apellidos" => "Noviello",
             "email" => "a23agunovnov@inspedralbes.cat",
             "phone" => "603397347",
-            'password' => Hash::make(value: "12345678"),
+            'password' => Hash::make(value: "perseverar"),
             "street_address" => "Carrer Confiança 32",
             "ciudad" => "Castelldefels",
             "provincia" => "Barcelona",
@@ -49,11 +49,11 @@ class ClientesTableSeeder extends Seeder
             "numero_puerta" => 1,
         ]);
         DB::table("cliente")->insert([
-            "name" => "Agustín Enzo",
-            "apellidos" => "Noviello",
+            "name" => "Pacho Lacalle",
+            "apellidos" => "Lobarrio",
             "email" => "comercio@comercio.cat",
             "phone" => "123456789",
-            'password' => Hash::make(value: "12345678"),
+            'password' => Hash::make(value: "objetivos"),
             "street_address" => "Carrer Confiança 32",
             "ciudad" => "Castelldefels",
             "provincia" => "Barcelona",
