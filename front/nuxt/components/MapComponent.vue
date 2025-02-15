@@ -25,7 +25,6 @@
             <button @click="getLocation" id="btnLocation">
                 <img src="../assets/location.svg" alt="Location">
             </button>
-            <!--<p v-if="location">Ubicación: {{ location }}</p>-->
         </div>
 
         <InfoMapa v-if="showPopup" :info="puebloSeleccionado" @cerrarPopup="cerrarPopup" />
@@ -33,59 +32,59 @@
 </template>
 
 <script setup>
-import { onMounted, ref } from 'vue';
-import 'ol/ol.css';
-import Map from 'ol/Map';
-import View from 'ol/View';
-import TileLayer from 'ol/layer/Tile';
-import OSM from 'ol/source/OSM';
-import { fromLonLat } from 'ol/proj';
-import VectorLayer from 'ol/layer/Vector';
-import VectorSource from 'ol/source/Vector';
-import Feature from 'ol/Feature';
-import Point from 'ol/geom/Point';
-import Style from 'ol/style/Style';
-import CircleStyle from 'ol/style/Circle';
-import Fill from 'ol/style/Fill';
-import Stroke from 'ol/style/Stroke';
-import Select from 'ol/interaction/Select';
-import { click } from 'ol/events/condition';
-import InfoMapa from './InfoMapa.vue';
-import { useRoute, useRouter } from "vue-router";
-import { defaults as defaultControls } from 'ol/control';
+    import { onMounted, ref } from 'vue';
+    import 'ol/ol.css';
+    import Map from 'ol/Map';
+    import View from 'ol/View';
+    import TileLayer from 'ol/layer/Tile';
+    import OSM from 'ol/source/OSM';
+    import { fromLonLat } from 'ol/proj';
+    import VectorLayer from 'ol/layer/Vector';
+    import VectorSource from 'ol/source/Vector';
+    import Feature from 'ol/Feature';
+    import Point from 'ol/geom/Point';
+    import Style from 'ol/style/Style';
+    import CircleStyle from 'ol/style/Circle';
+    import Fill from 'ol/style/Fill';
+    import Stroke from 'ol/style/Stroke';
+    import Select from 'ol/interaction/Select';
+    import { click } from 'ol/events/condition';
+    import InfoMapa from './InfoMapa.vue';
+    import { useRoute, useRouter } from "vue-router";
+    import { defaults as defaultControls } from 'ol/control';
 
-const map = ref(null);
-const router = useRouter();
-const location = ref(null);
-const codigoPostal = ref("");
-const showPopup = ref(false);
-const mapContainer = ref(null);
-const puebloSeleccionado = ref({});
-const vectorSource = ref(new VectorSource());
-const { $communicationManager } = useNuxtApp();
-const API_URL = "https://nominatim.openstreetmap.org/search";
+    const map = ref(null);
+    const router = useRouter();
+    const location = ref(null);
+    const codigoPostal = ref("");
+    const showPopup = ref(false);
+    const mapContainer = ref(null);
+    const puebloSeleccionado = ref({});
+    const vectorSource = ref(new VectorSource());
+    const { $communicationManager } = useNuxtApp();
+    const API_URL = "https://nominatim.openstreetmap.org/search";
 
-onMounted(async () => {
-    const vectorLayer = new VectorLayer({ source: vectorSource.value });
+    onMounted(async () => {
+        const vectorLayer = new VectorLayer({ source: vectorSource.value });
 
-    map.value = new Map({
-        target: mapContainer.value,
-        layers: [
-            new TileLayer({ source: new OSM() }),
-            vectorLayer
-        ],
-        view: new View({
-            center: fromLonLat([2.15899, 41.38879]),
-            zoom: 10
-        }),
-        controls: defaultControls({ zoom: false })
-    });
+        map.value = new Map({
+            target: mapContainer.value,
+            layers: [
+                new TileLayer({ source: new OSM() }),
+                vectorLayer
+            ],
+            view: new View({
+                center: fromLonLat([2.15899, 41.38879]),
+                zoom: 10
+            }),
+            controls: defaultControls({ zoom: false })
+        });
 
-    await agregarMarcadoresDesdeResponse();
+        await agregarMarcadoresDesdeResponse();
 
-    const selectClick = new Select({ condition: click });
-    map.value.addInteraction(selectClick);
-    selectClick.on('select', (e) => {
+        const selectClick = new Select({ condition: click });
+        map.value.addInteraction(selectClick);
+        selectClick.on('select', (e) => {
         const selectedFeature = e.selected[0];
         if (selectedFeature) {
             const id = selectedFeature.get('id');
@@ -94,138 +93,149 @@ onMounted(async () => {
             const lon = lonLat[0];
             const lat = lonLat[1];
             const puntaje = selectedFeature.get('puntaje_medio');
+            const horario = selectedFeature.get('horario');
 
-            puebloSeleccionado.value = { id, name, lat, lon, puntaje_medio: puntaje }; // Aquí pasas el puntaje
+            console.log("Pueblo seleccionado:", {
+                id, name, lat, lon, puntaje_medio: puntaje, horario
+            });
+
+            puebloSeleccionado.value = { id, name, lat, lon, puntaje_medio: puntaje, horario };
             showPopup.value = true;
         }
     });
-});
 
-const goBack = () => {
-    router.back();
-};
-
-const agregarMarcadoresDesdeResponse = async () => {
-    try {
-        const response = await $communicationManager.getLocations();
-
-        response.forEach(({ id, latitude, longitude, nombre, puntaje_medio }) => {
-            if (!isNaN(latitude) && !isNaN(longitude)) {
-                const marker = new Feature({
-                    geometry: new Point(fromLonLat([longitude, latitude])),
-                    id: id,
-                    name: nombre,
-                    puntaje_medio: puntaje_medio
-                });
-
-                marker.setStyle(
-                    new Style({
-                        image: new CircleStyle({
-                            radius: 6,
-                            fill: new Fill({ color: 'blue' }),
-                            stroke: new Stroke({ color: 'white', width: 1 })
-                        })
-                    })
-                );
-
-                vectorSource.value.addFeature(marker);
-            }
-        });
-    } catch (error) {
-        console.error("Error obteniendo ubicaciones:", error);
-    }
-};
-
-
-const buscarPorCodigoPostal = async () => {
-    if (!codigoPostal.value) {
-        alert("Introduce un código postal.");
-        return;
-    }
-
-    try {
-        const response = await fetch(`${API_URL}?postalcode=${codigoPostal.value}&country=ES&format=json`);
-        const data = await response.json();
-
-        if (data.length > 0) {
-            const ubicacion = data[0];
-            const lat = parseFloat(ubicacion.lat);
-            const lon = parseFloat(ubicacion.lon);
-            puebloSeleccionado.value = {
-                name: ubicacion.display_name,
-                lat,
-                lon
-            };
-
-            agregarMarcador(lon, lat, puebloSeleccionado.value.name);
-
-            map.value.getView().animate({
-                center: fromLonLat([lon, lat]),
-                zoom: 14,
-                duration: 1000
-            });
-        } else {
-            alert("No se encontró la ubicación.");
-        }
-    } catch (error) {
-        console.error("Error en la búsqueda:", error);
-        alert("Error al buscar el código postal.");
-    }
-};
-
-const agregarMarcador = (lon, lat, name) => {
-    const marker = new Feature({
-        geometry: new Point(fromLonLat([lon, lat])),
-        name: name
     });
 
+    const goBack = () => {
+        router.back();
+    };
 
-    vectorSource.value.addFeature(marker);
-};
+    const agregarMarcadoresDesdeResponse = async () => {
+        try {
+            const response = await $communicationManager.getLocations();
+            console.log("Respuesta de la api: ", response);
 
-const getLocation = () => {
-    if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(
-            (position) => {
-                const lat = position.coords.latitude;
-                const lon = position.coords.longitude;
-                location.value = `Lat: ${lat}, Lng: ${lon}`;
+            response.forEach(({ id, latitude, longitude, nombre, puntaje_medio, horario }) => {
+                if (!isNaN(latitude) && !isNaN(longitude)) {
+                    const horarioParseado = JSON.parse(horario);
+                    console.log(horarioParseado)
 
-                const lonLat = fromLonLat([lon, lat]);
+                    const marker = new Feature({
+                        geometry: new Point(fromLonLat([longitude, latitude])),
+                        id: id,
+                        name: nombre,
+                        puntaje_medio: puntaje_medio,
+                        horario: horarioParseado 
+                    });
+
+                    marker.setStyle(
+                        new Style({
+                            image: new CircleStyle({
+                                radius: 6,
+                                fill: new Fill({ color: 'blue' }),
+                                stroke: new Stroke({ color: 'white', width: 1 })
+                            })
+                        })
+                    );
+
+                    vectorSource.value.addFeature(marker);
+                }
+            });
+        } catch (error) {
+            console.error("Error obteniendo ubicaciones:", error);
+        }
+    };
+
+
+    const buscarPorCodigoPostal = async () => {
+        if (!codigoPostal.value) {
+            alert("Introduce un código postal.");
+            return;
+        }
+
+        try {
+            const response = await fetch(`${API_URL}?postalcode=${codigoPostal.value}&country=ES&format=json`);
+            const data = await response.json();
+
+            if (data.length > 0) {
+                const ubicacion = data[0];
+                const lat = parseFloat(ubicacion.lat);
+                const lon = parseFloat(ubicacion.lon);
+                puebloSeleccionado.value = {
+                    name: ubicacion.display_name,
+                    lat,
+                    lon
+                };
+
+                agregarMarcador(lon, lat, puebloSeleccionado.value.name);
 
                 map.value.getView().animate({
-                    center: lonLat,
-                    zoom: 16,
+                    center: fromLonLat([lon, lat]),
+                    zoom: 14,
                     duration: 1000
                 });
-
-                vectorSource.value.getFeatures().forEach(feature => {
-                    if (feature.get('userLocation')) {
-                        vectorSource.value.removeFeature(feature);
-                    }
-                });
-
-                vectorSource.value.addFeature(userMarker);
-            },
-            (error) => {
-                location.value = `Error: ${error.message}`;
-            },
-            {
-                enableHighAccuracy: true,
-                timeout: 10000,
-                maximumAge: 0
+            } else {
+                alert("No se encontró la ubicación.");
             }
-        );
-    } else {
-        location.value = 'La geolocalización no es compatible con este navegador.';
-    }
-};
+        } catch (error) {
+            console.error("Error en la búsqueda:", error);
+            alert("Error al buscar el código postal.");
+        }
+    };
 
-const cerrarPopup = () => {
-    showPopup.value = false;
-};
+    const agregarMarcador = (lon, lat, name) => {
+        const marker = new Feature({
+            geometry: new Point(fromLonLat([lon, lat])),
+            name: name
+        });
+
+
+        vectorSource.value.addFeature(marker);
+    };
+
+    const getLocation = () => {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(
+                (position) => {
+                    const lat = position.coords.latitude;
+                    const lon = position.coords.longitude;
+                    location.value = `Lat: ${lat}, Lng: ${lon}`;
+
+                    const lonLat = fromLonLat([lon, lat]);
+
+                    map.value.getView().animate({
+                        center: lonLat,
+                        zoom: 16,
+                        duration: 1000
+                    });
+
+                    vectorSource.value.getFeatures().forEach(feature => {
+                        if (feature.get('userLocation')) {
+                            vectorSource.value.removeFeature(feature);
+                        }
+                    });
+
+                    vectorSource.value.addFeature(userMarker);
+                },
+                (error) => {
+                    location.value = `Error: ${error.message}`;
+                },
+                {
+                    enableHighAccuracy: true,
+                    timeout: 10000,
+                    maximumAge: 0
+                }
+            );
+        } else {
+            location.value = 'La geolocalización no es compatible con este navegador.';
+        }
+    };
+
+    const cerrarPopup = () => {
+        showPopup.value = false;
+    };
 </script>
 
 <style scoped>
-@import url('../assets/mapa.css');
+    @import url('../assets/mapa.css');
 </style>

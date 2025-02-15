@@ -109,7 +109,7 @@ class ComercioController extends Controller {
     }
 
     public function getLocations() {
-        $comercios = Comercio::select('id', 'nombre', 'latitude', 'longitude', 'puntaje_medio')
+        $comercios = Comercio::select('id', 'nombre', 'latitude','longitude', 'puntaje_medio', 'horario')
             ->whereNotNull('ubicacion_verified_at')
             ->get();
 
@@ -171,5 +171,4 @@ class ComercioController extends Controller {
 
         return response()->json(['data' => $comerciosMapeados], 200);
     }
-
 }
