@@ -156,6 +156,12 @@ const view = ref('productos');
 const { $communicationManager } = useNuxtApp();
 const infoVisible = ref(false);
 
+const mostrarIdProducto = (id) => {
+    console.log("ID del producto:", id);
+    router.push(`/producto/${id}`);
+};
+
+
 const fetchComercio = async () => {
     const id = route.params.id;
     try {

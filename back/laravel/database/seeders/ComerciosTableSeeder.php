@@ -118,7 +118,7 @@ class ComerciosTableSeeder extends Seeder
                     'miércoles' => '09:00 - 18:00',
                     'jueves' => '09:00 - 18:00',
                     'viernes' => '09:00 - 18:00',
-                    'sábado' => '10:00 - 14:00',
+                    'sábado' => '10:00 - 20:00',
                     'domingo' => 'Cerrado',
                 ]),
                 'latitude' => $comercios_latitudes[$i],

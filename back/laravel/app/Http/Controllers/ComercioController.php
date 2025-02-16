@@ -9,10 +9,8 @@ use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 
-class ComercioController extends Controller
-{
-    public function RegistrarComercio(Request $request)
-    {
+class ComercioController extends Controller {
+    public function RegistrarComercio(Request $request) {
         $validator = Validator::make($request->all(), [
             'nombre' => 'required|string|max:255',
             'idUser' => 'required|integer',
@@ -69,14 +67,12 @@ class ComercioController extends Controller
         ], 201);
     }
 
-    public function getComercios()
-    {
+    public function getComercios() {
         $comercios = Comercio::all();
         return response()->json($comercios, 200);
     }
 
-    public function getComercio($id)
-    {
+    public function getComercio($id) {
         $comercio = Comercio::find($id);
 
         if ($comercio == null) {
@@ -112,17 +108,15 @@ class ComercioController extends Controller
         ], 200);
     }
 
-    public function getLocations()
-    {
-        $comercios = Comercio::select('id', 'nombre', 'latitude', 'longitude')
+    public function getLocations() {
+        $comercios = Comercio::select('id', 'nombre', 'latitude','longitude', 'puntaje_medio', 'horario')
             ->whereNotNull('ubicacion_verified_at')
             ->get();
 
         return response()->json($comercios);
     }
 
-    public function checkUserHasComercio($userId)
-    {
+    public function checkUserHasComercio($userId) {
         $comercio = Comercio::where('idUser', $userId)->first();
         if ($comercio) {
             return response()->json([
@@ -138,8 +132,7 @@ class ComercioController extends Controller
         }
     }
 
-    public function getUserID($id)
-    {
+    public function getUserID($id) {
         $comercio = Comercio::find($id);
         if (!$comercio) {
             return response()->json([
@@ -149,8 +142,7 @@ class ComercioController extends Controller
         return response()->json(['usuario_id' => $comercio->id], 200);
     }
 
-    public function search($search)
-    {
+    public function search($search) {
         $validator = Validator::make(['search' => $search], [
             'searchTerm' => 'required|integer',
         ]);
@@ -179,5 +171,4 @@ class ComercioController extends Controller
 
         return response()->json(['data' => $comerciosMapeados], 200);
     }
-
 }

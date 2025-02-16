@@ -1,5 +1,20 @@
 <template>
     <div>
+        <!-- Botón Retroceder (GoBack) visible solo cuando showPopup es falso -->
+        <div v-if="!showPopup" @click="goBack" class="text-xl text-gray-700 dark:text-gray-300 cursor-pointer"
+            id="retrocederBtn">
+            <svg width="1.5em" height="1.5em" viewBox="0 0 1024 1024" class="icon" xmlns="http://www.w3.org/2000/svg"
+                fill="#000000">
+                <g id="SVGRepo_iconCarrier">
+                    <path fill="#000000" d="M224 480h640a32 32 0 110 64H224a32 32 0 010-64z"></path>
+                    <path fill="#000000"
+                        d="M237.248 512l265.408 265.344a32 32 0 01-45.312 45.312l-288-288a32 32 0 010-45.312l288-288a32 32 0 1145.312 45.312L237.248 512z">
+                    </path>
+                </g>
+            </svg>
+        </div>
+
+        <!-- Buscador -->
         <div id="divBuscador">
             <input v-model="codigoPostal" @keyup.enter="buscarPorCodigoPostal" placeholder="Código Postal" />
             <button @click="buscarPorCodigoPostal" id="buscar">
@@ -7,16 +22,18 @@
             </button>
         </div>
 
+        <!-- Contenedor del mapa visible siempre -->
         <div ref="mapContainer" class="map-container"></div>
 
-        <div>
+        <!-- Botón GetLocation visible solo cuando showPopup es falso -->
+        <div v-if="!showPopup">
             <button @click="getLocation" id="btnLocation">
                 <img src="../assets/location.svg" alt="Location">
             </button>
-            <!--<p v-if="location">Ubicación: {{ location }}</p>-->
         </div>
 
-        <InfoMapa v-if="showPopup" :info="puebloSeleccionado" @cerrarPopup="cerrarPopup" />
+        <!-- Componente InfoMapa visible solo cuando showPopup es verdadero -->
+        <InfoMapa v-if="showPopup" :info="puebloSeleccionado" @cerrarPopup="cerrarPopup" id="infoMapa" />
     </div>
 </template>
 
@@ -39,8 +56,11 @@ import Stroke from 'ol/style/Stroke';
 import Select from 'ol/interaction/Select';
 import { click } from 'ol/events/condition';
 import InfoMapa from './InfoMapa.vue';
+import { useRoute, useRouter } from "vue-router";
+import { defaults as defaultControls } from 'ol/control';
 
 const map = ref(null);
+const router = useRouter();
 const location = ref(null);
 const codigoPostal = ref("");
 const showPopup = ref(false);
@@ -60,9 +80,10 @@ onMounted(async () => {
             vectorLayer
         ],
         view: new View({
-            center: fromLonLat([1.690866, 41.341365]),
+            center: fromLonLat([2.15899, 41.38879]),
             zoom: 10
-        })
+        }),
+        controls: defaultControls({ zoom: false })
     });
 
     await agregarMarcadoresDesdeResponse();
@@ -77,23 +98,40 @@ onMounted(async () => {
             const lonLat = selectedFeature.getGeometry().getCoordinates();
             const lon = lonLat[0];
             const lat = lonLat[1];
+            const puntaje = selectedFeature.get('puntaje_medio');
+            const horario = selectedFeature.get('horario');
 
-            puebloSeleccionado.value = { id, name, lat, lon };
+            console.log("Pueblo seleccionado:", {
+                id, name, lat, lon, puntaje_medio: puntaje, horario
+            });
+
+            puebloSeleccionado.value = { id, name, lat, lon, puntaje_medio: puntaje, horario };
             showPopup.value = true;
         }
     });
+
 });
+
+const goBack = () => {
+    router.back();
+};
 
 const agregarMarcadoresDesdeResponse = async () => {
     try {
         const response = await $communicationManager.getLocations();
+        console.log("Respuesta de la api: ", response);
 
-        response.forEach(({ id, latitude, longitude, nombre }) => {
+        response.forEach(({ id, latitude, longitude, nombre, puntaje_medio, horario }) => {
             if (!isNaN(latitude) && !isNaN(longitude)) {
+                const horarioParseado = JSON.parse(horario);
+                console.log(horarioParseado)
+
                 const marker = new Feature({
                     geometry: new Point(fromLonLat([longitude, latitude])),
                     id: id,
-                    name: nombre
+                    name: nombre,
+                    puntaje_medio: puntaje_medio,
+                    horario: horarioParseado
                 });
 
                 marker.setStyle(
@@ -113,6 +151,7 @@ const agregarMarcadoresDesdeResponse = async () => {
         console.error("Error obteniendo ubicaciones:", error);
     }
 };
+
 
 const buscarPorCodigoPostal = async () => {
     if (!codigoPostal.value) {
