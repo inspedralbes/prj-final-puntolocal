@@ -2,15 +2,16 @@
 import { computed } from "vue";
 
 defineProps({
-  rating: { type: Number, required: true }, // Valor entre 0 y 5
-  max: { type: Number, default: 5 }, // Máximo de estrellas
+  rating: { type: Number, required: true },
+  max: { type: Number, default: 5 },
+  customClass: { type: String, default: "relative w-5 h-5" }
 });
 </script>
 
 <template>
   <div class="flex">
     <template v-for="i in max" :key="i">
-      <div class="relative w-5 h-5">
+      <div :class="customClass">
         <!-- Estrella gris de fondo -->
         <svg class="absolute top-0 left-0 w-full h-full text-gray-300" fill="currentColor" viewBox="0 0 20 20">
           <path

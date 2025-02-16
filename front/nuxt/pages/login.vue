@@ -63,7 +63,7 @@
                                 <span class="bg-white px-2 text-gray-500">O continua amb</span>
                             </div>
                         </div>
-                        <div class="mt-6 grid grid-cols-2 gap-3">
+                        <div class="mt-6">
                             <button @click="loginWithGoogle"
                                 class="inline-flex w-full items-center justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-500 shadow-sm hover:bg-gray-50 disabled:cursor-wait disabled:opacity-50">
                                 <span class="sr-only">Inicia sessió amb Google</span>

@@ -3,7 +3,6 @@ definePageMeta({
     layout: 'footer-only'
 });
 
-
 import { useRuntimeConfig } from "#imports";
 const config = useRuntimeConfig();
 const baseUrl = config.public.apiBaseUrl;
@@ -40,6 +39,8 @@ const auth = useAuthStore();
 const shipOption = ref(null);
 const paymentView = ref(false);
 const cistellaView = ref(true);
+const isOk = ref(false);
+const order_id = ref();
 // const shipOption = ref(2);
 // const paymentView = ref(true);
 // const cistellaView = ref(false);
@@ -83,7 +84,7 @@ const storeTotal = (storeName) => {
 function toggleCheckout() {
     if (!isLoggued.value) {
         loginVisible.value = !loginVisible.value;
-    }else{
+    } else {
         chooseShipping.value = !chooseShipping.value;
         shipOption.value = null;
         choosed.value = false;
@@ -119,7 +120,7 @@ function toPay() {
 async function crearComanda() {
     const createdOrder = await $communicationManager.createOrder(orderFiltrada.value);
     if (createdOrder.success) {
-        const order_id = ref(createdOrder.data.order.id)
+        order_id.value = createdOrder.data.order.id;
         const subcomandaInfo = computed(() => {
             return {
                 order_id: order_id.value,
@@ -171,7 +172,8 @@ async function crearComanda() {
         }
     }
 
-    goBack();
+    // goBack();
+    isOk.value = true;
     comercioStore.emptyBasket();
 }
 
@@ -188,38 +190,12 @@ const subcomandaInfo = computed(() => {
     }));
 });
 
-async function login() {
-    const { $communicationManager } = useNuxtApp(); // Acceder al communicationManager
+const seguirComprant = () => {
+    router.push('/'); // Ajusta la ruta segons la teva aplicació
+};
 
-    // Verificar si los campos están vacíos
-    if (!formData.email || !formData.password) {
-        errorMessage.value = 'És necessari completar tots els camps';
-        return;
-    }
-
-    // Verificar que la contraseña tenga al menos 8 caracteres
-    if (formData.password.length < 8) {
-        errorMessage.value = 'La contrasenya es incorrecta';
-        return;
-    }
-
-    // Llamar al plugin communicationManager para registrar
-    const response = await $communicationManager.login(formData);
-
-    if (response) {
-        authStore.login(response.user, response.token, response.comercio);
-        loginVisible.value = !loginVisible.value
-        chooseShipping.value = !chooseShipping.value;
-        shipOption.value = null;
-        choosed.value = false;
-        // navigateTo('/');
-    } else {
-        errorMessage.value = 'Les dades introduïdes son incorrectes';
-    }
-}
-
-function loginWithGoogle() {
-    window.location.href = `${baseUrl}/auth/google`;
+const veureOrdre = () => {
+    router.push(`/perfil/compras/${order_id.value}`); // Ajusta la ruta segons la teva aplicació
 };
 
 </script>
@@ -230,7 +206,28 @@ function loginWithGoogle() {
             <h3 class="text-2xl ml-4">Cistella</h3>
         </div>
     </header>
+    <div v-if="isOk" class="fixed inset-0 flex items-center justify-center bg-black/50 z-50">
+        <div class="bg-white p-6 rounded-2xl shadow-xl max-w-sm text-center animate-fadeIn">
+            <!-- Ícono de confirmación -->
+            <div class="w-16 h-16 bg-green-500 text-white rounded-full mx-auto mb-4 flex items-center justify-center">
+                <span class="text-2xl font-bold">✔</span>
+            </div>
 
+            <h2 class="text-2xl font-semibold text-gray-800">Comanda realitzada amb èxit!</h2>
+            <p class="text-gray-600 mt-2">Rebràs un correu quan la teva comanda estigui llesta per a recollir.</p>
+
+            <div class="mt-6 flex gap-4">
+                <button @click="seguirComprant"
+                    class="flex-1 bg-gray-200 hover:bg-gray-300 text-gray-800 font-medium py-2 px-4 rounded-lg">
+                    Seguir comprant
+                </button>
+                <button @click="veureOrdre"
+                    class="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg">
+                    Veure la comanda
+                </button>
+            </div>
+        </div>
+    </div>
     <div class="mt-[80px] mb-[80px] w-full">
         <div v-if="Object.keys(groupedCesta).length === 0" class="w-full flex flex-col items-center mt-[180px]">
             <svg width="10em" height="10em" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -272,7 +269,8 @@ function loginWithGoogle() {
             <div v-if="loginVisible" class="w-full flex items-center justify-center">
                 <div class="bg-gray-900/50 dark:bg-gray-900/80 fixed inset-0 z-40"></div>
                 <div class="fixed top-0 right-0 z-40 w-full h-screen flex items-center">
-                    <div class="bg-white mx-5 px-4 pb-4 pt-4 sm:rounded-lg sm:px-10 sm:pb-6 sm:shadow rounded-md w-full">
+                    <div
+                        class="bg-white mx-5 px-4 pb-4 pt-4 sm:rounded-lg sm:px-10 sm:pb-6 sm:shadow rounded-md w-full">
                         <h2 class="text-2xl font-bold text-center mb-2">Inicia sessió</h2>
                         <form @submit.prevent="login" class="space-y-6">
                             <div>
@@ -426,7 +424,7 @@ function loginWithGoogle() {
                     </div>
                     <div id="map-ubi"
                         class="w-full h-[130px] bg-gray-200 mt-3 rounded flex items-center justify-center overflow-hidden">
-                        <img src="../assets/mapubi.png" alt="plano ubicación">
+                        <!-- <img src="../assets/mapubi.png" alt="plano ubicación"> -->
                         <!-- LOGICA DEL MAPA PARA MOSTRAR LA DIRECCIÓN DE ENTREGA DEL USUARIO -->
                     </div>
                     <button :disabled="!choosed" @click="toPay"
@@ -463,7 +461,7 @@ function loginWithGoogle() {
                         <div class="my-3 max-h-[250px] overflow-scroll">
                             <div v-for="(items) in groupedCesta">
                                 <div v-for="item in items" :key="item.id" class="flex mb-1">
-                                    <div id="contain-image" class="mr-4 max-w-[70px] max-h-[70px] overflow-hidden">
+                                    <div id="contain-image" class="mr-4 w-[70px] h-[70px] overflow-hidden">
                                         <img :src="`${baseUrl}/storage/${item.imagen}`" alt="" />
                                     </div>
                                     <div class="flex flex-col w-full justify-center">
@@ -617,10 +615,10 @@ function loginWithGoogle() {
                                 </g>
                             </svg>
                         </button>
-                        <div id="contain-image" class="mr-4 min-w-[100px] min-h-[100px] overflow-hidden">
+                        <div id="contain-image" class="mr-4 w-[80px] h-[100px] overflow-hidden">
                             <img :src="`${baseUrl}/storage/${item.imagen}`" alt="" />
                         </div>
-                        <div class="flex flex-col w-full justify-between">
+                        <div class="flex flex-col w-full justify-between flex-grow">
                             <div class="flex justify-between">
                                 <div class="w-[75%]">
                                     <h3 class="text-lg font-medium line-clamp-2">{{ item.nombre }}</h3>
@@ -660,7 +658,7 @@ function loginWithGoogle() {
                                             </g>
                                         </svg>
                                     -->
-                                        +
+                                    +
                                 </button>
                             </div>
                         </div>
@@ -686,6 +684,22 @@ function loginWithGoogle() {
 </template>
 
 <style scoped>
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.animate-fadeIn {
+    animation: fadeIn 0.3s ease-out;
+}
+
 #chooseShipping {
     width: 100%;
     height: 400px;
@@ -759,16 +773,5 @@ header {
     max-height: 80px;
     box-sizing: border-box;
     padding: 1rem;
-}
-
-#contain-image {
-    height: 160px;
-    position: relative;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    overflow: hidden;
-    border-radius: 10px;
-    border: 1px solid #dde0e2;
 }
 </style>

@@ -2,7 +2,7 @@
     <div
         class="min-h-screen bg-gray-100 flex flex-col text-gray-900 dark:bg-gray-900 dark:text-gray-100 transition-colors duration-300">
         <div id="header"
-            class="w-full flex items-center justify-between p-4 bg-white dark:bg-gray-800 rounded-b-lg fixed top-0 border-b">
+            class="w-full flex items-center justify-between p-4 bg-white dark:bg-gray-800 fixed top-0 border-b">
 
             <!-- Botón de retroceso -->
             <div @click="goBack" class="text-xl text-gray-700 dark:text-gray-300 cursor-pointer">
