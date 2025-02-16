@@ -218,10 +218,6 @@ const goBack = () => {
     router.back();
 };
 
-function mostrarIdProducto(id) {
-    router.push(`/producto/${id}`);
-}
-
 onMounted(() => {
     fetchComercio();
 });
