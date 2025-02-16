@@ -3,16 +3,21 @@
         <Loading />
     </div>
     <div v-else>
-        <nav class="sticky top-[76px] z-50 flex gap-4 w-full justify-center bg-white text-lg border-b-2 border-gray-300">
-            <button class="hover:text-black hover:border-b-2 hover:border-blue-500 text-gray-400 border-b-2 border-white" 
-                @click="showSection('productos'); getProductsBySearch()">
-                Productes
-            </button>
-            <button class="hover:text-black hover:border-b-2 hover:border-blue-500 text-gray-400 border-b-2 border-white"
-                @click="showSection('comercios'); getComerciosBySearch()">
-                Comerços
-            </button>
-
+        <nav class="sticky top-[76px] z-50 flex justify-center w-full bg-white text-lg border-b border-gray-300">
+            <div class="flex justify-around w-[60vw]">
+                <button class="border-b-2" :class="{
+                    'text-black': currentSection === 'productos', 'border-[#276BF2]': currentSection === 'productos',
+                    'text-gray-400': currentSection !== 'productos', 'border-white': currentSection !== 'productos'
+                }"
+                    @click="showSection('productos'), getProductsBySearch()">
+                    Productes
+                </button>
+                <button
+                    class="hover:text-black hover:border-b-2 hover:border-blue-500 text-gray-400 border-b-2 border-white"
+                    @click="showSection('comercios'); getComerciosBySearch()">
+                    Comerços
+                </button>
+            </div>
         </nav>
         <div v-if="currentSection === 'productos'" class="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div v-if="Object.values(productos).length > 0">

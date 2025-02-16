@@ -62,7 +62,7 @@
                         </p>
                     </div>
                     <div class="flex space-x-1 pl-4 items-center overflow-x-auto scrollbar-none">
-                        <productoComp v-for="(producto, index) in productos" :key="index" :id="producto.id"
+                        <productoComp v-for="(producto, index) in productos2" :key="index" :id="producto.id"
                         :img="producto.imagen ? `${baseUrl}/storage/${producto.imagen}` : `${baseUrl}/storage/productos/default-image.webp`"
                         :title="producto.nombre" :price="producto.precio" :comercio="producto.comercio"
                             :customClass="'w-[170px]'" price-class="text-gray-900 dark:text-white"
@@ -94,6 +94,7 @@ const config = useRuntimeConfig();
 const baseUrl = config.public.apiBaseUrl;
 
 const productos = ref([]);
+const productos2 = ref([]);
 const categorias = ref([]);
 const router = useRouter();
 const authStore = useAuthStore();
@@ -112,6 +113,7 @@ onMounted(() => {
         document.body.classList.toggle('dark', isDarkMode.value);
 
         fetchProductos();
+        fetchProductos2();
         fetchCategorias();
 });
 
@@ -152,6 +154,19 @@ async function fetchProductos() {
         const response = await $communicationManager.getProductos();
         if (response && response.data) {
             productos.value = response.data;
+        } else {
+            console.error("Error al obtener los productos");
+        }
+    } catch (error) {
+        console.error("Error en la petición:", error);
+    }
+}
+
+async function fetchProductos2() {
+    try {
+        const response = await $communicationManager.getProductos();
+        if (response && response.data) {
+            productos2.value = response.data;
         } else {
             console.error("Error al obtener los productos");
         }
