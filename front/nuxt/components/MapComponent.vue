@@ -50,14 +50,14 @@ import VectorSource from 'ol/source/Vector';
 import Feature from 'ol/Feature';
 import Point from 'ol/geom/Point';
 import Style from 'ol/style/Style';
-import CircleStyle from 'ol/style/Circle';
-import Fill from 'ol/style/Fill';
-import Stroke from 'ol/style/Stroke';
 import Select from 'ol/interaction/Select';
 import { click } from 'ol/events/condition';
 import InfoMapa from './InfoMapa.vue';
 import { useRoute, useRouter } from "vue-router";
+import Icon from 'ol/style/Icon';
 import { defaults as defaultControls } from 'ol/control';
+import puntoMapaIcon from '@/assets/punto-mapa.svg';
+
 
 const map = ref(null);
 const router = useRouter();
@@ -101,10 +101,6 @@ onMounted(async () => {
             const puntaje = selectedFeature.get('puntaje_medio');
             const horario = selectedFeature.get('horario');
 
-            console.log("Pueblo seleccionado:", {
-                id, name, lat, lon, puntaje_medio: puntaje, horario
-            });
-
             puebloSeleccionado.value = { id, name, lat, lon, puntaje_medio: puntaje, horario };
             showPopup.value = true;
         }
@@ -119,12 +115,19 @@ const goBack = () => {
 const agregarMarcadoresDesdeResponse = async () => {
     try {
         const response = await $communicationManager.getLocations();
-        console.log("Respuesta de la api: ", response);
+        console.log(response);
 
         response.forEach(({ id, latitude, longitude, nombre, puntaje_medio, horario }) => {
             if (!isNaN(latitude) && !isNaN(longitude)) {
-                const horarioParseado = JSON.parse(horario);
-                console.log(horarioParseado)
+                let horarioParseado = {};
+
+                if (horario && typeof horario === 'string') {
+                    try {
+                        horarioParseado = JSON.parse(horario);
+                    } catch (e) {
+                        console.error('Error al parsear el horario:', e);
+                    }
+                }
 
                 const marker = new Feature({
                     geometry: new Point(fromLonLat([longitude, latitude])),
@@ -136,13 +139,13 @@ const agregarMarcadoresDesdeResponse = async () => {
 
                 marker.setStyle(
                     new Style({
-                        image: new CircleStyle({
-                            radius: 6,
-                            fill: new Fill({ color: 'blue' }),
-                            stroke: new Stroke({ color: 'white', width: 1 })
+                        image: new Icon({
+                            src: 'https://imgs.search.brave.com/us8Gu30N5ILiAsZiqIrxuXbRxaJDoZ22JegunkIifwE/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9pY29u/ZXMucHJvL3dwLWNv/bnRlbnQvdXBsb2Fk/cy8yMDIxLzAyL2lj/b25lLWRlLWJyb2No/ZS1kZS1sb2NhbGlz/YXRpb24tYmxldWUu/cG5n',
+                            scale: 0.06
                         })
                     })
                 );
+
 
                 vectorSource.value.addFeature(marker);
             }
@@ -151,6 +154,7 @@ const agregarMarcadoresDesdeResponse = async () => {
         console.error("Error obteniendo ubicaciones:", error);
     }
 };
+
 
 
 const buscarPorCodigoPostal = async () => {
