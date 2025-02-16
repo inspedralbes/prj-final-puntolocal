@@ -45,7 +45,7 @@
                             <div class="flex">
                                 <div class="contain-image">
                                     <img class="image object-cover w-full h-full"
-                                        src="https://cdn-images.farfetch-contents.com/22/90/42/91/22904291_52923841_600.jpg"
+                                        :src="`${baseUrl}/storage/${productoOrder.producto.imagen}`"
                                         alt="image">
                                 </div>
                                 <div class="contain-text">

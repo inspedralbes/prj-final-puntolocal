@@ -102,12 +102,6 @@ const isDarkMode = ref(window.matchMedia("(prefers-color-scheme: dark)").matches
 import Swal from 'sweetalert2'
 
 onMounted(() => {
-    const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
-    const handleChange = (event) => {
-        isDarkMode.value = event.matches;
-    };
-    mediaQuery.addEventListener("change", handleChange);
-    onMounted(() => {
         const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
         const handleChange = (event) => {
             isDarkMode.value = event.matches;
@@ -119,9 +113,6 @@ onMounted(() => {
 
         fetchProductos();
         fetchCategorias();
-    });
-    fetchProductos();
-    fetchCategorias();
 });
 
 watch(isDarkMode, (newValue) => {

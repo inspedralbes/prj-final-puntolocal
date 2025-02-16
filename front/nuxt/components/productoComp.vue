@@ -18,7 +18,7 @@
                     </path>
                 </svg>
             </span>
-            <span id="contain-nom">
+            <span id="contain-nom" v-if="comercio">
                 <h3>{{ comercio }}</h3>
             </span>
         </div>
@@ -117,7 +117,6 @@ const props = defineProps({
     },
     comercio: {
         type: String,
-        required: true,
     },
     customClass: {
         type: String,
