@@ -23,7 +23,7 @@ class SubcategoriasTableSeeder extends Seeder
         Subcategoria::create(["categoria_id" => 1, "name" => "Lencería"]);
 
         // Tecnología
-        Subcategoria::create(["categoria_id" => 2, "name" => "Electrónica de Consumo"]);
+        Subcategoria::create(["categoria_id" => 2, "name" => "Electrónica"]);
         Subcategoria::create(["categoria_id" => 2, "name" => "Componentes PC"]);
         Subcategoria::create(["categoria_id" => 2, "name" => "Accesorios Móvil"]);
         Subcategoria::create(["categoria_id" => 2, "name" => "Impresoras"]);
@@ -34,7 +34,7 @@ class SubcategoriasTableSeeder extends Seeder
         // Hogar y Decoración
         Subcategoria::create(["categoria_id" => 3, "name" => "Interior"]);
         Subcategoria::create(["categoria_id" => 3, "name" => "Exterior"]);
-        Subcategoria::create(["categoria_id" => 3, "name" => "Articulos de Cocina"]);
+        Subcategoria::create(["categoria_id" => 3, "name" => "Cocina"]);
         Subcategoria::create(["categoria_id" => 3, "name" => "Textiles"]);
         Subcategoria::create(["categoria_id" => 3, "name" => "Cuadros y Arte"]);
         Subcategoria::create(["categoria_id" => 3, "name" => "Limpieza"]);
@@ -47,14 +47,14 @@ class SubcategoriasTableSeeder extends Seeder
         Subcategoria::create(["categoria_id" => 4, "name" => "Higiene Personal"]);
         Subcategoria::create(["categoria_id" => 4, "name" => "Equipos Médicos"]);
         Subcategoria::create(["categoria_id" => 4, "name" => "Perfumería"]);
-        Subcategoria::create(["categoria_id" => 4, "name" => "Salon de Belleza"]);
+        Subcategoria::create(["categoria_id" => 4, "name" => "Belleza"]);
 
         // Jugueterías
         Subcategoria::create(["categoria_id" => 5, "name" => "Juguetes Clásicos"]);
         Subcategoria::create(["categoria_id" => 5, "name" => "Juegos Educativos"]);
         Subcategoria::create(["categoria_id" => 5, "name" => "Bebés"]);
         Subcategoria::create(["categoria_id" => 5, "name" => "Muñecas y Figuras"]);
-        Subcategoria::create(["categoria_id" => 5, "name" => "Vehículos a Escala"]);
+        Subcategoria::create(["categoria_id" => 5, "name" => "Vehículos"]);
         Subcategoria::create(["categoria_id" => 5, "name" => "Construcción"]);
         Subcategoria::create(["categoria_id" => 5, "name" => "Electrónicos"]);
 
@@ -95,12 +95,12 @@ class SubcategoriasTableSeeder extends Seeder
         Subcategoria::create(["categoria_id" => 9, "name" => "Accesorios"]);
 
         // Floristerías
-        Subcategoria::create(["categoria_id" => 10, "name" => "Ramos de Flores"]);
+        Subcategoria::create(["categoria_id" => 10, "name" => "Ramos"]);
         Subcategoria::create(["categoria_id" => 10, "name" => "Interior"]);
         Subcategoria::create(["categoria_id" => 10, "name" => "Exterior"]);
         Subcategoria::create(["categoria_id" => 10, "name" => "Arreglos Florales"]);
-        Subcategoria::create(["categoria_id" => 10, "name" => "Flores Artificiales"]);
-        Subcategoria::create(["categoria_id" => 10, "name" => "Macetas y Accesorios"]);
+        Subcategoria::create(["categoria_id" => 10, "name" => "Artificiales"]);
+        Subcategoria::create(["categoria_id" => 10, "name" => "Macetas"]);
         Subcategoria::create(["categoria_id" => 10, "name" => "Decoración Floral"]);
 
         // Ópticas
@@ -108,7 +108,7 @@ class SubcategoriasTableSeeder extends Seeder
         Subcategoria::create(["categoria_id" => 11, "name" => "Lentes de Sol"]);
         Subcategoria::create(["categoria_id" => 11, "name" => "Lentes de Contacto"]);
         Subcategoria::create(["categoria_id" => 11, "name" => "Monturas"]);
-        Subcategoria::create(["categoria_id" => 11, "name" => "Soluciones y Accesorios"]);
+        Subcategoria::create(["categoria_id" => 11, "name" => "Accesorios"]);
         Subcategoria::create(["categoria_id" => 11, "name" => "Cuidado Visual"]);
         Subcategoria::create(["categoria_id" => 11, "name" => "Equipos de Examen"]);
 
