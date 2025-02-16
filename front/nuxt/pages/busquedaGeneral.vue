@@ -3,9 +3,16 @@
         <Loading />
     </div>
     <div v-else>
-        <nav class="sticky top-[76px] z-50 flex gap-4 w-full justify-center bg-gray-200 text-lg">
-            <button class="border p-2 hover:bg-gray-500 rounded-lg" @click="showSection('productos'); getProductsBySearch()">Productes</button>
-            <button class="hover:bg-gray-500 rounded-lg" @click="showSection('comercios'); getComerciosBySearch()">Comerços</button>
+        <nav class="sticky top-[76px] z-50 flex gap-4 w-full justify-center bg-white text-lg border-b-2 border-gray-300">
+            <button class="hover:text-black hover:border-b-2 hover:border-blue-500 text-gray-400 border-b-2 border-white" 
+                @click="showSection('productos'); getProductsBySearch()">
+                Productes
+            </button>
+            <button class="hover:text-black hover:border-b-2 hover:border-blue-500 text-gray-400 border-b-2 border-white"
+                @click="showSection('comercios'); getComerciosBySearch()">
+                Comerços
+            </button>
+
         </nav>
         <div v-if="currentSection === 'productos'" class="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div v-if="Object.values(productos).length > 0">
@@ -43,7 +50,7 @@
                                 </svg>
                             </div>
                             <p class="mt-2">Comerç a 400m</p>
-                                <p class="mt-3 text-xl">{{ product.precio }} €</p>
+                            <p class="mt-3 text-xl">{{ product.precio }} €</p>
                             <button @click="addToBasket(product)"
                                 class="pt-2 pb-2 pl-3 pr-3 mt-4 w-fit bg-[#276BF2] rounded-lg">Afegir a la
                                 cistella</button>
@@ -128,7 +135,7 @@ function getNombreCategoria(categoria_id) {
     return categoria.name;
 }
 
-async function getProductsBySearch() {      
+async function getProductsBySearch() {
     const { $communicationManager } = useNuxtApp();
 
     const response = await $communicationManager.busquedaProductos(searchQuery);
