@@ -6,10 +6,11 @@ import { useAuthStore } from '@/stores/authStore';
 
 const categorias = ref('');
 const authStore = useAuthStore();
-const { $provincias, $ciudades } = useNuxtApp();
 const listaProvincias = ref([]);
 const listaCiudades = ref([]);
 const todasLasCiudades = ref([]);
+const errorMensaje = ref('');
+
 
 definePageMeta({
     layout: 'authentication',
@@ -43,14 +44,16 @@ async function obtenerCoordenadas() {
         if (data && data[0]) {
             const latitud = data[0].lat;
             const longitud = data[0].lon;
-            console.log(`Coordenadas: Latitud: ${latitud}, Longitud: ${longitud}`);
+            errorMensaje.value = '';
             return { lat: latitud, lon: longitud };
         } else {
-            console.error("No se encontraron coordenadas para la dirección proporcionada.");
+            errorMensaje.value = "No se encontraron coordenadas para la dirección proporcionada.";
+            console.error(errorMensaje.value);
             return null;
         }
     } catch (error) {
-        console.error("Error al obtener las coordenadas:", error);
+        errorMensaje.value = "Error al obtener las coordenadas.";
+        console.error(errorMensaje.value, error);
         return null;
     }
 }
@@ -290,6 +293,10 @@ onMounted(async () => {
                                     class="block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"></textarea>
                             </div>
                         </div>
+                        <div v-if="errorMensaje" class="mt-2 text-red-500 text-sm">
+                            {{ errorMensaje }}
+                        </div>
+
                         <div>
                             <ButtonComp test-id="register" @submit.prevent="register">
                                 Registrar-se
