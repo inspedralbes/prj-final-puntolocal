@@ -16,6 +16,7 @@
             $this->call(SubcategoriasTableSeeder::class);
             $this->call(ComerciosTableSeeder::class);
             $this->call(ProductosTableSeeder::class);
+            $this->call(ProvinciasTableSeeder::class);
 
             // ORDERS
             // $this->call(OrdersTableSeeder::class);
