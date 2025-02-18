@@ -1,6 +1,6 @@
 <script setup>
 import 'ol/ol.css';
-import { onMounted, reactive, ref } from 'vue';
+import { onMounted, reactive, ref, watch } from 'vue';
 import { useNuxtApp, navigateTo } from '#app';
 import { useAuthStore } from '@/stores/authStore';
 
@@ -101,25 +101,48 @@ async function register() {
     }
 }
 
-const actualizarCiudades = () => {
-    const provinciaSeleccionada = listaProvincias.value.find(p => p.label === formData.provincia);
+watch(() => formData.provincia, async (nuevaProvincia) => {
+    if (!nuevaProvincia) {
+        listaCiudades.value = [];
+        return;
+    }
+
+    const { $communicationManager } = useNuxtApp();
+    const provinciaSeleccionada = listaProvincias.value.find(p => p.label === nuevaProvincia);
 
     if (provinciaSeleccionada) {
-        listaCiudades.value = todasLasCiudades.value.filter(ciudad => ciudad.parent_code === provinciaSeleccionada.code);
+        try {
+            const ciudades = await $communicationManager.getCiudades(provinciaSeleccionada.code);
+            if (ciudades) listaCiudades.value = ciudades;
+            else listaCiudades.value = [];
+        } catch (error) {
+            console.error("Error al obtindre les ciutats");
+            listaCiudades.value = [];
+        }
     } else {
         listaCiudades.value = [];
     }
-};
-
-watch(() => formData.provincia, () => {
-    actualizarCiudades();
 });
 
 
-onMounted(() => {
+onMounted(async () => {
     getCategoriasGenerales();
-    listaProvincias.value = $provincias();
-    todasLasCiudades.value = $ciudades();
+    const { $communicationManager } = useNuxtApp();
+
+    try {
+        const provincias = await $communicationManager.getProvincias();
+        if (provincias) {
+            listaProvincias.value = provincias;
+        }
+    } catch (error) {
+        console.error("Error al obtener provincias:", error);
+    }
+
+    const ciudades = await $communicationManager.getCiudades();
+    if (ciudades) {
+        todasLasCiudades.value = ciudades;
+    }
+
     formData.idUser = authStore.user.id;
 });
 </script>
@@ -180,7 +203,8 @@ onMounted(() => {
                                 <div class="mt-1">
                                     <select id="provincia" v-model="formData.provincia" required
                                         class="block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 bg-white shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm">
-                                        <option value="" disabled class="text-gray-400">Seleccione una provincia</option>
+                                        <option value="" disabled class="text-gray-400">Seleccione una provincia
+                                        </option>
                                         <option v-for="provincia in listaProvincias" :key="provincia.code"
                                             :value="provincia.label">
                                             {{ provincia.label }}
