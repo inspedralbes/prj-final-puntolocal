@@ -329,9 +329,9 @@
 
         <!-- Add Product Drawer -->
         <div v-if="isOpen['crear']"
-            class="fixed left-0 right-0 z-50 items-center justify-center overflow-x-hidden overflow-y-auto top-4 md:inset-0 h-modal sm:h-full flex"
+            class="fixed left-0 right-0 z-50 items-center justify-center overflow-x-hidden overflow-y-auto top-4 md:inset-0 h-modal sm:h-screen flex"
             id="edit-user-modal" aria-modal="true" role="dialog">
-            <div class="relative w-full h-full max-w-2xl px-4 md:h-auto">
+            <div class="relative w-full h-screen max-w-2xl px-4">
                 <div class="relative bg-white rounded-lg shadow dark:bg-gray-800">
                     <div class="flex items-start justify-between p-5 border-b rounded-t dark:border-gray-700">
                         <h3 class="text-xl font-semibold dark:text-white">
@@ -400,7 +400,7 @@
                                         del producte</label>
                                     <input type="file" accept="image/*" @change="handleImageCrear" id="imagenPrincipal"
                                         name="imagenPrincipal"
-                                        class="p-3 text-sm rounded-lg border border-gray-300 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                                        class="w-full p-3 text-sm rounded-lg border border-gray-300 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
                                         required />
                                     <div v-if="productoNuevo.imagen" class="image-preview">
                                         <p class="text-white">Vista prèvia de la imatge:</p>
