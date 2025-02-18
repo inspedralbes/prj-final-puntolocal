@@ -3,14 +3,16 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ClienteController;
+use App\Http\Controllers\FavoritoController;
 use App\Http\Controllers\ProductoController;
 use App\Http\Controllers\ComercioController;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\CategoriaController;
+use App\Http\Controllers\ciudadesController;
+use App\Http\Controllers\ProvinciasController;
 use App\Http\Controllers\EstatCompraController;
 use App\Http\Controllers\SubcategoriaController;
 use App\Http\Controllers\OrderComercioController;
-use App\Http\Controllers\FavoritoController;
 
 Route::get('/user', function (Request $request) {
     return $request->user();
@@ -174,4 +176,12 @@ Route::middleware('auth:sanctum')->prefix('clientes')->group(function () {
     Route::get('{id}/compras', [OrderController::class, 'comprasCliente']);
 
     Route::get('compras/{id}', [OrderController::class, 'detalleCompra']);
+});
+
+Route::prefix('poblaciones')->group(function () {
+    // Ver provincias
+    Route::get('/provincias', [ProvinciasController::class, 'index']);
+
+    // Ver ciudades por provincia seleccionada
+    Route::get('/ciudades/{id}', [ciudadesController::class, 'index']);
 });

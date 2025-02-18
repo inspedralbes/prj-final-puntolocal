@@ -17,6 +17,7 @@
             $this->call(ComerciosTableSeeder::class);
             $this->call(ProductosTableSeeder::class);
             $this->call(ProvinciasTableSeeder::class);
+            $this->call(CiudadesTableSeeder::class);
 
             // ORDERS
             // $this->call(OrdersTableSeeder::class);

@@ -8,7 +8,6 @@ return new class extends Migration {
     public function up(): void {
         Schema::create('provincias', function (Blueprint $table) {
             $table->id();
-            $table->integer("parent_code");
             $table->integer("code");
             $table->string("label");
             $table->timestamps();
