@@ -58,7 +58,7 @@ onMounted(() => {
 
 <template>
     <div class="bg-[#276BF2] w-full h-screen flex flex-col overflow-hidden">
-        <div class="flex-none flex flex-col items-center justify-center h-[30%]">
+        <div class="flex-none flex flex-col items-center justify-center h-[20%]">
             <h1 class="font-extrabold text-5xl text-white italic mt-[-1vh]">HolaBarri</h1>
             <p class="text-white text-xl tracking-wide">El teu barri a mà</p>
         </div>
@@ -67,7 +67,7 @@ onMounted(() => {
                 <h3 class="mt-5 text-center font-bold text-3xl">Registra't</h3>
             </div>
             <div class="sm:mx-auto sm:w-full sm:max-w-md">
-                <div class="bg-white px-4 pt-8 sm:rounded-lg sm:px-10 sm:shadow rounded-md mb-8">
+                <div class="bg-white px-4 pt-8 sm:rounded-lg sm:px-10 rounded-md mb-8">
                     <form @submit.prevent="register" class="space-y-6">
                         <div class="grid grid-cols-2 gap-2">
                             <div>

@@ -4,7 +4,7 @@
 
 <template>
     <div class="bg-[#276BF2] w-full h-screen flex flex-col">
-        <div class="flex flex-col items-center justify-center w-full h-[30%]"
+        <div class="flex flex-col items-center justify-center w-full h-[20%]"
             :class="{ 'move-up': moveUp, 'container-superior': moveUp, 'activated-sup': shown }">
             <h1 class="font-extrabold text-5xl text-white italic mt-[72vh]">{{ shown ? 'HolaBarri' : displayedText }}</h1>
             <p class="text-white text-xl tracking-wide subtitulo" :class="{ 'show-lema': showLema, 'activaded-subt': shown }">El teu barri a mà</p>
@@ -15,7 +15,7 @@
                 <h3 class="mt-5 text-center font-bold text-3xl">Benvingut</h3>
             </div>
             <div class="sm:mx-auto sm:w-full sm:max-w-md">
-                <div class="bg-white px-4 pt-8 sm:rounded-lg sm:px-10 sm:shadow rounded-md mb-8">
+                <div class="bg-white px-4 pt-8 sm:rounded-lg sm:px-10 rounded-md mb-8">
                     <form @submit.prevent="login" class="space-y-6">
                         <div>
                             <label for="email" class="block text-sm font-medium text-gray-700">Correu

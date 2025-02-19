@@ -63,8 +63,8 @@
                     </div>
                     <div class="flex space-x-1 pl-4 items-center overflow-x-auto scrollbar-none">
                         <productoComp v-for="(producto, index) in productos2" :key="index" :id="producto.id"
-                        :img="producto.imagen ? `${baseUrl}/storage/${producto.imagen}` : `${baseUrl}/storage/productos/default-image.webp`"
-                        :title="producto.nombre" :price="producto.precio" :comercio="producto.comercio"
+                            :img="producto.imagen ? `${baseUrl}/storage/${producto.imagen}` : `${baseUrl}/storage/productos/default-image.webp`"
+                            :title="producto.nombre" :price="producto.precio" :comercio="producto.comercio"
                             :customClass="'w-[170px]'" price-class="text-gray-900 dark:text-white"
                             @click="mostrarIdProducto(producto.id)">
                         </productoComp>
@@ -103,51 +103,51 @@ const isDarkMode = ref(window.matchMedia("(prefers-color-scheme: dark)").matches
 import Swal from 'sweetalert2'
 
 onMounted(() => {
-        const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
-        const handleChange = (event) => {
-            isDarkMode.value = event.matches;
-        };
-        mediaQuery.addEventListener("change", handleChange);
+    const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
+    const handleChange = (event) => {
+        isDarkMode.value = event.matches;
+    };
+    mediaQuery.addEventListener("change", handleChange);
 
-        document.body.classList.toggle('dark', isDarkMode.value);
-        document.body.classList.toggle('dark', isDarkMode.value);
+    document.body.classList.toggle('dark', isDarkMode.value);
+    document.body.classList.toggle('dark', isDarkMode.value);
 
-        fetchProductos();
-        fetchProductos2();
-        fetchCategorias();
+    fetchProductos();
+    fetchProductos2();
+    fetchCategorias();
 });
 
 watch(isDarkMode, (newValue) => {
     document.body.classList.toggle('dark', newValue);
 });
 
-const mostrarAlerta = () => {
-    Swal.fire({
-        title: "Nova comanda rebuda",
-        text: "Vols veure'l?",
-        icon: "info",
-        position: "top-end",
-        showConfirmButton: true,
-        showCancelButton: true,
-        confirmButtonText: "Sí",
-        cancelButtonText: "No",
-        toast: true,
-        timer: 3000,
-        timerProgressBar: true,
-        width: "320px", // 🔹 Ajusta el tamaño
-        customClass: {
-            popup: "horizontal-alert", // Clases personalizadas
-            icon: "small-icon", // Clases para el icono
-        },
-    })
-        .then((result) => {
-            if (result.isConfirmed) {
-                console.log("Usuari va dir SÍ");
-            } else {
-                console.log("Usuari va dir NO");
-            }
-        });
-};
+// const mostrarAlerta = () => {
+//     Swal.fire({
+//         title: "Nova comanda rebuda",
+//         text: "Vols veure'l?",
+//         icon: "info",
+//         position: "top-end",
+//         showConfirmButton: true,
+//         showCancelButton: true,
+//         confirmButtonText: "Sí",
+//         cancelButtonText: "No",
+//         toast: true,
+//         timer: 3000,
+//         timerProgressBar: true,
+//         width: "320px", // 🔹 Ajusta el tamaño
+//         customClass: {
+//             popup: "horizontal-alert", // Clases personalizadas
+//             icon: "small-icon", // Clases para el icono
+//         },
+//     })
+//         .then((result) => {
+//             if (result.isConfirmed) {
+//                 console.log("Usuari va dir SÍ");
+//             } else {
+//                 console.log("Usuari va dir NO");
+//             }
+//         });
+// };
 
 async function fetchProductos() {
     try {
