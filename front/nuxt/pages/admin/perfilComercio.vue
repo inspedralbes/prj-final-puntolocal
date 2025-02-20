@@ -33,11 +33,11 @@ async function getComercioData() {
             } catch (error) {
                 console.error("Error parsing imagenes:", error);
             }
-            console.log(response.comercio.imagenes)
+            // console.log(response.comercio.imagenes)
         }
         Object.assign(formData, response.comercio);
         Object.assign(formComercio, response.comercio);
-        console.log(formComercio)
+        // console.log(formComercio)
     } else {
         console.log('Hi ha hagut algun error');
     }
@@ -161,30 +161,26 @@ onMounted(() => {
                 <Loading />
             </div>
             <div v-else>
-                <div class="mx-4">
-                    <div
-                        class="mb-6 rounded-lg p-4 bg-white block sm:flex items-center justify-between border-b border-gray-200 lg:mt-1.5 dark:bg-gray-800 dark:border-gray-700">
-                        <div class="w-full mb-1 mt-16">
-                            <div class="mb-4 flex">
-                                <h1 class="text-xl font-semibold text-gray-900 sm:text-2xl dark:text-white">Tots els
-                                    productes
-                                </h1>
-                                <ButtonComp
-                                    class="group relative flex ml-auto justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:cursor-wait disabled:opacity-50"
-                                    @click="updateComercio"> Guardar </ButtonComp>
-                            </div>
+                <div
+                    class="p-4 bg-white block sm:flex items-center justify-between border-b border-gray-200 lg:mt-1.5 dark:bg-gray-800 dark:border-gray-700">
+                    <div class="w-full mb-1 mt-16">
+                        <div class="mb-4">
+                            <h1 class="text-xl font-semibold text-gray-900 sm:text-2xl dark:text-white">Informació del
+                                comerç</h1>
                         </div>
-
                     </div>
-                    <div class="mb-6 bg-white p-6 rounded-lg shadow-sm lg:mt-1.5 dark:bg-gray-800 dark:border-gray-700">
+                </div>
+                <div>
+                    <div class="bg-white p-6 rounded-lg shadow-sm dark:bg-gray-800 dark:border-gray-700">
                         <h3 class="text-lg font-semibold text-gray-800 mb-4 dark:text-white">Información Básica</h3>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <div><label
+                            <div>
+                                <label
                                     class="block text-sm font-medium text-gray-600 mb-1 sm:text-xl dark:text-white">Nombre
-                                    del
-                                    Comercio</label><input type="text" name="nombre"
+                                    del Comercio</label><input type="text" name="nombre"
                                     class="w-full px-3 py-2 border border-black rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-600 dark:text-white"
-                                    v-model="formComercio.nombre"></div>
+                                    v-model="formComercio.nombre">
+                            </div>
                             <div><label
                                     class="block text-sm font-medium text-gray-600 mb-1 sm:text-xl dark:text-white">Email</label><input
                                     type="email" name="email"
@@ -208,7 +204,7 @@ onMounted(() => {
                             </div>
                         </div>
                     </div>
-                    <div class="mb-6 bg-white p-6 rounded-lg shadow-sm lg:mt-1.5 dark:bg-gray-800 dark:border-gray-700">
+                    <div class="bg-white p-6 rounded-lg shadow-sm lg:mt-1.5 dark:bg-gray-800 dark:border-gray-700">
                         <h3 class="text-lg font-semibold text-gray-800 mb-4 dark:text-white">Dirección</h3>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div><label
@@ -244,7 +240,7 @@ onMounted(() => {
                                     v-model="formComercio.num_puerta"></div>
                         </div>
                     </div>
-                    <div class="mb-6 bg-white p-6 rounded-lg shadow-sm lg:mt-1.5 dark:bg-gray-800 dark:border-gray-700">
+                    <div class="bg-white p-6 rounded-lg shadow-sm lg:mt-1.5 dark:bg-gray-800 dark:border-gray-700">
                         <h3 class="text-lg font-semibold text-gray-800 mb-4 dark:text-white">Información Adicional</h3>
                         <div class="space-y-6">
                             <div><label
@@ -253,12 +249,6 @@ onMounted(() => {
                                     class="w-full px-3 py-2 border border-black rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-600 dark:text-white"></textarea>
                             </div>
                             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                                <div><label
-                                        class="block text-sm font-medium text-gray-600 mb-1 sm:text-xl dark:text-white">Puntaje
-                                        Medio</label><input type="number" name="puntaje_medio" min="0" max="5"
-                                        step="0.1"
-                                        class="w-full px-3 py-2 bg-white border border-black rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-600 dark:text-white cursor-not-allowed"
-                                        v-model="formComercio.puntaje_medio" disabled></div>
                                 <div><label for="categoria"
                                         class="block text-sm font-medium text-gray-600 mb-1 sm:text-xl dark:text-white">Categoria</label>
                                     <div class="mt-1">
@@ -297,15 +287,21 @@ onMounted(() => {
                                 <!-- Incluir "multiple" para varias imagenes -->
                                 <input type="file" @change="handleImageUpload" class="hidden" ref="fileInput"
                                     accept=".jpg,.jpeg,.png,.svg,.webp">
-                                <button type="button" @click="$refs.fileInput.click()"
-                                    class="mt-4 flex items-center px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-500 dark:text-white"><svg
-                                        xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                        stroke-linejoin="round" class="lucide lucide-image w-4 h-4 mr-2">
-                                        <rect width="18" height="18" x="3" y="3" rx="2" ry="2"></rect>
-                                        <circle cx="9" cy="9" r="2"></circle>
-                                        <path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"></path>
-                                    </svg>Añadir Imagen</button>
+                                <div class="w-full flex justify-between items-center">
+                                    <button type="button" style="font-size: 18px;" @click="$refs.fileInput.click()"
+                                        class="mt-4 flex items-center px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-500 dark:text-white"><svg
+                                            xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                            stroke-linecap="round" stroke-linejoin="round"
+                                            class="lucide lucide-image w-4 h-4 mr-2">
+                                            <rect width="18" height="18" x="3" y="3" rx="2" ry="2"></rect>
+                                            <circle cx="9" cy="9" r="2"></circle>
+                                            <path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"></path>
+                                        </svg>Añadir Imagen</button>
+                                    <ButtonComp
+                                        style="width: 150px; height: 50px; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 18px;"
+                                        @click="updateComercio">Guardar</ButtonComp>
+                                </div>
                             </div>
                         </div>
                     </div>

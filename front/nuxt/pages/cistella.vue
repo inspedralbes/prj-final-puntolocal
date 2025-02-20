@@ -363,7 +363,7 @@ const veureOrdre = () => {
 
             <!-- PANTALLA DE ELEGIR TIPO DE ENVÍO  -->
             <div v-if="chooseShipping">
-                <div class="bg-gray-900/50 dark:bg-gray-900/80 fixed inset-0 z-40" @click="toggleCheckout"></div>
+                <div class="bg-gray-900/50 dark:bg-gray-900/80 fixed inset-0 z-40 animate-appear" @click="toggleCheckout"></div>
                 <div id="chooseShipping" class="fixed bottom-0 z-40 flex flex-col items-center justify-center p-4">
                     <h3 class="text-3xl font-semibold text-center" style="color: #1E2026">
                         Com vols rebre la teva comanda?
@@ -559,17 +559,20 @@ const veureOrdre = () => {
                                         <g id="SVGRepo_iconCarrier">
                                             <path
                                                 d="M3 8C3 6.34315 4.34315 5 6 5H18C19.6569 5 21 6.34315 21 8V16C21 17.6569 19.6569 19 18 19H6C4.34315 19 3 17.6569 3 16V8Z"
-                                                stroke="rgb(156 163 175 / var(--tw-text-opacity, 1))" stroke-width="2"></path>
-                                            <path d="M3 10H21" stroke="rgb(156 163 175 / var(--tw-text-opacity, 1))" stroke-width="2"></path>
-                                            <path d="M14 15L17 15" stroke="rgb(156 163 175 / var(--tw-text-opacity, 1))" stroke-width="2"
-                                                stroke-linecap="round">
+                                                stroke="rgb(156 163 175 / var(--tw-text-opacity, 1))" stroke-width="2">
+                                            </path>
+                                            <path d="M3 10H21" stroke="rgb(156 163 175 / var(--tw-text-opacity, 1))"
+                                                stroke-width="2"></path>
+                                            <path d="M14 15L17 15" stroke="rgb(156 163 175 / var(--tw-text-opacity, 1))"
+                                                stroke-width="2" stroke-linecap="round">
                                             </path>
                                         </g>
                                     </svg>
                                 </div>
                                 <p class="text-gray-400">Targeta (Pròximament)</p>
-                                <input type="radio" disabled name="status" class="w-4 h-4 absolute accent-current right-3 text-gray-400"
-                                    id="targeta" value="2" @change="choosePayment" />
+                                <input type="radio" disabled name="status"
+                                    class="w-4 h-4 absolute accent-current right-3 text-gray-400" id="targeta" value="2"
+                                    @change="choosePayment" />
                             </label>
                         </div>
                     </div>

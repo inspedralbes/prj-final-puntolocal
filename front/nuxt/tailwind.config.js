@@ -9,7 +9,21 @@ module.exports = {
     // "./node_modules/flowbite/**/*.{js,ts}"
   ],
   theme: {
-    extend: {},
+    extend: {
+      keyframes: {
+        appear: {
+          "0%": {
+            opacity: "0",
+          },
+          "100%": {
+            opacity: "1",
+          },
+        },
+      },
+      animation: {
+        appear: "appear 0.1s ease-in-out",
+      }
+    },
   },
   darkMode: 'class',
   plugins: [
