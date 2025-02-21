@@ -914,10 +914,13 @@ function changeShow(listName) {
                 class="p-4 bg-white border border-gray-200 rounded-lg shadow-sm dark:border-gray-700 sm:p-6 dark:bg-gray-800">
                 <div class="w-full">
                     <div class="flex items-center">
-                        <div class="w-[18%]">
+                        <div class="w-[18%] flex flex-col items-center">
                             <h3 class="mb-2 text-base font-normal text-gray-500 dark:text-gray-400">Valoracions</h3>
                             <span
-                                class="text-2xl font-bold leading-none text-gray-900 sm:text-3xl dark:text-white">3,3</span>
+                                class="text-2xl font-bold leading-none text-gray-900 sm:text-3xl dark:text-white">
+                                3,3
+                            </span>
+                            <PuntuacionComp :rating="3.5"/>
                         </div>
                         <div class="flex-grow">
                             <div class="flex items-center mb-2">
