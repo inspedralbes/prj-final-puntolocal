@@ -4,8 +4,8 @@
         
         <div class="flex items-center gap-4 w-full">
             <!-- Contenedor de la imagen -->
-            <div id="imagenLocal" class="h-[70px] w-[70px] border-2 border-gray-500 border-solid">
-                <!-- Imagen aquí -->
+            <div id="imagenLocal">
+                <img :src="imagenLimpia" alt="Imagen del local">
             </div>
             
             <!-- Contenedor de la información -->
@@ -55,6 +55,12 @@ const infoDelComercio = () => {
         alert("Error: No se encontró el ID del comercio.");
     }
 };
+
+const imagenLimpia = computed(() => {
+    if (!props.info?.imagen) return '';
+    return props.info.imagen.replace(/^"|"$/g, '');
+});
+
 
 const obtenerDiaActual = () => {
     const dias = ["lunes", "martes", "miércoles", "jueves", "viernes", "sábado", "domingo"];

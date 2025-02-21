@@ -26,6 +26,7 @@
             'longitude',
             'horario',
             'ubicacion_verified_at',
+            'imagen',
         ];
 
         public function categoria() {
