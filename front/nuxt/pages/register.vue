@@ -39,10 +39,10 @@ async function register() {
     const response = await $communicationManager.register(formData);
 
     if (response) {
-        console.log(`S'ha registrat correctament`)
+        // console.log(`S'ha registrat correctament`)
         navigateTo('/login')
     } else {
-        console.log('Hi ha hagut algun error, comprovi les seves dades');
+        // console.log('Hi ha hagut algun error, comprovi les seves dades');
     }
 
 }

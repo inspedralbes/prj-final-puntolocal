@@ -39,7 +39,7 @@ async function getComercioData() {
         Object.assign(formComercio, response.comercio);
         // console.log(formComercio)
     } else {
-        console.log('Hi ha hagut algun error');
+        alert('Hi ha hagut algun error');
     }
 }
 
@@ -51,13 +51,11 @@ async function updateComercio() {
         const jsonResponse = await $communicationManager.updateComercio(formComercio, authStore.comercio.id);
 
         if (jsonResponse) {
-            console.log('Informació del comerç actualitzada amb èxit')
+            // console.log('Informació del comerç actualitzada amb èxit')
             Object.assign(formData, jsonResponse.comercio);
         } else {
-            console.log('Hi ha hagut algun error');
+            alert('Hi ha hagut algun error');
         }
-    } else {
-        console.log('No hay cambios en la información del comercio.');
     }
 
     // Update images with actual file objects
@@ -69,13 +67,9 @@ async function updateComercio() {
 
         const imageResponse = await $communicationManager.updateComercioImagenes(formD, authStore.comercio.id);
 
-        if (imageResponse) {
-            console.log('Imatge actualitzada amb èxit');
-        } else {
-            console.log('Hi ha hagut algun error');
+        if (!imageResponse) {
+            alert('Hi ha hagut algun error');
         }
-    } else {
-        console.log(`No s'ha selecionat cap imatge.`)
     }
 }
 
@@ -87,25 +81,6 @@ function handleImageUpload(event) {
     if (!formComercio.selectedFiles) {
         formComercio.selectedFiles = [];
     }
-
-    // Base64 for preview
-    // PARA CUANDO SE PUEDA SUBIR VARIAS IMAGENES
-    // if (!Array.isArray(formComercio.imagenes)) {
-    //     formComercio.imagenes = [];
-    // }
-    // for (let i = 0; i < files.length; i++) {
-    //     if (!allowedTypes.includes(files[i].type)) {
-    //         console.log("Solo se permiten imágenes en formato JPG, PNG, SVG o WEBP.");
-    //         continue;
-    //     }
-
-    //     const reader = new FileReader();
-    //     reader.onload = (e) => {
-    //         formComercio.imagenes.push(e.target.result);
-    //     };
-    //     reader.readAsDataURL(files[i]);
-    // }
-
 
     //SOLO 1 IMAGEN
     if (files.length === 0) return;

@@ -102,7 +102,7 @@ async function getFavoritos() {
     const response = await $communicationManager.getFavoritosInfo(authStore.user.id);
 
     if (!response) {
-        console.log('Error al obtenir les dades')
+        // console.log('Error al obtenir les dades')
         return;
     }
     Object.assign(favoritos, response);

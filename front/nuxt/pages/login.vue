@@ -148,7 +148,7 @@ async function login() {
         authStore.setFavoritos(res);
         navigateTo('/');
     } else {
-        console.log('Hi ha hagut algun error, revisi les seves dades');
+        // console.log('Hi ha hagut algun error, revisi les seves dades');
         errorMessage.value = 'Hi ha hagut algun error, revisi les seves dades';
     }
 }

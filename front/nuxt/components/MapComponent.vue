@@ -115,7 +115,7 @@ const goBack = () => {
 const agregarMarcadoresDesdeResponse = async () => {
     try {
         const response = await $communicationManager.getLocations();
-        console.log(response);
+        // console.log(response);
 
         response.forEach(({ id, latitude, longitude, nombre, puntaje_medio, horario }) => {
             if (!isNaN(latitude) && !isNaN(longitude)) {

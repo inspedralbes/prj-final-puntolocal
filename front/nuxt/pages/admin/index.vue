@@ -11,6 +11,7 @@ function changeShow(listName) {
 </script>
 
 <template>
+    <div class="h-screen w-full glassmorphism fixed z-10"></div>
     <div class="px-4 pt-[78px]">
         <div class="grid gap-4 xl:grid-cols-2 2xl:grid-cols-3">
             <!-- Main widget -->
@@ -539,16 +540,16 @@ function changeShow(listName) {
                 <ul class="hidden text-sm font-medium text-center text-gray-500 divide-x divide-gray-200 rounded-lg sm:flex dark:divide-gray-600 dark:text-gray-400"
                     id="fullWidthTab" data-tabs-toggle="#fullWidthTabContent" role="tablist">
                     <li class="w-full">
-                        <button @click="changeShow('productes')" id="faq-tab" data-tabs-target="#faq" type="button" role="tab" aria-controls="faq"
-                            aria-selected="true"
+                        <button @click="changeShow('productes')" id="faq-tab" data-tabs-target="#faq" type="button"
+                            role="tab" aria-controls="faq" aria-selected="true"
                             class="inline-block w-full p-4 rounded-tl-lg bg-gray-50 hover:bg-gray-100 focus:outline-none dark:bg-gray-700 dark:hover:bg-gray-600"
                             :class="{ 'text-blue-600 hover:text-blue-600 dark:text-blue-500 dark:hover:text-blue-500 border-blue-600 dark:border-blue-500': showList === 'productes' }">
                             Top products
                         </button>
                     </li>
                     <li class="w-full">
-                        <button @click="changeShow('clientes')" id="about-tab" data-tabs-target="#about" type="button" role="tab" aria-controls="about"
-                            aria-selected="false"
+                        <button @click="changeShow('clientes')" id="about-tab" data-tabs-target="#about" type="button"
+                            role="tab" aria-controls="about" aria-selected="false"
                             class="inline-block w-full p-4 rounded-tr-lg bg-gray-50 hover:bg-gray-100 focus:outline-none dark:bg-gray-700 dark:hover:bg-gray-600"
                             :class="{ 'text-blue-600 hover:text-blue-600 dark:text-blue-500 dark:hover:text-blue-500 border-blue-600 dark:border-blue-500': showList === 'clientes' }">
                             Top Customers
@@ -916,11 +917,10 @@ function changeShow(listName) {
                     <div class="flex items-center">
                         <div class="w-[18%] flex flex-col items-center">
                             <h3 class="mb-2 text-base font-normal text-gray-500 dark:text-gray-400">Valoracions</h3>
-                            <span
-                                class="text-2xl font-bold leading-none text-gray-900 sm:text-3xl dark:text-white">
+                            <span class="text-2xl font-bold leading-none text-gray-900 sm:text-3xl dark:text-white">
                                 3,3
                             </span>
-                            <PuntuacionComp :rating="3.5"/>
+                            <PuntuacionComp :rating="3.5" />
                         </div>
                         <div class="flex-grow">
                             <div class="flex items-center mb-2">
@@ -1398,4 +1398,11 @@ function changeShow(listName) {
     </div>
 </template>
 
-<style scoped></style>
+<style scoped>
+.glassmorphism {
+    background: rgba(255, 255, 255, 0.2);
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+}
+</style>

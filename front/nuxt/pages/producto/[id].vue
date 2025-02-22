@@ -81,7 +81,7 @@
                     {{ producto?.descripcion || 'Descripción no disponible' }}
                 </p>
                 <div class="mt-5">
-                    <p class="text-xl text-gray-900">Vendut per</p>
+                    <p class="text-xl text-gray-900">Venedor</p>
                     <div @click="irAComercio" id="comercioShop" class="flex h-[120px] mt-3 rounded-md border">
                         <div class="h-full w-[120px] border-r rounded-md bg-gray-200">
                             <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
