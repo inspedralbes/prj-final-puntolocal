@@ -47,7 +47,7 @@
                 <div id="contain-productos" class="py-4 bg-white border-t rounded-t-xl">
                     <div class="flex justify-between mx-4 mb-4">
                         <h1 class="text-xl font-semibold text-gray-900 dark:text-white">Últimes tendències</h1>
-                        <p class="text-gray-500 flex items-center">
+                        <p class="text-gray-500 flex items-ceeminter">
                             Veure totes
                             <svg width="1.5em" height="1.5em" viewBox="0 0 24 24" fill="none"
                                 xmlns="http://www.w3.org/2000/svg">

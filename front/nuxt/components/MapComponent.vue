@@ -53,7 +53,7 @@ import Style from 'ol/style/Style';
 import Select from 'ol/interaction/Select';
 import { click } from 'ol/events/condition';
 import InfoMapa from './InfoMapa.vue';
-import { useRoute, useRouter } from "vue-router";
+import { useRouter } from "vue-router";
 import Icon from 'ol/style/Icon';
 import { defaults as defaultControls } from 'ol/control';
 import puntoMapaIcon from '@/assets/punto-mapa.svg';
@@ -115,7 +115,6 @@ const goBack = () => {
 const agregarMarcadoresDesdeResponse = async () => {
     try {
         const response = await $communicationManager.getLocations();
-        // console.log(response);
 
         response.forEach(({ id, latitude, longitude, nombre, puntaje_medio, horario }) => {
             if (!isNaN(latitude) && !isNaN(longitude)) {
@@ -154,8 +153,6 @@ const agregarMarcadoresDesdeResponse = async () => {
         console.error("Error obteniendo ubicaciones:", error);
     }
 };
-
-
 
 const buscarPorCodigoPostal = async () => {
     if (!codigoPostal.value) {
@@ -224,8 +221,6 @@ const getLocation = () => {
                         vectorSource.value.removeFeature(feature);
                     }
                 });
-
-                vectorSource.value.addFeature(userMarker);
             },
             (error) => {
                 location.value = `Error: ${error.message}`;
@@ -247,5 +242,5 @@ const cerrarPopup = () => {
 </script>
 
 <style scoped>
-@import url('../assets/mapa.css');
+@import '@/assets/mapa.css';
 </style>
