@@ -1,16 +1,21 @@
 <?php
+
 namespace App\Http\Controllers;
 
 use App\Models\Comercio;
 use App\Models\Producto;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 
-class ComercioController extends Controller {
-    public function RegistrarComercio(Request $request) {
+class ComercioController extends Controller
+{
+    public function RegistrarComercio(Request $request)
+    {
         $validator = Validator::make($request->all(), [
             'nombre' => 'required|string|max:255',
             'idUser' => 'required|integer',
@@ -27,14 +32,25 @@ class ComercioController extends Controller {
             'gestion_stock' => 'required|integer',
             'latitude' => 'required|numeric',
             'longitude' => 'required|numeric',
+            'imagen' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048' // Validar imagen
         ]);
-
+    
         if ($validator->fails()) {
             return response()->json([
                 'error' => $validator->errors()
             ], 422);
         }
-
+    
+        // 📌 Manejo de la imagen con Laravel Storage (igual que en productos)
+        $imagePath = null;
+        if ($request->hasFile('imagen')) {
+            $image = $request->file('imagen');
+            $imageName = uniqid() . '.' . $image->getClientOriginalExtension(); // Nombre único
+            $imagePath = $request->file('imagen')->store('localComercios', 'public'); // Almacenar en localComercios
+            $imagePath = str_replace('public/', '', $imagePath); // Guardar solo la ruta relativa
+        }
+    
+        // 📌 Crear el comercio en la base de datos
         $cliente = Comercio::create([
             'nombre' => $request->nombre,
             'idUser' => $request->idUser,
@@ -52,27 +68,31 @@ class ComercioController extends Controller {
             'puntaje_medio' => 0,
             'latitude' => $request->latitude,
             'longitude' => $request->longitude,
+            'imagen' => $imagePath, // Guardar la ruta de la imagen
         ]);
-
-        $verificationUrl = route('verification.verify', ['id' => $cliente->id, 'hash' => sha1($cliente->email)]);
-
-        // Mail::send('emails.verify', ['verificationUrl' => $verificationUrl], function ($message) use ($cliente) {
-        //     $message->to($cliente->email)
-        //             ->subject('Verificación de email | ·LOCAL');
-        // });
-
+    
+        // 📌 Enviar correo (Opcional)
+        Mail::send('emails.nuevo_comercio', ['comercio' => $cliente], function ($message) {
+            $message->to(['a23arnbarsor@inspedralbes.cat', 'a23agunovnov@inspedralbes.cat'])
+                ->subject('Nuevo Comercio Registrado');
+        });
+    
         return response()->json([
-            'message' => 'Cliente creado exitosamente. Por favor, verifica tu correo electrónico.',
+            'message' => 'Cliente creado exitosamente.',
             'cliente' => $cliente
         ], 201);
     }
+    
 
-    public function getComercios() {
+
+    public function getComercios()
+    {
         $comercios = Comercio::all();
         return response()->json($comercios, 200);
     }
 
-    public function getComercio($id) {
+    public function getComercio($id)
+    {
         $comercio = Comercio::find($id);
 
         if ($comercio == null) {
@@ -108,15 +128,17 @@ class ComercioController extends Controller {
         ], 200);
     }
 
-    public function getLocations() {
-        $comercios = Comercio::select('id', 'nombre', 'latitude','longitude', 'puntaje_medio', 'horario', 'imagen')
+    public function getLocations()
+    {
+        $comercios = Comercio::select('id', 'nombre', 'latitude', 'longitude', 'puntaje_medio', 'horario', 'imagen')
             ->whereNotNull('ubicacion_verified_at')
             ->get();
 
         return response()->json($comercios);
     }
 
-    public function checkUserHasComercio($userId) {
+    public function checkUserHasComercio($userId)
+    {
         $comercio = Comercio::where('idUser', $userId)->first();
         if ($comercio) {
             return response()->json([
@@ -132,7 +154,8 @@ class ComercioController extends Controller {
         }
     }
 
-    public function getUserID($id) {
+    public function getUserID($id)
+    {
         $comercio = Comercio::find($id);
         if (!$comercio) {
             return response()->json([
@@ -142,7 +165,8 @@ class ComercioController extends Controller {
         return response()->json(['usuario_id' => $comercio->id], 200);
     }
 
-    public function search($search) {
+    public function search($search)
+    {
         $validator = Validator::make(['search' => $search], [
             'searchTerm' => 'required|integer',
         ]);

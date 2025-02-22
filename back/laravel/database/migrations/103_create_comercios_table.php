@@ -38,7 +38,6 @@
                 $table->float('puntaje_medio');
                 $table->json('imagenes')->nullable();
                 $table->json('horario')->nullable();
-                $table->string('imagen')->nullable();
                 $table->timestamps();
             });
         }

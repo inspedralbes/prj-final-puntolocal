@@ -675,31 +675,29 @@ export default defineNuxtPlugin(nuxtApp => {
         return null;
       }
     },
-
-    async registerStore(json) {
+    async registerStore(formData) {
       try {
         const response = await fetch(`${Host}/comercios/`, {
           method: 'POST',
           headers: {
             'Accept': 'application/json',
-            'Content-Type': 'application/json',
             'Authorization': this.authStore.token ? `Bearer ${this.authStore.token}` : ''
           },
-          body: JSON.stringify(json)
+          body: formData // Se envía FormData en lugar de JSON
         });
 
         if (!response.ok) {
-          console.error(`Error en la petición: ${response.status} ${response.statusText}`);
+          const errorData = await response.json();
+          console.error(`Error en la petición: ${response.status} ${response.statusText}`, errorData);
           return null;
         }
 
-        const data = await response.json();
-        return data;
+        return await response.json();
       } catch (error) {
         console.error('Error al realizar la petición:', error);
         return null;
       }
-    },
+    },  
 
     async getByComercio() {
       try {

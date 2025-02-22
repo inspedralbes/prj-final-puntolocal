@@ -10,7 +10,7 @@ const listaProvincias = ref([]);
 const listaCiudades = ref([]);
 const todasLasCiudades = ref([]);
 const errorMensaje = ref('');
-
+const imagen = ref(null);
 
 definePageMeta({
     layout: 'authentication',
@@ -41,13 +41,11 @@ async function obtenerCoordenadas() {
     try {
         const response = await fetch(url);
         const data = await response.json();
-        if (data && data[0]) {
-            const latitud = data[0].lat;
-            const longitud = data[0].lon;
+        if (data.length > 0) {
             errorMensaje.value = '';
-            return { lat: latitud, lon: longitud };
+            return { lat: data[0].lat, lon: data[0].lon };
         } else {
-            errorMensaje.value = "No se encontraron coordenadas para la dirección proporcionada.";
+            errorMensaje.value = "No se encontraron coordenadas.";
             console.error(errorMensaje.value);
             return null;
         }
@@ -58,6 +56,13 @@ async function obtenerCoordenadas() {
     }
 }
 
+const handleFileUpload = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+        imagen.value = file;
+    }
+};
+
 async function getCategoriasGenerales() {
     const { $communicationManager } = useNuxtApp();
     categorias.value = await $communicationManager.getCategorias();
@@ -66,6 +71,7 @@ async function getCategoriasGenerales() {
 async function realizarRegistro() {
     const { $communicationManager } = useNuxtApp();
 
+    // Convertir a números si aplica
     formData.codigo_postal = parseInt(formData.codigo_postal) || null;
     formData.num_planta = parseInt(formData.num_planta) || null;
     formData.num_puerta = parseInt(formData.num_puerta) || null;
@@ -79,16 +85,29 @@ async function realizarRegistro() {
 
     for (const key in formData) {
         if (formData[key] === null || formData[key] === undefined || formData[key] === '') {
-            console.error(`Es necesario completar el campo: ${key}`);
+            console.error(`Campo obligatorio faltante: ${key}`);
             return;
         }
     }
 
-    const response = await $communicationManager.registerStore(formData);
-    if (response) {
-        navigateTo('/perfil');
-    } else {
-        console.error("Error al registrar el comercio.");
+    const data = new FormData();
+    for (const key in formData) {
+        data.append(key, formData[key]);
+    }
+
+    if (imagen.value) {
+        data.append('imagen', imagen.value);
+    }
+
+    try {
+        const response = await $communicationManager.registerStore(data);
+        if (response) {
+            navigateTo('/perfil');
+        } else {
+            console.error("Error al registrar el comercio.");
+        }
+    } catch (error) {
+        console.error("Error en el proceso de registro:", error);
     }
 }
 
@@ -97,10 +116,9 @@ async function register() {
     if (coordenadas) {
         formData.latitude = coordenadas.lat;
         formData.longitude = coordenadas.lon;
-
         await realizarRegistro();
     } else {
-        console.error("No se pudieron obtener las coordenadas, el registro no se completó.");
+        console.error("No se obtuvieron coordenadas. Registro cancelado.");
     }
 }
 
@@ -116,10 +134,9 @@ watch(() => formData.provincia, async (nuevaProvincia) => {
     if (provinciaSeleccionada) {
         try {
             const ciudades = await $communicationManager.getCiudades(provinciaSeleccionada.code);
-            if (ciudades) listaCiudades.value = ciudades;
-            else listaCiudades.value = [];
+            listaCiudades.value = ciudades || [];
         } catch (error) {
-            console.error("Error al obtindre les ciutats");
+            console.error("Error al obtener las ciudades.");
             listaCiudades.value = [];
         }
     } else {
@@ -127,28 +144,21 @@ watch(() => formData.provincia, async (nuevaProvincia) => {
     }
 });
 
-
 onMounted(async () => {
     getCategoriasGenerales();
     const { $communicationManager } = useNuxtApp();
 
     try {
-        const provincias = await $communicationManager.getProvincias();
-        if (provincias) {
-            listaProvincias.value = provincias;
-        }
+        listaProvincias.value = await $communicationManager.getProvincias() || [];
     } catch (error) {
         console.error("Error al obtener provincias:", error);
     }
 
-    const ciudades = await $communicationManager.getCiudades();
-    if (ciudades) {
-        todasLasCiudades.value = ciudades;
-    }
-
+    todasLasCiudades.value = await $communicationManager.getCiudades() || [];
     formData.idUser = authStore.user.id;
 });
 </script>
+
 
 
 <template>
@@ -285,6 +295,16 @@ onMounted(async () => {
                                 </select>
                             </div>
                         </div>
+
+                        <div class="col-span-2">
+                            <label for="imagen" class="block text-sm font-medium text-gray-700">Imagen</label>
+                            <div class="mt-1">
+                                <input id="imagen" type="file" @change="handleFileUpload" accept="image/*"
+                                    class="block w-full text-sm text-gray-900 border border-gray-300 rounded-md cursor-pointer bg-white shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
+                            </div>
+                        </div>
+
+
                         <div class="col-span-2">
                             <label for="descripcion" class="block text-sm font-medium text-gray-700">Descripció</label>
                             <div class="mt-1">
