@@ -4,7 +4,6 @@
     </header>
     <hr class="mb-2">
     <div v-if="authStore.isAuthenticated">
-        <!-- Botones para alternar entre productos y comercios -->
         <div class="flex justify-center my-4">
             <button
                 @click="mostrarProductos = true"
@@ -20,7 +19,6 @@
             </button>
         </div>
 
-        <!-- Contenido dinámico -->
         <div v-if="loading" class="flex justify-center items-center">
             <Loading />
         </div>
@@ -115,7 +113,7 @@ definePageMeta({
 
 const authStore = useAuthStore();
 const loading = ref(true);
-const mostrarProductos = ref(true); // Estado para alternar entre productos y comercios
+const mostrarProductos = ref(true);
 let favoritos = reactive([]);
 let comerciosFavoritos = reactive([]);
 const { $communicationManager } = useNuxtApp();
