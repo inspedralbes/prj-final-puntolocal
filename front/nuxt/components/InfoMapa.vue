@@ -3,7 +3,9 @@
         class="fixed bottom-[12px] left-0 right-0 mx-auto bg-white border border-gray-300 z-50 w-[95%] rounded-xl overflow-hidden p-3">
         <div class="flex gap-4 w-full">
             <div class="mt-1">
-                <div class="w-[100px] h-[120px] border rounded-xl"></div>
+                <div class="w-[100px] h-[120px] border rounded-xl overflow-hidden">
+                    <img :src="props.info.imagen" alt="">
+                </div>
             </div>
             <div class="w-full font-medium flex flex-col gap-1">
                 <div class="flex w-full justify-between items-center">

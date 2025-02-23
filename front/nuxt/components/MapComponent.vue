@@ -103,8 +103,9 @@ onMounted(async () => {
             const horario = selectedFeature.get('horario');
             const calle_num = selectedFeature.get('calle_num');
             const telefon = selectedFeature.get('phone');
+            const imagen = selectedFeature.get('imagen');
 
-            puebloSeleccionado.value = { id, name, lat, lon, puntaje_medio: puntaje, horario, calle_num, telefon };
+            puebloSeleccionado.value = { id, name, lat, lon, puntaje_medio: puntaje, horario, calle_num, telefon, imagen };
             showPopup.value = true;
         }
     });
@@ -141,7 +142,8 @@ const agregarMarcadoresDesdeResponse = async () => {
                     horario: horarioParseado,
                     phone: comercio.phone,
                     calle_num: comercio.calle_num,
-                    categoria_id: comercio.categoria_id
+                    categoria_id: comercio.categoria_id,
+                    imagen: comercio.imagen
                 });
 
                 marker.setStyle(
