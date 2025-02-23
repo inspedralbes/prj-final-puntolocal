@@ -1,25 +1,21 @@
 <?php
+    namespace App\Models;
 
-namespace App\Models;
+    use Illuminate\Database\Eloquent\Factories\HasFactory;
+    use Illuminate\Database\Eloquent\Model;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
+    class Favorito extends Model {
+        use HasFactory;
+        protected $table = 'favoritos';
 
-class Favorito extends Model
-{
-    use HasFactory;
+        protected $fillable = ['cliente_id', 'producto_id'];
 
-    protected $table = 'favoritos';
+        
+        public function cliente() {
+            return $this->belongsTo(Cliente::class);
+        }
 
-    protected $fillable = ['cliente_id', 'producto_id'];
-
-    public function cliente()
-    {
-        return $this->belongsTo(Cliente::class);
+        public function producto() {
+            return $this->belongsTo(Producto::class);
+        }
     }
-
-    public function producto()
-    {
-        return $this->belongsTo(Producto::class);
-    }
-}
