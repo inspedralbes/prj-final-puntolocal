@@ -62,14 +62,17 @@
                     </svg>
                 </div>
                 <p class="font-semibold text-white text-xl">Perfil de comerç</p>
-                <div class="bg-white rounded-full flex items-center justify-center p-3">
-                    <svg width="1.5em" height="1.5em" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2"
-                        stroke-linecap="round" stroke-linejoin="round">
+                <div class="bg-white rounded-full flex items-center justify-center p-3"
+                    @click="darLikeComercio(comercio.id)">
+                    <svg @click="toggleColor" width="1.5em" height="1.5em" viewBox="0 0 24 24" fill="none" stroke="#000"
+                        stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                        :class="isLiked ? 'fill-red-500 stroke-red-500' : 'fill-white stroke-red-500'">
                         <path
                             d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z">
                         </path>
                     </svg>
                 </div>
+
             </div>
             <div class="w-[85vw] bg-white border rounded-md absolute bottom-[-50px] flex items-center p-2">
                 <div class="w-[80px] h-[80px] border rounded-md bg-gray-100 mr-2">
@@ -130,96 +133,124 @@
 
 
 <script setup>
-    definePageMeta({
-        layout: 'footer-only',
-    });
+definePageMeta({
+    layout: 'footer-only',
+});
 
-    import { useNuxtApp } from "#app";
-    import { ref, onMounted, computed } from "vue";
-    import { useRoute, useRouter } from "vue-router";
-    import loading from "../../components/loading.vue";
+import { useNuxtApp } from "#app";
+import { ref, onMounted, computed } from "vue";
+import { useRoute, useRouter } from "vue-router";
+import loading from "../../components/loading.vue";
 
-    import { useRuntimeConfig } from "#imports";
-    import PuntuacionComp from "~/components/PuntuacionComp.vue";
-    const config = useRuntimeConfig();
-    const baseUrl = config.public.apiBaseUrl;
-    const backgroundShadow = ref(false);
+import { useRuntimeConfig } from "#imports";
+import PuntuacionComp from "~/components/PuntuacionComp.vue";
+const config = useRuntimeConfig();
+const baseUrl = config.public.apiBaseUrl;
+const backgroundShadow = ref(false);
 
-    const route = useRoute();
-    const productos = ref([]);
-    const router = useRouter();
-    const comercio = ref(null);
-    const isLoading = ref(true);
-    const subcategorias = ref([]);
-    const selectedSubcategorias = ref([]);
-    const view = ref('productos');
-    const { $communicationManager } = useNuxtApp();
-    const infoVisible = ref(false);
+const route = useRoute();
+const productos = ref([]);
+const router = useRouter();
+const comercio = ref(null);
+const isLoading = ref(true);
+const subcategorias = ref([]);
+const selectedSubcategorias = ref([]);
+const view = ref('productos');
+const { $communicationManager } = useNuxtApp();
+const infoVisible = ref(false);
+const tieneLike = ref(false);
+const isLiked = ref(false);
 
-    const mostrarIdProducto = (id) => {
-        console.log("ID del producto:", id);
-        router.push(`/producto/${id}`);
-    };
+const mostrarIdProducto = (id) => {
+    console.log("ID del producto:", id);
+    router.push(`/producto/${id}`);
+};
 
-
-    const fetchComercio = async () => {
-        const id = route.params.id;
-        try {
-            const response = await $communicationManager.getComercioById(id);
-            console.log(response);
-
-            if (response) {
-                comercio.value = response.comercio;
-                productos.value = response.productos;
-
-                const subcats = response.productos.map(producto => producto.subcategoria);
-                subcategorias.value = [...new Map(subcats.map(sub => [sub.id, sub])).values()];
-
-                isLoading.value = false;
-            } else {
-                throw new Error("No se pudo obtener el comercio");
-            }
-        } catch (error) {
-            console.error("Error al obtener el comercio:", error);
-            isLoading.value = false;
-        }
-    };
-
-    const formatPrice = (price) => {
-        return parseFloat(price).toFixed(2);
-    };
-
-    const toggleView = (newView) => {
-        view.value = newView;
-    };
-
-    const filteredProductos = computed(() => {
-        if (selectedSubcategorias.value.length === 0) {
-            return productos.value;
-        }
-        return productos.value.filter(producto =>
-            selectedSubcategorias.value.includes(producto.subcategoria.id)
-        );
-    });
-
-
-    const toggleSubcategoria = (subcategoria) => {
-        if (selectedSubcategorias.value.includes(subcategoria.id)) {
-            selectedSubcategorias.value = selectedSubcategorias.value.filter(id => id !== subcategoria.id);
-        } else {
-            selectedSubcategorias.value.push(subcategoria.id);
-        }
-    };
-
-    function toggleInfo() {
-        infoVisible.value = !infoVisible.value;
+const darLikeComercio = async (id) => {
+    try {
+        const response = await $communicationManager.darLikeComercio(id);
+        console.log("Like dado al comercio con id:", id);
+        console.log(response);
+    } catch (error) {
+        console.error("Error al dar like al comercio:", error);
     }
+};
 
-    const goBack = () => {
-        router.back();
-    };
+function toggleColor() {
+    isLiked.value = !isLiked.value;
+}
 
-    onMounted(() => {
-        fetchComercio();
-    });
+const consultarSiTieneLike = async (id) => {
+    try {
+        const response = await $communicationManager.consultarSiTieneLikeComercio(id);
+        tieneLike.value = response;
+        console.log("¿El usuario sigue este comercio?", response);
+    } catch (error) {
+        console.error("Error al consultar si tiene like:", error);
+    }
+};
+
+
+const fetchComercio = async () => {
+    const id = route.params.id;
+    try {
+        const response = await $communicationManager.getComercioById(id);
+
+        if (response) {
+            comercio.value = response.comercio;
+            productos.value = response.productos;
+
+            const subcats = response.productos.map(producto => producto.subcategoria);
+            subcategorias.value = [...new Map(subcats.map(sub => [sub.id, sub])).values()];
+
+            isLoading.value = false;
+        } else {
+            throw new Error("No se pudo obtener el comercio");
+        }
+    } catch (error) {
+        console.error("Error al obtener el comercio:", error);
+        isLoading.value = false;
+    }
+};
+
+const formatPrice = (price) => {
+    return parseFloat(price).toFixed(2);
+};
+
+const toggleView = (newView) => {
+    view.value = newView;
+};
+
+const filteredProductos = computed(() => {
+    if (selectedSubcategorias.value.length === 0) {
+        return productos.value;
+    }
+    return productos.value.filter(producto =>
+        selectedSubcategorias.value.includes(producto.subcategoria.id)
+    );
+});
+
+
+const toggleSubcategoria = (subcategoria) => {
+    if (selectedSubcategorias.value.includes(subcategoria.id)) {
+        selectedSubcategorias.value = selectedSubcategorias.value.filter(id => id !== subcategoria.id);
+    } else {
+        selectedSubcategorias.value.push(subcategoria.id);
+    }
+};
+
+function toggleInfo() {
+    infoVisible.value = !infoVisible.value;
+}
+
+const goBack = () => {
+    router.back();
+};
+
+onMounted(async () => {
+    await fetchComercio();
+    if (comercio.value) {
+        consultarSiTieneLike(comercio.value.id);
+    }
+});
 </script>

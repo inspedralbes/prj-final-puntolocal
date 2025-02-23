@@ -1,66 +1,60 @@
 <?php
+    namespace App\Http\Controllers;
 
-namespace App\Http\Controllers;
+    use Illuminate\Http\Request;
+    use App\Models\comercioFavoritos;
+    use App\Http\Controllers\Controller;
+    use Illuminate\Support\Facades\Auth;
 
-use App\Models\comercioFavoritos;
-use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
+    class ComercioFavoritosController extends Controller {
+        public function index() {
+            $clienteId = Auth::id();
+            
+            if (!$clienteId) {
+                return response()->json(['error' => 'Usuario no autenticado'], 401);
+            }
+        
+            $comerciosFavoritos = comercioFavoritos::with('comercio')->where('cliente_id', $clienteId)->get();
+        
+            return response()->json($comerciosFavoritos);
+        }        
+        
+        
+        
 
-class ComercioFavoritosController extends Controller
-{
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
-    {
-        //
+        public function create() { }
+
+        public function afegirLikeComerci(Request $request, $comercioId) {
+            $clienteId = Auth::id();
+        
+            if (!$comercioId) {
+                return response()->json(['error' => 'ID de comercio no proporcionado'], 400);
+            }
+        
+            $favorito = comercioFavoritos::where('cliente_id', $clienteId)
+                ->where('comercio_id', $comercioId)
+                ->first();
+        
+            if ($favorito) {
+                $favorito->delete();
+                return response()->json(['message' => 'Comercio eliminado de favoritos']);
+            }
+        
+            comercioFavoritos::create([
+                'cliente_id' => $clienteId,
+                'comercio_id' => $comercioId,
+            ]);
+        
+            return response()->json(['message' => 'Comercio añadido a favoritos']);
+        }
+        
+        public function verificarSeguido($comercioId) {
+            $clienteId = Auth::id();
+        
+            $seguido = comercioFavoritos::where('cliente_id', $clienteId)
+                ->where('comercio_id', $comercioId)
+                ->exists();
+        
+            return response()->json(['seguido' => $seguido]);
+        }
     }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(comercioFavoritos $comercioFavoritos)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(comercioFavoritos $comercioFavoritos)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, comercioFavoritos $comercioFavoritos)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(comercioFavoritos $comercioFavoritos)
-    {
-        //
-    }
-}
