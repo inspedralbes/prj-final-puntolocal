@@ -102,7 +102,7 @@
                 ->get();
     
             if ($comercios->isEmpty()) {
-                $comercios = Comercio::inRandomOrder()->take(7)->get(['id', 'nombre', 'codigo_postal', DB::raw("JSON_UNQUOTE(JSON_EXTRACT(imagenes, '$[0]')) as imagen")]);
+                return response()->json(['message' => 'No hay comercios cerca de ti.'], 200);
             }
     
             return response()->json($comercios);

@@ -13,6 +13,7 @@ use App\Http\Controllers\ProvinciasController;
 use App\Http\Controllers\EstatCompraController;
 use App\Http\Controllers\SubcategoriaController;
 use App\Http\Controllers\OrderComercioController;
+use App\Http\Controllers\ComercioFavoritosController;
 
 Route::get('/user', function (Request $request) {
     return $request->user();
@@ -49,6 +50,13 @@ Route::middleware('auth:sanctum')->prefix('comercios')->group(function () {
     Route::put('/{id}', [ComercioController::class, 'updateComercio']);
     Route::post('/{id}/imagenes', [ComercioController::class, 'updateComercioImagenes']);
     Route::delete('/{id}/imagenes', [ComercioController::class, 'deleteComercioImagen']);
+
+});
+
+Route::middleware('auth:sanctum')->prefix('favoritos')->group(function () {
+    Route::get('/comercios-favoritos', [ComercioFavoritosController::class, 'index']);
+    Route::post('/like/{id}', [ComercioFavoritosController::class, 'afegirLikeComerci']);
+    Route::get('/verificar-seguido/{id}', [ComercioFavoritosController::class, 'verificarSeguido']);
 });
 
 Route::prefix('comercios')->group(function () {

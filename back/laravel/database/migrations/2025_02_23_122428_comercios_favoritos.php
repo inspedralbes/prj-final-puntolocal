@@ -5,16 +5,15 @@
 
     return new class extends Migration {
         public function up() {
-            Schema::create('favoritos', function (Blueprint $table) {
+            Schema::create('comercios_favoritos', function (Blueprint $table) {
                 $table->id();
                 $table->foreignId('cliente_id')->constrained('cliente')->onDelete('cascade');
-                $table->foreignId('producto_id')->constrained('productos')->onDelete('cascade');
+                $table->foreignId('comercio_id')->constrained('comercios')->onDelete('cascade');
                 $table->timestamps();
-                $table->unique(['cliente_id', 'producto_id']);
             });
         }
 
         public function down() {
-            Schema::dropIfExists('favoritos');
+            Schema::dropIfExists('comercios_favoritos');
         }
     };
