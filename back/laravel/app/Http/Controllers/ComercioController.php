@@ -102,7 +102,7 @@
                 ->get();
     
             if ($comercios->isEmpty()) {
-            $comercios = Comercio::inRandomOrder()->take(7)->get(['id', 'nombre', 'codigo_postal', DB::raw("JSON_UNQUOTE(JSON_EXTRACT(imagenes, '$[0]')) as imagen")]);
+                $comercios = Comercio::inRandomOrder()->take(7)->get(['id', 'nombre', 'codigo_postal', DB::raw("JSON_UNQUOTE(JSON_EXTRACT(imagenes, '$[0]')) as imagen")]);
             }
     
             return response()->json($comercios);

@@ -40,6 +40,30 @@ export default defineNuxtPlugin(nuxtApp => {
       }
     },
 
+    async getComerciosCercanos(lat, lon) {
+      try {
+        const response = await fetch(Host + `/comercios/comercios-cercanos/${lat}/${lon}`, {
+          method: 'GET',
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+            'Authorization': this.authStore.token ? `Bearer ${this.authStore.token}` : ''
+          },
+        });
+        if (response.ok) {
+          const json = await response.json();
+          return json;
+        } else {
+          console.error(`Error en la petición: ${response.status} ${response.statusText}`)
+          return null;
+        }
+
+      } catch (error) {
+        console.error('Error al realizar la petición:', error);
+        return null;
+      }
+    },
+
     async getCiudades($id) {
       try {
         const response = await fetch(Host + `/poblaciones/ciudades/${$id}`, {

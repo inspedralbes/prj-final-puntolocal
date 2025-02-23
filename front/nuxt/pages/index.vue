@@ -90,6 +90,7 @@ import { useRouter } from "vue-router";
 import { useAuthStore } from "~/stores/authStore";
 import { useRuntimeConfig } from "#imports";
 import Swal from "sweetalert2";
+import { Loading } from "#components";
 
 const config = useRuntimeConfig();
 const baseUrl = config.public.apiBaseUrl;
@@ -121,9 +122,6 @@ watch(isDarkMode, (newValue) => {
     document.body.classList.toggle("dark", newValue);
 });
 
-/**
- * Verifica si el usuario ha dado permiso de ubicación.
- */
 function checkLocationPermission() {
     if (localStorage.getItem("locationPermission") === "granted") {
         getLocation();
@@ -132,9 +130,6 @@ function checkLocationPermission() {
     }
 }
 
-/**
- * Pide permiso al usuario para acceder a su ubicación.
- */
 function requestLocationPermission() {
     Swal.fire({
         title: "Permiso de ubicación",
@@ -152,9 +147,6 @@ function requestLocationPermission() {
     });
 }
 
-/**
- * Obtiene la ubicación del usuario.
- */
 function getLocation() {
     if ("geolocation" in navigator) {
         navigator.geolocation.getCurrentPosition(
@@ -173,12 +165,12 @@ function getLocation() {
     }
 }
 
-/**
- * Llama a la API para obtener los comercios cercanos.
- */
 async function fetchComerciosCercanos(lat, lon) {
     try {
-        const response = await fetch(`http://localhost:8000/api/comercios/comercios-cercanos/${lat}/${lon}`);
+        const response = await $communicationManager.getComerciosCercanos(lat, lon);
+        //const response = await fetch(`http://localhost:8000/api/comercios/comercios-cercanos/${lat}/${lon}`);
+        console.log(response);
+        
         if (!response.ok) throw new Error("Error en la API");
 
         const data = await response.json();
@@ -237,5 +229,5 @@ function mostrarIdProducto(id) {
 </script>
 
 <style scoped>
-@import '../assets/index.css';
+    @import '../assets/index.css';
 </style>
