@@ -109,7 +109,7 @@ class ComercioController extends Controller {
     }
 
     public function getLocations() {
-        $comercios = Comercio::select('id', 'nombre', 'latitude','longitude', 'puntaje_medio', 'horario')
+        $comercios = Comercio::select('id', 'nombre', 'latitude', 'longitude', 'puntaje_medio', 'horario', 'phone', 'email', 'calle_num', 'categoria_id')
             ->whereNotNull('ubicacion_verified_at')
             ->get();
 

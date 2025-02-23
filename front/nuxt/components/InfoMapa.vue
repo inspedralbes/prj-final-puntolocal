@@ -5,7 +5,7 @@
             <div class="mt-1">
                 <div class="w-[100px] h-[120px] border rounded-xl"></div>
             </div>
-            <div class="w-full font-medium">
+            <div class="w-full font-medium flex flex-col gap-1">
                 <div class="flex w-full justify-between items-center">
                     <p class="text-xl font-semibold">{{ info.name }}</p>
                     <svg @click="cerrar" width="1em" height="1em" viewBox="0 0 24 24" fill="none"
@@ -49,7 +49,7 @@
                             </g>
                         </g>
                     </svg>
-                    Carrer de l'Esglesia 18
+                    {{ props.info.calle_num }}
                 </div>
                 <div class="flex items-center gap-1">
                     <svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -80,41 +80,13 @@
                             </path>
                         </g>
                     </svg>
-                    603 38 58 49
+                    {{ props.info.telefon }}
                 </div>
                 <div class="mt-2">
                     <button @click="infoDelComercio" class="bg-[#276BF2] text-white py-2 px-10 rounded-md">Veure el comerç</button>
                 </div>
             </div>
         </div>
-        <!-- <div class="flex items-center">
-            <div id="imagenLocal" class="h-[70px] w-[70px] border-2 border-gray-500 border-solid">
-            </div>
-            
-            <div class="flex flex-col items-center w-full max-w-xs" id="infoLocal">
-                <h3>{{ info.name }}</h3>
-
-                <p v-if="info.puntaje_medio" class="text-m text-gray-600 text-right"> ⭐ {{ info.puntaje_medio }} / 5</p>
-
-                <div class="flex w-full items-center text-center gap-5">
-                    <p class="w-1/2 text-sm font-bold py-2 text-right gap-10"
-                        :class="estadoLocal === 'Abierto' ? 'text-green-600' : 'text-red-600'">
-                        {{ estadoLocal }}
-                    </p>
-
-                    <p class="w-1/2 text-sm text-gray-600 py-2 border-gray-300 text-left">
-                        {{ horarioDelDia }}
-                    </p>
-                </div>
-
-                <button @click="cerrar" id="cerrar">x</button>
-                <button @click="infoDelComercio" 
-                    class="mt-4 px-6 py-2 text-white bg-blue-500 hover:bg-blue-600 rounded-lg shadow-md focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-50 transition duration-200">
-                    Ir al local
-                </button>
-
-            </div>
-        </div> -->
     </div>
 </template>
 
