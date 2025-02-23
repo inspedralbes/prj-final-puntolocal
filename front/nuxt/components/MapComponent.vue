@@ -50,7 +50,11 @@ import VectorSource from 'ol/source/Vector';
 import Feature from 'ol/Feature';
 import Point from 'ol/geom/Point';
 import Style from 'ol/style/Style';
+import { Fill, Stroke, Circle as CircleStyle, Text } from "ol/style";
 import Select from 'ol/interaction/Select';
+import XYZ from 'ol/source/XYZ';  // Asegúrate de que esta línea esté presente
+import MVT from 'ol/format/MVT';
+import VectorTileSource from 'ol/source/VectorTile';
 import { click } from 'ol/events/condition';
 import InfoMapa from './InfoMapa.vue';
 import { useRouter } from "vue-router";
@@ -76,7 +80,12 @@ onMounted(async () => {
     map.value = new Map({
         target: mapContainer.value,
         layers: [
-            new TileLayer({ source: new OSM() }),
+            new TileLayer({
+                source: new VectorTileSource({
+                    format: new MVT(),
+                    url: 'https://api.maptiler.com/tiles/v3/{z}/{x}/{y}.pbf?key=TU_CLAVE',
+                }),
+            }),
             vectorLayer
         ],
         view: new View({
@@ -88,7 +97,16 @@ onMounted(async () => {
 
     await agregarMarcadoresDesdeResponse();
 
-    const selectClick = new Select({ condition: click });
+    const selectClick = new Select({
+        condition: click,
+        style: new Style({
+            image: new CircleStyle({
+                radius: 12, // Tamaño del círculo
+                fill: new Fill({ color: "red" }), // Color del círculo
+                stroke: new Stroke({ color: "white", width: 3 }) // Contorno
+            })
+        })
+    });
     map.value.addInteraction(selectClick);
     selectClick.on('select', (e) => {
         const selectedFeature = e.selected[0];
@@ -109,7 +127,6 @@ onMounted(async () => {
             showPopup.value = true;
         }
     });
-
 });
 
 const goBack = () => {
@@ -118,6 +135,7 @@ const goBack = () => {
 
 const agregarMarcadoresDesdeResponse = async () => {
     try {
+        const categoria_icon = ref();
         const response = await $communicationManager.getLocations();
         console.log(response);
 
@@ -146,11 +164,67 @@ const agregarMarcadoresDesdeResponse = async () => {
                     imagen: comercio.imagen
                 });
 
+                switch (comercio.categoria_id) {
+                    case 1:
+                        categoria_icon.value = "indumentaria";
+                        break;
+                    case 2:
+                        categoria_icon.value = "tecnologia";
+                        break;
+                    case 3:
+                        categoria_icon.value = "hogar";
+                        break;
+                    case 4:
+                        categoria_icon.value = "cosmeticos";
+                        break;
+                    case 5:
+                        categoria_icon.value = "jugueterias";
+                        break;
+                    case 6:
+                        categoria_icon.value = "ferreterias";
+                        break;
+                    case 7:
+                        categoria_icon.value = "librerias";
+                        break;
+                    case 8:
+                        categoria_icon.value = "farmacias";
+                        break;
+                    case 9:
+                        categoria_icon.value = "zapaterias";
+                        break;
+                    case 10:
+                        categoria_icon.value = "floristerias";
+                        break;
+                    case 11:
+                        categoria_icon.value = "opticas";
+                        break;
+                    case 12:
+                        categoria_icon.value = "accesorios";
+                        break;
+                    case 13:
+                        categoria_icon.value = "mascotas";
+                        break;
+                    default:
+                        categoria_icon.value = 'https://imgs.search.brave.com/us8Gu30N5ILiAsZiqIrxuXbRxaJDoZ22JegunkIifwE/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9pY29u/ZXMucHJvL3dwLWNv/bnRlbnQvdXBsb2Fk/cy8yMDIxLzAyL2lj/b25lLWRlLWJyb2No/ZS1kZS1sb2NhbGlz/YXRpb24tYmxldWUu/cG5n';
+                        break;
+                }
+
                 marker.setStyle(
                     new Style({
                         image: new Icon({
+                            src: categoria_icon.value,
                             src: 'https://imgs.search.brave.com/us8Gu30N5ILiAsZiqIrxuXbRxaJDoZ22JegunkIifwE/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9pY29u/ZXMucHJvL3dwLWNv/bnRlbnQvdXBsb2Fk/cy8yMDIxLzAyL2lj/b25lLWRlLWJyb2No/ZS1kZS1sb2NhbGlz/YXRpb24tYmxldWUu/cG5n',
                             scale: 0.08
+                        }),
+                        text: new Text({
+                            text: comercio.nombre, // Nombre del comercio
+                            font: "bold 14px Arial",
+                            fill: new Fill({ color: "#007bff" }), // Color azul
+                            stroke: new Stroke({ color: "#fff", width: 3 }), // Contorno blanco
+                            offsetY: 0, // Eleva el texto sobre el marcador
+                            offsetX: -15,
+                            textAlign: "right", // Alineación horizontal
+                            textBaseline: "middle",
                         })
                     })
                 );
