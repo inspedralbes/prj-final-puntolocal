@@ -363,14 +363,14 @@ const veureOrdre = () => {
 
             <!-- PANTALLA DE ELEGIR TIPO DE ENVÍO  -->
             <div v-if="chooseShipping">
-                <div class="bg-gray-900/50 dark:bg-gray-900/80 fixed inset-0 z-40" @click="toggleCheckout"></div>
+                <div class="bg-gray-900/50 dark:bg-gray-900/80 fixed inset-0 z-40 animate-appear" @click="toggleCheckout"></div>
                 <div id="chooseShipping" class="fixed bottom-0 z-40 flex flex-col items-center justify-center p-4">
                     <h3 class="text-3xl font-semibold text-center" style="color: #1E2026">
                         Com vols rebre la teva comanda?
                     </h3>
                     <div class="flex w-full justify-between contain-buttons mt-3">
-                        <button @click="chooseShip" value="1"
-                            class="flex items-center rounded-md px-3 py-4 min-w-[48%] text-lg font-bold disabled:opacity-50"
+                        <button @click="chooseShip" value="1" disabled
+                            class="flex items-center rounded-md px-3 py-4 min-w-[48%] text-lg font-bold disabled:opacity-50 cursor-not-allowed"
                             :class="{ 'selected': shipOption === '1', 'noSelected': shipOption !== '1' }">
                             <svg widths="1.8em" height="1.8em" fill="currentColor" version="1.1" id="Layer_1"
                                 xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
@@ -422,16 +422,19 @@ const veureOrdre = () => {
                             <h3 class="ml-3">Recollida</h3>
                         </button>
                     </div>
-                    <div id="map-ubi"
+                    <!-- <div id="map-ubi"
                         class="w-full h-[130px] bg-gray-200 mt-3 rounded flex items-center justify-center overflow-hidden">
-                        <!-- <img src="../assets/mapubi.png" alt="plano ubicación"> -->
-                        <!-- LOGICA DEL MAPA PARA MOSTRAR LA DIRECCIÓN DE ENTREGA DEL USUARIO -->
-                    </div>
+                        <img src="../assets/mapubi.png" alt="plano ubicación">
+                    </div> -->
                     <button :disabled="!choosed" @click="toPay"
                         class="mt-3 w-full h-[60px] justify-center rounded-md border border-transparent px-4 py-2 text-xl font-semibold disabled:cursor-not-allowed"
                         :class="{ 'btn-ok': choosed, 'bg-[#6393F2]': !choosed, 'text-white': !choosed }">
                         <h3>Continuar</h3>
                     </button>
+                    <!-- <button @click="toggleCheckout()"
+                        class="mt-3 w-full h-[60px] justify-center rounded-md border border-red-300 px-4 py-2 text-xl font-semibold text-red-500">
+                        <h3>Cancel·lar</h3>
+                    </button> -->
                 </div>
             </div>
 
@@ -547,7 +550,7 @@ const veureOrdre = () => {
                                     @change="choosePayment" />
                             </label>
                             <label for="targeta"
-                                class="font-medium text-lg h-14 relative hover:bg-zinc-100 flex items-center pl-3 gap-2 rounded-lg has-[:checked]:text-blue-500 has-[:checked]:bg-blue-50 has-[:checked]:ring-blue-300 has-[:checked]:ring-1 select-none">
+                                class="font-medium text-lg h-14 relative flex items-center pl-3 gap-2 rounded-lg has-[:checked]:text-blue-500 has-[:checked]:bg-blue-50 has-[:checked]:ring-blue-300 has-[:checked]:ring-1 select-none">
                                 <div class="w-5">
                                     <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                         <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
@@ -556,17 +559,20 @@ const veureOrdre = () => {
                                         <g id="SVGRepo_iconCarrier">
                                             <path
                                                 d="M3 8C3 6.34315 4.34315 5 6 5H18C19.6569 5 21 6.34315 21 8V16C21 17.6569 19.6569 19 18 19H6C4.34315 19 3 17.6569 3 16V8Z"
-                                                stroke="currentColor" stroke-width="2"></path>
-                                            <path d="M3 10H21" stroke="currentColor" stroke-width="2"></path>
-                                            <path d="M14 15L17 15" stroke="currentColor" stroke-width="2"
-                                                stroke-linecap="round">
+                                                stroke="rgb(156 163 175 / var(--tw-text-opacity, 1))" stroke-width="2">
+                                            </path>
+                                            <path d="M3 10H21" stroke="rgb(156 163 175 / var(--tw-text-opacity, 1))"
+                                                stroke-width="2"></path>
+                                            <path d="M14 15L17 15" stroke="rgb(156 163 175 / var(--tw-text-opacity, 1))"
+                                                stroke-width="2" stroke-linecap="round">
                                             </path>
                                         </g>
                                     </svg>
                                 </div>
-                                Targeta
-                                <input type="radio" name="status" class="w-4 h-4 absolute accent-current right-3"
-                                    id="targeta" value="2" @change="choosePayment" />
+                                <p class="text-gray-400">Targeta (Pròximament)</p>
+                                <input type="radio" disabled name="status"
+                                    class="w-4 h-4 absolute accent-current right-3 text-gray-400" id="targeta" value="2"
+                                    @change="choosePayment" />
                             </label>
                         </div>
                     </div>
@@ -674,7 +680,7 @@ const veureOrdre = () => {
                     </h3>
                 </div>
                 <div id="carrito" class="flex items-center space-x-4">
-                    <button id="btn-comprar" class="text-xl font-semibold bg-[#276BF2]" @click="comprar">
+                    <button id="btn-comprar" class="text-xl font-semibold bg-[#276BF2]" @click="toggleCheckout()">
                         Checkout ({{ comercioStore.totalItems }})
                     </button>
                 </div>
@@ -702,7 +708,7 @@ const veureOrdre = () => {
 
 #chooseShipping {
     width: 100%;
-    height: 400px;
+    height: max-content;
     border-top-left-radius: 10px;
     border-top-right-radius: 10px;
     background-color: white;

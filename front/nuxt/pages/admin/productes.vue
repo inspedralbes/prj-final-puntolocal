@@ -329,9 +329,9 @@
 
         <!-- Add Product Drawer -->
         <div v-if="isOpen['crear']"
-            class="fixed left-0 right-0 z-50 items-center justify-center overflow-x-hidden overflow-y-auto top-4 md:inset-0 h-modal sm:h-full flex"
+            class="fixed left-0 right-0 z-50 items-center justify-center overflow-x-hidden overflow-y-auto top-4 md:inset-0 h-modal sm:h-screen flex"
             id="edit-user-modal" aria-modal="true" role="dialog">
-            <div class="relative w-full h-full max-w-2xl px-4 md:h-auto">
+            <div class="relative w-full h-screen max-w-2xl px-4">
                 <div class="relative bg-white rounded-lg shadow dark:bg-gray-800">
                     <div class="flex items-start justify-between p-5 border-b rounded-t dark:border-gray-700">
                         <h3 class="text-xl font-semibold dark:text-white">
@@ -400,7 +400,7 @@
                                         del producte</label>
                                     <input type="file" accept="image/*" @change="handleImageCrear" id="imagenPrincipal"
                                         name="imagenPrincipal"
-                                        class="p-3 text-sm rounded-lg border border-gray-300 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                                        class="w-full p-3 text-sm rounded-lg border border-gray-300 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
                                         required />
                                     <div v-if="productoNuevo.imagen" class="image-preview">
                                         <p class="text-white">Vista prèvia de la imatge:</p>
@@ -520,7 +520,7 @@ async function eliminarProducto(id) {
             toggleCard('eliminar');
         }
     } else {
-        console.log('Error: ' + data.message);
+        // console.log('Error: ' + data.message);
     }
 }
 
@@ -579,7 +579,6 @@ async function editarProd(id) {
     toggleCard('editar');
     const data = await $communicationManager.infoProducto(id);
     productoActual.value = data;
-    console.log(productoActual.value);
 }
 
 async function guardarProd() {
@@ -617,17 +616,17 @@ async function crearProducto() {
     formData.append("stock", productoNuevo.value.stock);
     formData.append("imagen", productoNuevo.value.imagen.file);
 
-    for (const [key, value] of formData.entries()) {
-        console.log(`${key}:`, value);
-    }
+    // for (const [key, value] of formData.entries()) {
+    //     console.log(`${key}:`, value);
+    // }
     const result = await $communicationManager.createProducto(formData);
-    console.log(formData);
+    // console.log(formData);
 
     if (result && result.success) {
         toggleCard('crear');
         productoNuevo.value = result.data.producto;
         productoNuevo.value.subcategoria = result.data.producto.subcategoria.name;
-        console.log("PRODUCTO NUEVO:", productoNuevo.value);
+        // console.log("PRODUCTO NUEVO:", productoNuevo.value);
         productos.push(productoNuevo.value);
         productoNuevo.value = {
             'nombre': '',
@@ -649,13 +648,13 @@ onMounted(async () => {
     // console.log(comercio?.value?.categoria_id);
 
     // console.log('Comercio (toRaw):', toRaw(authStore.comercio)); // Muestra el objeto real
-    // console.log('Comercio (JSON):', JSON.stringify(authStore.comercio, null, 2)); // JSON legible
+    // º('Comercio (JSON):', JSON.stringify(authStore.comercio, null, 2)); // JSON legible
     // console.log('Comercio (copia):', { ...authStore.comercio }); // Copia sin reactividad
 });
 
 onBeforeMount(async () => {
     const data = await $communicationManager.getByComercio();
     Object.assign(productos, data);
-    console.log(productos);
+    // console.log(productos);
 });
 </script>

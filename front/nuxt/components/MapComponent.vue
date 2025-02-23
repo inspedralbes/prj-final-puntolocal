@@ -53,7 +53,7 @@ import Style from 'ol/style/Style';
 import Select from 'ol/interaction/Select';
 import { click } from 'ol/events/condition';
 import InfoMapa from './InfoMapa.vue';
-import { useRoute, useRouter } from "vue-router";
+import { useRouter } from "vue-router";
 import Icon from 'ol/style/Icon';
 import { defaults as defaultControls } from 'ol/control';
 import puntoMapaIcon from '@/assets/punto-mapa.svg';
@@ -93,6 +93,7 @@ onMounted(async () => {
     selectClick.on('select', (e) => {
         const selectedFeature = e.selected[0];
         if (selectedFeature) {
+            console.log(selectedFeature);
             const id = selectedFeature.get('id');
             const name = selectedFeature.get('name');
             const lonLat = selectedFeature.getGeometry().getCoordinates();
@@ -100,8 +101,10 @@ onMounted(async () => {
             const lat = lonLat[1];
             const puntaje = selectedFeature.get('puntaje_medio');
             const horario = selectedFeature.get('horario');
+            const calle_num = selectedFeature.get('calle_num');
+            const telefon = selectedFeature.get('phone');
 
-            puebloSeleccionado.value = { id, name, lat, lon, puntaje_medio: puntaje, horario };
+            puebloSeleccionado.value = { id, name, lat, lon, puntaje_medio: puntaje, horario, calle_num, telefon };
             showPopup.value = true;
         }
     });
@@ -117,35 +120,38 @@ const agregarMarcadoresDesdeResponse = async () => {
         const response = await $communicationManager.getLocations();
         console.log(response);
 
-        response.forEach(({ id, latitude, longitude, nombre, puntaje_medio, horario }) => {
-            if (!isNaN(latitude) && !isNaN(longitude)) {
+        response.forEach((comercio) => {
+            console.log(comercio);
+            if (!isNaN(comercio.latitude) && !isNaN(comercio.longitude)) {
                 let horarioParseado = {};
 
-                if (horario && typeof horario === 'string') {
+                if (comercio.horario && typeof comercio.horario === 'string') {
                     try {
-                        horarioParseado = JSON.parse(horario);
+                        horarioParseado = JSON.parse(comercio.horario);
                     } catch (e) {
                         console.error('Error al parsear el horario:', e);
                     }
                 }
 
                 const marker = new Feature({
-                    geometry: new Point(fromLonLat([longitude, latitude])),
-                    id: id,
-                    name: nombre,
-                    puntaje_medio: puntaje_medio,
-                    horario: horarioParseado
+                    geometry: new Point(fromLonLat([comercio.longitude, comercio.latitude])),
+                    id: comercio.id,
+                    name: comercio.nombre,
+                    puntaje_medio: comercio.puntaje_medio,
+                    horario: horarioParseado,
+                    phone: comercio.phone,
+                    calle_num: comercio.calle_num,
+                    categoria_id: comercio.categoria_id
                 });
 
                 marker.setStyle(
                     new Style({
                         image: new Icon({
                             src: 'https://imgs.search.brave.com/us8Gu30N5ILiAsZiqIrxuXbRxaJDoZ22JegunkIifwE/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9pY29u/ZXMucHJvL3dwLWNv/bnRlbnQvdXBsb2Fk/cy8yMDIxLzAyL2lj/b25lLWRlLWJyb2No/ZS1kZS1sb2NhbGlz/YXRpb24tYmxldWUu/cG5n',
-                            scale: 0.06
+                            scale: 0.08
                         })
                     })
                 );
-
 
                 vectorSource.value.addFeature(marker);
             }
@@ -154,8 +160,6 @@ const agregarMarcadoresDesdeResponse = async () => {
         console.error("Error obteniendo ubicaciones:", error);
     }
 };
-
-
 
 const buscarPorCodigoPostal = async () => {
     if (!codigoPostal.value) {
@@ -199,7 +203,6 @@ const agregarMarcador = (lon, lat, name) => {
         name: name
     });
 
-
     vectorSource.value.addFeature(marker);
 };
 
@@ -224,8 +227,6 @@ const getLocation = () => {
                         vectorSource.value.removeFeature(feature);
                     }
                 });
-
-                vectorSource.value.addFeature(userMarker);
             },
             (error) => {
                 location.value = `Error: ${error.message}`;
@@ -247,5 +248,5 @@ const cerrarPopup = () => {
 </script>
 
 <style scoped>
-@import url('../assets/mapa.css');
+@import '@/assets/mapa.css';
 </style>

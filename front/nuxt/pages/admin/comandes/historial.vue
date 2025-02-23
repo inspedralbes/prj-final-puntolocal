@@ -198,17 +198,9 @@ definePageMeta({
 
 const backgroundShadow = ref(false);
 
-console.log("Socket Connected: ", socket.connected);
-
-socket.on('connect', () => {
-    console.log("Socket conectado con id: ", socket.id);
-});
-
 if (socket.connected) {
     // console.log("Socket está conectado correctamente.");
     socket.emit("identificarUsuario", { user_id: auth.user.id });
-} else {
-    console.log("Socket no está conectado.");
 }
 
 const isOpen = reactive({

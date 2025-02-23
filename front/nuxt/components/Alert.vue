@@ -25,22 +25,18 @@
           title: this.title,
           text: this.text,
           icon: "info",
-          position: "top-end",
+          iconColor: "#276BF2",
           showConfirmButton: true,
           showCancelButton: true,
           confirmButtonText: "Sí",
           cancelButtonText: "No",
-          toast: true,
-          timer: 5000,
-          timerProgressBar: true,
+          confirmButtonColor: "#276BF2",
           width: "320px",
         }).then((result) => {
           if (result.isConfirmed) {
-            console.log("Usuari va dir SÍ");
-            this.$emit('confirmed');  // Emitimos el evento 'confirmed' al componente padre
+            this.$emit('confirmed');
           } else {
-            console.log("Usuari va dir NO");
-            this.$emit('canceled');  // Emitimos el evento 'canceled' al componente padre
+            this.$emit('canceled');
           }
         });
       }

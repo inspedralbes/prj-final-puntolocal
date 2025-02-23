@@ -5,9 +5,9 @@
 </template>
 
 <script setup>
-    definePageMeta({
-        layout: false,
-    });
-    
-    import MapComponent from '../components/MapComponent.vue';
+import MapComponent from '../components/MapComponent.vue';
+
+definePageMeta({
+    layout: false,
+});
 </script>

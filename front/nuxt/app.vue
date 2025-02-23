@@ -68,7 +68,7 @@ onMounted(() => {
     });
 
   socket.on("nuevaOrdenRecibida", (newOrden) => {
-    console.log(newOrden);
+    // console.log(newOrden);
     orden.value = newOrden;
     showAlert.value = true;
   });
@@ -76,9 +76,6 @@ onMounted(() => {
 
 // Función para manejar la confirmación
 const handleConfirmed = () => {
-  console.log("Usuari va dir SÍ");
-  // Aquí haces la redirección cuando el usuario confirma
-  console.log('orden',orden.value)
   setTimeout(() => {
     if (orden?.value?.id) {
       router.push(`/admin/comandes/${orden?.value?.id}`);
@@ -91,8 +88,4 @@ const handleConfirmed = () => {
 const handleCanceled = () => {
   showAlert.value = false; // Ocultar la alerta después de la acción
 };
-
-function test() {
-  socket.emit("test");
-}
 </script>
