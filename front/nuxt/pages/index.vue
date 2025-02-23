@@ -104,7 +104,7 @@ const { $communicationManager } = useNuxtApp();
 const isDarkMode = ref(window.matchMedia("(prefers-color-scheme: dark)").matches);
 const userLocation = ref(null);
 
-onMounted(() => {
+onMounted(async () => {
     const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
     const handleChange = (event) => {
         isDarkMode.value = event.matches;
@@ -115,16 +115,16 @@ onMounted(() => {
     fetchProductos();
     fetchProductos2();
     fetchCategorias();
-    checkLocationPermission();
+    await checkLocationPermission();
 });
 
 watch(isDarkMode, (newValue) => {
     document.body.classList.toggle("dark", newValue);
 });
 
-function checkLocationPermission() {
+async function checkLocationPermission() {
     if (localStorage.getItem("locationPermission") === "granted") {
-        getLocation();
+        await getLocation();
     } else {
         requestLocationPermission();
     }
@@ -147,14 +147,14 @@ function requestLocationPermission() {
     });
 }
 
-function getLocation() {
+async function getLocation() {
     if ("geolocation" in navigator) {
         navigator.geolocation.getCurrentPosition(
-            (position) => {
+            async (position) => {
                 const { latitude, longitude } = position.coords;
                 userLocation.value = { latitude, longitude };
                 localStorage.setItem("locationPermission", "granted");
-                fetchComerciosCercanos(latitude, longitude);
+                await fetchComerciosCercanos(latitude, longitude);
             },
             (error) => {
                 console.error("Error al obtener la ubicación:", error);
@@ -168,13 +168,8 @@ function getLocation() {
 async function fetchComerciosCercanos(lat, lon) {
     try {
         const response = await $communicationManager.getComerciosCercanos(lat, lon);
-        //const response = await fetch(`http://localhost:8000/api/comercios/comercios-cercanos/${lat}/${lon}`);
-        console.log(response);
+        console.log("Comercios cercanos:", response);
         
-        if (!response.ok) throw new Error("Error en la API");
-
-        const data = await response.json();
-        console.log("Comercios cercanos:", data);
     } catch (error) {
         console.error("Error obteniendo comercios cercanos:", error);
     }
