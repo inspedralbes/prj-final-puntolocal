@@ -63,8 +63,8 @@
                     </div>
                     <div class="flex space-x-1 pl-4 items-center overflow-x-auto scrollbar-none">
                         <productoComp v-for="(producto, index) in productos2" :key="index" :id="producto.id"
-                        :img="producto.imagen ? `${baseUrl}/storage/${producto.imagen}` : `${baseUrl}/storage/productos/default-image.webp`"
-                        :title="producto.nombre" :price="producto.precio" :comercio="producto.comercio"
+                            :img="producto.imagen ? `${baseUrl}/storage/${producto.imagen}` : `${baseUrl}/storage/productos/default-image.webp`"
+                            :title="producto.nombre" :price="producto.precio" :comercio="producto.comercio"
                             :customClass="'w-[170px]'" price-class="text-gray-900 dark:text-white"
                             @click="mostrarIdProducto(producto.id)">
                         </productoComp>
@@ -88,8 +88,9 @@
 import { ref, onMounted, watch } from "vue";
 import { useRouter } from "vue-router";
 import { useAuthStore } from "~/stores/authStore";
-
 import { useRuntimeConfig } from "#imports";
+import Swal from "sweetalert2";
+
 const config = useRuntimeConfig();
 const baseUrl = config.public.apiBaseUrl;
 
@@ -100,54 +101,92 @@ const router = useRouter();
 const authStore = useAuthStore();
 const { $communicationManager } = useNuxtApp();
 const isDarkMode = ref(window.matchMedia("(prefers-color-scheme: dark)").matches);
-import Swal from 'sweetalert2'
+const userLocation = ref(null);
 
 onMounted(() => {
-        const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
-        const handleChange = (event) => {
-            isDarkMode.value = event.matches;
-        };
-        mediaQuery.addEventListener("change", handleChange);
+    const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
+    const handleChange = (event) => {
+        isDarkMode.value = event.matches;
+    };
+    mediaQuery.addEventListener("change", handleChange);
+    document.body.classList.toggle("dark", isDarkMode.value);
 
-        document.body.classList.toggle('dark', isDarkMode.value);
-        document.body.classList.toggle('dark', isDarkMode.value);
-
-        fetchProductos();
-        fetchProductos2();
-        fetchCategorias();
+    fetchProductos();
+    fetchProductos2();
+    fetchCategorias();
+    checkLocationPermission();
 });
 
 watch(isDarkMode, (newValue) => {
-    document.body.classList.toggle('dark', newValue);
+    document.body.classList.toggle("dark", newValue);
 });
 
-const mostrarAlerta = () => {
+/**
+ * Verifica si el usuario ha dado permiso de ubicación.
+ */
+function checkLocationPermission() {
+    if (localStorage.getItem("locationPermission") === "granted") {
+        getLocation();
+    } else {
+        requestLocationPermission();
+    }
+}
+
+/**
+ * Pide permiso al usuario para acceder a su ubicación.
+ */
+function requestLocationPermission() {
     Swal.fire({
-        title: "Nova comanda rebuda",
-        text: "Vols veure'l?",
+        title: "Permiso de ubicación",
+        text: "Necesitamos acceder a tu ubicación para mostrar comercios cercanos.",
         icon: "info",
-        position: "top-end",
-        showConfirmButton: true,
         showCancelButton: true,
-        confirmButtonText: "Sí",
-        cancelButtonText: "No",
-        toast: true,
-        timer: 3000,
-        timerProgressBar: true,
-        width: "320px", // 🔹 Ajusta el tamaño
-        customClass: {
-            popup: "horizontal-alert", // Clases personalizadas
-            icon: "small-icon", // Clases para el icono
-        },
-    })
-        .then((result) => {
-            if (result.isConfirmed) {
-                console.log("Usuari va dir SÍ");
-            } else {
-                console.log("Usuari va dir NO");
+        confirmButtonText: "Permitir",
+        cancelButtonText: "Cancelar",
+    }).then((result) => {
+        if (result.isConfirmed) {
+            getLocation();
+        } else {
+            console.log("El usuario denegó el permiso de ubicación.");
+        }
+    });
+}
+
+/**
+ * Obtiene la ubicación del usuario.
+ */
+function getLocation() {
+    if ("geolocation" in navigator) {
+        navigator.geolocation.getCurrentPosition(
+            (position) => {
+                const { latitude, longitude } = position.coords;
+                userLocation.value = { latitude, longitude };
+                localStorage.setItem("locationPermission", "granted");
+                fetchComerciosCercanos(latitude, longitude);
+            },
+            (error) => {
+                console.error("Error al obtener la ubicación:", error);
             }
-        });
-};
+        );
+    } else {
+        console.error("Geolocalización no disponible.");
+    }
+}
+
+/**
+ * Llama a la API para obtener los comercios cercanos.
+ */
+async function fetchComerciosCercanos(lat, lon) {
+    try {
+        const response = await fetch(`http://localhost:8000/api/comercios/comercios-cercanos/${lat}/${lon}`);
+        if (!response.ok) throw new Error("Error en la API");
+
+        const data = await response.json();
+        console.log("Comercios cercanos:", data);
+    } catch (error) {
+        console.error("Error obteniendo comercios cercanos:", error);
+    }
+}
 
 async function fetchProductos() {
     try {

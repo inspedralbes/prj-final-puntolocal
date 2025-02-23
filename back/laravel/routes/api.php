@@ -55,6 +55,7 @@ Route::prefix('comercios')->group(function () {
     Route::get('/{id}', [ComercioController::class, 'getComercio']);
     Route::get('/search/{search}', [ComercioController::class, 'search']);
     Route::get('/getUserid/{id}', [ComercioController::class, 'getUserID']);
+    Route::get('/comercios-cercanos/{latitud}/{longitud}', [ComercioController::class, 'getComerciosCercanos']);
 });
 Route::get('/getLocations', [ComercioController::class, 'getLocations']);
 
