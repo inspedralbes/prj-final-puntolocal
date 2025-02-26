@@ -4,7 +4,8 @@
         <div class="flex gap-4 w-full">
             <div class="mt-1">
                 <div class="w-[100px] h-[120px] border rounded-xl overflow-hidden">
-                    <img :src="props.info.imagen" alt="">
+                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTax-ApMm37HSk0kyDBucbsorK56o8DeULcr__CcbkzJoGLRW_YPFG5JVOV3BrUXCsX_uY&usqp=CAU"
+                        alt="imagen del comercio" class="w-full h-full object-cover">
                 </div>
             </div>
             <div class="w-full font-medium flex flex-col gap-1">
@@ -85,7 +86,8 @@
                     {{ props.info.telefon }}
                 </div>
                 <div class="mt-2">
-                    <button @click="infoDelComercio" class="bg-[#276BF2] text-white py-2 px-10 rounded-md">Veure el comerç</button>
+                    <button @click="infoDelComercio" class="bg-[#276BF2] text-white py-2 px-10 rounded-md">Veure el
+                        comerç</button>
                 </div>
             </div>
         </div>

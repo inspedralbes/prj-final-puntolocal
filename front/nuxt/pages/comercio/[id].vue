@@ -75,7 +75,9 @@
 
             </div>
             <div class="w-[85vw] bg-white border rounded-md absolute bottom-[-50px] flex items-center p-2">
-                <div class="w-[80px] h-[80px] border rounded-md bg-gray-100 mr-2">
+                <div class="w-[80px] h-[80px] border border-gray-400 rounded-md bg-gray-100 mr-2 overflow-hidden">
+                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTax-ApMm37HSk0kyDBucbsorK56o8DeULcr__CcbkzJoGLRW_YPFG5JVOV3BrUXCsX_uY&usqp=CAU"
+                        alt="imagen del comercio" class="w-full h-full object-cover">
                 </div>
                 <div class="h-full flex-grow">
                     <div class="flex justify-between items-center pr-1">

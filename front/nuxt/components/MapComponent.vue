@@ -80,12 +80,7 @@ onMounted(async () => {
     map.value = new Map({
         target: mapContainer.value,
         layers: [
-            new TileLayer({
-                source: new VectorTileSource({
-                    format: new MVT(),
-                    url: 'https://api.maptiler.com/tiles/v3/{z}/{x}/{y}.pbf?key=TU_CLAVE',
-                }),
-            }),
+            new TileLayer({ source: new OSM() }),
             vectorLayer
         ],
         view: new View({
@@ -166,43 +161,43 @@ const agregarMarcadoresDesdeResponse = async () => {
 
                 switch (comercio.categoria_id) {
                     case 1:
-                        categoria_icon.value = "indumentaria";
+                        categoria_icon.value = 'https://imgs.search.brave.com/us8Gu30N5ILiAsZiqIrxuXbRxaJDoZ22JegunkIifwE/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9pY29u/ZXMucHJvL3dwLWNv/bnRlbnQvdXBsb2Fk/cy8yMDIxLzAyL2lj/b25lLWRlLWJyb2No/ZS1kZS1sb2NhbGlz/YXRpb24tYmxldWUu/cG5n';
                         break;
                     case 2:
-                        categoria_icon.value = "tecnologia";
+                        categoria_icon.value = 'https://imgs.search.brave.com/us8Gu30N5ILiAsZiqIrxuXbRxaJDoZ22JegunkIifwE/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9pY29u/ZXMucHJvL3dwLWNv/bnRlbnQvdXBsb2Fk/cy8yMDIxLzAyL2lj/b25lLWRlLWJyb2No/ZS1kZS1sb2NhbGlz/YXRpb24tYmxldWUu/cG5n';
                         break;
                     case 3:
-                        categoria_icon.value = "hogar";
+                        categoria_icon.value = 'https://imgs.search.brave.com/us8Gu30N5ILiAsZiqIrxuXbRxaJDoZ22JegunkIifwE/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9pY29u/ZXMucHJvL3dwLWNv/bnRlbnQvdXBsb2Fk/cy8yMDIxLzAyL2lj/b25lLWRlLWJyb2No/ZS1kZS1sb2NhbGlz/YXRpb24tYmxldWUu/cG5n';
                         break;
                     case 4:
-                        categoria_icon.value = "cosmeticos";
+                        categoria_icon.value = 'https://imgs.search.brave.com/us8Gu30N5ILiAsZiqIrxuXbRxaJDoZ22JegunkIifwE/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9pY29u/ZXMucHJvL3dwLWNv/bnRlbnQvdXBsb2Fk/cy8yMDIxLzAyL2lj/b25lLWRlLWJyb2No/ZS1kZS1sb2NhbGlz/YXRpb24tYmxldWUu/cG5n';
                         break;
                     case 5:
-                        categoria_icon.value = "jugueterias";
+                        categoria_icon.value = 'https://imgs.search.brave.com/us8Gu30N5ILiAsZiqIrxuXbRxaJDoZ22JegunkIifwE/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9pY29u/ZXMucHJvL3dwLWNv/bnRlbnQvdXBsb2Fk/cy8yMDIxLzAyL2lj/b25lLWRlLWJyb2No/ZS1kZS1sb2NhbGlz/YXRpb24tYmxldWUu/cG5n';
                         break;
                     case 6:
                         categoria_icon.value = "ferreterias";
                         break;
                     case 7:
-                        categoria_icon.value = "librerias";
+                        categoria_icon.value = 'https://imgs.search.brave.com/us8Gu30N5ILiAsZiqIrxuXbRxaJDoZ22JegunkIifwE/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9pY29u/ZXMucHJvL3dwLWNv/bnRlbnQvdXBsb2Fk/cy8yMDIxLzAyL2lj/b25lLWRlLWJyb2No/ZS1kZS1sb2NhbGlz/YXRpb24tYmxldWUu/cG5n';
                         break;
                     case 8:
-                        categoria_icon.value = "farmacias";
+                        categoria_icon.value = 'https://imgs.search.brave.com/us8Gu30N5ILiAsZiqIrxuXbRxaJDoZ22JegunkIifwE/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9pY29u/ZXMucHJvL3dwLWNv/bnRlbnQvdXBsb2Fk/cy8yMDIxLzAyL2lj/b25lLWRlLWJyb2No/ZS1kZS1sb2NhbGlz/YXRpb24tYmxldWUu/cG5n';
                         break;
                     case 9:
-                        categoria_icon.value = "zapaterias";
+                        categoria_icon.value = 'https://imgs.search.brave.com/us8Gu30N5ILiAsZiqIrxuXbRxaJDoZ22JegunkIifwE/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9pY29u/ZXMucHJvL3dwLWNv/bnRlbnQvdXBsb2Fk/cy8yMDIxLzAyL2lj/b25lLWRlLWJyb2No/ZS1kZS1sb2NhbGlz/YXRpb24tYmxldWUu/cG5n';
                         break;
                     case 10:
-                        categoria_icon.value = "floristerias";
+                        categoria_icon.value = 'https://imgs.search.brave.com/us8Gu30N5ILiAsZiqIrxuXbRxaJDoZ22JegunkIifwE/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9pY29u/ZXMucHJvL3dwLWNv/bnRlbnQvdXBsb2Fk/cy8yMDIxLzAyL2lj/b25lLWRlLWJyb2No/ZS1kZS1sb2NhbGlz/YXRpb24tYmxldWUu/cG5n';
                         break;
                     case 11:
-                        categoria_icon.value = "opticas";
+                        categoria_icon.value = 'https://imgs.search.brave.com/us8Gu30N5ILiAsZiqIrxuXbRxaJDoZ22JegunkIifwE/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9pY29u/ZXMucHJvL3dwLWNv/bnRlbnQvdXBsb2Fk/cy8yMDIxLzAyL2lj/b25lLWRlLWJyb2No/ZS1kZS1sb2NhbGlz/YXRpb24tYmxldWUu/cG5n';
                         break;
                     case 12:
-                        categoria_icon.value = "accesorios";
+                        categoria_icon.value = 'https://imgs.search.brave.com/us8Gu30N5ILiAsZiqIrxuXbRxaJDoZ22JegunkIifwE/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9pY29u/ZXMucHJvL3dwLWNv/bnRlbnQvdXBsb2Fk/cy8yMDIxLzAyL2lj/b25lLWRlLWJyb2No/ZS1kZS1sb2NhbGlz/YXRpb24tYmxldWUu/cG5n';
                         break;
                     case 13:
-                        categoria_icon.value = "mascotas";
+                        categoria_icon.value = 'https://imgs.search.brave.com/us8Gu30N5ILiAsZiqIrxuXbRxaJDoZ22JegunkIifwE/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9pY29u/ZXMucHJvL3dwLWNv/bnRlbnQvdXBsb2Fk/cy8yMDIxLzAyL2lj/b25lLWRlLWJyb2No/ZS1kZS1sb2NhbGlz/YXRpb24tYmxldWUu/cG5n';
                         break;
                     default:
                         categoria_icon.value = 'https://imgs.search.brave.com/us8Gu30N5ILiAsZiqIrxuXbRxaJDoZ22JegunkIifwE/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9pY29u/ZXMucHJvL3dwLWNv/bnRlbnQvdXBsb2Fk/cy8yMDIxLzAyL2lj/b25lLWRlLWJyb2No/ZS1kZS1sb2NhbGlz/YXRpb24tYmxldWUu/cG5n';
@@ -213,7 +208,7 @@ const agregarMarcadoresDesdeResponse = async () => {
                     new Style({
                         image: new Icon({
                             src: categoria_icon.value,
-                            src: 'https://imgs.search.brave.com/us8Gu30N5ILiAsZiqIrxuXbRxaJDoZ22JegunkIifwE/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9pY29u/ZXMucHJvL3dwLWNv/bnRlbnQvdXBsb2Fk/cy8yMDIxLzAyL2lj/b25lLWRlLWJyb2No/ZS1kZS1sb2NhbGlz/YXRpb24tYmxldWUu/cG5n',
+                            // src: 'https://imgs.search.brave.com/us8Gu30N5ILiAsZiqIrxuXbRxaJDoZ22JegunkIifwE/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9pY29u/ZXMucHJvL3dwLWNv/bnRlbnQvdXBsb2Fk/cy8yMDIxLzAyL2lj/b25lLWRlLWJyb2No/ZS1kZS1sb2NhbGlz/YXRpb24tYmxldWUu/cG5n',
                             scale: 0.08
                         }),
                         text: new Text({
