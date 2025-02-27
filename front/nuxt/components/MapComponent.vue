@@ -39,28 +39,20 @@
 <script setup>
 import { onMounted, ref } from 'vue';
 import 'ol/ol.css';
-import Map from 'ol/Map';
-import View from 'ol/View';
+import { Map, View } from 'ol';
 import TileLayer from 'ol/layer/Tile';
 import OSM from 'ol/source/OSM';
 import { fromLonLat } from 'ol/proj';
 import VectorLayer from 'ol/layer/Vector';
 import VectorSource from 'ol/source/Vector';
+import Cluster from 'ol/source/Cluster'; // Importa Cluster
 import Feature from 'ol/Feature';
 import Point from 'ol/geom/Point';
 import Style from 'ol/style/Style';
-import { Fill, Stroke, Circle as CircleStyle, Text } from "ol/style";
+import { Icon, Fill, Stroke, Text, Circle as CircleStyle } from "ol/style";
 import Select from 'ol/interaction/Select';
-import XYZ from 'ol/source/XYZ';  // Asegúrate de que esta línea esté presente
-import MVT from 'ol/format/MVT';
-import VectorTileSource from 'ol/source/VectorTile';
 import { click } from 'ol/events/condition';
-import InfoMapa from './InfoMapa.vue';
-import { useRouter } from "vue-router";
-import Icon from 'ol/style/Icon';
 import { defaults as defaultControls } from 'ol/control';
-import puntoMapaIcon from '@/assets/punto-mapa.svg';
-
 
 const map = ref(null);
 const router = useRouter();
@@ -73,14 +65,50 @@ const vectorSource = ref(new VectorSource());
 const { $communicationManager } = useNuxtApp();
 const API_URL = "https://nominatim.openstreetmap.org/search";
 
-onMounted(async () => {
-    const vectorLayer = new VectorLayer({ source: vectorSource.value });
+// Fuente para los clústeres
+const clusterSource = new Cluster({
+    distance: 30,
+    source: vectorSource.value
+});
 
+const clusterLayer = new VectorLayer({
+    source: clusterSource,
+    style: function (feature) {
+        const features = feature.get('features'); // Obtenemos los puntos dentro del clúster
+        const size = features.length; // Número de puntos en el clúster
+
+        if (size === 1) {
+            const marker = features[0]; // Solo hay un marcador
+            return marker.getStyle(); // Devolvemos el estilo original del marcador
+        }
+
+        return new Style({
+            image: new CircleStyle({
+                radius: 15, // Radio del círculo
+                fill: new Fill({
+                    color: '#276BF2' // Color de fondo del círculo
+                }),
+                stroke: new Stroke({
+                    color: 'white', // Color del borde del círculo
+                    width: 2 // Grosor del borde
+                })
+            }),
+            text: new Text({
+                text: size.toString(), // Número de puntos en el clúster
+                fill: new Fill({ color: 'white' }),
+                // stroke: new Stroke({ color: 'black', width: 2 }),
+                font: 'bold 13px Lato'
+            })
+        });
+    }
+});
+
+onMounted(async () => {
     map.value = new Map({
         target: mapContainer.value,
         layers: [
             new TileLayer({ source: new OSM() }),
-            vectorLayer
+            clusterLayer
         ],
         view: new View({
             center: fromLonLat([2.15899, 41.38879]),
@@ -96,32 +124,46 @@ onMounted(async () => {
     });
 
     map.value.addInteraction(selectClick);
+
     selectClick.on('select', (e) => {
-        const selectedFeature = e.selected[0];
-        if (selectedFeature) {
-            const id = selectedFeature.get('id');
-            const name = selectedFeature.get('name');
-            const lonLat = selectedFeature.getGeometry().getCoordinates();
-            const lon = lonLat[0];
-            const lat = lonLat[1];
-            const puntaje = selectedFeature.get('puntaje_medio');
-            const horario = selectedFeature.get('horario');
-            const calle_num = selectedFeature.get('calle_num');
-            const telefon = selectedFeature.get('phone');
-            const imagen = selectedFeature.get('imagen');
+        const selected = e.selected[0];
 
-            puebloSeleccionado.value = { id, name, lat, lon, puntaje_medio: puntaje, horario, calle_num, telefon, imagen };
-            showPopup.value = true;
+        if (selected) {
+            const features = selected.get('features');
+            
+            if (features && features.length > 1) {
+                selectClick.getFeatures().clear();
+                return; // No hacer nada si es un cluster con más de un marcador
+            }
 
-            selectedFeature.setStyle(
-                new Style({
-                    image: new Icon({
-                        src: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTI3IiBoZWlnaHQ9IjE0OCIgdmlld0JveD0iMCAwIDEyNyAxNDgiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxnIGZpbHRlcj0idXJsKCNmaWx0ZXIwX2RfOV8zOSkiPgo8cGF0aCBkPSJNMTIzIDU5LjVDMTIzIDkyLjM2MDkgOTUgMTIzLjUgNjMuNSAxMzkuNUMzMSAxMjMgNCA5Mi4zNjA5IDQgNTkuNUM0IDI2LjYzOTEgMzAuNjM5MSAwIDYzLjUgMEM5Ni4zNjA5IDAgMTIzIDI2LjYzOTEgMTIzIDU5LjVaIiBmaWxsPSIjMjc2QkYyIi8+CjxjaXJjbGUgY3g9IjYzLjUiIGN5PSI1OS41IiByPSIyOC41IiBmaWxsPSJ3aGl0ZSIvPgo8L2c+CjxkZWZzPgo8ZmlsdGVyIGlkPSJmaWx0ZXIwX2RfOV8zOSIgeD0iMCIgeT0iMCIgd2lkdGg9IjEyNyIgaGVpZ2h0PSIxNDcuNSIgZmlsdGVyVW5pdHM9InVzZXJTcGFjZU9uVXNlIiBjb2xvci1pbnRlcnBvbGF0aW9uLWZpbHRlcnM9InNSR0IiPgo8ZmVGbG9vZCBmbG9vZC1vcGFjaXR5PSIwIiByZXN1bHQ9IkJhY2tncm91bmRJbWFnZUZpeCIvPgo8ZmVDb2xvck1hdHJpeCBpbj0iU291cmNlQWxwaGEiIHR5cGU9Im1hdHJpeCIgdmFsdWVzPSIwIDAgMCAwIDAgMCAwIDAgMCAwIDAgMCAwIDAgMCAwIDAgMCAxMjcgMCIgcmVzdWx0PSJoYXJkQWxwaGEiLz4KPGZlT2Zmc2V0IGR5PSI0Ii8+CjxmZUdhdXNzaWFuQmx1ciBzdGREZXZpYXRpb249IjIiLz4KPGZlQ29tcG9zaXRlIGluMj0iaGFyZEFscGhhIiBvcGVyYXRvcj0ib3V0Ii8+CjxmZUNvbG9yTWF0cml4IHR5cGU9Im1hdHJpeCIgdmFsdWVzPSIwIDAgMCAwIDAgMCAwIDAgMCAwIDAgMCAwIDAgMCAwIDAgMCAwLjI1IDAiLz4KPGZlQmxlbmQgbW9kZT0ibm9ybWFsIiBpbjI9IkJhY2tncm91bmRJbWFnZUZpeCIgcmVzdWx0PSJlZmZlY3QxX2Ryb3BTaGFkb3dfOV8zOSIvPgo8ZmVCbGVuZCBtb2RlPSJub3JtYWwiIGluPSJTb3VyY2VHcmFwaGljIiBpbjI9ImVmZmVjdDFfZHJvcFNoYWRvd185XzM5IiByZXN1bHQ9InNoYXBlIi8+CjwvZmlsdGVyPgo8L2RlZnM+Cjwvc3ZnPgo=',
-                        // src: 'https://imgs.search.brave.com/us8Gu30N5ILiAsZiqIrxuXbRxaJDoZ22JegunkIifwE/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9pY29u/ZXMucHJvL3dwLWNv/bnRlbnQvdXBsb2Fk/cy8yMDIxLzAyL2lj/b25lLWRlLWJyb2No/ZS1kZS1sb2NhbGlz/YXRpb24tYmxldWUu/cG5n',
-                        scale: 0.25
-                    })
-                })
-            )
+            const selectedFeature = features ? features[0] : selected;
+
+            if (selectedFeature) {
+                const id = selectedFeature.get('id');
+                const name = selectedFeature.get('name');
+                const lonLat = selectedFeature.getGeometry().getCoordinates();
+                const lon = lonLat[0];
+                const lat = lonLat[1];
+                const puntaje = selectedFeature.get('puntaje_medio');
+                const horario = selectedFeature.get('horario');
+                const calle_num = selectedFeature.get('calle_num');
+                const telefon = selectedFeature.get('phone');
+                const imagen = selectedFeature.get('imagen');
+
+                puebloSeleccionado.value = { id, name, lat, lon, puntaje_medio: puntaje, horario, calle_num, telefon, imagen };
+                showPopup.value = puebloSeleccionado.value.id !== undefined;
+
+                if (selectedFeature) {
+                    selected.setStyle(
+                        new Style({
+                            image: new Icon({
+                                src: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTI3IiBoZWlnaHQ9IjE0OCIgdmlld0JveD0iMCAwIDEyNyAxNDgiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxnIGZpbHRlcj0idXJsKCNmaWx0ZXIwX2RfOV8zOSkiPgo8cGF0aCBkPSJNMTIzIDU5LjVDMTIzIDkyLjM2MDkgOTUgMTIzLjUgNjMuNSAxMzkuNUMzMSAxMjMgNCA5Mi4zNjA5IDQgNTkuNUM0IDI2LjYzOTEgMzAuNjM5MSAwIDYzLjUgMEM5Ni4zNjA5IDAgMTIzIDI2LjYzOTEgMTIzIDU5LjVaIiBmaWxsPSIjMjc2QkYyIi8+CjxjaXJjbGUgY3g9IjYzLjUiIGN5PSI1OS41IiByPSIyOC41IiBmaWxsPSJ3aGl0ZSIvPgo8L2c+CjxkZWZzPgo8ZmlsdGVyIGlkPSJmaWx0ZXIwX2RfOV8zOSIgeD0iMCIgeT0iMCIgd2lkdGg9IjEyNyIgaGVpZ2h0PSIxNDcuNSIgZmlsdGVyVW5pdHM9InVzZXJTcGFjZU9uVXNlIiBjb2xvci1pbnRlcnBvbGF0aW9uLWZpbHRlcnM9InNSR0IiPgo8ZmVGbG9vZCBmbG9vZC1vcGFjaXR5PSIwIiByZXN1bHQ9IkJhY2tncm91bmRJbWFnZUZpeCIvPgo8ZmVDb2xvck1hdHJpeCBpbj0iU291cmNlQWxwaGEiIHR5cGU9Im1hdHJpeCIgdmFsdWVzPSIwIDAgMCAwIDAgMCAwIDAgMCAwIDAgMCAwIDAgMCAwIDAgMCAxMjcgMCIgcmVzdWx0PSJoYXJkQWxwaGEiLz4KPGZlT2Zmc2V0IGR5PSI0Ii8+CjxmZUdhdXNzaWFuQmx1ciBzdGREZXZpYXRpb249IjIiLz4KPGZlQ29tcG9zaXRlIGluMj0iaGFyZEFscGhhIiBvcGVyYXRvcj0ib3V0Ii8+CjxmZUNvbG9yTWF0cml4IHR5cGU9Im1hdHJpeCIgdmFsdWVzPSIwIDAgMCAwIDAgMCAwIDAgMCAwIDAgMCAwIDAgMCAwIDAgMCAwLjI1IDAiLz4KPGZlQmxlbmQgbW9kZT0ibm9ybWFsIiBpbjI9IkJhY2tncm91bmRJbWFnZUZpeCIgcmVzdWx0PSJlZmZlY3QxX2Ryb3BTaGFkb3dfOV8zOSIvPgo8ZmVCbGVuZCBtb2RlPSJub3JtYWwiIGluPSJTb3VyY2VHcmFwaGljIiBpbjI9ImVmZmVjdDFfZHJvcFNoYWRvd185XzM5IiByZXN1bHQ9InNoYXBlIi8+CjwvZmlsdGVyPgo8L2RlZnM+Cjwvc3ZnPgo=',
+                                scale: 0.25
+                            })
+                        })
+                    );
+                }
+            }
         }
     });
 });
@@ -134,10 +176,8 @@ const agregarMarcadoresDesdeResponse = async () => {
     try {
         const categoria_icon = ref();
         const response = await $communicationManager.getLocations();
-        console.log(response);
 
         response.forEach((comercio) => {
-            console.log(comercio);
             if (!isNaN(comercio.latitude) && !isNaN(comercio.longitude)) {
                 let horarioParseado = {};
 
@@ -205,7 +245,6 @@ const agregarMarcadoresDesdeResponse = async () => {
                         categoria_icon.value = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTI3IiBoZWlnaHQ9IjE0OCIgdmlld0JveD0iMCAwIDEyNyAxNDgiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxnIGZpbHRlcj0idXJsKCNmaWx0ZXIwX2RfNl8xMDgpIj4KPHBhdGggZD0iTTEyMyA1OS41QzEyMyA5Mi4zNjA5IDk1IDEyMy41IDYzLjUgMTM5LjVDMzEgMTIzIDQgOTIuMzYwOSA0IDU5LjVDNCAyNi42MzkxIDMwLjYzOTEgMCA2My41IDBDOTYuMzYwOSAwIDEyMyAyNi42MzkxIDEyMyA1OS41WiIgZmlsbD0id2hpdGUiLz4KPGNpcmNsZSBjeD0iNjMuNSIgY3k9IjU5LjUiIHI9IjQ3LjUiIGZpbGw9IiMyNzZCRjIiLz4KPHBhdGggZD0iTTkwLjg1MzUgNjguNzM2QzkzLjMwMTEgNjguNzM2IDk1LjM4MTYgNjcuODg2NyA5Ny4wOTQ5IDY2LjE4OEM5OC44MDgyIDY0LjQ4OTMgOTkuNjY0OSA2Mi40MjY3IDk5LjY2NDkgNjBDOTkuNjY0OSA1Ny41NzMzIDk4LjgwODIgNTUuNTEwNyA5Ny4wOTQ5IDUzLjgxMkM5NS4zODE2IDUyLjExMzMgOTMuMzAxMSA1MS4yNjQgOTAuODUzNSA1MS4yNjRDODguNDA2IDUxLjI2NCA4Ni4zMjU1IDUyLjExMzMgODQuNjEyMiA1My44MTJDODIuODk4OSA1NS41MTA3IDgyLjA0MjIgNTcuNTczMyA4Mi4wNDIyIDYwQzgyLjA0MjIgNjIuNDI2NyA4Mi44OTg5IDY0LjQ4OTMgODQuNjEyMiA2Ni4xODhDODYuMzI1NSA2Ny44ODY3IDg4LjQwNiA2OC43MzYgOTAuODUzNSA2OC43MzZaTTY0IDY4LjczNkM2Ni40NDc2IDY4LjczNiA2OC41MjgxIDY3Ljg4NjcgNzAuMjQxNCA2Ni4xODhDNzEuOTU0NyA2NC40ODkzIDcyLjgxMTMgNjIuNDI2NyA3Mi44MTEzIDYwQzcyLjgxMTMgNTcuNTczMyA3MS45NTQ3IDU1LjUxMDcgNzAuMjQxNCA1My44MTJDNjguNTI4MSA1Mi4xMTMzIDY2LjQ2NTEgNTEuMjY0IDY0LjA1MjUgNTEuMjY0QzYxLjYzOTkgNTEuMjY0IDU5LjU1OTQgNTIuMTEzMyA1Ny44MTExIDUzLjgxMkM1Ni4wNjI5IDU1LjUxMDcgNTUuMTg4NyA1Ny41NzMzIDU1LjE4ODcgNjBDNTUuMTg4NyA2Mi40MjY3IDU2LjA2MjkgNjQuNDg5MyA1Ny44MTExIDY2LjE4OEM1OS41NTk0IDY3Ljg4NjcgNjEuNjU3MyA2OC43MzYgNjQuMTA0OSA2OC43MzZINjRaTTM3LjE0NjUgNjguNzM2QzM5LjU5NDEgNjguNzM2IDQxLjY3NDUgNjcuODg2NyA0My4zODc5IDY2LjE4OEM0NS4xMDEyIDY0LjQ4OTMgNDUuOTU3OCA2Mi40MjY3IDQ1Ljk1NzggNjBDNDUuOTU3OCA1Ny41NzMzIDQ1LjEwMTIgNTUuNTEwNyA0My4zODc5IDUzLjgxMkM0MS42NzQ1IDUyLjExMzMgMzkuNTk0MSA1MS4yNjQgMzcuMTQ2NSA1MS4yNjRDMzQuNjk4OSA1MS4yNjQgMzIuNjE4NSA1Mi4xMTMzIDMwLjkwNTIgNTMuODEyQzI5LjE5MTkgNTUuNTEwNyAyOC4zMzUyIDU3LjU3MzMgMjguMzM1MiA2MEMyOC4zMzUyIDYyLjQyNjcgMjkuMTkxOSA2NC40ODkzIDMwLjkwNTIgNjYuMTg4QzMyLjYxODUgNjcuODg2NyAzNC42OTg5IDY4LjczNiAzNy4xNDY1IDY4LjczNloiIGZpbGw9IndoaXRlIi8+CjwvZz4KPGRlZnM+CjxmaWx0ZXIgaWQ9ImZpbHRlcjBfZF82XzEwOCIgeD0iMCIgeT0iMCIgd2lkdGg9IjEyNyIgaGVpZ2h0PSIxNDcuNSIgZmlsdGVyVW5pdHM9InVzZXJTcGFjZU9uVXNlIiBjb2xvci1pbnRlcnBvbGF0aW9uLWZpbHRlcnM9InNSR0IiPgo8ZmVGbG9vZCBmbG9vZC1vcGFjaXR5PSIwIiByZXN1bHQ9IkJhY2tncm91bmRJbWFnZUZpeCIvPgo8ZmVDb2xvck1hdHJpeCBpbj0iU291cmNlQWxwaGEiIHR5cGU9Im1hdHJpeCIgdmFsdWVzPSIwIDAgMCAwIDAgMCAwIDAgMCAwIDAgMCAwIDAgMCAwIDAgMCAxMjcgMCIgcmVzdWx0PSJoYXJkQWxwaGEiLz4KPGZlT2Zmc2V0IGR5PSI0Ii8+CjxmZUdhdXNzaWFuQmx1ciBzdGREZXZpYXRpb249IjIiLz4KPGZlQ29tcG9zaXRlIGluMj0iaGFyZEFscGhhIiBvcGVyYXRvcj0ib3V0Ii8+CjxmZUNvbG9yTWF0cml4IHR5cGU9Im1hdHJpeCIgdmFsdWVzPSIwIDAgMCAwIDAgMCAwIDAgMCAwIDAgMCAwIDAgMCAwIDAgMCAwLjI1IDAiLz4KPGZlQmxlbmQgbW9kZT0ibm9ybWFsIiBpbjI9IkJhY2tncm91bmRJbWFnZUZpeCIgcmVzdWx0PSJlZmZlY3QxX2Ryb3BTaGFkb3dfNl8xMDgiLz4KPGZlQmxlbmQgbW9kZT0ibm9ybWFsIiBpbj0iU291cmNlR3JhcGhpYyIgaW4yPSJlZmZlY3QxX2Ryb3BTaGFkb3dfNl8xMDgiIHJlc3VsdD0ic2hhcGUiLz4KPC9maWx0ZXI+CjwvZGVmcz4KPC9zdmc+Cg==';
                         break;
                 }
-
 
                 marker.setStyle(
                     new Style({

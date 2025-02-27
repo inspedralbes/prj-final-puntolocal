@@ -102,6 +102,7 @@ import { useRouter } from 'vue-router';
 const props = defineProps({
     info: Object
 });
+
 const emit = defineEmits(['cerrarPopup']);
 const router = useRouter();
 const show = ref(true);

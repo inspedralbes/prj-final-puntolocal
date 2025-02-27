@@ -21,7 +21,7 @@
                             <label for="email" class="block text-sm font-medium text-gray-700">Correu
                                 electrònic</label>
                             <div class="mt-1">
-                                <input id="email" v-model="formData.email" type="text" data-testid="username"
+                                <input id="email" name="email" v-model="formData.email" type="text" data-testid="username"
                                     required=""
                                     class="block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm">
                             </div>
@@ -148,7 +148,6 @@ async function login() {
         authStore.setFavoritos(res);
         navigateTo('/');
     } else {
-        // console.log('Hi ha hagut algun error, revisi les seves dades');
         errorMessage.value = 'Hi ha hagut algun error, revisi les seves dades';
     }
 }

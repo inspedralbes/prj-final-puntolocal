@@ -6,7 +6,7 @@
                     <input class="px-5 py-2 mx-5 w-full rounded-full border bg-gray-50 focus:outline-none focus:ring-0"
                         type="text" name="search" id="search" placeholder="Buscar..." v-model="search"
                         @keyup.enter="goSearch()">
-                    <div class="rounded-full bg-[#447EF2] p-2 cursor-pointer" @click="redirectToMap">
+                    <div id="redirectToMap" class="rounded-full bg-[#447EF2] p-2 cursor-pointer" @click="redirectToMap">
                         <svg fill="#FFFFFF" width="1.2em" height="1.2em" version="1.1" id="Layer_1I"
                             xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
                             viewBox="0 0 512 512" xml:space="preserve" stroke="#FFFFFF">
