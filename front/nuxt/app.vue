@@ -62,6 +62,8 @@ const showAlert = ref(false);
 const orden = ref(null);
 
 onMounted(() => {
+  auth.checkAuth();
+
   if (auth?.comercio) {
     socket.on("connect", () => {
       socket.emit("identificarUsuario", { user_id: auth.user.id });

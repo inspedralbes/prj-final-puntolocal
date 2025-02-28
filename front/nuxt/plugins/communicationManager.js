@@ -41,14 +41,14 @@ export default defineNuxtPlugin(nuxtApp => {
     },
 
     async getComerciosCercanos(lat, lon) {
-        const response = await fetch(Host + `/comercios/comercios-cercanos/${lat}/${lon}`);
+      const response = await fetch(Host + `/comercios/comercios-cercanos/${lat}/${lon}`);
 
-        if (response.ok) {
-          const json = await response.json();
-          return json;
-        }
+      if (response.ok) {
+        const json = await response.json();
+        return json;
+      }
 
-        return null;
+      return null;
     },
 
     async getCiudades($id) {
@@ -575,7 +575,7 @@ export default defineNuxtPlugin(nuxtApp => {
             'Authorization': this.authStore.token ? `Bearer ${this.authStore.token}` : ''
           }
         });
-        
+
         const jsonResponse = await response.json();
         return jsonResponse;
       } catch (error) {
@@ -610,27 +610,27 @@ export default defineNuxtPlugin(nuxtApp => {
 
     async darLikeComercio(id) {
       try {
-          const response = await fetch(`${Host}/favoritos/like/${id}`, {
-            method: 'POST',
-            headers: {
-              'Accept': 'application/json',
-              'Content-Type': 'application/json',
-              'Authorization': this.authStore.token ? `Bearer ${this.authStore.token}` : ''
-            }
-          });
-          if (response.ok) {
-            const json = await response.json();
-            return json.data;
-          } else {
-            console.error(`Error en la petición: ${response.status} ${response.statusText}`)
-            return null;
+        const response = await fetch(`${Host}/favoritos/like/${id}`, {
+          method: 'POST',
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+            'Authorization': this.authStore.token ? `Bearer ${this.authStore.token}` : ''
           }
-  
-        } catch (error) {
-          console.error('Error al realizar la petición:', error);
+        });
+        if (response.ok) {
+          const json = await response.json();
+          return json.data;
+        } else {
+          console.error(`Error en la petición: ${response.status} ${response.statusText}`)
           return null;
         }
-      },
+
+      } catch (error) {
+        console.error('Error al realizar la petición:', error);
+        return null;
+      }
+    },
 
     async login(json) {
       try {
@@ -775,7 +775,7 @@ export default defineNuxtPlugin(nuxtApp => {
         console.error('Error al realizar la petición:', error);
         return null;
       }
-    },  
+    },
 
     async getByComercio() {
       try {
@@ -1206,7 +1206,18 @@ export default defineNuxtPlugin(nuxtApp => {
         console.error('Error al realizar la petición:', error);
         return null;
       }
-    }
+    },
+
+    ///////////////////////////// OTROS //////////////////////////////////
+
+    // async checkToken() {
+    //   try {
+    //     const response = 
+    //   } catch (error) {
+    //     console.error('Error al realizar la peticion: ', error);
+    //     return null;
+    //   }
+    // }
   };
 
   // Inyectar el communicationManager en la app

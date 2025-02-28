@@ -30,12 +30,13 @@ Route::prefix('auth')->group(function () {
 
 // ==== CLIENTES ===================
 Route::middleware('auth:sanctum')->prefix('cliente')->group(function () {
+    Route::get('/check-auth', [ClienteController::class, 'checkUser']);
     Route::get('/{id}', [ClienteController::class, 'getCliente']);
     Route::put('/{id}/datos-personales', [ClienteController::class, 'updateDatosPersonales']);
     Route::put('/{id}/datos-facturacion', [ClienteController::class, 'updateDatosFacturacion']);
-    Route::get('{id}/favoritos', [FavoritoController::class, 'index']);
-    Route::post('{id}/favoritos', [FavoritoController::class, 'toggleFavorito']);
-    Route::get('{id}/favoritos-info', [FavoritoController::class, 'getFavoritosInformacion']);
+    Route::get('/{id}/favoritos', [FavoritoController::class, 'index']);
+    Route::post('/{id}/favoritos', [FavoritoController::class, 'toggleFavorito']);
+    Route::get('/{id}/favoritos-info', [FavoritoController::class, 'getFavoritosInformacion']);
 });
 
 Route::prefix('comercios')->group(function () {
