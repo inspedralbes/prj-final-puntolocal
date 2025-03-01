@@ -2,15 +2,21 @@
     <div class="bg-gray-100">
         <div :class="{ 'dark': isDarkMode }">
             <div class="dark:bg-gray-900 min-h-screen transition-colors duration-300">
-
-                <div id="banner" class="bg-white mt-2 px-4 w-full h-[180px] flex relative items-center overflow-hidden">
-                    <div class="absolute bottom-2 w-full overflow-hidden">
-                        <div class="flex space-x-6 animate-marquee h-100%">
-                            <p v-for="comercio in comercios" :key="comercio.id"
-                                class="text-white font-bold text-lg bg-blue-500 px-4 py-1 rounded-full shadow-md">{{
-                                comercio.nombre }}</p>
-                        </div>
+                <div id="banner" class="bg-white mt-2 px-4 w-full h-[150px] flex items-center justify-between relative">
+                    <div v-if="comercios.length"
+                        :style="{ backgroundImage: 'url(' + comercios[currentIndex].imagen + ')', backgroundSize: 'cover' }"
+                        class="h-full w-full flex items-center justify-center">
+                        <p class="text-white font-bold text-lg px-4 py-1 bg-black bg-opacity-50 shadow-md">
+                            {{ comercios[currentIndex].nombre }}
+                        </p>
                     </div>
+                    <p v-else class="text-gray-500 font-bold text-lg">
+                        No s'han trobat comerços propers a la teva ubicació
+                    </p>
+                    <button v-if="comercios.length" @click="irAlComercio(comercios[currentIndex].id)"
+                        class="absolute bottom-2 right-9 bg-white text-black px-3 py-1 shadow-md hover:bg-gray-100">
+                        Anar al comerç
+                    </button>
                 </div>
 
                 <div id="contain-categorias"
@@ -95,34 +101,32 @@ import { ref, onMounted, watch } from "vue";
 import { useRouter } from "vue-router";
 import { useAuthStore } from "~/stores/authStore";
 import { useRuntimeConfig } from "#imports";
-import Swal from "sweetalert2";
-import { Loading } from "#components";
 
 const config = useRuntimeConfig();
 const baseUrl = config.public.apiBaseUrl;
 const comercios = ref([]);
+const currentIndex = ref(0);
 
 const productos = ref([]);
 const productos2 = ref([]);
 const categorias = ref([]);
 const router = useRouter();
+const userLocation = ref(null);
 const authStore = useAuthStore();
 const { $communicationManager } = useNuxtApp();
 const isDarkMode = ref(window.matchMedia("(prefers-color-scheme: dark)").matches);
-const userLocation = ref(null);
 
 onMounted(async () => {
-    const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
-    const handleChange = (event) => {
-        isDarkMode.value = event.matches;
-    };
-    mediaQuery.addEventListener("change", handleChange);
-    document.body.classList.toggle("dark", isDarkMode.value);
-
     getLocation();
     fetchProductos2();
     fetchCategorias();
     await checkLocationPermission();
+
+    setInterval(() => {
+        if (comercios.value.length > 0) {
+            currentIndex.value = (currentIndex.value + 1) % comercios.value.length;
+        }
+    }, 5000);
 });
 
 watch(isDarkMode, (newValue) => {
@@ -170,7 +174,6 @@ async function fetchComerciosCercanos(lat, lon) {
     }
 }
 
-
 async function getProductosCercanos(comercioIds) {
     try {
         const response = await $communicationManager.getProductosCercanos(comercioIds);
@@ -214,6 +217,10 @@ function irACategoria(id) {
 
 function mostrarIdProducto(id) {
     router.push(`/producto/${id}`);
+}
+
+function irAlComercio(id) {
+    router.push(`/comercio/${id}`);
 }
 </script>
 

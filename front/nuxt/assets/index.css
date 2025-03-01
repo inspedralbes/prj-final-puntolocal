@@ -20,14 +20,3 @@
     background-color: white;
     box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
 }
-
-@keyframes marquee {
-    0% { transform: translateX(100%); }
-    100% { transform: translateX(-100%); }
-}
-
-.animate-marquee {
-    display: flex;
-    white-space: nowrap;
-    animation: marquee 10s linear infinite;
-}
