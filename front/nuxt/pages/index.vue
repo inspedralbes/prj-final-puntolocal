@@ -119,6 +119,10 @@ onMounted(async () => {
     await checkLocationPermission();
 });
 
+watch(isDarkMode, (newValue) => {
+    document.body.classList.toggle("dark", newValue);
+});
+
 async function checkLocationPermission() {
     if (localStorage.getItem("locationPermission") === "granted") {
         await getLocation();
@@ -150,34 +154,29 @@ async function fetchComerciosCercanos(lat, lon) {
         const response = await $communicationManager.getComerciosCercanos(lat, lon);
         console.log("Comercios cercanos:", response);
 
-        if (response && response.data) {
-            const comercioIds = response.data.map(comercio => comercio.id);
-            await fetchProductos(comercioIds);
-        } else {
-            console.error("No se encontraron comercios cercanos.");
-        }
+        const idsComercios = response.map(comercio => comercio.id);        
+        const idsComerciosString = idsComercios.join(',');
+
+        console.log("IDs de comercios separados por coma:", idsComerciosString);
+        
     } catch (error) {
         console.error("Error obteniendo comercios cercanos:", error);
     }
 }
 
-async function fetchProductos(comercioIds) {
-    try {
-        const response = await $communicationManager.getProductosCercanos(comercioIds);
 
+async function fetchProductos() {
+    try {
+        const response = await $communicationManager.getProductos();
         if (response && response.data) {
             productos.value = response.data;
         } else {
-            console.error("No se encontraron productos disponibles.");
-            productos.value = []; // Evita que el front falle al no recibir datos
+            console.error("Error al obtener los productos");
         }
     } catch (error) {
         console.error("Error en la petición:", error);
-        productos.value = [];
     }
 }
-
-
 
 async function fetchProductos2() {
     try {
@@ -215,5 +214,5 @@ function mostrarIdProducto(id) {
 </script>
 
 <style scoped>
-@import '../assets/index.css';
+    @import '../assets/index.css';
 </style>

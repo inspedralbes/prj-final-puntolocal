@@ -20,33 +20,3 @@
     background-color: white;
     box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
 }
-
-/*
-#contain-productos {
-    padding: 20px;
-}
-
-#productos {
-    gap: 20px;
-    width: 100%;
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-}
-
-.titulo-productos {
-    font-size: 20px;
-    margin-top: 0px;
-    font-weight: 500;
-    margin-bottom: 10px;
-}
-
-@media (prefers-color-scheme: dark) {
-    .producto-nombre {
-        color: white;
-    }
-
-    .producto-precio {
-        color: white;
-    }
-}
-*/

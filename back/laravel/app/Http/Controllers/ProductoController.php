@@ -263,19 +263,24 @@ class ProductoController extends Controller
             return response()->json(['error' => 'No hay comercios cercanos con productos disponibles'], 400);
         }
 
+        // Obtener todos los productos disponibles de los comercios especificados
         $productos = \App\Models\Producto::whereIn('comercio_id', $comercioIds)
             ->where('visible', true)
             ->where('stock', '>', 0)
             ->inRandomOrder()
-            ->limit(20)
             ->get();
 
+        // Si no hay productos disponibles
         if ($productos->isEmpty()) {
             return response()->json(['error' => 'No hay productos disponibles en los comercios cercanos'], 404);
         }
 
+        // Limitar a 20 solo si hay más de 20 productos
+        $productos = $productos->take(20);
+
         return response()->json($productos);
     }
+
 
 
 
