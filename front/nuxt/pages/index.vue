@@ -4,10 +4,12 @@
             <div class="dark:bg-gray-900 min-h-screen transition-colors duration-300">
 
                 <div id="banner" class="bg-white mt-2 px-4 w-full h-[180px] flex relative items-center overflow-hidden">
-                    <div id="carousel"
-                        class="h-full flex items-center transition-transform duration-500 ease-in-out rounded-lg overflow-hidden">
-                        <img src="https://s.tmimgcdn.com/scr/1200x750/343900/banner-de-venta-de-color-azul-degradado-vectorial-y-idea-de-fondo-azul-de-promocion-de-descuento-de-banner-de-venta_343959-original.jpg"
-                            class="object-cover object-center">
+                    <div class="absolute bottom-2 w-full overflow-hidden">
+                        <div class="flex space-x-6 animate-marquee h-100%">
+                            <p v-for="comercio in comercios" :key="comercio.id"
+                                class="text-white font-bold text-lg bg-blue-500 px-4 py-1 rounded-full shadow-md">{{
+                                comercio.nombre }}</p>
+                        </div>
                     </div>
                 </div>
 
@@ -68,16 +70,18 @@
                             :customClass="'w-[170px]'" price-class="text-gray-900 dark:text-white"
                             @click="mostrarIdProducto(producto.id)"></productoComp>
                     </div>
-                    <h1 class="text-xl mt-5 font-semibold text-gray-900 dark:text-white mb-4 ml-4">Productes prop teu</h1>
+                    <h1 class="text-xl mt-5 font-semibold text-gray-900 dark:text-white mb-4 ml-4">Productes prop teu
+                    </h1>
                     <div id="productos" class="grid grid-cols-2 gap-4 px-4">
                         <productoComp v-for="(producto, index) in productos" :key="index" :productoId="producto.id"
                             :img="producto.imagen ? `${baseUrl}/storage/${producto.imagen}` : `${baseUrl}/storage/productos/default-image.webp`"
                             :title="producto.nombre" :price="producto.precio" :comercio="producto.comercio_nombre"
                             :customClass="'w-full'" price-class="text-gray-900 dark:text-white"
-                            @click="mostrarIdProducto(producto.id)"></productoComp>
-                        <!-- Si no hay productos cercanos -->
-                        <div v-if="productos.length === 0" class="w-full text-center py-4 text-gray-500">
-                            <p>No hi ha productes de comerços prop teu. Si vols veure la ubicació, accepta la permís de geolocalització.</p>
+                            @click="mostrarIdProducto(producto.id)">
+                        </productoComp>
+                        <div v-if="productos.length === 0" class="text-center py-4 text-gray-500">
+                            <p>No hi ha productes de comerços prop teu. Si vols veure la ubicació, accepta la permís de
+                                geolocalització.</p>
                         </div>
                     </div>
                 </div>
@@ -96,6 +100,7 @@ import { Loading } from "#components";
 
 const config = useRuntimeConfig();
 const baseUrl = config.public.apiBaseUrl;
+const comercios = ref([]);
 
 const productos = ref([]);
 const productos2 = ref([]);
@@ -153,8 +158,10 @@ async function getLocation() {
 async function fetchComerciosCercanos(lat, lon) {
     try {
         const response = await $communicationManager.getComerciosCercanos(lat, lon);
+        console.log(response)
+        comercios.value = response;
 
-        const idsComercios = response.map(comercio => comercio.id);        
+        const idsComercios = response.map(comercio => comercio.id);
         const idsComerciosString = idsComercios.join(',');
 
         getProductosCercanos(idsComerciosString);
@@ -211,5 +218,5 @@ function mostrarIdProducto(id) {
 </script>
 
 <style scoped>
-    @import '../assets/index.css';
+@import '../assets/index.css';
 </style>
