@@ -238,6 +238,35 @@ export default defineNuxtPlugin(nuxtApp => {
       }
     },
 
+    async getProductosCercanos(comercioIds) {
+      try {
+          if (!Array.isArray(comercioIds) || comercioIds.length === 0) {
+              console.warn("No hay comercios cercanos para buscar productos.");
+              return { error: "No hay comercios cercanos con productos disponibles" };
+          }
+  
+          const idsQuery = comercioIds.join(','); // Convertir array en string separado por comas
+          const response = await fetch(`${Host}/producto/cercanos?ids=${idsQuery}`, {
+              method: 'GET',
+              headers: {
+                  'Accept': 'application/json',
+                  'Content-Type': 'application/json',
+                  'Authorization': this.authStore.token ? `Bearer ${this.authStore.token}` : ''
+              }
+          });
+  
+          if (!response.ok) {
+              console.error(`Error en la petición: ${response.status} ${response.statusText}`);
+              return null;
+          }
+  
+          return await response.json();
+      } catch (error) {
+          console.error('Error al realizar la petición:', error);
+          return null;
+      }
+    },   
+
     async getCategoriasGenerales() {
       try {
         const response = await fetch(`${Host}/categorias`, {

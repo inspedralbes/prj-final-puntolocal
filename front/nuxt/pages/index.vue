@@ -112,14 +112,11 @@ onMounted(async () => {
     mediaQuery.addEventListener("change", handleChange);
     document.body.classList.toggle("dark", isDarkMode.value);
 
+    getLocation();
     fetchProductos();
     fetchProductos2();
     fetchCategorias();
     await checkLocationPermission();
-});
-
-watch(isDarkMode, (newValue) => {
-    document.body.classList.toggle("dark", newValue);
 });
 
 async function checkLocationPermission() {
@@ -128,23 +125,6 @@ async function checkLocationPermission() {
     } else {
         requestLocationPermission();
     }
-}
-
-function requestLocationPermission() {
-    Swal.fire({
-        title: "Permiso de ubicación",
-        text: "Necesitamos acceder a tu ubicación para mostrar comercios cercanos.",
-        icon: "info",
-        showCancelButton: true,
-        confirmButtonText: "Permitir",
-        cancelButtonText: "Cancelar",
-    }).then((result) => {
-        if (result.isConfirmed) {
-            getLocation();
-        } else {
-            console.log("El usuario denegó el permiso de ubicación.");
-        }
-    });
 }
 
 async function getLocation() {
@@ -169,24 +149,35 @@ async function fetchComerciosCercanos(lat, lon) {
     try {
         const response = await $communicationManager.getComerciosCercanos(lat, lon);
         console.log("Comercios cercanos:", response);
-        
+
+        if (response && response.data) {
+            const comercioIds = response.data.map(comercio => comercio.id);
+            await fetchProductos(comercioIds);
+        } else {
+            console.error("No se encontraron comercios cercanos.");
+        }
     } catch (error) {
         console.error("Error obteniendo comercios cercanos:", error);
     }
 }
 
-async function fetchProductos() {
+async function fetchProductos(comercioIds) {
     try {
-        const response = await $communicationManager.getProductos();
+        const response = await $communicationManager.getProductosCercanos(comercioIds);
+
         if (response && response.data) {
             productos.value = response.data;
         } else {
-            console.error("Error al obtener los productos");
+            console.error("No se encontraron productos disponibles.");
+            productos.value = []; // Evita que el front falle al no recibir datos
         }
     } catch (error) {
         console.error("Error en la petición:", error);
+        productos.value = [];
     }
 }
+
+
 
 async function fetchProductos2() {
     try {
@@ -224,5 +215,5 @@ function mostrarIdProducto(id) {
 </script>
 
 <style scoped>
-    @import '../assets/index.css';
+@import '../assets/index.css';
 </style>

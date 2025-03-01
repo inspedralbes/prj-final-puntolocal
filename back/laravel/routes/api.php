@@ -171,6 +171,9 @@ Route::middleware('auth:sanctum')->prefix('producto')->group(function () {
 
     // Eliminar un producto específico
     Route::delete('{id}', [ProductoController::class, 'destroy']);
+
+    // Productos cercanos
+    Route::get('/cercanos', [ProductoController::class, 'productosCercanos']);
 });
 
 // ==== SUBCATEGORIAS ===============
