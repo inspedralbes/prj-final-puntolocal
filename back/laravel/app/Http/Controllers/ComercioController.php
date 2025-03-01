@@ -85,7 +85,7 @@
 
 
         public function getComerciosCercanos($latitud, $longitud) {
-            $radio = 20;
+            $radio = 1;
     
             $comercios = Comercio::select(
                     'id',

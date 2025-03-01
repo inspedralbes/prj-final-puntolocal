@@ -254,35 +254,46 @@ class ProductoController extends Controller
         return response()->json(['data' => $productos], 200);
     }
 
-    public function productosCercanos(Request $request)
-    {
-        // Obtener los IDs de los comercios desde los parámetros de la URL
-        $comercioIds = explode(',', $request->query('ids'));
-
-        if (empty($comercioIds) || $comercioIds[0] === "") {
-            return response()->json(['error' => 'No hay comercios cercanos con productos disponibles'], 400);
+    public function prueba(Request $request) {
+        $comercioIds = $request->query('comercioIds');
+            
+        $comercioIdsArray = explode(',', $comercioIds);
+    
+        foreach ($comercioIdsArray as $id) {
+            if (!is_numeric($id)) {
+                return response()->json(['message' => 'Los IDs de los comercios deben ser números válidos'], 400);
+            }
         }
-
-        // Obtener todos los productos disponibles de los comercios especificados
-        $productos = \App\Models\Producto::whereIn('comercio_id', $comercioIds)
-            ->where('visible', true)
-            ->where('stock', '>', 0)
+    
+        $productos = Producto::whereIn('comercio_id', $comercioIdsArray)
+            ->where('visible', true) 
             ->inRandomOrder()
+            ->limit(20)
+            ->with('comercio')
             ->get();
-
-        // Si no hay productos disponibles
+    
         if ($productos->isEmpty()) {
-            return response()->json(['error' => 'No hay productos disponibles en los comercios cercanos'], 404);
+            return response()->json(['message' => 'No hay productos disponibles con stock para los comercios seleccionados'], 404);
         }
-
-        // Limitar a 20 solo si hay más de 20 productos
-        $productos = $productos->take(20);
-
-        return response()->json($productos);
+    
+        $productosConNombreComercio = $productos->map(function($producto) {
+            return [
+                'id' => $producto->id,
+                'nombre' => $producto->nombre,
+                'descripcion' => $producto->descripcion,
+                'precio' => $producto->precio,
+                'stock' => $producto->stock,
+                'imagen' => $producto->imagen,
+                'comercio_id' => $producto->comercio_id,
+                'comercio_nombre' => $producto->comercio->nombre,
+                'subcategoria_id' => $producto->subcategoria_id,
+            ];
+        });
+    
+        return response()->json([
+            'data' => $productosConNombreComercio,
+        ], 200);
     }
-
-
-
 
     //Busqueda por nombre de producto y la decripcion del producto  
     public function search(Request $request, $searchTerm)

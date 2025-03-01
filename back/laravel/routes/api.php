@@ -156,7 +156,13 @@ Route::prefix('producto')->group(function () {
     Route::get('/search/{search}', [ProductoController::class, 'search']);
 
     Route::get('/categoria/{categoriaID}', [CategoriaController::class, 'getProductosPorCategoria']);
+
 });
+
+Route::prefix('cercanos')->group(function () {
+    Route::get('/productos', [ProductoController::class, 'prueba']);
+});
+
 
 
 Route::middleware('auth:sanctum')->prefix('producto')->group(function () {
@@ -172,8 +178,6 @@ Route::middleware('auth:sanctum')->prefix('producto')->group(function () {
     // Eliminar un producto específico
     Route::delete('{id}', [ProductoController::class, 'destroy']);
 
-    // Productos cercanos
-    Route::get('/cercanos', [ProductoController::class, 'productosCercanos']);
 });
 
 // ==== SUBCATEGORIAS ===============

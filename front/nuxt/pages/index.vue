@@ -66,17 +66,19 @@
                             :img="producto.imagen ? `${baseUrl}/storage/${producto.imagen}` : `${baseUrl}/storage/productos/default-image.webp`"
                             :title="producto.nombre" :price="producto.precio" :comercio="producto.comercio"
                             :customClass="'w-[170px]'" price-class="text-gray-900 dark:text-white"
-                            @click="mostrarIdProducto(producto.id)">
-                        </productoComp>
+                            @click="mostrarIdProducto(producto.id)"></productoComp>
                     </div>
-                    <h1 class="text-xl mt-5 font-semibold text-gray-900 dark:text-white mb-4 ml-4">Per a tu</h1>
+                    <h1 class="text-xl mt-5 font-semibold text-gray-900 dark:text-white mb-4 ml-4">Productes prop teu</h1>
                     <div id="productos" class="grid grid-cols-2 gap-4 px-4">
                         <productoComp v-for="(producto, index) in productos" :key="index" :productoId="producto.id"
                             :img="producto.imagen ? `${baseUrl}/storage/${producto.imagen}` : `${baseUrl}/storage/productos/default-image.webp`"
-                            :title="producto.nombre" :price="producto.precio" :comercio="producto.comercio"
+                            :title="producto.nombre" :price="producto.precio" :comercio="producto.comercio_nombre"
                             :customClass="'w-full'" price-class="text-gray-900 dark:text-white"
-                            @click="mostrarIdProducto(producto.id)">
-                        </productoComp>
+                            @click="mostrarIdProducto(producto.id)"></productoComp>
+                        <!-- Si no hay productos cercanos -->
+                        <div v-if="productos.length === 0" class="w-full text-center py-4 text-gray-500">
+                            <p>No hi ha productes de comerços prop teu. Si vols veure la ubicació, accepta la permís de geolocalització.</p>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -113,7 +115,6 @@ onMounted(async () => {
     document.body.classList.toggle("dark", isDarkMode.value);
 
     getLocation();
-    fetchProductos();
     fetchProductos2();
     fetchCategorias();
     await checkLocationPermission();
@@ -152,29 +153,25 @@ async function getLocation() {
 async function fetchComerciosCercanos(lat, lon) {
     try {
         const response = await $communicationManager.getComerciosCercanos(lat, lon);
-        console.log("Comercios cercanos:", response);
 
         const idsComercios = response.map(comercio => comercio.id);        
         const idsComerciosString = idsComercios.join(',');
 
-        console.log("IDs de comercios separados por coma:", idsComerciosString);
-        
+        getProductosCercanos(idsComerciosString);
     } catch (error) {
-        console.error("Error obteniendo comercios cercanos:", error);
+        console.error("Error al obtener comercios cercanos", error);
     }
 }
 
 
-async function fetchProductos() {
+async function getProductosCercanos(comercioIds) {
     try {
-        const response = await $communicationManager.getProductos();
+        const response = await $communicationManager.getProductosCercanos(comercioIds);
         if (response && response.data) {
             productos.value = response.data;
-        } else {
-            console.error("Error al obtener los productos");
         }
     } catch (error) {
-        console.error("Error en la petición:", error);
+        console.error("Error al obtener productos cercanos", error);
     }
 }
 
