@@ -76,8 +76,7 @@
                             :customClass="'w-[170px]'" price-class="text-gray-900 dark:text-white"
                             @click="mostrarIdProducto(producto.id)"></productoComp>
                     </div>
-                    <h1 class="text-xl mt-5 font-semibold text-gray-900 dark:text-white mb-4 ml-4">Productes prop teu
-                    </h1>
+                    <h1 class="text-xl mt-5 font-semibold text-gray-900 dark:text-white mb-4 ml-4">Productes a prop teu</h1>
                     <div id="productos" class="grid grid-cols-2 gap-4 px-4">
                         <productoComp v-for="(producto, index) in productos" :key="index" :productoId="producto.id"
                             :img="producto.imagen ? `${baseUrl}/storage/${producto.imagen}` : `${baseUrl}/storage/productos/default-image.webp`"
@@ -86,7 +85,7 @@
                             @click="mostrarIdProducto(producto.id)">
                         </productoComp>
                         <div v-if="productos.length === 0" class="text-center py-4 text-gray-500">
-                            <p>No hi ha productes de comerços prop teu. Si vols veure la ubicació, accepta la permís de
+                            <p>No hi ha productes de comerços a prop teu. Si vols veure la ubicació, accepta la permís de
                                 geolocalització.</p>
                         </div>
                     </div>

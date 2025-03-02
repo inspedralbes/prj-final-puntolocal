@@ -130,7 +130,7 @@ onMounted(async () => {
 
         if (selected) {
             const features = selected.get('features');
-            
+
             if (features && features.length > 1) {
                 selectClick.getFeatures().clear();
                 return; // No hacer nada si es un cluster con más de un marcador
@@ -164,6 +164,14 @@ onMounted(async () => {
                     );
                 }
             }
+        }
+    });
+
+    map.value.on('click', (event) => {
+        const clickedFeature = map.value.forEachFeatureAtPixel(event.pixel, (feature) => feature);
+
+        if (!clickedFeature) {
+            cerrarPopup();
         }
     });
 });
@@ -284,6 +292,7 @@ const buscarPorCodigoPostal = async () => {
         const data = await response.json();
 
         if (data.length > 0) {
+            console.log("ENTRA")
             const ubicacion = data[0];
             const lat = parseFloat(ubicacion.lat);
             const lon = parseFloat(ubicacion.lon);
@@ -310,30 +319,29 @@ const buscarPorCodigoPostal = async () => {
 };
 
 const agregarMarcador = (lon, lat, name) => {
-    alert("marcador");
     const marker = new Feature({
         geometry: new Point(fromLonLat([lon, lat])),
         name: name
     });
 
-    marker.setStyle(
-        new Style({
-            image: new Icon({
-                src: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTI3IiBoZWlnaHQ9IjE0OCIgdmlld0JveD0iMCAwIDEyNyAxNDgiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxnIGZpbHRlcj0idXJsKCNmaWx0ZXIwX2RfOV8zOSkiPgo8cGF0aCBkPSJNMTIzIDU5LjVDMTIzIDkyLjM2MDkgOTUgMTIzLjUgNjMuNSAxMzkuNUMzMSAxMjMgNCA5Mi4zNjA5IDQgNTkuNUM0IDI2LjYzOTEgMzAuNjM5MSAwIDYzLjUgMEM5Ni4zNjA5IDAgMTIzIDI2LjYzOTEgMTIzIDU5LjVaIiBmaWxsPSIjMjc2QkYyIi8+CjxjaXJjbGUgY3g9IjYzLjUiIGN5PSI1OS41IiByPSIyOC41IiBmaWxsPSJ3aGl0ZSIvPgo8L2c+CjxkZWZzPgo8ZmlsdGVyIGlkPSJmaWx0ZXIwX2RfOV8zOSIgeD0iMCIgeT0iMCIgd2lkdGg9IjEyNyIgaGVpZ2h0PSIxNDcuNSIgZmlsdGVyVW5pdHM9InVzZXJTcGFjZU9uVXNlIiBjb2xvci1pbnRlcnBvbGF0aW9uLWZpbHRlcnM9InNSR0IiPgo8ZmVGbG9vZCBmbG9vZC1vcGFjaXR5PSIwIiByZXN1bHQ9IkJhY2tncm91bmRJbWFnZUZpeCIvPgo8ZmVDb2xvck1hdHJpeCBpbj0iU291cmNlQWxwaGEiIHR5cGU9Im1hdHJpeCIgdmFsdWVzPSIwIDAgMCAwIDAgMCAwIDAgMCAwIDAgMCAwIDAgMCAwIDAgMCAxMjcgMCIgcmVzdWx0PSJoYXJkQWxwaGEiLz4KPGZlT2Zmc2V0IGR5PSI0Ii8+CjxmZUdhdXNzaWFuQmx1ciBzdGREZXZpYXRpb249IjIiLz4KPGZlQ29tcG9zaXRlIGluMj0iaGFyZEFscGhhIiBvcGVyYXRvcj0ib3V0Ii8+CjxmZUNvbG9yTWF0cml4IHR5cGU9Im1hdHJpeCIgdmFsdWVzPSIwIDAgMCAwIDAgMCAwIDAgMCAwIDAgMCAwIDAgMCAwIDAgMCAwLjI1IDAiLz4KPGZlQmxlbmQgbW9kZT0ibm9ybWFsIiBpbjI9IkJhY2tncm91bmRJbWFnZUZpeCIgcmVzdWx0PSJlZmZlY3QxX2Ryb3BTaGFkb3dfOV8zOSIvPgo8ZmVCbGVuZCBtb2RlPSJub3JtYWwiIGluPSJTb3VyY2VHcmFwaGljIiBpbjI9ImVmZmVjdDFfZHJvcFNoYWRvd185XzM5IiByZXN1bHQ9InNoYXBlIi8+CjwvZmlsdGVyPgo8L2RlZnM+Cjwvc3ZnPgo=',
-                scale: 0.3
-            }),
-            text: new Text({
-                text: comercio.nombre, // Nombre del comercio
-                font: "bold 14px Lato",
-                fill: new Fill({ color: "#276bf2" }), // Color azul
-                stroke: new Stroke({ color: "#fff", width: 3 }), // Contorno blanco
-                offsetY: 0, // Eleva el texto sobre el marcador
-                offsetX: -25,
-                textAlign: "right", // Alineación horizontal
-                textBaseline: "middle",
-            })
-        })
-    );
+    // marker.setStyle(
+    //     new Style({
+    //         image: new Icon({
+    //             src: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTI3IiBoZWlnaHQ9IjE0OCIgdmlld0JveD0iMCAwIDEyNyAxNDgiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxnIGZpbHRlcj0idXJsKCNmaWx0ZXIwX2RfOV8zOSkiPgo8cGF0aCBkPSJNMTIzIDU5LjVDMTIzIDkyLjM2MDkgOTUgMTIzLjUgNjMuNSAxMzkuNUMzMSAxMjMgNCA5Mi4zNjA5IDQgNTkuNUM0IDI2LjYzOTEgMzAuNjM5MSAwIDYzLjUgMEM5Ni4zNjA5IDAgMTIzIDI2LjYzOTEgMTIzIDU5LjVaIiBmaWxsPSIjMjc2QkYyIi8+CjxjaXJjbGUgY3g9IjYzLjUiIGN5PSI1OS41IiByPSIyOC41IiBmaWxsPSJ3aGl0ZSIvPgo8L2c+CjxkZWZzPgo8ZmlsdGVyIGlkPSJmaWx0ZXIwX2RfOV8zOSIgeD0iMCIgeT0iMCIgd2lkdGg9IjEyNyIgaGVpZ2h0PSIxNDcuNSIgZmlsdGVyVW5pdHM9InVzZXJTcGFjZU9uVXNlIiBjb2xvci1pbnRlcnBvbGF0aW9uLWZpbHRlcnM9InNSR0IiPgo8ZmVGbG9vZCBmbG9vZC1vcGFjaXR5PSIwIiByZXN1bHQ9IkJhY2tncm91bmRJbWFnZUZpeCIvPgo8ZmVDb2xvck1hdHJpeCBpbj0iU291cmNlQWxwaGEiIHR5cGU9Im1hdHJpeCIgdmFsdWVzPSIwIDAgMCAwIDAgMCAwIDAgMCAwIDAgMCAwIDAgMCAwIDAgMCAxMjcgMCIgcmVzdWx0PSJoYXJkQWxwaGEiLz4KPGZlT2Zmc2V0IGR5PSI0Ii8+CjxmZUdhdXNzaWFuQmx1ciBzdGREZXZpYXRpb249IjIiLz4KPGZlQ29tcG9zaXRlIGluMj0iaGFyZEFscGhhIiBvcGVyYXRvcj0ib3V0Ii8+CjxmZUNvbG9yTWF0cml4IHR5cGU9Im1hdHJpeCIgdmFsdWVzPSIwIDAgMCAwIDAgMCAwIDAgMCAwIDAgMCAwIDAgMCAwIDAgMCAwLjI1IDAiLz4KPGZlQmxlbmQgbW9kZT0ibm9ybWFsIiBpbjI9IkJhY2tncm91bmRJbWFnZUZpeCIgcmVzdWx0PSJlZmZlY3QxX2Ryb3BTaGFkb3dfOV8zOSIvPgo8ZmVCbGVuZCBtb2RlPSJub3JtYWwiIGluPSJTb3VyY2VHcmFwaGljIiBpbjI9ImVmZmVjdDFfZHJvcFNoYWRvd185XzM5IiByZXN1bHQ9InNoYXBlIi8+CjwvZmlsdGVyPgo8L2RlZnM+Cjwvc3ZnPgo=',
+    //             scale: 0.3
+    //         }),
+    //         text: new Text({
+    //             text: comercio.nombre, // Nombre del comercio
+    //             font: "bold 14px Lato",
+    //             fill: new Fill({ color: "#276bf2" }), // Color azul
+    //             stroke: new Stroke({ color: "#fff", width: 3 }), // Contorno blanco
+    //             offsetY: 0, // Eleva el texto sobre el marcador
+    //             offsetX: -25,
+    //             textAlign: "right", // Alineación horizontal
+    //             textBaseline: "middle",
+    //         })
+    //     })
+    // );
 
     vectorSource.value.addFeature(marker);
 };
