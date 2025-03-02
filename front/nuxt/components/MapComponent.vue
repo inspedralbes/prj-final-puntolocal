@@ -104,6 +104,8 @@ const clusterLayer = new VectorLayer({
 });
 
 onMounted(async () => {
+    await nextTick();
+    
     map.value = new Map({
         target: mapContainer.value,
         layers: [

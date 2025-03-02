@@ -9,6 +9,12 @@ export default defineNuxtConfig({
     port: 3000,
   },
   
+  vite: {
+    optimizeDeps: {
+      exclude: ['ol']
+    }
+  },
+
   ssr: false,
   compatibilityDate: '2025-01-23',
 

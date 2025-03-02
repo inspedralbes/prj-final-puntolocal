@@ -1,7 +1,9 @@
 <template>
-    <div>
-        <MapComponent />
-    </div>
+    <ClientOnly>
+        <div>
+            <MapComponent />
+        </div>
+    </ClientOnly>
 </template>
 
 <script setup>
