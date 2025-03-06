@@ -2,7 +2,8 @@
     <div class="bg-gray-100">
         <div>
             <div class="min-h-screen transition-colors duration-300">
-                <div id="banner" class="bg-white mt-2 px-4 w-full h-[150px] flex items-center justify-between relative">
+                <StoreCarousel :comercios="comercios.slice(0, 5)" v-if="comercios.length"/>
+                <!-- <div id="banner" class="bg-white mt-2 px-4 w-full h-[150px] flex items-center justify-between relative">
                     <div v-if="comercios.length"
                         :style="{ backgroundImage: 'url(' + comercios[currentIndex].imagen + ')', backgroundSize: 'cover' }"
                         class="h-full w-full flex items-center justify-center">
@@ -17,10 +18,10 @@
                         class="absolute bottom-2 right-9 bg-white text-black px-3 py-1 shadow-md hover:bg-gray-100">
                         Anar al comerç
                     </button>
-                </div>
-
+                </div> -->
+                <img src="https://sl.bing.net/k6Zr6eP9Yu4" alt="">
                 <div id="contain-categorias"
-                    class="bg-white w-full flex flex-col py-4 border-b rounded-b-xl mb-2 scrollbar-none">
+                    class="bg-white w-full flex flex-col py-4 border rounded-xl mb-2 scrollbar-none">
                     <div class="flex justify-between mx-4 mb-3">
                         <h2 class="font-semibold text-lg">Categories</h2>
                         <p class="text-gray-500 flex items-center">
@@ -129,9 +130,9 @@ onMounted(async () => {
     }, 5000);
 });
 
-watch(isDarkMode, (newValue) => {
-    document.body.classList.toggle("dark", newValue);
-});
+// watch(isDarkMode, (newValue) => {
+//     document.body.classList.toggle("dark", newValue);
+// });
 
 async function checkLocationPermission() {
     if (localStorage.getItem("locationPermission") === "granted") {
@@ -217,10 +218,6 @@ function irACategoria(id) {
 
 function mostrarIdProducto(id) {
     router.push(`/producto/${id}`);
-}
-
-function irAlComercio(id) {
-    router.push(`/comercio/${id}`);
 }
 </script>
 
