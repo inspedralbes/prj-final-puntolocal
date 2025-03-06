@@ -1,10 +1,10 @@
 <template>
     <main v-if="actualOrder?.order?.cliente">
         <div
-            class="pl-4 pt-4 bg-white block sm:flex items-center justify-between border-b border-gray-200 lg:mt-1.5 dark:bg-gray-800 dark:border-gray-700">
+            class="pl-4 pt-4 bg-white block sm:flex items-center justify-between border-b border-gray-200 lg:mt-1.5">
             <div class="w-full mt-16">
                 <div class="mb-4 flex items-center">
-                    <div @click="navigateTo('/admin/comandes')" class="text-xl text-gray-700 dark:text-gray-300 cursor-pointer">
+                    <div @click="navigateTo('/admin/comandes')" class="text-xl text-gray-700  cursor-pointer">
                         <svg width="1.5em" height="1.5em" viewBox="0 0 1024 1024" class="icon"
                             xmlns="http://www.w3.org/2000/svg" fill="#000000">
                             <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
@@ -17,9 +17,9 @@
                             </g>
                         </svg>
                     </div>
-                    <h1 class="ml-2 text-xl font-semibold text-gray-900 sm:text-2xl dark:text-white">Comanda ID: {{
+                    <h1 class="ml-2 text-xl font-semibold text-gray-900 sm:text-2xl ">Comanda ID: {{
                         actualOrder?.id }}</h1>
-                    <h3 class="ml-2 pt-2 text-base font-medium text-gray-900 whitespace-nowrap dark:text-white">{{
+                    <h3 class="ml-2 pt-2 text-base font-medium text-gray-900 whitespace-nowrap ">{{
                         formatFecha(actualOrder.created_at) }}</h3>
                 </div>
                 <!-- Barra de búsqueda + botones -->
@@ -30,17 +30,17 @@
         <div class="px-4 pt-4 grid gap-4 xl:grid-cols-2 2xl:grid-cols-3">
             <div class="2xl:col-span-2">
                 <div
-                    class="p-4 mb-4 bg-white border border-gray-200 shadow-sm dark:border-gray-700 sm:p-6 dark:bg-gray-800">
+                    class="p-4 mb-4 bg-white border border-gray-200 shadow-sm  sm:p-6">
                     <div class="flex items-center justify-between mb-4">
                         <div class="flex-shrink-0">
                             <span
-                                class="text-xl font-bold leading-none text-gray-900 sm:text-2xl dark:text-white">Llistat
+                                class="text-xl font-bold leading-none text-gray-900 sm:text-2xl ">Llistat
                                 de productes</span>
-                            <h3 class="text-base font-light dark:text-gray-500">Llistat de tots els
+                            <h3 class="text-base font-light ">Llistat de tots els
                                 productes que el cliente ha comprat</h3>
                         </div>
                     </div>
-                    <div class="divide-y divide-gray-200 dark:divide-gray-700">
+                    <div class="divide-y divide-gray-200 ">
                         <div class="producto" v-for="productoOrder in actualOrder.productos_compra">
                             <div class="flex">
                                 <div class="contain-image">
@@ -49,18 +49,18 @@
                                         alt="image">
                                 </div>
                                 <div class="contain-text">
-                                    <h3 class="font-medium text-gray-900 truncate dark:text-white truncate">{{
+                                    <h3 class="font-medium text-gray-900 truncate  truncate">{{
                                         productoOrder.producto.nombre }}
                                     </h3>
-                                    <h4 class="font-small text-gray-900 dark:text-white truncate">Opciones de producto
+                                    <h4 class="font-small text-gray-900  truncate">Opciones de producto
                                     </h4>
                                 </div>
                             </div>
                             <div class="contain-precio">
-                                <h2 class="font-small text-gray-900 dark:text-white truncate">
+                                <h2 class="font-small text-gray-900  truncate">
                                     {{ productoOrder.precio.toFixed(2) }} €</h2>
-                                <h2 class="text-base font-semibold text-gray-900 dark:text-white">
-                                    <span class="font-large font-bold text-md dark:text-gray-200 ml-1">
+                                <h2 class="text-base font-semibold text-gray-900 ">
+                                    <span class="font-large font-bold text-md  ml-1">
                                         x {{ productoOrder.cantidad }} UDS:
                                     </span>
                                     {{ (productoOrder.precio * productoOrder.cantidad).toFixed(2) }} €
@@ -69,14 +69,14 @@
                         </div>
                     </div>
                 </div>
-                <div class="p-4 bg-white border border-gray-200 shadow-sm dark:border-gray-700 sm:p-6 dark:bg-gray-800">
+                <div class="p-4 bg-white border border-gray-200 shadow-sm  sm:p-6">
                     <div class="mb-4">
                         <div class="flex-shrink-0">
                             <span
-                                class="text-xl font-bold leading-none text-gray-900 sm:text-2xl dark:text-white truncate">
+                                class="text-xl font-bold leading-none text-gray-900 sm:text-2xl  truncate">
                                 Total de la comanda
                             </span>
-                            <h3 class="text-base font-light dark:text-gray-500 truncate">
+                            <h3 class="text-base font-light  truncate">
                                 Desglose completo del importe de la comanda</h3>
                         </div>
                         <div class="flex mt-4">
@@ -84,29 +84,29 @@
                                 <!-- Fila 1 - Subtotal -->
                                 <div class="w-full flex justify-between items-center mb-2">
                                     <div class="flex items-center gap-2">
-                                        <span class="font-small text-gray-900 dark:text-white">{{
+                                        <span class="font-small text-gray-900 ">{{
                                             actualOrder?.productos_compra?.length }} ítems</span>
                                     </div>
-                                    <span class="font-small text-gray-900 dark:text-white">{{ subtotal.toFixed(2) }}
+                                    <span class="font-small text-gray-900 ">{{ subtotal.toFixed(2) }}
                                         €</span>
                                 </div>
 
                                 <!-- Fila 2 - Descuento -->
                                 <div class="w-full flex justify-between items-center mb-2">
-                                    <span class="font-small text-gray-900 dark:text-white">Descompte</span>
-                                    <span class="font-small text-gray-900 dark:text-white">0.00 €</span>
+                                    <span class="font-small text-gray-900 ">Descompte</span>
+                                    <span class="font-small text-gray-900 ">0.00 €</span>
                                 </div>
 
                                 <!-- Fila 3 - Comisión -->
                                 <div class="w-full flex justify-between items-center mb-2">
-                                    <span class="font-small text-gray-900 dark:text-white">Taxes</span>
-                                    <span class="font-small text-gray-900 dark:text-white">0.00 €</span>
+                                    <span class="font-small text-gray-900 ">Taxes</span>
+                                    <span class="font-small text-gray-900 ">0.00 €</span>
                                 </div>
 
                                 <!-- Total -->
                                 <div class="w-full flex justify-between items-center pt-2 border-t">
-                                    <span class="text-xl font-bold text-gray-900 dark:text-white">Total</span>
-                                    <span class="text-xl font-bold text-gray-900 dark:text-white">{{ subtotal.toFixed(2)
+                                    <span class="text-xl font-bold text-gray-900 ">Total</span>
+                                    <span class="text-xl font-bold text-gray-900 ">{{ subtotal.toFixed(2)
                                         }} €</span>
                                 </div>
                             </div>
@@ -118,8 +118,8 @@
             <div class="2xl:col-span-1">
                 <!-- POR SI DECIDIMOS AÑADIR NOTAS EN UN FUTURO -->
                 <!-- <div
-                    class="p-4 bg-white border border-gray-200 rounded-lg shadow-sm dark:border-gray-700 sm:p-6 dark:bg-gray-800">
-                    <h3 class="flex items-center mb-4 text-lg font-semibold text-gray-900 dark:text-white">
+                    class="p-4 bg-white border border-gray-200 rounded-lg shadow-sm  sm:p-6">
+                    <h3 class="flex items-center mb-4 text-lg font-semibold text-gray-900 ">
                         Notas
                     </h3>
                     <div id="fullWidthTabContent" class="">
@@ -129,13 +129,13 @@
                     </div>
                 </div> -->
                 <div
-                    class="p-4 mb-4 bg-white border border-gray-200 shadow-sm dark:border-gray-700 sm:p-6 dark:bg-gray-800">
-                    <h3 class="flex items-center text-lg font-semibold text-gray-900 dark:text-white">
+                    class="p-4 mb-4 bg-white border border-gray-200 shadow-sm  sm:p-6">
+                    <h3 class="flex items-center text-lg font-semibold text-gray-900 ">
                         Informació del cliente
                     </h3>
                     <div id="fullWidthTabContent" class="">
                         <div class="pt-2" id="faq" role="tabpanel" aria-labelledby="faq-tab">
-                            <h3 class="font-small py-1 text-gray-900 dark:text-white flex items-center truncate">
+                            <h3 class="font-small py-1 text-gray-900  flex items-center truncate">
                                 <span class="mr-1">
                                     <svg width="1em" height="1em" viewBox="0 0 24 24" fill="none"
                                         xmlns="http://www.w3.org/2000/svg">
@@ -157,7 +157,7 @@
                                 {{ actualOrder?.order?.cliente?.name }} {{
                                     formatApellido(actualOrder?.order?.cliente?.apellidos) }}
                             </h3>
-                            <h3 class="font-small py-1 text-gray-900 dark:text-white flex items-center truncate">
+                            <h3 class="font-small py-1 text-gray-900  flex items-center truncate">
                                 <span class="mr-1">
                                     <svg width="1em" height="1em" fill="currentColor" viewBox="0 0 35 35"
                                         data-name="Layer 2" id="ee13b174-13f0-43ea-b921-f168b1054f8d"
@@ -178,7 +178,7 @@
                                 </span>
                                 {{ actualOrder?.order?.cliente?.email }}
                             </h3>
-                            <h3 class="font-small py-1 text-gray-900 dark:text-white flex items-center truncate">
+                            <h3 class="font-small py-1 text-gray-900  flex items-center truncate">
                                 <span class="mr-1">
                                     <svg width="1em" height="1em" viewBox="0 0 24 24" fill="none"
                                         xmlns="http://www.w3.org/2000/svg">
@@ -200,13 +200,13 @@
                     </div>
                 </div>
                 <div v-if="actualOrder?.order?.tipo_envio?.id === 1"
-                    class="p-4 mb-4 bg-white border border-gray-200 shadow-sm dark:border-gray-700 sm:p-6 dark:bg-gray-800">
-                    <h3 class="flex items-center text-lg font-semibold text-gray-900 dark:text-white">
+                    class="p-4 mb-4 bg-white border border-gray-200 shadow-sm  sm:p-6">
+                    <h3 class="flex items-center text-lg font-semibold text-gray-900 ">
                         Direcció d'envio
                     </h3>
                     <div id="fullWidthTabContent" class="">
                         <div class="pt-4" id="faq" role="tabpanel" aria-labelledby="faq-tab">
-                            <h3 class="font-small py-1 text-gray-900 dark:text-white flex items-center truncate">
+                            <h3 class="font-small py-1 text-gray-900  flex items-center truncate">
                                 <span class="mr-1">
                                     <svg width="1.3em" height="1.3em" viewBox="0 0 24 24" fill="none"
                                         xmlns="http://www.w3.org/2000/svg">
@@ -222,7 +222,7 @@
                                 </span>
                                 {{ actualOrder?.order?.cliente?.street_address }}
                             </h3>
-                            <h3 class="font-small py-1 text-gray-900 dark:text-white flex items-center truncate">
+                            <h3 class="font-small py-1 text-gray-900  flex items-center truncate">
                                 <span class="mr-1">
                                     <svg width="1.3em" height="1.3em" viewBox="0 0 24 24" fill="none"
                                         xmlns="http://www.w3.org/2000/svg">
@@ -240,7 +240,7 @@
                                 {{ actualOrder?.order?.cliente?.numero_planta }}º planta, puerta
                                 {{ actualOrder?.order?.cliente?.numero_puerta }}
                             </h3>
-                            <h3 class="font-small py-1 text-gray-900 dark:text-white flex items-center truncate">
+                            <h3 class="font-small py-1 text-gray-900  flex items-center truncate">
                                 <span class="mr-1">
                                     <svg width="1.2em" height="1.2em" viewBox="0 0 24 24" fill="none"
                                         xmlns="http://www.w3.org/2000/svg">
@@ -262,58 +262,58 @@
                     </div>
                 </div>
                 <div
-                    class="p-4 mb-4 bg-white border border-gray-200 shadow-sm dark:border-gray-700 sm:p-6 dark:bg-gray-800">
+                    class="p-4 mb-4 bg-white border border-gray-200 shadow-sm  sm:p-6">
                     <div class="flex items-center justify-between mb-4">
-                        <h3 class="flex items-center text-lg font-semibold text-gray-900 dark:text-white">Línia de temps
+                        <h3 class="flex items-center text-lg font-semibold text-gray-900 ">Línia de temps
                         </h3>
                     </div>
-                    <ol class="relative border-l border-gray-200 dark:border-gray-700 pt-4">
+                    <ol class="relative border-l border-gray-200  pt-4">
                         <li class="mb-10 ml-4">
-                            <div class="absolute w-3 h-3 rounded-full mt-1.5 -left-1.5 border border-white dark:border-gray-800 dark:bg-gray-100"
+                            <div class="absolute w-3 h-3 rounded-full mt-1.5 -left-1.5 border border-white "
                                 :class="actualOrder?.estat_compra?.id >= 1 ? 'bg-[#276BF2]' : 'bg-gray-200'">
                             </div>
-                            <h3 class="text-lg font-semibold text-gray-900 dark:text-white"
+                            <h3 class="text-lg font-semibold text-gray-900 "
                                 :class="actualOrder?.estat_compra?.id >= 1 ? 'font-semibold' : 'font-medium'">
                                 Comanda rebuda
                             </h3>
-                            <time class="mb-1 text-sm font-normal leading-none text-gray-400 dark:text-gray-500">
+                            <time class="mb-1 text-sm font-normal leading-none text-gray-400 ">
 
                                 Abril 2025
                             </time>
                         </li>
                         <li class="mb-10 ml-4">
-                            <div class="absolute w-3 h-3 rounded-full mt-1.5 -left-1.5 border border-white dark:border-gray-800 dark:bg-gray-100"
+                            <div class="absolute w-3 h-3 rounded-full mt-1.5 -left-1.5 border border-white "
                                 :class="actualOrder?.estat_compra?.id >= 2 ? 'bg-[#276BF2]' : 'bg-gray-200'">
                             </div>
-                            <h3 class="text-lg text-gray-900 dark:text-white"
+                            <h3 class="text-lg text-gray-900 "
                                 :class="actualOrder?.estat_compra?.id >= 2 ? 'font-semibold' : 'font-medium'">
                                 Llest per a recollir
                             </h3>
-                            <time class="mb-1 text-sm font-normal leading-none text-gray-400 dark:text-gray-500">
+                            <time class="mb-1 text-sm font-normal leading-none text-gray-400 ">
                                 Abril 2023
                             </time>
                         </li>
                         <li class="mb-10 ml-4" v-if="actualOrder?.order?.tipo_envio?.id === 1">
-                            <div class="absolute w-3 h-3 rounded-full mt-1.5 -left-1.5 border border-white dark:border-gray-800 dark:bg-gray-100"
+                            <div class="absolute w-3 h-3 rounded-full mt-1.5 -left-1.5 border border-white "
                                 :class="actualOrder?.estat_compra?.id >= 3 ? 'bg-[#276BF2]' : 'bg-gray-200'">
                             </div>
-                            <h3 class="text-lg text-gray-900 dark:text-white"
+                            <h3 class="text-lg text-gray-900 "
                                 :class="actualOrder?.estat_compra?.id >= 3 ? 'font-semibold' : 'font-medium'">
                                 En repartiment
                             </h3>
-                            <time class="mb-1 text-sm font-normal leading-none text-gray-400 dark:text-gray-500">
+                            <time class="mb-1 text-sm font-normal leading-none text-gray-400 ">
                                 Abril 2025
                             </time>
                         </li>
                         <li class="ml-4">
-                            <div class="absolute w-3 h-3 rounded-full mt-1.5 -left-1.5 border border-white dark:border-gray-800 dark:bg-gray-100"
+                            <div class="absolute w-3 h-3 rounded-full mt-1.5 -left-1.5 border border-white "
                                 :class="actualOrder?.estat_compra?.id >= 4 ? 'bg-[#276BF2]' : 'bg-gray-200'">
                             </div>
-                            <h3 class="text-lg text-gray-900 dark:text-white"
+                            <h3 class="text-lg text-gray-900 "
                                 :class="actualOrder?.estat_compra?.id >= 4 ? 'font-semibold' : 'font-medium'">
                                 Lliurat
                             </h3>
-                            <time class="mb-1 text-sm font-normal leading-none text-gray-400 dark:text-gray-500">
+                            <time class="mb-1 text-sm font-normal leading-none text-gray-400 ">
                                 Abril 2023
                             </time>
                         </li>

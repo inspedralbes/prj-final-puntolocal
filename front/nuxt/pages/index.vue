@@ -1,7 +1,7 @@
 <template>
     <div class="bg-gray-100">
-        <div :class="{ 'dark': isDarkMode }">
-            <div class="dark:bg-gray-900 min-h-screen transition-colors duration-300">
+        <div>
+            <div class="min-h-screen transition-colors duration-300">
                 <div id="banner" class="bg-white mt-2 px-4 w-full h-[150px] flex items-center justify-between relative">
                     <div v-if="comercios.length"
                         :style="{ backgroundImage: 'url(' + comercios[currentIndex].imagen + ')', backgroundSize: 'cover' }"
@@ -45,7 +45,7 @@
                                 <img :src="categoria.imagenes" alt="imgCategoria">
                             </div>
                             <p
-                                class="flex items-center justify-center mt-1 text-sm font-medium text-gray-800 dark:text-gray-200">
+                                class="flex items-center justify-center mt-1 text-sm font-medium text-gray-800">
                                 {{ categoria.name }}
                             </p>
                         </div>
@@ -54,7 +54,7 @@
 
                 <div id="contain-productos" class="py-4 bg-white border-t rounded-t-xl">
                     <div class="flex justify-between mx-4 mb-4">
-                        <h1 class="text-xl font-semibold text-gray-900 dark:text-white">Últimes tendències</h1>
+                        <h1 class="text-xl font-semibold text-gray-900">Últimes tendències</h1>
                         <p class="text-gray-500 flex items-ceeminter">
                             Veure totes
                             <svg width="1.5em" height="1.5em" viewBox="0 0 24 24" fill="none"
@@ -73,15 +73,15 @@
                         <productoComp v-for="(producto, index) in productos2" :key="index" :id="producto.id"
                             :img="producto.imagen ? `${baseUrl}/storage/${producto.imagen}` : `${baseUrl}/storage/productos/default-image.webp`"
                             :title="producto.nombre" :price="producto.precio" :comercio="producto.comercio"
-                            :customClass="'w-[170px]'" price-class="text-gray-900 dark:text-white"
+                            :customClass="'w-[170px]'" price-class="text-gray-900 "
                             @click="mostrarIdProducto(producto.id)"></productoComp>
                     </div>
-                    <h1 class="text-xl mt-5 font-semibold text-gray-900 dark:text-white mb-4 ml-4">Productes a prop teu</h1>
+                    <h1 class="text-xl mt-5 font-semibold text-gray-900 mb-4 ml-4">Productes a prop teu</h1>
                     <div id="productos" class="grid grid-cols-2 gap-4 px-4">
                         <productoComp v-for="(producto, index) in productos" :key="index" :productoId="producto.id"
                             :img="producto.imagen ? `${baseUrl}/storage/${producto.imagen}` : `${baseUrl}/storage/productos/default-image.webp`"
                             :title="producto.nombre" :price="producto.precio" :comercio="producto.comercio_nombre"
-                            :customClass="'w-full'" price-class="text-gray-900 dark:text-white"
+                            :customClass="'w-full'" price-class="text-gray-900"
                             @click="mostrarIdProducto(producto.id)">
                         </productoComp>
                         <div v-if="productos.length === 0" class="text-center py-4 text-gray-500">
@@ -113,7 +113,8 @@ const router = useRouter();
 const userLocation = ref(null);
 const authStore = useAuthStore();
 const { $communicationManager } = useNuxtApp();
-const isDarkMode = ref(window.matchMedia("(prefers-color-scheme: dark)").matches);
+// const isDarkMode = ref(window.matchMedia("(prefers-color-scheme: dark)").matches);
+const isDarkMode = false;
 
 onMounted(async () => {
     getLocation();

@@ -1,11 +1,11 @@
 <template>
     <div
-        class="min-h-screen bg-gray-100 flex flex-col text-gray-900 dark:bg-gray-900 dark:text-gray-100 transition-colors duration-300">
+        class="min-h-screen bg-gray-100 flex flex-col text-gray-900 transition-colors duration-300">
         <div id="header"
-            class="w-full flex items-center justify-between p-4 bg-white dark:bg-gray-800 fixed top-0 border-b">
+            class="w-full flex items-center justify-between p-4 bg-white fixed top-0 border-b">
 
             <!-- Botón de retroceso -->
-            <div @click="goBack" class="text-xl text-gray-700 dark:text-gray-300 cursor-pointer">
+            <div @click="goBack" class="text-xl text-gray-700 cursor-pointer">
                 <svg width="1.5em" height="1.5em" viewBox="0 0 1024 1024" class="icon"
                     xmlns="http://www.w3.org/2000/svg" fill="#000000">
                     <g id="SVGRepo_iconCarrier">
@@ -61,7 +61,7 @@
 
             <div id="infoAdicional" class="p-4 flex flex-col flex-grow">
                 <div id="contain-title" class="flex items-center">
-                    <h2 class="text-2xl font-bold text-gray-800 dark:text-gray-200">
+                    <h2 class="text-2xl font-bold text-gray-800">
                         {{ producto?.nombre || 'Nombre no disponible' }}
                     </h2>
                     <span class="flex items-center">
@@ -73,11 +73,11 @@
                                 </path>
                             </g>
                         </svg>
-                        <h3 class="ml-1 text-gray-600 font-bold text-xl dark:text-gray-400 ">{{ producto?.valoracion ||
+                        <h3 class="ml-1 text-gray-600 font-bold text-xl">{{ producto?.valoracion ||
                             '3.9' }}</h3>
                     </span>
                 </div>
-                <p class="text-gray-600 dark:text-gray-400 mt-2 text-justify">
+                <p class="text-gray-600 mt-2 text-justify">
                     {{ producto?.descripcion || 'Descripción no disponible' }}
                 </p>
                 <div class="mt-5">

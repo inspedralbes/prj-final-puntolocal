@@ -1,7 +1,7 @@
 <template>
     <div>
         <!-- Botón Retroceder (GoBack) visible solo cuando showPopup es falso -->
-        <div @click="goBack" class="text-xl text-gray-700 dark:text-gray-300 cursor-pointer" id="retrocederBtn">
+        <div @click="goBack" class="text-xl text-gray-700 cursor-pointer" id="retrocederBtn">
             <svg width="1.5em" height="1.5em" viewBox="0 0 1024 1024" class="icon" xmlns="http://www.w3.org/2000/svg"
                 fill="#000000">
                 <g id="SVGRepo_iconCarrier">

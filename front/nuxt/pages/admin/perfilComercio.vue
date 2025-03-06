@@ -137,99 +137,99 @@ onMounted(() => {
             </div>
             <div v-else>
                 <div
-                    class="p-4 bg-white block sm:flex items-center justify-between border-b border-gray-200 lg:mt-1.5 dark:bg-gray-800 dark:border-gray-700">
+                    class="p-4 bg-white block sm:flex items-center justify-between border-b border-gray-200 lg:mt-1.5 ">
                     <div class="w-full mb-1 mt-16">
                         <div class="mb-4">
-                            <h1 class="text-xl font-semibold text-gray-900 sm:text-2xl dark:text-white">Informació del
+                            <h1 class="text-xl font-semibold text-gray-900 sm:text-2xl">Informació del
                                 comerç</h1>
                         </div>
                     </div>
                 </div>
                 <div>
-                    <div class="bg-white p-6 rounded-lg shadow-sm dark:bg-gray-800 dark:border-gray-700">
-                        <h3 class="text-lg font-semibold text-gray-800 mb-4 dark:text-white">Información Básica</h3>
+                    <div class="bg-white p-6 rounded-lg shadow-sm ">
+                        <h3 class="text-lg font-semibold text-gray-800 mb-4 ">Información Básica</h3>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div>
                                 <label
-                                    class="block text-sm font-medium text-gray-600 mb-1 sm:text-xl dark:text-white">Nombre
+                                    class="block text-sm font-medium text-gray-600 mb-1 sm:text-xl ">Nombre
                                     del Comercio</label><input type="text" name="nombre"
-                                    class="w-full px-3 py-2 border border-black rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-600 dark:text-white"
+                                    class="w-full px-3 py-2 border border-black rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500  "
                                     v-model="formComercio.nombre">
                             </div>
                             <div><label
-                                    class="block text-sm font-medium text-gray-600 mb-1 sm:text-xl dark:text-white">Email</label><input
+                                    class="block text-sm font-medium text-gray-600 mb-1 sm:text-xl ">Email</label><input
                                     type="email" name="email"
-                                    class="w-full px-3 py-2 border border-black rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-600 dark:text-white"
+                                    class="w-full px-3 py-2 border border-black rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500  "
                                     v-model="formComercio.email"></div>
                             <div><label
-                                    class="block text-sm font-medium text-gray-600 mb-1 sm:text-xl dark:text-white">Teléfono</label><input
+                                    class="block text-sm font-medium text-gray-600 mb-1 sm:text-xl ">Teléfono</label><input
                                     type="tel" name="phone"
-                                    class="w-full px-3 py-2 border border-black rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-600 dark:text-white"
+                                    class="w-full px-3 py-2 border border-black rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500  "
                                     v-model="formComercio.phone"></div>
                             <div><label
-                                    class="block text-sm font-medium text-gray-600 mb-1 sm:text-xl dark:text-white">Gestión
+                                    class="block text-sm font-medium text-gray-600 mb-1 sm:text-xl ">Gestión
                                     de Stock</label>
                                 <div class="flex items-center mt-4"><input type="checkbox"
                                         v-model="formComercio.gestion_stock" name="gestion_stock"
                                         class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
                                         :true-value="1" :false-value="0"><span
-                                        class="ml-2 text-sm text-gray-600 sm:text-xl dark:text-white">Activar
+                                        class="ml-2 text-sm text-gray-600 sm:text-xl ">Activar
                                         gestión de stock</span>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div class="bg-white p-6 rounded-lg shadow-sm lg:mt-1.5 dark:bg-gray-800 dark:border-gray-700">
-                        <h3 class="text-lg font-semibold text-gray-800 mb-4 dark:text-white">Dirección</h3>
+                    <div class="bg-white p-6 rounded-lg shadow-sm lg:mt-1.5 ">
+                        <h3 class="text-lg font-semibold text-gray-800 mb-4 ">Dirección</h3>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div><label
-                                    class="block text-sm font-medium text-gray-600 mb-1 sm:text-xl dark:text-white">Calle
+                                    class="block text-sm font-medium text-gray-600 mb-1 sm:text-xl ">Calle
                                     y
                                     Número</label><input type="text" name="calle_num"
-                                    class="w-full px-3 py-2 border border-black rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-600 dark:text-white"
+                                    class="w-full px-3 py-2 border border-black rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500  "
                                     v-model="formComercio.calle_num"></div>
                             <div><label
-                                    class="block text-sm font-medium text-gray-600 mb-1 sm:text-xl dark:text-white">Ciudad</label><input
+                                    class="block text-sm font-medium text-gray-600 mb-1 sm:text-xl ">Ciudad</label><input
                                     type="text" name="ciudad"
-                                    class="w-full px-3 py-2 border border-black rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-600 dark:text-white"
+                                    class="w-full px-3 py-2 border border-black rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500  "
                                     v-model="formComercio.ciudad"></div>
                             <div><label
-                                    class="block text-sm font-medium text-gray-600 mb-1 sm:text-xl dark:text-white">Provincia</label><input
+                                    class="block text-sm font-medium text-gray-600 mb-1 sm:text-xl ">Provincia</label><input
                                     type="text" name="provincia"
-                                    class="w-full px-3 py-2 border border-black rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-600 dark:text-white"
+                                    class="w-full px-3 py-2 border border-black rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500  "
                                     v-model="formComercio.provincia"></div>
                             <div><label
-                                    class="block text-sm font-medium text-gray-600 mb-1 sm:text-xl dark:text-white">Código
+                                    class="block text-sm font-medium text-gray-600 mb-1 sm:text-xl ">Código
                                     Postal</label><input type="text" name="codigo_postal"
-                                    class="w-full px-3 py-2 border border-black rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-600 dark:text-white"
+                                    class="w-full px-3 py-2 border border-black rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500  "
                                     v-model="formComercio.codigo_postal"></div>
                             <div><label
-                                    class="block text-sm font-medium text-gray-600 mb-1 sm:text-xl dark:text-white">Planta</label><input
+                                    class="block text-sm font-medium text-gray-600 mb-1 sm:text-xl ">Planta</label><input
                                     type="number" name="num_planta"
-                                    class="w-full px-3 py-2 border border-black rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-600 dark:text-white"
+                                    class="w-full px-3 py-2 border border-black rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500  "
                                     v-model="formComercio.num_planta"></div>
                             <div><label
-                                    class="block text-sm font-medium text-gray-600 mb-1 sm:text-xl dark:text-white">Puerta</label><input
+                                    class="block text-sm font-medium text-gray-600 mb-1 sm:text-xl ">Puerta</label><input
                                     type="number" name="num_puerta"
-                                    class="w-full px-3 py-2 border border-black rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-600 dark:text-white"
+                                    class="w-full px-3 py-2 border border-black rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500  "
                                     v-model="formComercio.num_puerta"></div>
                         </div>
                     </div>
-                    <div class="bg-white p-6 rounded-lg shadow-sm lg:mt-1.5 dark:bg-gray-800 dark:border-gray-700">
-                        <h3 class="text-lg font-semibold text-gray-800 mb-4 dark:text-white">Información Adicional</h3>
+                    <div class="bg-white p-6 rounded-lg shadow-sm lg:mt-1.5 ">
+                        <h3 class="text-lg font-semibold text-gray-800 mb-4 ">Información Adicional</h3>
                         <div class="space-y-6">
                             <div><label
-                                    class="block text-sm font-medium text-gray-600 mb-1 sm:text-xl dark:text-white">Descripción</label><textarea
+                                    class="block text-sm font-medium text-gray-600 mb-1 sm:text-xl ">Descripción</label><textarea
                                     name="descripcion" rows="4" v-model="formComercio.descripcion"
-                                    class="w-full px-3 py-2 border border-black rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-600 dark:text-white"></textarea>
+                                    class="w-full px-3 py-2 border border-black rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500  "></textarea>
                             </div>
                             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                 <div><label for="categoria"
-                                        class="block text-sm font-medium text-gray-600 mb-1 sm:text-xl dark:text-white">Categoria</label>
+                                        class="block text-sm font-medium text-gray-600 mb-1 sm:text-xl ">Categoria</label>
                                     <div class="mt-1">
                                         <select id="categoria" v-model="formComercio.categoria_id"
                                             data-testid="categoria" required=""
-                                            class="w-full px-3 py-2 bg-white border border-black rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-600 dark:text-white">
+                                            class="w-full px-3 py-2 bg-white border border-black rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500  ">
                                             <option v-for="categoria in categorias" :key="categoria.id"
                                                 :value="categoria.id">
                                                 {{ categoria.name }}
@@ -238,7 +238,7 @@ onMounted(() => {
                                     </div>
                                 </div>
                             </div>
-                            <div><label class="text-lg font-semibold text-gray-800 mb-4 dark:text-white">Imágenes del
+                            <div><label class="text-lg font-semibold text-gray-800 mb-4 ">Imágenes del
                                     Comercio</label>
                                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                                     <div v-for="(imagen, index) in formComercio.imagenes" :key="index"
@@ -264,7 +264,7 @@ onMounted(() => {
                                     accept=".jpg,.jpeg,.png,.svg,.webp">
                                 <div class="w-full flex justify-between items-center">
                                     <button type="button" style="font-size: 18px;" @click="$refs.fileInput.click()"
-                                        class="mt-4 flex items-center px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-500 dark:text-white"><svg
+                                        class="mt-4 flex items-center px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-500 "><svg
                                             xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                                             viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                                             stroke-linecap="round" stroke-linejoin="round"

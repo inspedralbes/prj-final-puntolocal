@@ -267,7 +267,7 @@ const veureOrdre = () => {
         </div>
         <div v-else>
             <div v-if="loginVisible" class="w-full flex items-center justify-center">
-                <div class="bg-gray-900/50 dark:bg-gray-900/80 fixed inset-0 z-40"></div>
+                <div class="bg-gray-900/50 fixed inset-0 z-40"></div>
                 <div class="fixed top-0 right-0 z-40 w-full h-screen flex items-center">
                     <div
                         class="bg-white mx-5 px-4 pb-4 pt-4 sm:rounded-lg sm:px-10 sm:pb-6 sm:shadow rounded-md w-full">
@@ -363,7 +363,7 @@ const veureOrdre = () => {
 
             <!-- PANTALLA DE ELEGIR TIPO DE ENVÍO  -->
             <div v-if="chooseShipping">
-                <div class="bg-gray-900/50 dark:bg-gray-900/80 fixed inset-0 z-40 animate-appear" @click="toggleCheckout"></div>
+                <div class="bg-gray-900/50 fixed inset-0 z-40 animate-appear" @click="toggleCheckout"></div>
                 <div id="chooseShipping" class="fixed bottom-0 z-40 flex flex-col items-center justify-center p-4">
                     <h3 class="text-3xl font-semibold text-center" style="color: #1E2026">
                         Com vols rebre la teva comanda?
@@ -590,7 +590,7 @@ const veureOrdre = () => {
             </div>
 
             <!-- CISTELLA VIEW CON TODOS LOS PRODUCTOS -->
-            <div class="divide-y divide-gray-300 dark:divide-gray-600 pb-2">
+            <div class="divide-y divide-gray-300 pb-2">
                 <div v-for="(items, storeName) in groupedCesta" :key="storeName" class="px-3 pt-1">
                     <div class="flex justify-between items-center border-b border-gray-200 m-4">
                         <div class="flex items-center">
@@ -673,7 +673,7 @@ const veureOrdre = () => {
             </div>
 
             <div class="footer flex items-center justify-between mt-auto border-t border-gray-300 mb-[60px]">
-                <div id="precio" class="font-semibold text-gray-800 dark:text-gray-200">
+                <div id="precio" class="font-semibold text-gray-800">
                     <p class="text-gray-600 font-light text-sm">Precio total:</p>
                     <h3 class="text-2xl">
                         <p>{{ comercioStore.totalPrice.toFixed(2) }} €</p>
