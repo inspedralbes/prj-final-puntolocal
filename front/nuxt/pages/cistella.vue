@@ -3,7 +3,6 @@ definePageMeta({
     layout: 'footer-only'
 });
 
-
 import { useRuntimeConfig } from "#imports";
 const config = useRuntimeConfig();
 const baseUrl = config.public.apiBaseUrl;
@@ -21,7 +20,8 @@ const route = useRoute();
 const router = useRouter();
 const comercioStore = useComercioStore();
 const { $communicationManager } = useNuxtApp();
-const socket = io("http://localhost:8001");
+// const socket = io("http://localhost:8001");
+const socket = io("https://holabarri.cat")
 
 const authStore = useAuthStore();
 const errorMessage = ref('');
@@ -39,6 +39,8 @@ const auth = useAuthStore();
 const shipOption = ref(null);
 const paymentView = ref(false);
 const cistellaView = ref(true);
+const isOk = ref(false);
+const order_id = ref();
 // const shipOption = ref(2);
 // const paymentView = ref(true);
 // const cistellaView = ref(false);
@@ -82,7 +84,7 @@ const storeTotal = (storeName) => {
 function toggleCheckout() {
     if (!isLoggued.value) {
         loginVisible.value = !loginVisible.value;
-    }else{
+    } else {
         chooseShipping.value = !chooseShipping.value;
         shipOption.value = null;
         choosed.value = false;
@@ -118,7 +120,7 @@ function toPay() {
 async function crearComanda() {
     const createdOrder = await $communicationManager.createOrder(orderFiltrada.value);
     if (createdOrder.success) {
-        const order_id = ref(createdOrder.data.order.id)
+        order_id.value = createdOrder.data.order.id;
         const subcomandaInfo = computed(() => {
             return {
                 order_id: order_id.value,
@@ -170,7 +172,8 @@ async function crearComanda() {
         }
     }
 
-    goBack();
+    // goBack();
+    isOk.value = true;
     comercioStore.emptyBasket();
 }
 
@@ -187,38 +190,12 @@ const subcomandaInfo = computed(() => {
     }));
 });
 
-async function login() {
-    const { $communicationManager } = useNuxtApp(); // Acceder al communicationManager
+const seguirComprant = () => {
+    router.push('/'); // Ajusta la ruta segons la teva aplicació
+};
 
-    // Verificar si los campos están vacíos
-    if (!formData.email || !formData.password) {
-        errorMessage.value = 'És necessari completar tots els camps';
-        return;
-    }
-
-    // Verificar que la contraseña tenga al menos 8 caracteres
-    if (formData.password.length < 8) {
-        errorMessage.value = 'La contrasenya es incorrecta';
-        return;
-    }
-
-    // Llamar al plugin communicationManager para registrar
-    const response = await $communicationManager.login(formData);
-
-    if (response) {
-        authStore.login(response.user, response.token, response.comercio);
-        loginVisible.value = !loginVisible.value
-        chooseShipping.value = !chooseShipping.value;
-        shipOption.value = null;
-        choosed.value = false;
-        // navigateTo('/');
-    } else {
-        errorMessage.value = 'Les dades introduïdes son incorrectes';
-    }
-}
-
-function loginWithGoogle() {
-    window.location.href = `${baseUrl}/auth/google`;
+const veureOrdre = () => {
+    router.push(`/perfil/compras/${order_id.value}`); // Ajusta la ruta segons la teva aplicació
 };
 
 </script>
@@ -229,7 +206,28 @@ function loginWithGoogle() {
             <h3 class="text-2xl ml-4">Cistella</h3>
         </div>
     </header>
+    <div v-if="isOk" class="fixed inset-0 flex items-center justify-center bg-black/50 z-50">
+        <div class="bg-white p-6 rounded-2xl shadow-xl max-w-sm text-center animate-fadeIn">
+            <!-- Ícono de confirmación -->
+            <div class="w-16 h-16 bg-green-500 text-white rounded-full mx-auto mb-4 flex items-center justify-center">
+                <span class="text-2xl font-bold">✔</span>
+            </div>
 
+            <h2 class="text-2xl font-semibold text-gray-800">Comanda realitzada amb èxit!</h2>
+            <p class="text-gray-600 mt-2">Rebràs un correu quan la teva comanda estigui llesta per a recollir.</p>
+
+            <div class="mt-6 flex gap-4">
+                <button @click="seguirComprant"
+                    class="flex-1 bg-gray-200 hover:bg-gray-300 text-gray-800 font-medium py-2 px-4 rounded-lg">
+                    Seguir comprant
+                </button>
+                <button @click="veureOrdre"
+                    class="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg">
+                    Veure la comanda
+                </button>
+            </div>
+        </div>
+    </div>
     <div class="mt-[80px] mb-[80px] w-full">
         <div v-if="Object.keys(groupedCesta).length === 0" class="w-full flex flex-col items-center mt-[180px]">
             <svg width="10em" height="10em" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -269,9 +267,10 @@ function loginWithGoogle() {
         </div>
         <div v-else>
             <div v-if="loginVisible" class="w-full flex items-center justify-center">
-                <div class="bg-gray-900/50 dark:bg-gray-900/80 fixed inset-0 z-40"></div>
+                <div class="bg-gray-900/50 fixed inset-0 z-40"></div>
                 <div class="fixed top-0 right-0 z-40 w-full h-screen flex items-center">
-                    <div class="bg-white mx-5 px-4 pb-4 pt-4 sm:rounded-lg sm:px-10 sm:pb-6 sm:shadow rounded-md w-full">
+                    <div
+                        class="bg-white mx-5 px-4 pb-4 pt-4 sm:rounded-lg sm:px-10 sm:pb-6 sm:shadow rounded-md w-full">
                         <h2 class="text-2xl font-bold text-center mb-2">Inicia sessió</h2>
                         <form @submit.prevent="login" class="space-y-6">
                             <div>
@@ -364,14 +363,14 @@ function loginWithGoogle() {
 
             <!-- PANTALLA DE ELEGIR TIPO DE ENVÍO  -->
             <div v-if="chooseShipping">
-                <div class="bg-gray-900/50 dark:bg-gray-900/80 fixed inset-0 z-40" @click="toggleCheckout"></div>
+                <div class="bg-gray-900/50 fixed inset-0 z-40 animate-appear" @click="toggleCheckout"></div>
                 <div id="chooseShipping" class="fixed bottom-0 z-40 flex flex-col items-center justify-center p-4">
                     <h3 class="text-3xl font-semibold text-center" style="color: #1E2026">
                         Com vols rebre la teva comanda?
                     </h3>
                     <div class="flex w-full justify-between contain-buttons mt-3">
-                        <button @click="chooseShip" value="1"
-                            class="flex items-center rounded-md px-3 py-4 min-w-[48%] text-lg font-bold disabled:opacity-50"
+                        <button @click="chooseShip" value="1" disabled
+                            class="flex items-center rounded-md px-3 py-4 min-w-[48%] text-lg font-bold disabled:opacity-50 cursor-not-allowed"
                             :class="{ 'selected': shipOption === '1', 'noSelected': shipOption !== '1' }">
                             <svg widths="1.8em" height="1.8em" fill="currentColor" version="1.1" id="Layer_1"
                                 xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
@@ -423,16 +422,19 @@ function loginWithGoogle() {
                             <h3 class="ml-3">Recollida</h3>
                         </button>
                     </div>
-                    <div id="map-ubi"
+                    <!-- <div id="map-ubi"
                         class="w-full h-[130px] bg-gray-200 mt-3 rounded flex items-center justify-center overflow-hidden">
                         <img src="../assets/mapubi.png" alt="plano ubicación">
-                        <!-- LOGICA DEL MAPA PARA MOSTRAR LA DIRECCIÓN DE ENTREGA DEL USUARIO -->
-                    </div>
+                    </div> -->
                     <button :disabled="!choosed" @click="toPay"
                         class="mt-3 w-full h-[60px] justify-center rounded-md border border-transparent px-4 py-2 text-xl font-semibold disabled:cursor-not-allowed"
                         :class="{ 'btn-ok': choosed, 'bg-[#6393F2]': !choosed, 'text-white': !choosed }">
                         <h3>Continuar</h3>
                     </button>
+                    <!-- <button @click="toggleCheckout()"
+                        class="mt-3 w-full h-[60px] justify-center rounded-md border border-red-300 px-4 py-2 text-xl font-semibold text-red-500">
+                        <h3>Cancel·lar</h3>
+                    </button> -->
                 </div>
             </div>
 
@@ -462,7 +464,7 @@ function loginWithGoogle() {
                         <div class="my-3 max-h-[250px] overflow-scroll">
                             <div v-for="(items) in groupedCesta">
                                 <div v-for="item in items" :key="item.id" class="flex mb-1">
-                                    <div id="contain-image" class="mr-4 max-w-[70px] max-h-[70px] overflow-hidden">
+                                    <div id="contain-image" class="mr-4 w-[70px] h-[70px] overflow-hidden">
                                         <img :src="`${baseUrl}/storage/${item.imagen}`" alt="" />
                                     </div>
                                     <div class="flex flex-col w-full justify-center">
@@ -548,7 +550,7 @@ function loginWithGoogle() {
                                     @change="choosePayment" />
                             </label>
                             <label for="targeta"
-                                class="font-medium text-lg h-14 relative hover:bg-zinc-100 flex items-center pl-3 gap-2 rounded-lg has-[:checked]:text-blue-500 has-[:checked]:bg-blue-50 has-[:checked]:ring-blue-300 has-[:checked]:ring-1 select-none">
+                                class="font-medium text-lg h-14 relative flex items-center pl-3 gap-2 rounded-lg has-[:checked]:text-blue-500 has-[:checked]:bg-blue-50 has-[:checked]:ring-blue-300 has-[:checked]:ring-1 select-none">
                                 <div class="w-5">
                                     <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                         <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
@@ -557,17 +559,20 @@ function loginWithGoogle() {
                                         <g id="SVGRepo_iconCarrier">
                                             <path
                                                 d="M3 8C3 6.34315 4.34315 5 6 5H18C19.6569 5 21 6.34315 21 8V16C21 17.6569 19.6569 19 18 19H6C4.34315 19 3 17.6569 3 16V8Z"
-                                                stroke="currentColor" stroke-width="2"></path>
-                                            <path d="M3 10H21" stroke="currentColor" stroke-width="2"></path>
-                                            <path d="M14 15L17 15" stroke="currentColor" stroke-width="2"
-                                                stroke-linecap="round">
+                                                stroke="rgb(156 163 175 / var(--tw-text-opacity, 1))" stroke-width="2">
+                                            </path>
+                                            <path d="M3 10H21" stroke="rgb(156 163 175 / var(--tw-text-opacity, 1))"
+                                                stroke-width="2"></path>
+                                            <path d="M14 15L17 15" stroke="rgb(156 163 175 / var(--tw-text-opacity, 1))"
+                                                stroke-width="2" stroke-linecap="round">
                                             </path>
                                         </g>
                                     </svg>
                                 </div>
-                                Targeta
-                                <input type="radio" name="status" class="w-4 h-4 absolute accent-current right-3"
-                                    id="targeta" value="2" @change="choosePayment" />
+                                <p class="text-gray-400">Targeta (Pròximament)</p>
+                                <input type="radio" disabled name="status"
+                                    class="w-4 h-4 absolute accent-current right-3 text-gray-400" id="targeta" value="2"
+                                    @change="choosePayment" />
                             </label>
                         </div>
                     </div>
@@ -585,7 +590,7 @@ function loginWithGoogle() {
             </div>
 
             <!-- CISTELLA VIEW CON TODOS LOS PRODUCTOS -->
-            <div class="divide-y divide-gray-300 dark:divide-gray-600 pb-2">
+            <div class="divide-y divide-gray-300 pb-2">
                 <div v-for="(items, storeName) in groupedCesta" :key="storeName" class="px-3 pt-1">
                     <div class="flex justify-between items-center border-b border-gray-200 m-4">
                         <div class="flex items-center">
@@ -616,10 +621,10 @@ function loginWithGoogle() {
                                 </g>
                             </svg>
                         </button>
-                        <div id="contain-image" class="mr-4 min-w-[100px] min-h-[100px] overflow-hidden">
+                        <div id="contain-image" class="mr-4 w-[80px] h-[100px] overflow-hidden">
                             <img :src="`${baseUrl}/storage/${item.imagen}`" alt="" />
                         </div>
-                        <div class="flex flex-col w-full justify-between">
+                        <div class="flex flex-col w-full justify-between flex-grow">
                             <div class="flex justify-between">
                                 <div class="w-[75%]">
                                     <h3 class="text-lg font-medium line-clamp-2">{{ item.nombre }}</h3>
@@ -659,7 +664,7 @@ function loginWithGoogle() {
                                             </g>
                                         </svg>
                                     -->
-                                        +
+                                    +
                                 </button>
                             </div>
                         </div>
@@ -668,14 +673,14 @@ function loginWithGoogle() {
             </div>
 
             <div class="footer flex items-center justify-between mt-auto border-t border-gray-300 mb-[60px]">
-                <div id="precio" class="font-semibold text-gray-800 dark:text-gray-200">
+                <div id="precio" class="font-semibold text-gray-800">
                     <p class="text-gray-600 font-light text-sm">Precio total:</p>
                     <h3 class="text-2xl">
                         <p>{{ comercioStore.totalPrice.toFixed(2) }} €</p>
                     </h3>
                 </div>
                 <div id="carrito" class="flex items-center space-x-4">
-                    <button id="btn-comprar" class="text-xl font-semibold bg-[#276BF2]" @click="comprar">
+                    <button id="btn-comprar" class="text-xl font-semibold bg-[#276BF2]" @click="toggleCheckout()">
                         Checkout ({{ comercioStore.totalItems }})
                     </button>
                 </div>
@@ -685,9 +690,25 @@ function loginWithGoogle() {
 </template>
 
 <style scoped>
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.animate-fadeIn {
+    animation: fadeIn 0.3s ease-out;
+}
+
 #chooseShipping {
     width: 100%;
-    height: 400px;
+    height: max-content;
     border-top-left-radius: 10px;
     border-top-right-radius: 10px;
     background-color: white;
@@ -758,16 +779,5 @@ header {
     max-height: 80px;
     box-sizing: border-box;
     padding: 1rem;
-}
-
-#contain-image {
-    height: 160px;
-    position: relative;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    overflow: hidden;
-    border-radius: 10px;
-    border: 1px solid #dde0e2;
 }
 </style>

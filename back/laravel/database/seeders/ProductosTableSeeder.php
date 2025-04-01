@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Producto;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
@@ -16,130 +17,82 @@ class ProductosTableSeeder extends Seeder
     {
         $faker = Faker::create();
 
+        // $cantidad = 30;
+
+        // $productosConImagen = array_rand(range(0, $cantidad - 1), 2);
+
         $productos = [
-            "Ordenador portátil",
-            "Smartphone",
-            "Televisor LED 4K",
-            "Auriculares inalámbricos",
-            "Altavoz Bluetooth",
-            "Reloj inteligente",
-            "Camiseta deportiva",
-            "Pantalones vaqueros",
-            "Zapatillas de running",
-            "Mochila escolar",
-            "Lámpara de escritorio",
-            "Sofá de tres plazas",
-            "Mesa de comedor",
-            "Silla ergonómica",
-            "Juego de sábanas",
-            "Cafetera espresso",
-            "Batidora de mano",
-            "Olla a presión",
-            "Set de cuchillos de cocina",
-            "Tabla de cortar de bambú",
-            "Botella de agua reutilizable",
-            "Mochila para senderismo",
-            "Bicicleta de montaña",
-            "Pelota de fútbol",
-            "Juego de pesas",
-            "Colchón viscoelástico",
-            "Libro de recetas",
-            "Juego de toallas",
-            "Cepillo eléctrico",
-            "Protector solar SPF 50",
-            "Frigorífico doble puerta",
-            "Lavadora automática",
-            "Horno microondas",
-            "Consola de videojuegos",
-            "Videocámara de acción",
-            "Set de pinceles para pintura",
-            "Cuaderno de notas ecológico",
-            "Bolígrafo de gel",
-            "Caja de herramientas",
-            "Taladro eléctrico",
-            "Juego de mesa para niños",
-            "Pack de alimentos orgánicos",
-            "Chocolates artesanales",
-            "Bolsa de frutos secos",
-            "Botella de vino tinto",
-            "Kit de jardinería",
-            "Casco para bicicleta",
-            "Maleta de viaje",
-            "Perfume floral",
-            "Ropa interior térmica",
-            "Iphone 13 Pro Max"
+            // Boutique Castelldefels - Indumentaria
+            ["nombre" => "Vestido de fiesta", "comercio_id" => 1, "descripcion" => "Vestido elegante ideal para eventos formales.", "subcategoria_id" => 5, "precio" => 150, "visible" => 1],
+            ["nombre" => "Blazer de lana", "comercio_id" => 1, "descripcion" => "Blazer de corte clásico para un look sofisticado.", "subcategoria_id" => 4, "precio" => 120, "visible" => 1],
+            ["nombre" => "Jeans ajustados", "comercio_id" => 1, "descripcion" => "Pantalón denim con diseño moderno y cómodo.", "subcategoria_id" => 6, "precio" => 50, "visible" => 1],
+            ["nombre" => "Camiseta estampada", "comercio_id" => 1, "descripcion" => "Camiseta de algodón con estampado original.", "subcategoria_id" => 2, "precio" => 10, "visible" => 1],
+            ["nombre" => "Abrigo de invierno", "comercio_id" => 1, "descripcion" => "Abrigo grueso con forro térmico para el frío.", "subcategoria_id" => 3, "precio" => 20, "visible" => 1],
+
+            // Marina Moda - Indumentaria
+            ["nombre" => "Falda plisada", "comercio_id" => 2, "descripcion" => "Falda midi con pliegues elegantes.", "subcategoria_id" => 3, "precio" => 20, "visible" => 1],
+            ["nombre" => "Sudadera oversize", "comercio_id" => 2, "descripcion" => "Sudadera cómoda y abrigada para el día a día.", "subcategoria_id" => 2, "precio" => 55, "visible" => 1],
+            ["nombre" => "Zapatillas urbanas", "comercio_id" => 2, "descripcion" => "Calzado deportivo con diseño moderno.", "subcategoria_id" => 2, "precio" => 38.99, "visible" => 1],
+            ["nombre" => "Top de encaje", "comercio_id" => 2, "descripcion" => "Blusa con detalles en encaje, perfecta para ocasiones especiales.", "subcategoria_id" => 5, "precio" => 26.99, "visible" => 1],
+            ["nombre" => "Chaqueta vaquera", "comercio_id" => 2, "descripcion" => "Chaqueta denim de corte clásico.", "subcategoria_id" => 7, "precio" => 99.99, "visible" => 1],
+
+            // Tech & More - Tecnología
+            ["nombre" => "Smartphone 5G", "comercio_id" => 3, "descripcion" => "Teléfono móvil con conectividad 5G y pantalla OLED.", "subcategoria_id" => 8, "precio" => 350, "visible" => 1],
+            ["nombre" => "Auriculares Bluetooth", "comercio_id" => 3, "descripcion" => "Auriculares inalámbricos con cancelación de ruido.", "subcategoria_id" => 9, "precio" => 9.99, "visible" => 1],
+            ["nombre" => "Laptop ultraligera", "comercio_id" => 3, "descripcion" => "Ordenador portátil de última generación.", "subcategoria_id" => 10, "precio" => 15, "visible" => 1],
+            ["nombre" => "Mouse gamer RGB", "comercio_id" => 3, "descripcion" => "Ratón ergonómico con iluminación LED.", "subcategoria_id" => 11, "precio" => 35, "visible" => 1],
+            ["nombre" => "Cámara de seguridad", "comercio_id" => 3, "descripcion" => "Cámara IP con detección de movimiento.", "subcategoria_id" => 12, "precio" => 40, "visible" => 1],
+
+            // Ferretería El Faro - Ferretería
+            ["nombre" => "Taladro percutor", "comercio_id" => 4, "descripcion" => "Taladro eléctrico con múltiples velocidades.", "subcategoria_id" => 36, "precio" => 38.99, "visible" => 1],
+            ["nombre" => "Martillo de acero", "comercio_id" => 4, "descripcion" => "Martillo de uso profesional con mango ergonómico.", "subcategoria_id" => 37, "precio" => 45, "visible" => 1],
+            ["nombre" => "Caja de herramientas", "comercio_id" => 4, "descripcion" => "Kit completo con destornilladores y llaves.", "subcategoria_id" => 38, "precio" => 40, "visible" => 1],
+            ["nombre" => "Sierra eléctrica", "comercio_id" => 4, "descripcion" => "Sierra de corte rápido para madera y metal.", "subcategoria_id" => 39, "precio" => 30, "visible" => 1],
+            ["nombre" => "Llave inglesa ajustable", "comercio_id" => 4, "descripcion" => "Llave de precisión con agarre antideslizante.", "subcategoria_id" => 40, "precio" => 15.99, "visible" => 1],
+
+            // Belleza Urbana - Cosméticos
+            ["nombre" => "Base líquida mate", "comercio_id" => 5, "descripcion" => "Base de maquillaje con acabado natural.", "subcategoria_id" => 28, "precio" => 100, "visible" => 1],
+            ["nombre" => "Paleta de sombras", "comercio_id" => 5, "descripcion" => "Colores vibrantes para maquillaje profesional.", "subcategoria_id" => 27, "precio" => 100, "visible" => 1],
+            ["nombre" => "Labial rojo intenso", "comercio_id" => 5, "descripcion" => "Bálsamo labial de larga duración.", "subcategoria_id" => 26, "precio" => 100, "visible" => 1],
+            ["nombre" => "Delineador waterproof", "comercio_id" => 5, "descripcion" => "Delineador resistente al agua con punta fina.", "subcategoria_id" => 25, "precio" => 100, "visible" => 1],
+            ["nombre" => "Crema facial hidratante", "comercio_id" => 5, "descripcion" => "Hidratante con ácido hialurónico y SPF 30.", "subcategoria_id" => 24, "precio" => 100, "visible" => 1],
+
+            // Repuestos Auto Express - Repuestos
+            ["nombre" => "Filtro de aceite", "comercio_id" => 6, "descripcion" => "Filtro de alto rendimiento para motores.", "subcategoria_id" => 14, "precio" => 29.99, "visible" => 1],
+            ["nombre" => "Juego de bujías", "comercio_id" => 6, "descripcion" => "Bujías de encendido de alta durabilidad.", "subcategoria_id" => 13, "precio" => 35, "visible" => 1],
+            ["nombre" => "Batería 12V", "comercio_id" => 6, "descripcion" => "Batería de coche con gran capacidad.", "subcategoria_id" => 12, "precio" => 55, "visible" => 1],
+            ["nombre" => "Aceite sintético", "comercio_id" => 6, "descripcion" => "Lubricante para motor de alto rendimiento.", "subcategoria_id" => 11, "precio" => 130, "visible" => 1],
+            ["nombre" => "Pastillas de freno", "comercio_id" => 6, "descripcion" => "Juego de frenos de alta seguridad.", "subcategoria_id" => 10, "precio" => 150, "visible" => 1],
+
+            // Home & Decor Hub - Hogar
+            ["nombre" => "Juego de sábanas", "comercio_id" => 7, "descripcion" => "Sábanas de algodón suave y fresco.", "subcategoria_id" => 15, "precio" => 120, "visible" => 1],
+            ["nombre" => "Cafetera de acero", "comercio_id" => 7, "descripcion" => "Cafetera con sistema antigoteo y filtro permanente.", "subcategoria_id" => 16, "precio" => 95, "visible" => 1],
+            ["nombre" => "Lámpara de pie", "comercio_id" => 7, "descripcion" => "Lámpara LED con diseño moderno.", "subcategoria_id" => 17, "precio" => 85, "visible" => 1],
+            ["nombre" => "Sofá reclinable", "comercio_id" => 7, "descripcion" => "Sofá cómodo con tapizado premium.", "subcategoria_id" => 18, "precio" => 75, "visible" => 1],
+            ["nombre" => "Aspiradora ciclónica", "comercio_id" => 7, "descripcion" => "Aspiradora sin bolsa con alto poder de succión.", "subcategoria_id" => 19, "precio" => 70, "visible" => 1],
+
+            // Accesorios Chic - Accesorios
+            ["nombre" => "Bolso de cuero", "comercio_id" => 8, "descripcion" => "Bolso elegante de piel auténtica.", "subcategoria_id" => 84, "precio" => 60, "visible" => 1],
+            ["nombre" => "Gafas de sol", "comercio_id" => 8, "descripcion" => "Lentes polarizados con protección UV.", "subcategoria_id" => 83, "precio" => 50, "visible" => 1],
+            ["nombre" => "Reloj minimalista", "comercio_id" => 8, "descripcion" => "Reloj con correa de cuero y esfera clásica.", "subcategoria_id" => 82, "precio" => 40, "visible" => 1],
+            ["nombre" => "Collar de plata", "comercio_id" => 8, "descripcion" => "Colgante de plata de ley con diseño exclusivo.", "subcategoria_id" => 81, "precio" => 30, "visible" => 1],
+            ["nombre" => "Pulsera con charms", "comercio_id" => 8, "descripcion" => "Pulsera ajustable con dijes intercambiables.", "subcategoria_id" => 80, "precio" => 20, "visible" => 1],
+
+            // Electrónica Viva - Tecnología
+            ["nombre" => "Tablet de 10 pulgadas", "comercio_id" => 9, "descripcion" => "Pantalla táctil HD con procesador rápido.", "subcategoria_id" => 8, "precio" => 14.99, "visible" => 1],
+            ["nombre" => "Barra de sonido", "comercio_id" => 9, "descripcion" => "Sonido envolvente con conexión Bluetooth.", "subcategoria_id" => 9, "precio" => 120, "visible" => 1],
+            ["nombre" => "Cargador inalámbrico", "comercio_id" => 9, "descripcion" => "Carga rápida para dispositivos móviles.", "subcategoria_id" => 10, "precio" => 78.99, "visible" => 1],
+            ["nombre" => "Router WiFi 6", "comercio_id" => 9, "descripcion" => "Internet de alta velocidad con baja latencia.", "subcategoria_id" => 11, "precio" => 35, "visible" => 1],
+            ["nombre" => "Disco SSD 1TB", "comercio_id" => 9, "descripcion" => "Almacenamiento rápido para ordenadores.", "subcategoria_id" => 12, "precio" => 120.50, "visible" => 1],
+
+            // Cosmética Natural - Cosméticos
+            ["nombre" => "Jabón artesanal", "comercio_id" => 10, "descripcion" => "Elaborado con ingredientes naturales.", "subcategoria_id" => 22, "precio" => 35, "visible" => 1],
+            ["nombre" => "Aceite de argán", "comercio_id" => 10, "descripcion" => "Aceite orgánico para piel y cabello.", "subcategoria_id" => 23, "precio" => 89.99, "visible" => 1],
+            ["nombre" => "Mascarilla facial", "comercio_id" => 10, "descripcion" => "Tratamiento hidratante para todo tipo de piel.", "subcategoria_id" => 24, "precio" => 65, "visible" => 1],
+            ["nombre" => "Perfume vegano", "comercio_id" => 10, "descripcion" => "Fragancia sin químicos dañinos.", "subcategoria_id" => 25, "precio" => 20, "visible" => 1],
+            ["nombre" => "Shampoo sólido", "comercio_id" => 10, "descripcion" => "Fórmula ecológica sin sulfatos.", "subcategoria_id" => 26, "precio" => 35.99, "visible" => 1],
         ];
 
-        $descripciones = [
-            "Un ordenador portátil de alto rendimiento, ideal tanto para trabajo como para entretenimiento, con pantalla de 15 pulgadas y batería de larga duración.",
-            "Smartphone con cámara de 48 MP, procesador rápido y una pantalla OLED que ofrece una calidad de imagen impresionante, todo en un diseño compacto y moderno.",
-            "Televisor LED 4K con tecnología HDR para que disfrutes de tus películas y series favoritas con una calidad de imagen nítida y colores vibrantes, además de ser compatible con todas las plataformas de streaming.",
-            "Auriculares inalámbricos con cancelación de ruido activa, ofreciendo una experiencia de sonido envolvente y conectividad estable para que disfrutes de tu música sin interrupciones.",
-            "Altavoz Bluetooth con un sonido claro y potente, ideal para llevar a cualquier lugar gracias a su tamaño compacto y su batería de larga duración.",
-            "Reloj inteligente con funciones avanzadas de monitoreo de salud, como frecuencia cardíaca, seguimiento de actividad física y notificaciones de tu smartphone directamente en tu muñeca.",
-            "Camiseta deportiva diseñada con tecnología que mantiene la piel fresca y seca durante el ejercicio, con un ajuste cómodo y materiales transpirables.",
-            "Pantalones vaqueros de corte clásico, con una mezcla de algodón y elastano que proporciona comodidad y flexibilidad, perfectos para cualquier ocasión.",
-            "Zapatillas de running con una suela especializada para absorber impactos y ofrecer mayor comodidad y soporte durante carreras largas o entrenamientos intensos.",
-            "Mochila escolar espaciosa, con múltiples compartimentos y un diseño ergonómico para que puedas llevar libros, dispositivos y otros materiales de forma cómoda y ordenada.",
-            "Lámpara de escritorio con luz LED regulable para adaptarse a tus necesidades de iluminación, ideal para estudiar o trabajar durante largas horas sin cansar la vista.",
-            "Sofá de tres plazas con un diseño moderno, tapizado en tela suave y acolchado para ofrecerte la máxima comodidad al descansar o ver una película.",
-            "Mesa de comedor de madera maciza, con un diseño elegante y sencillo que encaja perfectamente en cualquier estilo de decoración, ideal para reuniones familiares.",
-            "Silla ergonómica para oficina, con respaldo ajustable, soporte lumbar y asiento acolchado para mejorar tu postura y comodidad durante largas jornadas de trabajo.",
-            "Juego de sábanas de alta calidad, suaves al tacto y resistentes, disponibles en varios colores y tamaños para que tu cama siempre luzca perfecta.",
-            "Cafetera espresso con un diseño compacto, fácil de usar y con la capacidad de preparar cafés deliciosos con una crema perfecta, ideal para los amantes del café.",
-            "Batidora de mano con múltiples velocidades, ideal para preparar batidos, salsas o purés de forma rápida y eficiente, con un diseño cómodo para su uso diario.",
-            "Olla a presión de acero inoxidable, con capacidad para cocinar grandes cantidades de comida en menos tiempo, perfecta para preparar guisos y sopas.",
-            "Set de cuchillos de cocina con mangos ergonómicos, ideales para cortar con precisión todo tipo de alimentos, desde verduras hasta carnes, asegurando durabilidad y seguridad.",
-            "Tabla de cortar de bambú, resistente y ecológica, con una superficie suave para mantener los cuchillos afilados mientras preparas tus recetas favoritas.",
-            "Botella de agua reutilizable, fabricada en acero inoxidable, manteniendo la temperatura de tus bebidas por horas, perfecta para el gimnasio o llevar a cualquier parte.",
-            "Mochila para senderismo con compartimentos múltiples, hecha con materiales resistentes al agua, diseñada para llevar todo lo necesario para una caminata o excursión larga.",
-            "Bicicleta de montaña con suspensión total, neumáticos de gran agarre y un diseño robusto para disfrutar de rutas de montaña con máxima comodidad y seguridad.",
-            "Pelota de fútbol de alta calidad, con una excelente resistencia al desgaste, ideal para entrenamientos o partidos entre amigos.",
-            "Juego de pesas de diferentes tamaños, con un diseño compacto y fácil de almacenar, perfectas para mejorar tu fuerza y resistencia en casa.",
-            "Colchón viscoelástico que se adapta perfectamente a la forma de tu cuerpo, proporcionando un descanso profundo y cómodo durante toda la noche.",
-            "Libro de recetas con una amplia variedad de platos saludables y fáciles de preparar, ideal para quienes buscan llevar una alimentación balanceada.",
-            "Juego de toallas suaves y absorbentes, fabricadas con algodón de alta calidad, ideales para el baño o la piscina, disponibles en varios colores.",
-            "Cepillo eléctrico para dientes con tecnología de vibración sónica, que limpia eficazmente y ayuda a mantener una sonrisa saludable y brillante.",
-            "Protector solar SPF 50 que ofrece una protección alta contra los rayos UVA y UVB, ideal para proteger tu piel de manera efectiva durante actividades al aire libre.",
-            "Frigorífico doble puerta con sistema de refrigeración eficiente, gran capacidad y diseño moderno para mantener tus alimentos frescos y organizados.",
-            "Lavadora automática con múltiples programas de lavado y una gran capacidad para lavar grandes cantidades de ropa, ahorrando tiempo y energía.",
-            "Horno microondas con función de grill, ideal para calentar, cocinar o dorar alimentos rápidamente, con una potencia adecuada para todo tipo de platos.",
-            "Consola de videojuegos de última generación, con gráficos impresionantes, juegos exclusivos y una experiencia de juego fluida y sin interrupciones.",
-            "Videocámara de acción resistente al agua, perfecta para capturar tus aventuras al aire libre, con calidad de grabación 4K y estabilización de imagen.",
-            "Set de pinceles para pintura, con una variedad de tamaños y tipos de cerdas, ideal tanto para principiantes como para artistas experimentados.",
-            "Cuaderno de notas ecológico con papel reciclado, ideal para tomar apuntes o dibujar, con una encuadernación resistente que asegura su durabilidad.",
-            "Bolígrafo de gel de tinta fluida, con un diseño cómodo y elegante, ideal para escribir con suavidad y precisión en cualquier tipo de papel.",
-            "Caja de herramientas con un completo set de destornilladores, llaves y otros utensilios esenciales para realizar reparaciones o proyectos de bricolaje en casa.",
-            "Taladro eléctrico de alta potencia, con múltiples velocidades y una variedad de brocas, ideal para perforar madera, metal o paredes con facilidad.",
-            "Juego de mesa para niños con piezas grandes y coloridas, ideal para fomentar la creatividad y el trabajo en equipo mientras se divierten.",
-            "Pack de alimentos orgánicos que incluye una variedad de productos frescos y naturales, perfectos para quienes prefieren llevar una dieta saludable y libre de químicos.",
-            "Chocolates artesanales elaborados con cacao de alta calidad, con diferentes sabores y texturas, perfectos para regalar o disfrutar en cualquier momento.",
-            "Bolsa de frutos secos que contiene una mezcla de almendras, nueces y avellanas, ideal para un snack saludable y lleno de energía.",
-            "Botella de vino tinto de una cosecha seleccionada, con un sabor suave y afrutado, perfecta para acompañar una cena especial.",
-            "Kit de jardinería que incluye herramientas esenciales como pala, rastrillo y guantes, ideal para quienes disfrutan del cuidado de plantas y flores en el hogar.",
-            "Casco para bicicleta de alta seguridad, con ventilación adecuada y un diseño cómodo, imprescindible para proteger tu cabeza durante tus recorridos en bici.",
-            "Maleta de viaje resistente, con ruedas multidireccionales y un compartimento principal amplio para organizar todo lo necesario para tus viajes.",
-            "Perfume floral con una fragancia suave y femenina, ideal para usar durante el día o en ocasiones especiales, con una larga duración.",
-            "Ropa interior térmica perfecta para mantenerte cálido en climas fríos, fabricada con materiales suaves y cómodos que se adaptan a tu cuerpo.",
-            "Iphone 13 Pro MAX 255GB de almacenamiento"
-        ];
-
-        $cantidad = 30;
-
-        $productosConImagen = array_rand(range(0, $cantidad - 1), 2);
-
-        for ($i = 0; $i < $cantidad; $i++) {
-            $prodID = $faker->numberBetween(0, count($productos) - 1);
-
-            DB::table("productos")->insert([
-                "subcategoria_id" => $faker->numberBetween(1, 91),
-                "comercio_id" => $faker->numberBetween(8, 12),
-                "nombre" => $productos[$prodID],
-                "descripcion" => $faker->sentence(15),
-                "precio" => $faker->randomFloat(2, 5, 1000),
-                "visible" => $faker->numberBetween(0, 1),
-                "imagen" => in_array($i, $productosConImagen) ? "productos/pepa.jpg" : null,
-            ]);
-        }
+        Producto::insert($productos);
     }
 }

@@ -56,18 +56,21 @@ import Alert from "@/components/Alert.vue";
 const auth = useAuthStore();
 const route = useRoute();
 const router = useRouter();
-const socket = io("http://localhost:8001");
+// const socket = io("http://localhost:8001");
+const socket = io("https://holabarri.cat")
 const showAlert = ref(false);
 const orden = ref(null);
 
 onMounted(() => {
+  // auth.checkAuth();
+
   if (auth?.comercio) {
     socket.on("connect", () => {
       socket.emit("identificarUsuario", { user_id: auth.user.id });
     });
 
   socket.on("nuevaOrdenRecibida", (newOrden) => {
-    console.log(newOrden);
+    // console.log(newOrden);
     orden.value = newOrden;
     showAlert.value = true;
   });
@@ -75,9 +78,6 @@ onMounted(() => {
 
 // Función para manejar la confirmación
 const handleConfirmed = () => {
-  console.log("Usuari va dir SÍ");
-  // Aquí haces la redirección cuando el usuario confirma
-  console.log('orden',orden.value)
   setTimeout(() => {
     if (orden?.value?.id) {
       router.push(`/admin/comandes/${orden?.value?.id}`);
@@ -90,8 +90,4 @@ const handleConfirmed = () => {
 const handleCanceled = () => {
   showAlert.value = false; // Ocultar la alerta después de la acción
 };
-
-function test() {
-  socket.emit("test");
-}
 </script>

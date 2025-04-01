@@ -3,7 +3,7 @@ import { defineStore } from 'pinia';
 export const useAuthStore = defineStore('auth', {
   state: () => ({
     isAuthenticated: typeof window !== 'undefined' ? localStorage.getItem('isAuthenticated') || false : false,
-    token: typeof window !== 'undefined' ? localStorage.getItem('token') || null : null, 
+    token: typeof window !== 'undefined' ? localStorage.getItem('token') || null : null,
     user: typeof window !== 'undefined' ? JSON.parse(localStorage.getItem('user')) || null : null,
     comercio: typeof window !== 'undefined' ? JSON.parse(localStorage.getItem('comercio')) || null : null,
     favoritos: typeof window !== 'undefined' ? new Set(JSON.parse(localStorage.getItem('favoritos')) || []) : new Set(),
@@ -16,14 +16,14 @@ export const useAuthStore = defineStore('auth', {
   actions: {
     login(userData, userToken, comercioData) {
       this.isAuthenticated = true;
-      this.user = userData; 
-      this.token = userToken; 
+      this.user = userData;
+      this.token = userToken;
       this.comercio = comercioData;
       if (typeof window !== 'undefined') {
         localStorage.setItem('isAuthenticated', this.isAuthenticated);
         localStorage.setItem('token', userToken);
         localStorage.setItem('user', JSON.stringify(userData));
-        localStorage.setItem('comercio', JSON.stringify(comercioData));        
+        localStorage.setItem('comercio', JSON.stringify(comercioData));
       }
     },
     logout() {
@@ -34,9 +34,9 @@ export const useAuthStore = defineStore('auth', {
       this.favoritos = null
       if (typeof window !== 'undefined') {
         localStorage.removeItem('isAuthenticated');
-        localStorage.removeItem('token'); 
-        localStorage.removeItem('user'); 
-        localStorage.removeItem('comercio'); 
+        localStorage.removeItem('token');
+        localStorage.removeItem('user');
+        localStorage.removeItem('comercio');
         localStorage.removeItem('favoritos');
       }
     },
@@ -50,6 +50,21 @@ export const useAuthStore = defineStore('auth', {
         if (token && user && comercio) {
           this.login(user, token, comercio);
         }
+      }
+    },
+    async checkAuth() {
+      if (!this.token) return false;
+
+      try {
+        const user = await $fetch("http://localhost:8000/api/cliente/check-auth", {
+          headers: { Authorization: `Bearer ${this.token}` }
+        });
+
+        this.user = user;
+        return true;
+      } catch (error) {
+        this.logout();
+        return false;
       }
     },
     setUser(user) {
@@ -80,16 +95,16 @@ export const useAuthStore = defineStore('auth', {
         localStorage.setItem('favoritos', JSON.stringify([...this.favoritos])); // Guardar el Set como Array
       }
     },
-    
+
   },
   persist: {
     enabled: true,
     strategies: [
       {
-        key: 'clientStorage', 
+        key: 'clientStorage',
         storage: typeof window !== 'undefined' ? localStorage : null,
       },
-    ],
+    ],  
   },
 });
 

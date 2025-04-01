@@ -1,18 +1,27 @@
 <template>
     <div class="bg-gray-100">
-        <div :class="{ 'dark': isDarkMode }">
-            <div class="dark:bg-gray-900 min-h-screen transition-colors duration-300">
-
-                <div id="banner" class="bg-white mt-2 px-4 w-full h-[180px] flex relative items-center overflow-hidden">
-                    <div id="carousel"
-                        class="h-full flex items-center transition-transform duration-500 ease-in-out rounded-lg overflow-hidden">
-                        <img src="https://s.tmimgcdn.com/scr/1200x750/343900/banner-de-venta-de-color-azul-degradado-vectorial-y-idea-de-fondo-azul-de-promocion-de-descuento-de-banner-de-venta_343959-original.jpg"
-                            class="object-cover object-center">
+        <div>
+            <div class="min-h-screen transition-colors duration-300">
+                <StoreCarousel :comercios="comercios.slice(0, 5)" v-if="comercios.length"/>
+                <!-- <div id="banner" class="bg-white mt-2 px-4 w-full h-[150px] flex items-center justify-between relative">
+                    <div v-if="comercios.length"
+                        :style="{ backgroundImage: 'url(' + comercios[currentIndex].imagen + ')', backgroundSize: 'cover' }"
+                        class="h-full w-full flex items-center justify-center">
+                        <p class="text-white font-bold text-lg px-4 py-1 bg-black bg-opacity-50 shadow-md">
+                            {{ comercios[currentIndex].nombre }}
+                        </p>
                     </div>
-                </div>
-
+                    <p v-else class="text-gray-500 font-bold text-lg">
+                        No s'han trobat comerços propers a la teva ubicació
+                    </p>
+                    <button v-if="comercios.length" @click="irAlComercio(comercios[currentIndex].id)"
+                        class="absolute bottom-2 right-9 bg-white text-black px-3 py-1 shadow-md hover:bg-gray-100">
+                        Anar al comerç
+                    </button>
+                </div> -->
+                <img src="https://sl.bing.net/k6Zr6eP9Yu4" alt="">
                 <div id="contain-categorias"
-                    class="bg-white w-full flex flex-col py-4 border-b rounded-b-xl mb-2 scrollbar-none">
+                    class="bg-white w-full flex flex-col py-4 border rounded-xl mb-2 scrollbar-none">
                     <div class="flex justify-between mx-4 mb-3">
                         <h2 class="font-semibold text-lg">Categories</h2>
                         <p class="text-gray-500 flex items-center">
@@ -37,7 +46,7 @@
                                 <img :src="categoria.imagenes" alt="imgCategoria">
                             </div>
                             <p
-                                class="flex items-center justify-center mt-1 text-sm font-medium text-gray-800 dark:text-gray-200">
+                                class="flex items-center justify-center mt-1 text-sm font-medium text-gray-800">
                                 {{ categoria.name }}
                             </p>
                         </div>
@@ -46,8 +55,8 @@
 
                 <div id="contain-productos" class="py-4 bg-white border-t rounded-t-xl">
                     <div class="flex justify-between mx-4 mb-4">
-                        <h1 class="text-xl font-semibold text-gray-900 dark:text-white">Últimes tendències</h1>
-                        <p class="text-gray-500 flex items-center">
+                        <h1 class="text-xl font-semibold text-gray-900">Últimes tendències</h1>
+                        <p class="text-gray-500 flex items-ceeminter">
                             Veure totes
                             <svg width="1.5em" height="1.5em" viewBox="0 0 24 24" fill="none"
                                 xmlns="http://www.w3.org/2000/svg">
@@ -62,21 +71,24 @@
                         </p>
                     </div>
                     <div class="flex space-x-1 pl-4 items-center overflow-x-auto scrollbar-none">
-                        <productoComp v-for="(producto, index) in productos" :key="index" :id="producto.id"
-                        :img="producto.imagen ? `${baseUrl}/storage/${producto.imagen}` : `${baseUrl}/storage/productos/default-image.webp`"
-                        :title="producto.nombre" :price="producto.precio" :comercio="producto.comercio"
-                            :customClass="'w-[170px]'" price-class="text-gray-900 dark:text-white"
-                            @click="mostrarIdProducto(producto.id)">
-                        </productoComp>
+                        <productoComp v-for="(producto, index) in productos2" :key="index" :id="producto.id"
+                            :img="producto.imagen ? `${baseUrl}/storage/${producto.imagen}` : `${baseUrl}/storage/productos/default-image.webp`"
+                            :title="producto.nombre" :price="producto.precio" :comercio="producto.comercio"
+                            :customClass="'w-[170px]'" price-class="text-gray-900 "
+                            @click="mostrarIdProducto(producto.id)"></productoComp>
                     </div>
-                    <h1 class="text-xl mt-5 font-semibold text-gray-900 dark:text-white mb-4 ml-4">Per a tu</h1>
+                    <h1 class="text-xl mt-5 font-semibold text-gray-900 mb-4 ml-4">Productes a prop teu</h1>
                     <div id="productos" class="grid grid-cols-2 gap-4 px-4">
                         <productoComp v-for="(producto, index) in productos" :key="index" :productoId="producto.id"
                             :img="producto.imagen ? `${baseUrl}/storage/${producto.imagen}` : `${baseUrl}/storage/productos/default-image.webp`"
-                            :title="producto.nombre" :price="producto.precio" :comercio="producto.comercio"
-                            :customClass="'w-full'" price-class="text-gray-900 dark:text-white"
+                            :title="producto.nombre" :price="producto.precio" :comercio="producto.comercio_nombre"
+                            :customClass="'w-full'" price-class="text-gray-900"
                             @click="mostrarIdProducto(producto.id)">
                         </productoComp>
+                        <div v-if="productos.length === 0" class="text-center py-4 text-gray-500">
+                            <p>No hi ha productes de comerços a prop teu. Si vols veure la ubicació, accepta la permís de
+                                geolocalització.</p>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -88,79 +100,97 @@
 import { ref, onMounted, watch } from "vue";
 import { useRouter } from "vue-router";
 import { useAuthStore } from "~/stores/authStore";
-
 import { useRuntimeConfig } from "#imports";
+
 const config = useRuntimeConfig();
 const baseUrl = config.public.apiBaseUrl;
+const comercios = ref([]);
+const currentIndex = ref(0);
 
 const productos = ref([]);
+const productos2 = ref([]);
 const categorias = ref([]);
 const router = useRouter();
+const userLocation = ref(null);
 const authStore = useAuthStore();
 const { $communicationManager } = useNuxtApp();
-const isDarkMode = ref(window.matchMedia("(prefers-color-scheme: dark)").matches);
-import Swal from 'sweetalert2'
+// const isDarkMode = ref(window.matchMedia("(prefers-color-scheme: dark)").matches);
+const isDarkMode = false;
 
-onMounted(() => {
-    const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
-    const handleChange = (event) => {
-        isDarkMode.value = event.matches;
-    };
-    mediaQuery.addEventListener("change", handleChange);
-    onMounted(() => {
-        const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
-        const handleChange = (event) => {
-            isDarkMode.value = event.matches;
-        };
-        mediaQuery.addEventListener("change", handleChange);
-
-        document.body.classList.toggle('dark', isDarkMode.value);
-        document.body.classList.toggle('dark', isDarkMode.value);
-
-        fetchProductos();
-        fetchCategorias();
-    });
-    fetchProductos();
+onMounted(async () => {
+    getLocation();
+    fetchProductos2();
     fetchCategorias();
+    await checkLocationPermission();
+
+    setInterval(() => {
+        if (comercios.value.length > 0) {
+            currentIndex.value = (currentIndex.value + 1) % comercios.value.length;
+        }
+    }, 5000);
 });
 
-watch(isDarkMode, (newValue) => {
-    document.body.classList.toggle('dark', newValue);
-});
+// watch(isDarkMode, (newValue) => {
+//     document.body.classList.toggle("dark", newValue);
+// });
 
-const mostrarAlerta = () => {
-    Swal.fire({
-        title: "Nova comanda rebuda",
-        text: "Vols veure'l?",
-        icon: "info",
-        position: "top-end",
-        showConfirmButton: true,
-        showCancelButton: true,
-        confirmButtonText: "Sí",
-        cancelButtonText: "No",
-        toast: true,
-        timer: 3000,
-        timerProgressBar: true,
-        width: "320px", // 🔹 Ajusta el tamaño
-        customClass: {
-            popup: "horizontal-alert", // Clases personalizadas
-            icon: "small-icon", // Clases para el icono
-        },
-    })
-        .then((result) => {
-            if (result.isConfirmed) {
-                console.log("Usuari va dir SÍ");
-            } else {
-                console.log("Usuari va dir NO");
+async function checkLocationPermission() {
+    if (localStorage.getItem("locationPermission") === "granted") {
+        await getLocation();
+    } else {
+        requestLocationPermission();
+    }
+}
+
+async function getLocation() {
+    if ("geolocation" in navigator) {
+        navigator.geolocation.getCurrentPosition(
+            async (position) => {
+                const { latitude, longitude } = position.coords;
+                userLocation.value = { latitude, longitude };
+                localStorage.setItem("locationPermission", "granted");
+                await fetchComerciosCercanos(latitude, longitude);
+            },
+            (error) => {
+                console.error("Error al obtener la ubicación:", error);
             }
-        });
-};
+        );
+    } else {
+        console.error("Geolocalización no disponible.");
+    }
+}
 
-async function fetchProductos() {
+async function fetchComerciosCercanos(lat, lon) {
+    try {
+        const response = await $communicationManager.getComerciosCercanos(lat, lon);
+        console.log(response)
+        comercios.value = response;
+
+        const idsComercios = response.map(comercio => comercio.id);
+        const idsComerciosString = idsComercios.join(',');
+
+        getProductosCercanos(idsComerciosString);
+    } catch (error) {
+        console.error("Error al obtener comercios cercanos", error);
+    }
+}
+
+async function getProductosCercanos(comercioIds) {
+    try {
+        const response = await $communicationManager.getProductosCercanos(comercioIds);
+        if (response && response.data) {
+            productos.value = response.data;
+        }
+    } catch (error) {
+        console.error("Error al obtener productos cercanos", error);
+    }
+}
+
+async function fetchProductos2() {
     try {
         const response = await $communicationManager.getProductos();
         if (response && response.data) {
-            productos.value = response.data;
+            productos2.value = response.data;
         } else {
             console.error("Error al obtener los productos");
         }

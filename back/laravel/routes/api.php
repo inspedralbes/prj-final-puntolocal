@@ -3,19 +3,21 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ClienteController;
+use App\Http\Controllers\FavoritoController;
 use App\Http\Controllers\ProductoController;
 use App\Http\Controllers\ComercioController;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\CategoriaController;
+use App\Http\Controllers\ciudadesController;
+use App\Http\Controllers\ProvinciasController;
 use App\Http\Controllers\EstatCompraController;
 use App\Http\Controllers\SubcategoriaController;
 use App\Http\Controllers\OrderComercioController;
-use App\Http\Controllers\FavoritoController;
+use App\Http\Controllers\ComercioFavoritosController;
 
 Route::get('/user', function (Request $request) {
     return $request->user();
 })->middleware('auth:sanctum');
-
 
 // ==== AUTH ===================
 Route::prefix('auth')->group(function () {
@@ -27,12 +29,13 @@ Route::prefix('auth')->group(function () {
 
 // ==== CLIENTES ===================
 Route::middleware('auth:sanctum')->prefix('cliente')->group(function () {
+    Route::get('/check-auth', [ClienteController::class, 'checkUser']);
     Route::get('/{id}', [ClienteController::class, 'getCliente']);
     Route::put('/{id}/datos-personales', [ClienteController::class, 'updateDatosPersonales']);
     Route::put('/{id}/datos-facturacion', [ClienteController::class, 'updateDatosFacturacion']);
-    Route::get('{id}/favoritos', [FavoritoController::class, 'index']);
-    Route::post('{id}/favoritos', [FavoritoController::class, 'toggleFavorito']);
-    Route::get('{id}/favoritos-info', [FavoritoController::class, 'getFavoritosInformacion']);
+    Route::get('/{id}/favoritos', [FavoritoController::class, 'index']);
+    Route::post('/{id}/favoritos', [FavoritoController::class, 'toggleFavorito']);
+    Route::get('/{id}/favoritos-info', [FavoritoController::class, 'getFavoritosInformacion']);
 });
 
 Route::prefix('comercios')->group(function () {
@@ -49,10 +52,17 @@ Route::middleware('auth:sanctum')->prefix('comercios')->group(function () {
     Route::delete('/{id}/imagenes', [ComercioController::class, 'deleteComercioImagen']);
 });
 
+Route::middleware('auth:sanctum')->prefix('favoritos')->group(function () {
+    Route::get('/comercios-favoritos', [ComercioFavoritosController::class, 'index']);
+    Route::post('/like/{id}', [ComercioFavoritosController::class, 'afegirLikeComerci']);
+    Route::get('/verificar-seguido/{id}', [ComercioFavoritosController::class, 'verificarSeguido']);
+});
+
 Route::prefix('comercios')->group(function () {
     Route::get('/{id}', [ComercioController::class, 'getComercio']);
     Route::get('/search/{search}', [ComercioController::class, 'search']);
     Route::get('/getUserid/{id}', [ComercioController::class, 'getUserID']);
+    Route::get('/comercios-cercanos/{latitud}/{longitud}', [ComercioController::class, 'getComerciosCercanos']);
 });
 Route::get('/getLocations', [ComercioController::class, 'getLocations']);
 
@@ -144,7 +154,13 @@ Route::prefix('producto')->group(function () {
     Route::get('/search/{search}', [ProductoController::class, 'search']);
 
     Route::get('/categoria/{categoriaID}', [CategoriaController::class, 'getProductosPorCategoria']);
+
 });
+
+Route::prefix('cercanos')->group(function () {
+    Route::get('/productos', [ProductoController::class, 'prueba']);
+});
+
 
 
 Route::middleware('auth:sanctum')->prefix('producto')->group(function () {
@@ -159,6 +175,7 @@ Route::middleware('auth:sanctum')->prefix('producto')->group(function () {
 
     // Eliminar un producto específico
     Route::delete('{id}', [ProductoController::class, 'destroy']);
+
 });
 
 // ==== SUBCATEGORIAS ===============
@@ -174,4 +191,12 @@ Route::middleware('auth:sanctum')->prefix('clientes')->group(function () {
     Route::get('{id}/compras', [OrderController::class, 'comprasCliente']);
 
     Route::get('compras/{id}', [OrderController::class, 'detalleCompra']);
+});
+
+Route::prefix('poblaciones')->group(function () {
+    // Ver provincias
+    Route::get('/provincias', [ProvinciasController::class, 'index']);
+
+    // Ver ciudades por provincia seleccionada
+    Route::get('/ciudades/{id}', [ciudadesController::class, 'index']);
 });

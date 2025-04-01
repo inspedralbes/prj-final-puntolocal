@@ -1,11 +1,11 @@
 <template>
     <div
-        class="min-h-screen bg-gray-100 flex flex-col text-gray-900 dark:bg-gray-900 dark:text-gray-100 transition-colors duration-300">
+        class="min-h-screen bg-gray-100 flex flex-col text-gray-900 transition-colors duration-300">
         <div id="header"
-            class="w-full flex items-center justify-between p-4 bg-white dark:bg-gray-800 rounded-b-lg fixed top-0 border-b">
+            class="w-full flex items-center justify-between p-4 bg-white fixed top-0 border-b">
 
             <!-- Botón de retroceso -->
-            <div @click="goBack" class="text-xl text-gray-700 dark:text-gray-300 cursor-pointer">
+            <div @click="goBack" class="text-xl text-gray-700 cursor-pointer">
                 <svg width="1.5em" height="1.5em" viewBox="0 0 1024 1024" class="icon"
                     xmlns="http://www.w3.org/2000/svg" fill="#000000">
                     <g id="SVGRepo_iconCarrier">
@@ -27,12 +27,12 @@
             <div id="corazon" @click="actualizaFavoritos(producto.id)"
                 class="w-16 h-8 flex items-center justify-between cursor-pointer">
                 <svg v-if="authStore?.favoritos?.has(producto?.id)" width="1.5em" height="1.5em" viewBox="0 0 24 24"
-                    fill="#ea4823" stroke="#ea4823" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    fill="#ea4823" stroke="#ea4823" stroke-width="1" stroke-linecap="round" stroke-linejoin="round">
                     <path
                         d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z">
                     </path>
                 </svg>
-                <svg v-else width="1.5em" height="1.5em" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="3"
+                <svg v-else width="1.5em" height="1.5em" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="1"
                     stroke-linecap="round" stroke-linejoin="round">
                     <path
                         d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z">
@@ -53,7 +53,7 @@
             </div>
         </div>
 
-        <div class="bg-white rounded-b-md mb-4 mt-20">
+        <div class="bg-white rounded-b-md mb-4 mt-[65px]">
             <div id="imgs" class="h-[400px] w-full max-w-[900px] mx-auto overflow-hidden">
                 <img :src="producto?.imagen ? `${baseUrl}/storage/${producto.imagen}` : `${baseUrl}/storage/productos/default-image.webp`"
                     alt="Imagen del producto" class="h-full w-full object-contain" />
@@ -61,7 +61,7 @@
 
             <div id="infoAdicional" class="p-4 flex flex-col flex-grow">
                 <div id="contain-title" class="flex items-center">
-                    <h2 class="text-2xl font-bold text-gray-800 dark:text-gray-200">
+                    <h2 class="text-2xl font-bold text-gray-800">
                         {{ producto?.nombre || 'Nombre no disponible' }}
                     </h2>
                     <span class="flex items-center">
@@ -73,15 +73,15 @@
                                 </path>
                             </g>
                         </svg>
-                        <h3 class="ml-1 text-gray-600 font-bold text-xl dark:text-gray-400 ">{{ producto?.valoracion ||
+                        <h3 class="ml-1 text-gray-600 font-bold text-xl">{{ producto?.valoracion ||
                             '3.9' }}</h3>
                     </span>
                 </div>
-                <p class="text-gray-600 dark:text-gray-400 mt-2 text-justify">
+                <p class="text-gray-600 mt-2 text-justify">
                     {{ producto?.descripcion || 'Descripción no disponible' }}
                 </p>
                 <div class="mt-5">
-                    <p class="text-xl text-gray-900">Vendut per</p>
+                    <p class="text-xl text-gray-900">Venedor</p>
                     <div @click="irAComercio" id="comercioShop" class="flex h-[120px] mt-3 rounded-md border">
                         <div class="h-full w-[120px] border-r rounded-md bg-gray-200">
                             <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">

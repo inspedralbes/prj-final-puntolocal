@@ -50,7 +50,6 @@
                 'cliente' => $cliente
             ], 201);
         }
-
         public function login(Request $request) {
             $validator = Validator::make($request->all(), [
                 'email' => 'required|email',
@@ -93,7 +92,6 @@
                 'comercio' => $comercio,
             ], 200);
         }
-
         public function logout(Request $request) {
             $request->user()->currentAccessToken()->delete();
 
@@ -101,7 +99,6 @@
                 'message' => 'Sesión cerrada exitosamente.'
             ], 200);
         }
-
         public function changePassword(Request $request) {
             $validator = Validator::make($request->all(), [
                 'currentPassword' => 'required|string|min:8',

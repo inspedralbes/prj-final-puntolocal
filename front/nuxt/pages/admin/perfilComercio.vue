@@ -33,13 +33,13 @@ async function getComercioData() {
             } catch (error) {
                 console.error("Error parsing imagenes:", error);
             }
-            console.log(response.comercio.imagenes)
+            // console.log(response.comercio.imagenes)
         }
         Object.assign(formData, response.comercio);
         Object.assign(formComercio, response.comercio);
-        console.log(formComercio)
+        // console.log(formComercio)
     } else {
-        console.log('Hi ha hagut algun error');
+        alert('Hi ha hagut algun error');
     }
 }
 
@@ -51,13 +51,11 @@ async function updateComercio() {
         const jsonResponse = await $communicationManager.updateComercio(formComercio, authStore.comercio.id);
 
         if (jsonResponse) {
-            console.log('Informació del comerç actualitzada amb èxit')
+            // console.log('Informació del comerç actualitzada amb èxit')
             Object.assign(formData, jsonResponse.comercio);
         } else {
-            console.log('Hi ha hagut algun error');
+            alert('Hi ha hagut algun error');
         }
-    } else {
-        console.log('No hay cambios en la información del comercio.');
     }
 
     // Update images with actual file objects
@@ -69,13 +67,9 @@ async function updateComercio() {
 
         const imageResponse = await $communicationManager.updateComercioImagenes(formD, authStore.comercio.id);
 
-        if (imageResponse) {
-            console.log('Imatge actualitzada amb èxit');
-        } else {
-            console.log('Hi ha hagut algun error');
+        if (!imageResponse) {
+            alert('Hi ha hagut algun error');
         }
-    } else {
-        console.log(`No s'ha selecionat cap imatge.`)
     }
 }
 
@@ -87,25 +81,6 @@ function handleImageUpload(event) {
     if (!formComercio.selectedFiles) {
         formComercio.selectedFiles = [];
     }
-
-    // Base64 for preview
-    // PARA CUANDO SE PUEDA SUBIR VARIAS IMAGENES
-    // if (!Array.isArray(formComercio.imagenes)) {
-    //     formComercio.imagenes = [];
-    // }
-    // for (let i = 0; i < files.length; i++) {
-    //     if (!allowedTypes.includes(files[i].type)) {
-    //         console.log("Solo se permiten imágenes en formato JPG, PNG, SVG o WEBP.");
-    //         continue;
-    //     }
-
-    //     const reader = new FileReader();
-    //     reader.onload = (e) => {
-    //         formComercio.imagenes.push(e.target.result);
-    //     };
-    //     reader.readAsDataURL(files[i]);
-    // }
-
 
     //SOLO 1 IMAGEN
     if (files.length === 0) return;
@@ -161,110 +136,100 @@ onMounted(() => {
                 <Loading />
             </div>
             <div v-else>
-                <div class="mx-4">
-                    <div
-                        class="mb-6 rounded-lg p-4 bg-white block sm:flex items-center justify-between border-b border-gray-200 lg:mt-1.5 dark:bg-gray-800 dark:border-gray-700">
-                        <div class="w-full mb-1 mt-16">
-                            <div class="mb-4 flex">
-                                <h1 class="text-xl font-semibold text-gray-900 sm:text-2xl dark:text-white">Tots els
-                                    productes
-                                </h1>
-                                <ButtonComp
-                                    class="group relative flex ml-auto justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:cursor-wait disabled:opacity-50"
-                                    @click="updateComercio"> Guardar </ButtonComp>
-                            </div>
+                <div
+                    class="p-4 bg-white block sm:flex items-center justify-between border-b border-gray-200 lg:mt-1.5 ">
+                    <div class="w-full mb-1 mt-16">
+                        <div class="mb-4">
+                            <h1 class="text-xl font-semibold text-gray-900 sm:text-2xl">Informació del
+                                comerç</h1>
                         </div>
-
                     </div>
-                    <div class="mb-6 bg-white p-6 rounded-lg shadow-sm lg:mt-1.5 dark:bg-gray-800 dark:border-gray-700">
-                        <h3 class="text-lg font-semibold text-gray-800 mb-4 dark:text-white">Información Básica</h3>
+                </div>
+                <div>
+                    <div class="bg-white p-6 rounded-lg shadow-sm ">
+                        <h3 class="text-lg font-semibold text-gray-800 mb-4 ">Información Básica</h3>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label
+                                    class="block text-sm font-medium text-gray-600 mb-1 sm:text-xl ">Nombre
+                                    del Comercio</label><input type="text" name="nombre"
+                                    class="w-full px-3 py-2 border border-black rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500  "
+                                    v-model="formComercio.nombre">
+                            </div>
                             <div><label
-                                    class="block text-sm font-medium text-gray-600 mb-1 sm:text-xl dark:text-white">Nombre
-                                    del
-                                    Comercio</label><input type="text" name="nombre"
-                                    class="w-full px-3 py-2 border border-black rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-600 dark:text-white"
-                                    v-model="formComercio.nombre"></div>
-                            <div><label
-                                    class="block text-sm font-medium text-gray-600 mb-1 sm:text-xl dark:text-white">Email</label><input
+                                    class="block text-sm font-medium text-gray-600 mb-1 sm:text-xl ">Email</label><input
                                     type="email" name="email"
-                                    class="w-full px-3 py-2 border border-black rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-600 dark:text-white"
+                                    class="w-full px-3 py-2 border border-black rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500  "
                                     v-model="formComercio.email"></div>
                             <div><label
-                                    class="block text-sm font-medium text-gray-600 mb-1 sm:text-xl dark:text-white">Teléfono</label><input
+                                    class="block text-sm font-medium text-gray-600 mb-1 sm:text-xl ">Teléfono</label><input
                                     type="tel" name="phone"
-                                    class="w-full px-3 py-2 border border-black rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-600 dark:text-white"
+                                    class="w-full px-3 py-2 border border-black rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500  "
                                     v-model="formComercio.phone"></div>
                             <div><label
-                                    class="block text-sm font-medium text-gray-600 mb-1 sm:text-xl dark:text-white">Gestión
+                                    class="block text-sm font-medium text-gray-600 mb-1 sm:text-xl ">Gestión
                                     de Stock</label>
                                 <div class="flex items-center mt-4"><input type="checkbox"
                                         v-model="formComercio.gestion_stock" name="gestion_stock"
                                         class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
                                         :true-value="1" :false-value="0"><span
-                                        class="ml-2 text-sm text-gray-600 sm:text-xl dark:text-white">Activar
+                                        class="ml-2 text-sm text-gray-600 sm:text-xl ">Activar
                                         gestión de stock</span>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div class="mb-6 bg-white p-6 rounded-lg shadow-sm lg:mt-1.5 dark:bg-gray-800 dark:border-gray-700">
-                        <h3 class="text-lg font-semibold text-gray-800 mb-4 dark:text-white">Dirección</h3>
+                    <div class="bg-white p-6 rounded-lg shadow-sm lg:mt-1.5 ">
+                        <h3 class="text-lg font-semibold text-gray-800 mb-4 ">Dirección</h3>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div><label
-                                    class="block text-sm font-medium text-gray-600 mb-1 sm:text-xl dark:text-white">Calle
+                                    class="block text-sm font-medium text-gray-600 mb-1 sm:text-xl ">Calle
                                     y
                                     Número</label><input type="text" name="calle_num"
-                                    class="w-full px-3 py-2 border border-black rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-600 dark:text-white"
+                                    class="w-full px-3 py-2 border border-black rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500  "
                                     v-model="formComercio.calle_num"></div>
                             <div><label
-                                    class="block text-sm font-medium text-gray-600 mb-1 sm:text-xl dark:text-white">Ciudad</label><input
+                                    class="block text-sm font-medium text-gray-600 mb-1 sm:text-xl ">Ciudad</label><input
                                     type="text" name="ciudad"
-                                    class="w-full px-3 py-2 border border-black rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-600 dark:text-white"
+                                    class="w-full px-3 py-2 border border-black rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500  "
                                     v-model="formComercio.ciudad"></div>
                             <div><label
-                                    class="block text-sm font-medium text-gray-600 mb-1 sm:text-xl dark:text-white">Provincia</label><input
+                                    class="block text-sm font-medium text-gray-600 mb-1 sm:text-xl ">Provincia</label><input
                                     type="text" name="provincia"
-                                    class="w-full px-3 py-2 border border-black rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-600 dark:text-white"
+                                    class="w-full px-3 py-2 border border-black rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500  "
                                     v-model="formComercio.provincia"></div>
                             <div><label
-                                    class="block text-sm font-medium text-gray-600 mb-1 sm:text-xl dark:text-white">Código
+                                    class="block text-sm font-medium text-gray-600 mb-1 sm:text-xl ">Código
                                     Postal</label><input type="text" name="codigo_postal"
-                                    class="w-full px-3 py-2 border border-black rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-600 dark:text-white"
+                                    class="w-full px-3 py-2 border border-black rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500  "
                                     v-model="formComercio.codigo_postal"></div>
                             <div><label
-                                    class="block text-sm font-medium text-gray-600 mb-1 sm:text-xl dark:text-white">Planta</label><input
+                                    class="block text-sm font-medium text-gray-600 mb-1 sm:text-xl ">Planta</label><input
                                     type="number" name="num_planta"
-                                    class="w-full px-3 py-2 border border-black rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-600 dark:text-white"
+                                    class="w-full px-3 py-2 border border-black rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500  "
                                     v-model="formComercio.num_planta"></div>
                             <div><label
-                                    class="block text-sm font-medium text-gray-600 mb-1 sm:text-xl dark:text-white">Puerta</label><input
+                                    class="block text-sm font-medium text-gray-600 mb-1 sm:text-xl ">Puerta</label><input
                                     type="number" name="num_puerta"
-                                    class="w-full px-3 py-2 border border-black rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-600 dark:text-white"
+                                    class="w-full px-3 py-2 border border-black rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500  "
                                     v-model="formComercio.num_puerta"></div>
                         </div>
                     </div>
-                    <div class="mb-6 bg-white p-6 rounded-lg shadow-sm lg:mt-1.5 dark:bg-gray-800 dark:border-gray-700">
-                        <h3 class="text-lg font-semibold text-gray-800 mb-4 dark:text-white">Información Adicional</h3>
+                    <div class="bg-white p-6 rounded-lg shadow-sm lg:mt-1.5 ">
+                        <h3 class="text-lg font-semibold text-gray-800 mb-4 ">Información Adicional</h3>
                         <div class="space-y-6">
                             <div><label
-                                    class="block text-sm font-medium text-gray-600 mb-1 sm:text-xl dark:text-white">Descripción</label><textarea
+                                    class="block text-sm font-medium text-gray-600 mb-1 sm:text-xl ">Descripción</label><textarea
                                     name="descripcion" rows="4" v-model="formComercio.descripcion"
-                                    class="w-full px-3 py-2 border border-black rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-600 dark:text-white"></textarea>
+                                    class="w-full px-3 py-2 border border-black rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500  "></textarea>
                             </div>
                             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                                <div><label
-                                        class="block text-sm font-medium text-gray-600 mb-1 sm:text-xl dark:text-white">Puntaje
-                                        Medio</label><input type="number" name="puntaje_medio" min="0" max="5"
-                                        step="0.1"
-                                        class="w-full px-3 py-2 bg-white border border-black rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-600 dark:text-white cursor-not-allowed"
-                                        v-model="formComercio.puntaje_medio" disabled></div>
                                 <div><label for="categoria"
-                                        class="block text-sm font-medium text-gray-600 mb-1 sm:text-xl dark:text-white">Categoria</label>
+                                        class="block text-sm font-medium text-gray-600 mb-1 sm:text-xl ">Categoria</label>
                                     <div class="mt-1">
                                         <select id="categoria" v-model="formComercio.categoria_id"
                                             data-testid="categoria" required=""
-                                            class="w-full px-3 py-2 bg-white border border-black rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-600 dark:text-white">
+                                            class="w-full px-3 py-2 bg-white border border-black rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500  ">
                                             <option v-for="categoria in categorias" :key="categoria.id"
                                                 :value="categoria.id">
                                                 {{ categoria.name }}
@@ -273,7 +238,7 @@ onMounted(() => {
                                     </div>
                                 </div>
                             </div>
-                            <div><label class="text-lg font-semibold text-gray-800 mb-4 dark:text-white">Imágenes del
+                            <div><label class="text-lg font-semibold text-gray-800 mb-4 ">Imágenes del
                                     Comercio</label>
                                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                                     <div v-for="(imagen, index) in formComercio.imagenes" :key="index"
@@ -297,15 +262,21 @@ onMounted(() => {
                                 <!-- Incluir "multiple" para varias imagenes -->
                                 <input type="file" @change="handleImageUpload" class="hidden" ref="fileInput"
                                     accept=".jpg,.jpeg,.png,.svg,.webp">
-                                <button type="button" @click="$refs.fileInput.click()"
-                                    class="mt-4 flex items-center px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-500 dark:text-white"><svg
-                                        xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                        stroke-linejoin="round" class="lucide lucide-image w-4 h-4 mr-2">
-                                        <rect width="18" height="18" x="3" y="3" rx="2" ry="2"></rect>
-                                        <circle cx="9" cy="9" r="2"></circle>
-                                        <path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"></path>
-                                    </svg>Añadir Imagen</button>
+                                <div class="w-full flex justify-between items-center">
+                                    <button type="button" style="font-size: 18px;" @click="$refs.fileInput.click()"
+                                        class="mt-4 flex items-center px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-500 "><svg
+                                            xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                            stroke-linecap="round" stroke-linejoin="round"
+                                            class="lucide lucide-image w-4 h-4 mr-2">
+                                            <rect width="18" height="18" x="3" y="3" rx="2" ry="2"></rect>
+                                            <circle cx="9" cy="9" r="2"></circle>
+                                            <path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"></path>
+                                        </svg>Añadir Imagen</button>
+                                    <ButtonComp
+                                        style="width: 150px; height: 50px; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 18px;"
+                                        @click="updateComercio">Guardar</ButtonComp>
+                                </div>
                             </div>
                         </div>
                     </div>

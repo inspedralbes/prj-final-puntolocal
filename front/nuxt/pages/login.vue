@@ -4,7 +4,7 @@
 
 <template>
     <div class="bg-[#276BF2] w-full h-screen flex flex-col">
-        <div class="flex flex-col items-center justify-center w-full h-[30%]"
+        <div class="flex flex-col items-center justify-center w-full h-[20%]"
             :class="{ 'move-up': moveUp, 'container-superior': moveUp, 'activated-sup': shown }">
             <h1 class="font-extrabold text-5xl text-white italic mt-[72vh]">{{ shown ? 'HolaBarri' : displayedText }}</h1>
             <p class="text-white text-xl tracking-wide subtitulo" :class="{ 'show-lema': showLema, 'activaded-subt': shown }">El teu barri a mà</p>
@@ -15,13 +15,13 @@
                 <h3 class="mt-5 text-center font-bold text-3xl">Benvingut</h3>
             </div>
             <div class="sm:mx-auto sm:w-full sm:max-w-md">
-                <div class="bg-white px-4 pt-8 sm:rounded-lg sm:px-10 sm:shadow rounded-md mb-8">
+                <div class="bg-white px-4 pt-8 sm:rounded-lg sm:px-10 rounded-md mb-8">
                     <form @submit.prevent="login" class="space-y-6">
                         <div>
                             <label for="email" class="block text-sm font-medium text-gray-700">Correu
                                 electrònic</label>
                             <div class="mt-1">
-                                <input id="email" v-model="formData.email" type="text" data-testid="username"
+                                <input id="email" name="email" v-model="formData.email" type="text" data-testid="username"
                                     required=""
                                     class="block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm">
                             </div>
@@ -63,7 +63,7 @@
                                 <span class="bg-white px-2 text-gray-500">O continua amb</span>
                             </div>
                         </div>
-                        <div class="mt-6 grid grid-cols-2 gap-3">
+                        <div class="mt-6">
                             <button @click="loginWithGoogle"
                                 class="inline-flex w-full items-center justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-500 shadow-sm hover:bg-gray-50 disabled:cursor-wait disabled:opacity-50">
                                 <span class="sr-only">Inicia sessió amb Google</span>
@@ -81,15 +81,6 @@
                                             d="m10.000263 8.268785l9.847767 0l0 3.496233l-9.847767 0z"
                                             fill-rule="evenodd"></path>
                                     </g>
-                                </svg>
-                            </button>
-                            <button
-                                class="inline-flex w-full justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-500 shadow-sm hover:bg-gray-50 disabled:cursor-wait disabled:opacity-50">
-                                <span class="sr-only">Inicia sessió amb Facebook</span>
-                                <svg class="h-6 w-6" fill="currentColor" xmlns="http://www.w3.org/2000/svg"
-                                    width="800px" height="800px" viewBox="2 2 28 28" version="1.1">
-                                    <path
-                                        d="M21.95 5.005l-3.306-.004c-3.206 0-5.277 2.124-5.277 5.415v2.495H10.05v4.515h3.317l-.004 9.575h4.641l.004-9.575h3.806l-.003-4.514h-3.803v-2.117c0-1.018.241-1.533 1.566-1.533l2.366-.001.01-4.256z" />
                                 </svg>
                             </button>
                         </div>
@@ -157,7 +148,6 @@ async function login() {
         authStore.setFavoritos(res);
         navigateTo('/');
     } else {
-        console.log('Hi ha hagut algun error, revisi les seves dades');
         errorMessage.value = 'Hi ha hagut algun error, revisi les seves dades';
     }
 }

@@ -19,20 +19,20 @@
 
             <div class="py-6 px-4 w-full max-w-md text-center">
                 <div class="space-y-4">
-                    <button class="w-full bg-[#447EF2] text-white py-2 rounded-md hover:bg-blue-50" @click="goToInfo">
+                    <button class="w-full bg-[#447EF2] text-white py-2 rounded-md" @click="goToInfo">
                         Información personal
                     </button>
 
-                    <button class="w-full bg-[#447EF2] text-white py-2 rounded-md hover:bg-blue-50" @click="goToEdit">
+                    <button class="w-full bg-[#447EF2] text-white py-2 rounded-md" @click="goToEdit">
                         Editar informació
                     </button>
 
-                    <button class="w-full bg-[#447EF2] text-white py-2 rounded-md hover:bg-blue-50"
+                    <button class="w-full bg-[#447EF2] text-white py-2 rounded-md"
                         @click="goToCompras">
                         Veure les meves compres
                     </button>
 
-                    <button class="w-full bg-[#447EF2] text-white py-2 rounded-md hover:bg-blue-50"
+                    <button class="w-full bg-[#447EF2] text-white py-2 rounded-md"
                         @click="goToComercio">
                         {{ hasComercio ? 'Panel de Control del Comercio' : 'Crear Comercio' }}
                     </button>

@@ -3,10 +3,10 @@
         <header class="sticky top-0 left-0 w-full bg-white z-10">
             <div class="mx-auto flex max-w-7xl items-center justify-between p-2 py-4 lg:px-8" aria-label="Global">
                 <div class="w-full mx-auto bg-white flex justify-around items-center">
-                    <input class="px-5 py-2 mx-5 w-full rounded-md border bg-gray-50 focus:outline-none focus:ring-0"
+                    <input class="px-5 py-2 mx-5 w-full rounded-full border bg-gray-50 focus:outline-none focus:ring-0"
                         type="text" name="search" id="search" placeholder="Buscar..." v-model="search"
                         @keyup.enter="goSearch()">
-                    <div class="rounded-full bg-[#447EF2] p-2 cursor-pointer" @click="redirectToMap">
+                    <div id="redirectToMap" class="rounded-full bg-[#447EF2] p-2 cursor-pointer" @click="redirectToMap">
                         <svg fill="#FFFFFF" width="1.2em" height="1.2em" version="1.1" id="Layer_1I"
                             xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
                             viewBox="0 0 512 512" xml:space="preserve" stroke="#FFFFFF">
