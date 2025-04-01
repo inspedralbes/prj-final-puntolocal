@@ -3,15 +3,15 @@ const http = require("http");
 const fetch = require("node-fetch");
 const { Server } = require("socket.io");
 
-const Host = "https://holabarri.cat/api";
-// const Host = "http://localhost:8001/api";
+// const Host = "https://holabarri.cat/api";
+const Host = "http://localhost:8001/api";
 
 const app = express();
 const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
-    origin: "https://holabarri.cat",
-    // origin: ["http://localhost", "http://localhost:8001", "http://localhost:3000", "http://localhost:8000"],
+    // origin: "https://holabarri.cat",
+    origin: ["http://localhost", "http://localhost:8001", "http://localhost:3000", "http://localhost:8000"],
     methods: ["GET", "POST"],
     allowedHeaders: ["Content-Type"],  // Los encabezados permitidos
   },
