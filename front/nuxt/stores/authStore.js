@@ -104,7 +104,7 @@ export const useAuthStore = defineStore('auth', {
         key: 'clientStorage',
         storage: typeof window !== 'undefined' ? localStorage : null,
       },
-    ],
+    ],  
   },
 });
 
