@@ -32,23 +32,10 @@ describe('Test de login', () => {
 
     it('S\'ha d\'iniciar sessió correctament', () => {
         cy.contains('Perfil').click();
-        cy.contains('Panel de Control del Comercio').click();
+        cy.contains('Editar informació').click();
 
-        cy.viewport(Cypress.config('viewportWidth'), Cypress.config('viewportHeight'));
-        if (Cypress.config('viewportWidth') < 1040) {
-            // VEURE PRODUCTES
-            cy.get('#toggleSidebarMobile').click();
-            cy.contains('Productes').click();
-            cy.contains('Llistat').click();
-            cy.get('#toggleSidebarMobile').click();
-        } else {
-            // VEURE PRODUCTES
-            cy.contains('Productes').click();
-            cy.contains('Llistat').click();
-        }
-
-        cy.contains('Eliminar item').first().click();
-        cy.contains('Si, estoy seguro').click();
-
+        cy.get('input[type=email]').clear();
+        cy.get('input[type=email]').type('arnau.baso@gmail.com');
+        cy.contains('Guardar Canvis').click();
     });
 });

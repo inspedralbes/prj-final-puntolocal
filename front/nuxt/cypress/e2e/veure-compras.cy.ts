@@ -32,23 +32,7 @@ describe('Test de login', () => {
 
     it('S\'ha d\'iniciar sessió correctament', () => {
         cy.contains('Perfil').click();
-        cy.contains('Panel de Control del Comercio').click();
-
-        cy.viewport(Cypress.config('viewportWidth'), Cypress.config('viewportHeight'));
-        if (Cypress.config('viewportWidth') < 1040) {
-            // VEURE PRODUCTES
-            cy.get('#toggleSidebarMobile').click();
-            cy.contains('Productes').click();
-            cy.contains('Llistat').click();
-            cy.get('#toggleSidebarMobile').click();
-        } else {
-            // VEURE PRODUCTES
-            cy.contains('Productes').click();
-            cy.contains('Llistat').click();
-        }
-
-        cy.contains('Editar').first().click();
-        cy.get('input[id=name]').type(`Producte modificat`);
-
+        cy.contains('Veure les meves compres').click();
+        cy.contains('Veure detalls').first().click();
     });
 });
