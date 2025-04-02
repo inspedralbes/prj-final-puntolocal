@@ -138,17 +138,17 @@ class ClienteController extends Controller
         ], 200);
     }
 
-    public function checkUser()
-    {
-        try {
-            $user = "Hola";
-            if (!$user) {
-                return response()->json(['success' => false, "message" => 'User not authenticated'], 200);
-            } else {
-                return response()->json(['success' => true, "message" => 'User authenticated'], 200);
-            }
-        } catch (\Throwable $th) {
-            return response()->json(['success' => false, "message" => `Error: $th`]);
-        }
-    }
+    // public function checkUser()
+    // {
+    //     try {
+    //         $user = "Hola";
+    //         if (!$user) {
+    //             return response()->json(['success' => false, "message" => 'User not authenticated'], 200);
+    //         } else {
+    //             return response()->json(['success' => true, "message" => 'User authenticated'], 200);
+    //         }
+    //     } catch (\Throwable $th) {
+    //         return response()->json(['success' => false, "message" => `Error: $th`]);
+    //     }
+    // }
 }
