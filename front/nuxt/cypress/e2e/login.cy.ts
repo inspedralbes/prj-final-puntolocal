@@ -1,6 +1,6 @@
 // NPX CYPRESS OPEN
 
-describe('Test de compra con sesión', () => {
+describe('Test de login', () => {
   beforeEach(() => {
     cy.visit('http://localhost:3000/login', {
       onBeforeLoad(win) {
