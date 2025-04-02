@@ -56,8 +56,8 @@ import Alert from "@/components/Alert.vue";
 const auth = useAuthStore();
 const route = useRoute();
 const router = useRouter();
-// const socket = io("http://localhost:8001");
-const socket = io("https://holabarri.cat")
+const socket = io("http://localhost:8001");
+// const socket = io("https://holabarri.cat")
 const showAlert = ref(false);
 const orden = ref(null);
 

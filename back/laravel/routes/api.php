@@ -19,7 +19,6 @@ Route::get('/user', function (Request $request) {
     return $request->user();
 })->middleware('auth:sanctum');
 
-
 // ==== AUTH ===================
 Route::prefix('auth')->group(function () {
     Route::post('register', [AuthController::class, 'registrar']);
@@ -51,7 +50,6 @@ Route::middleware('auth:sanctum')->prefix('comercios')->group(function () {
     Route::put('/{id}', [ComercioController::class, 'updateComercio']);
     Route::post('/{id}/imagenes', [ComercioController::class, 'updateComercioImagenes']);
     Route::delete('/{id}/imagenes', [ComercioController::class, 'deleteComercioImagen']);
-
 });
 
 Route::middleware('auth:sanctum')->prefix('favoritos')->group(function () {
