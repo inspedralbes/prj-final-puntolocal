@@ -186,7 +186,7 @@
 
         <div v-if="producto" id="footer" class="mb-5 fixed bottom-0 left-0 right-0 mx-auto">
             <div id="carrito" class="flex items-center justify-center w-full">
-                <button ref="buttonRef" @click="addToBasket(producto)"
+                <button ref="buttonRef" @click="addToBasket(producto)" id="afegir-a-cistella"
                     class="bg-[#276BF2] text-white text-xl font-semibold rounded-xl px-5 py-4 w-[90vw] transition-all duration-150 active:scale-95 relative overflow-hidden">
                     {{ textCistella }}
                     <div class="circle-animation" :class="{ 'active': clicked }"></div>

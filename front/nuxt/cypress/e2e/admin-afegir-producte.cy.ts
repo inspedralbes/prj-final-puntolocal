@@ -1,4 +1,5 @@
 // NPX CYPRESS OPEN
+import { vModelDynamic } from "vue";
 
 describe('Test de login', () => {
     beforeEach(() => {
@@ -30,13 +31,30 @@ describe('Test de login', () => {
     });
 
     it('S\'ha d\'iniciar sessió correctament', () => {
-        cy.visit('http://localhost:3000/producto/97',{
-        });
-        cy.get('#afegir-a-cistella').click();
-        cy.contains('Veure la cistella').click();
-        cy.contains('Checkout (1)').click();
-        cy.contains('Recollida').click();
-        cy.contains('Continuar').click();
-        cy.contains('Pagar').click();
+        cy.contains('Perfil').click();
+        cy.contains('Panel de Control del Comercio').click();
+
+        cy.viewport(Cypress.config('viewportWidth'), Cypress.config('viewportHeight'));
+        if (Cypress.config('viewportWidth') < 1040) {
+            // VEURE PRODUCTES
+            cy.get('#toggleSidebarMobile').click();
+            cy.contains('Productes').click();
+            cy.contains('Llistat').click();
+            cy.get('#toggleSidebarMobile').click();
+        } else {
+            // VEURE PRODUCTES
+            cy.contains('Productes').click();
+            cy.contains('Llistat').click();
+        }
+
+        cy.contains('Afegir nou producte').click();
+
+        cy.get('input[id=nom-producte]').type('Pantalo de proba');
+        cy.get('select[id=category]').select('Ropa Formal')
+        cy.get('input[id=precio]').type('99.99');
+        cy.get('input[id=stock]').type('10');
+        cy.get('textarea').type('Descripció del producte');
+        cy.get('input[type="file"]').selectFile('cypress/fixtures/nature.webp', { force: true });
+        cy.contains('Guardar').click();
     });
 });
