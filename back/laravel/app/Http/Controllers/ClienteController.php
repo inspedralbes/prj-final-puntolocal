@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Validator;
 
 class ClienteController extends Controller
 {
+    // CORROBORAR QUE SEA UN COMERCIO EL ÚNICO QUE PUEDE HACER ESTA PETICIÓN
     public function getCliente($id)
     {
         $cliente = Cliente::find($id);
@@ -36,11 +37,11 @@ class ClienteController extends Controller
             if ($validator->fails()) {
                 return response()->json(['message' => 'Datos incorrectos'], 400);
             }
-            $cliente->nombre = $request->nombre;
-            $cliente->apellido = $request->apellido;
+            $cliente->name = $request->nombre;
+            $cliente->apellidos = $request->apellido;
             $cliente->email = $request->email;
-            $cliente->telefono = $request->telefono;
-            $cliente->direccion = $request->direccion;
+            $cliente->phone = $request->telefono;
+            $cliente->street_address = $request->direccion;
             $cliente->password = Hash::make($request->password);
             $cliente->save();
             return response()->json($cliente, 200);
