@@ -63,5 +63,20 @@ describe('Test de admin', () => {
         // ELIMINAR EL PRODUCTE
         cy.contains('Eliminar item').first().click();
         cy.contains('Si, estoy seguro').click();
+
+        // MODIFICAR DADES DEL COMERÇ
+        if (Cypress.config('viewportWidth') < 1040) {
+            cy.get('#toggleSidebarMobile').click();
+            cy.contains('Configuración').click();
+            cy.contains('Dades del comerç').click();
+            cy.get('#toggleSidebarMobile').click();
+        } else {
+            cy.contains('Configuración').click();
+            cy.contains('Dades del comerç').click();
+        }
+
+        cy.wait(1500);
+        cy.get('#telefono').clear();
+        cy.get('#telefono').type('612976292');
     });
 });

@@ -163,7 +163,7 @@ onMounted(() => {
                                     v-model="formComercio.email"></div>
                             <div><label
                                     class="block text-sm font-medium text-gray-600 mb-1 sm:text-xl ">Teléfono</label><input
-                                    type="tel" name="phone"
+                                    type="tel" name="phone" id="telefono"
                                     class="w-full px-3 py-2 border border-black rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500  "
                                     v-model="formComercio.phone"></div>
                             <div><label
