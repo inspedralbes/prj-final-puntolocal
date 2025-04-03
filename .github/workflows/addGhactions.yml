@@ -81,7 +81,7 @@ jobs:
             ${{ secrets.CLOUDING_USER }}@${{ secrets.CLOUDING_HOST }}:/var/www/html
 
           # Laravel
-          rsync -avz --exclude='.env' -e "ssh -o StrictHostKeyChecking=no" \
+          rsync -avz -e "ssh -o StrictHostKeyChecking=no" \
             ./back/laravel/ \
             ${{ secrets.CLOUDING_USER }}@${{ secrets.CLOUDING_HOST }}:/var/www/backend/laravel
 
