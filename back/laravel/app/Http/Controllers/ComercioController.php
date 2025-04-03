@@ -47,7 +47,7 @@
                 $imagePath = str_replace('public/', '', $imagePath);
             }
 
-            $cliente = Comercio::create([
+            $comercio = Comercio::create([
                 'nombre' => $request->nombre,
                 'idUser' => $request->idUser,
                 'email' => $request->email,
@@ -67,20 +67,20 @@
                 'imagen' => $imagePath,
             ]);
 
-            Mail::send('emails.nuevo_comercio', ['comercio' => $cliente], function ($message) {
+            Mail::send('emails.nuevo_comercio', ['comercio' => $comercio], function ($message) {
                 $message->to(['a23arnbarsor@inspedralbes.cat', 'a23agunovnov@inspedralbes.cat'])
                     ->subject('Nuevo Comercio Registrado');
             });
 
             return response()->json([
-                'message' => 'Cliente creado exitosamente.',
-                'cliente' => $cliente
+                'message' => 'Comercio creado exitosamente.',
+                'comercio' => $comercio
             ], 201);
         }
 
         public function getComercios() {
             $comercios = Comercio::all();
-            return response()->json($comercios, 200);
+            return response()->json(['comercios' => $comercios], 200);
         }
 
 
@@ -105,7 +105,7 @@
                 return response()->json(['message' => 'No hay comercios cerca de ti.'], 200);
             }
     
-            return response()->json($comercios);
+            return response()->json(['comercios' => $comercios], 200);
         }
 
 
@@ -150,7 +150,7 @@
                 ->whereNotNull('ubicacion_verified_at')
                 ->get();
 
-            return response()->json($comercios);
+            return response()->json(['comercios' => $comercios], 200);
         }
 
         public function checkUserHasComercio($userId) {

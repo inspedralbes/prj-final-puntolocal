@@ -108,6 +108,8 @@ Route::middleware('auth:sanctum')->prefix('admin/comandes')->group(function () {
     Route::post('/{id}', [OrderComercioController::class, 'update']);
 });
 
+// CONTINUAR TESTING DESDE ESTE PUNTO HACIA ABAJO
+
 // ==== ESTATS ===================
 Route::prefix('admin/estats')->group(function () {
     // Obtener todos los estados que puede tener un pedido

@@ -103,8 +103,6 @@ class OrderComercioController extends Controller
 
                     $suborderCompleta = OrderComercio::where('id', $suborderCreated->id)->with('estatCompra')->first();
 
-                    // $suborder
-
                     $productos = [];
 
                     if (isset($suborder['productos']) && is_array($suborder['productos'])) {
@@ -160,7 +158,7 @@ class OrderComercioController extends Controller
     {
         try {
             $user = Auth::user();
-            $order = OrderComercio::with('estatCompra', 'order:id,tipo', 'order.tipoEnvio', 'productosCompra.producto')
+            $order = OrderComercio::with('estatCompra', 'order:id,tipo_envio,tipo_pago', 'order.tipoEnvio', 'productosCompra.producto')
                 ->whereHas('order', function ($query) use ($user) {
                     $query->where('cliente_id', $user->id);
                 })
