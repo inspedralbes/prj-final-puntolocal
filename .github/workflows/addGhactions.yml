@@ -41,7 +41,7 @@ jobs:
       - name: Instalar dependencias Laravel
         run: |
           composer install --no-dev --optimize-autoloader
-          cp .env.production .env
+          cp .env.example .env
           
           # Variables de ejemplo (ajusta según tu proyecto)
           sed -i "s|DB_DATABASE=.*|DB_DATABASE=${{ secrets.PROD_DB_NAME }}|" .env
