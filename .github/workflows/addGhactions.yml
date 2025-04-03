@@ -104,5 +104,15 @@ jobs:
             # Reiniciar servicios
             sudo systemctl restart php8.2-fpm
             sudo systemctl restart nginx
-            pm2 restart puntolocal-node --update-env
+            export PATH=$PATH:/usr/local/bin
+            if command -v pm2 &> /dev/null; then
+              cd /var/www/backend
+              pm2 delete puntolocal-node || true
+              pm2 start server.js --name puntolocal-node
+              pm2 save
+              pm2 startup
+            else
+              echo 'PM2 no está instalado'
+              exit 1
+            fi
           "
