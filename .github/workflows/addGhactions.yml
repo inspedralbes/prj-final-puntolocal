@@ -95,8 +95,10 @@ jobs:
         run: |
           ssh -i ~/.ssh/clouding_key ${{ secrets.CLOUDING_USER }}@${{ secrets.CLOUDING_HOST }} "
             # Permisos Laravel
-            chmod -R 775 /var/www/backend/laravel/storage
-            chmod -R 775 /var/www/backend/laravel/bootstrap/cache
+            sudo chown -R www-data:www-data /var/www/backend/laravel/storage
+            sudo chown -R www-data:www-data /var/www/backend/laravel/bootstrap/cache
+            sudo chmod -R 775 /var/www/backend/laravel/storage
+            sudo chmod -R 775 /var/www/backend/laravel/bootstrap/cache
 
             # Instalar dependencias Node.js
             cd /var/www/backend && npm ci --production
