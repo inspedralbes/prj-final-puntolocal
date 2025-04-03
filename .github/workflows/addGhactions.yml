@@ -102,7 +102,7 @@ jobs:
             cd /var/www/backend && npm ci --production
 
             # Reiniciar servicios
-            sudo systemctl restart php8.2-fpm
+            sudo systemctl restart php8.2
             sudo systemctl restart nginx
             export PATH=$PATH:/usr/local/bin
             if command -v pm2 &> /dev/null; then
