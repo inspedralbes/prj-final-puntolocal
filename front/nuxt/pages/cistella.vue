@@ -96,19 +96,16 @@ function togglePayment() {
 }
 
 const comprar = () => {
-    // console.log(groupedCesta.value);
     toggleCheckout();
 }
 
 function chooseShip(event) {
     shipOption.value = event.currentTarget.value;
-    // console.log("Opción:", shipOption.value);
     choosed.value = shipOption.value !== null;
 }
 
 function choosePayment(event) {
     payOption.value = event.target.value;
-    // console.log("Opción de pago:", payOption.value);
 }
 
 function toPay() {

@@ -571,7 +571,6 @@ import { nextTick } from 'vue';
 import { useRoute, useRouter } from "vue-router";
 
 const route = useRoute();
-console.log(route.path);
 const authStore = useAuthStore();
 const comercio = authStore.comercio;
 

@@ -58,26 +58,24 @@
 </template>
 
 <script setup>
-definePageMeta({
-    layout: 'footer-only'
-});
+    definePageMeta({
+        layout: 'footer-only'
+    });
 
-import { ref, onMounted } from 'vue';
-import { useAuthStore } from '../../stores/authStore';
+    import { ref, onMounted } from 'vue';
+    import { useAuthStore } from '../../stores/authStore';
 
-const { $communicationManager } = useNuxtApp();
+    const { $communicationManager } = useNuxtApp();
 
-const clientData = ref(null);
-const authStore = useAuthStore();
+    const clientData = ref(null);
+    const authStore = useAuthStore();
 
-onMounted(async () => {
-    const clienteId = authStore.user.id;
-    const token = authStore.token;
+    onMounted(async () => {
+        const clienteId = authStore.user.id;
+        const token = authStore.token;
 
-    if (clienteId && token) {
-        clientData.value = await $communicationManager.getDatosCliente(clienteId);
-    } else {
-        console.error("ID de cliente o token no disponibles");
-    }
-});
+        if (clienteId && token) {
+            clientData.value = await $communicationManager.getDatosCliente(clienteId);
+        }
+    });
 </script>

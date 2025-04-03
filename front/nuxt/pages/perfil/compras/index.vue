@@ -48,54 +48,54 @@
 </template>
 
 <script setup>
-definePageMeta({
-    layout: 'footer-only'
-});
+    definePageMeta({
+        layout: 'footer-only'
+    });
 
-import { ref, onMounted } from "vue";
-import { useRouter } from "vue-router";
-import Loading from "../../../components/loading.vue";
-import { useAuthStore } from "../../../stores/authStore";
+    import { ref, onMounted } from "vue";
+    import { useRouter } from "vue-router";
+    import Loading from "../../../components/loading.vue";
+    import { useAuthStore } from "../../../stores/authStore";
 
-const { $communicationManager } = useNuxtApp();
-const compras = ref([]);
-const loading = ref(true);
-const router = useRouter();
-const authStore = useAuthStore();
+    const { $communicationManager } = useNuxtApp();
+    const compras = ref([]);
+    const loading = ref(true);
+    const router = useRouter();
+    const authStore = useAuthStore();
 
-async function fetchCompras() {
-    loading.value = true;
-    const clienteId = authStore.user?.id;
+    async function fetchCompras() {
+        loading.value = true;
+        const clienteId = authStore.user?.id;
 
-    if (clienteId) {
-        try {
-            const response = await $communicationManager.comprasCliente(clienteId);
-            console.log(response);
+        if (clienteId) {
+            try {
+                const response = await $communicationManager.comprasCliente(clienteId);
+                console.log(response);
 
-            if (response) {
-                compras.value = response;
-            } else {
-                console.error("Error al obtenir les compres.");
+                if (response) {
+                    compras.value = response;
+                } else {
+                    console.error("Error al obtenir les compres.");
+                }
+            } catch (error) {
+                console.error("Error en fetchCompras:", error);
             }
-        } catch (error) {
-            console.error("Error en fetchCompras:", error);
         }
+        loading.value = false;
     }
-    loading.value = false;
-}
 
-function verDetalles(compraId) {
-    router.push(`/perfil/compras/${compraId}`);
-}
+    function verDetalles(compraId) {
+        router.push(`/perfil/compras/${compraId}`);
+    }
 
-onMounted(fetchCompras);
+    onMounted(fetchCompras);
 </script>
 
 <style scoped>
-#estat {
-    width: 15px;
-    height: 15px;
-    border-radius: 50%;
-    margin-left: 10px;
-}
+    #estat {
+        width: 15px;
+        height: 15px;
+        border-radius: 50%;
+        margin-left: 10px;
+    }
 </style>

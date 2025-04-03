@@ -70,7 +70,6 @@ onMounted(() => {
     });
 
   socket.on("nuevaOrdenRecibida", (newOrden) => {
-    // console.log(newOrden);
     orden.value = newOrden;
     showAlert.value = true;
   });

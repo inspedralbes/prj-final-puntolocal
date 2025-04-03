@@ -63,9 +63,8 @@ import { useAuthStore } from "../../../stores/authStore";
 
 const { $communicationManager } = useNuxtApp();
 const compras = ref({});
-const loading = ref(true);
-const router = useRouter();
 const route = useRoute();
+const loading = ref(true);
 const authStore = useAuthStore();
 
 async function fetchCompraDetalles() {
@@ -76,12 +75,14 @@ async function fetchCompraDetalles() {
     if (clienteId && compraId) {
         try {
             const response = await $communicationManager.detalleCompra(compraId);
-            console.log("Detalle de la compra:", response);
 
             if (response) {
                 compras.value = response;
             } else {
-                console.error("Error al obtenir els detalls de la compra.");
+                Swal.fire({
+                    icon: "error",
+                    text: "No s'ha pogut obtenir les compres realitzades",
+                });
             }
         } catch (error) {
             console.error("Error en fetchCompraDetalles:", error);

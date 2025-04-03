@@ -294,7 +294,6 @@ const buscarPorCodigoPostal = async () => {
         const data = await response.json();
 
         if (data.length > 0) {
-            console.log("ENTRA")
             const ubicacion = data[0];
             const lat = parseFloat(ubicacion.lat);
             const lon = parseFloat(ubicacion.lon);
