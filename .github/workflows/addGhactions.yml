@@ -95,11 +95,11 @@ jobs:
         run: |
           ssh -i ~/.ssh/clouding_key ${{ secrets.CLOUDING_USER }}@${{ secrets.CLOUDING_HOST }} "
             # Permisos Laravel
-            chmod -R 775 /var/www/puntolocal/backend/storage
-            chmod -R 775 /var/www/puntolocal/backend/bootstrap/cache
+            chmod -R 775 /var/www/backend/storage
+            chmod -R 775 /var/www/backend/bootstrap/cache
 
             # Instalar dependencias Node.js
-            cd /var/www/puntolocal/node-server && npm ci --production
+            cd /var/www/backend && npm ci --production
 
             # Reiniciar servicios
             sudo systemctl restart php8.2-fpm
