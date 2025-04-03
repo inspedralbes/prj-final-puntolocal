@@ -78,17 +78,17 @@ jobs:
           # Frontend
           rsync -avz --delete -e "ssh -o StrictHostKeyChecking=no" \
             ./front/nuxt/.output/public/ \
-            ${{ secrets.CLOUDING_USER }}@${{ secrets.CLOUDING_HOST }}:/var/www/puntolocal/frontend
+            ${{ secrets.CLOUDING_USER }}@${{ secrets.CLOUDING_HOST }}:/var/www/html
 
           # Laravel
           rsync -avz --exclude='.env' -e "ssh -o StrictHostKeyChecking=no" \
             ./back/laravel/ \
-            ${{ secrets.CLOUDING_USER }}@${{ secrets.CLOUDING_HOST }}:/var/www/puntolocal/backend/laravel
+            ${{ secrets.CLOUDING_USER }}@${{ secrets.CLOUDING_HOST }}:/var/www/backend/laravel
 
           # Node.js
           rsync -avz -e "ssh -o StrictHostKeyChecking=no" \
             ./back/server.js ./back/package*.json \
-            ${{ secrets.CLOUDING_USER }}@${{ secrets.CLOUDING_HOST }}:/var/www/puntolocal/backend
+            ${{ secrets.CLOUDING_USER }}@${{ secrets.CLOUDING_HOST }}:/var/www/backend
 
       # Configuración en el servidor
       - name: Ejecutar comandos post-despliegue
