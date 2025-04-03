@@ -83,12 +83,12 @@ jobs:
           # Laravel
           rsync -avz --exclude='.env' -e "ssh -o StrictHostKeyChecking=no" \
             ./back/laravel/ \
-            ${{ secrets.CLOUDING_USER }}@${{ secrets.CLOUDING_HOST }}:/var/www/puntolocal/backend
+            ${{ secrets.CLOUDING_USER }}@${{ secrets.CLOUDING_HOST }}:/var/www/puntolocal/backend/laravel
 
           # Node.js
           rsync -avz -e "ssh -o StrictHostKeyChecking=no" \
             ./back/server.js ./back/package*.json \
-            ${{ secrets.CLOUDING_USER }}@${{ secrets.CLOUDING_HOST }}:/var/www/puntolocal/node-server
+            ${{ secrets.CLOUDING_USER }}@${{ secrets.CLOUDING_HOST }}:/var/www/puntolocal/backend
 
       # Configuración en el servidor
       - name: Ejecutar comandos post-despliegue
