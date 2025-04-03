@@ -52,12 +52,13 @@ import { useAuthStore } from '../../stores/authStore';
 import { useRoute, useRouter } from "vue-router";
 import { io } from "socket.io-client";
 import Alert from "@/components/Alert.vue";
+import { useRuntimeConfig } from "#app";
 
+const config = useRuntimeConfig();
 const auth = useAuthStore();
 const route = useRoute();
 const router = useRouter();
-const socket = io("http://localhost:8001");
-// const socket = io("https://holabarri.cat")
+const socket = io(config.public.baseNodeUrl);
 const showAlert = ref(false);
 const orden = ref(null);
 

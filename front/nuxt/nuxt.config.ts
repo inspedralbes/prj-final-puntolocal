@@ -20,7 +20,9 @@ export default defineNuxtConfig({
 
   runtimeConfig: {
     public: {
-      apiBaseUrl: process.env.API_BASE_URL,
+      apiBaseUrl: process.env.NUXT_PUBLIC_BASE_URL,
+      apiBaseLaravelUrl: process.env.NUXT_PUBLIC_API_LARAVEL_URL,
+      baseNodeUrl: process.env.NUXT_PUBLIC_NODE_URL,
     },
   },
 });

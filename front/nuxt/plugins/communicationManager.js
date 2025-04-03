@@ -1,15 +1,17 @@
-import { useAuthStore } from '@/stores/authStore';
 import { createPinia, setActivePinia } from 'pinia';
 import BusquedaGeneral from '~/pages/busquedaGeneral.vue';
 
 const pinia = createPinia();
 setActivePinia(pinia);
-// const Host = 'https://holabarri.cat/api';
-const Host = 'http://localhost:8000/api';
 const auth = useAuthStore();
 const comercio = auth.comercio;
+import { useRuntimeConfig } from "#app";
 
-export default defineNuxtPlugin(nuxtApp => {
+export default defineNuxtPlugin((nuxtApp) => {
+
+  const config = useRuntimeConfig();
+  const Host = config.public.apiBaseLaravelUrl;
+  console.log(Host);
   const communicationManager = {
     get authStore() {
       return useAuthStore();
