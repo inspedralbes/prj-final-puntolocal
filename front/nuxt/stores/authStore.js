@@ -1,4 +1,5 @@
 import { defineStore } from 'pinia';
+import { useRuntimeConfig } from "#app";
 
 export const useAuthStore = defineStore('auth', {
   state: () => ({
@@ -55,8 +56,11 @@ export const useAuthStore = defineStore('auth', {
     async checkAuth() {
       if (!this.token) return false;
 
+      const config = useRuntimeConfig();
+      const Host = config.public.apiBaseLaravelUrl;
+
       try {
-        const user = await $fetch("http://localhost:8000/api/cliente/check-auth", {
+        const user = await $fetch(`${Host}/cliente/check-auth`, {
           headers: { Authorization: `Bearer ${this.token}` }
         });
 
