@@ -129,8 +129,8 @@ class OrderController extends Controller {
     public function comprasCliente($clienteId)
     {
         try {
-            $compras = Order::with(['tipoEnvio'])->where('cliente_id', $clienteId)->orderBy('fecha', 'desc')->get();
-            $compras->load('productosCompra.producto');
+            $compras = Order::with(['tipoEnvio'])->where('cliente_id', $clienteId)->orderBy('created_at', 'desc')->get();
+            // $compras->load('productosCompra.producto');
 
             if ($compras->isEmpty()) {
                 return response()->json(['message' => 'No se encontraron compras para este cliente.'], 404);
@@ -154,7 +154,7 @@ class OrderController extends Controller {
     public function detalleCompra($id)
     {
         try {
-            $compra = Order::with(['estatCompra', 'tipoEnvio', 'productosCompra.producto'])
+            $compra = Order::with(['estatCompra', 'tipoEnvio'])
                 ->where('id', $id)
                 ->first();
 

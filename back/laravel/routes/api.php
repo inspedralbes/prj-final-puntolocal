@@ -29,7 +29,7 @@ Route::prefix('auth')->group(function () {
 
 // ==== CLIENTES ===================
 Route::middleware('auth:sanctum')->prefix('cliente')->group(function () {
-    Route::get('/check-auth', [ClienteController::class, 'checkUser']);
+    // Route::get('/check-auth', [ClienteController::class, 'checkUser']);
     Route::get('/{id}', [ClienteController::class, 'getCliente']);
     Route::put('/{id}/datos-personales', [ClienteController::class, 'updateDatosPersonales']);
     Route::put('/{id}/datos-facturacion', [ClienteController::class, 'updateDatosFacturacion']);
@@ -108,6 +108,7 @@ Route::middleware('auth:sanctum')->prefix('admin/comandes')->group(function () {
     Route::post('/{id}', [OrderComercioController::class, 'update']);
 });
 
+
 // ==== ESTATS ===================
 Route::prefix('admin/estats')->group(function () {
     // Obtener todos los estados que puede tener un pedido
@@ -162,7 +163,6 @@ Route::prefix('cercanos')->group(function () {
 });
 
 
-
 Route::middleware('auth:sanctum')->prefix('producto')->group(function () {
     // Crear un nuevo producto
     Route::post('/', [ProductoController::class, 'store']);
@@ -176,12 +176,6 @@ Route::middleware('auth:sanctum')->prefix('producto')->group(function () {
     // Eliminar un producto específico
     Route::delete('{id}', [ProductoController::class, 'destroy']);
 
-});
-
-// ==== SUBCATEGORIAS ===============
-Route::prefix('subcategorias')->group(function () {
-    // Ver subcategorias
-    Route::get('/{categoria_id}', [SubcategoriaController::class, 'show']);
 });
 
 // ==== CLIENTES ====================

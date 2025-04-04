@@ -19,9 +19,6 @@
             return response()->json($comerciosFavoritos);
         }        
         
-        
-        
-
         public function create() { }
 
         public function afegirLikeComerci(Request $request, $comercioId) {
