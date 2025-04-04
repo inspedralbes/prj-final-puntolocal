@@ -14,7 +14,7 @@
             $categoria = Categoria::with('comercios')->find($categoriaId);
 
             if(!$categoria) {
-                return response() -> json(['message' => 'No s\'han trobat categorias']);
+                return response() -> json(['message' => 'No s\'han trobat categorias'], 404);
             }
 
             return response()->json($categoria->comercios,200);

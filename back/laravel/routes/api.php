@@ -108,7 +108,6 @@ Route::middleware('auth:sanctum')->prefix('admin/comandes')->group(function () {
     Route::post('/{id}', [OrderComercioController::class, 'update']);
 });
 
-// CONTINUAR TESTING DESDE ESTE PUNTO HACIA ABAJO
 
 // ==== ESTATS ===================
 Route::prefix('admin/estats')->group(function () {
@@ -164,7 +163,6 @@ Route::prefix('cercanos')->group(function () {
 });
 
 
-
 Route::middleware('auth:sanctum')->prefix('producto')->group(function () {
     // Crear un nuevo producto
     Route::post('/', [ProductoController::class, 'store']);
@@ -178,12 +176,6 @@ Route::middleware('auth:sanctum')->prefix('producto')->group(function () {
     // Eliminar un producto específico
     Route::delete('{id}', [ProductoController::class, 'destroy']);
 
-});
-
-// ==== SUBCATEGORIAS ===============
-Route::prefix('subcategorias')->group(function () {
-    // Ver subcategorias
-    Route::get('/{categoria_id}', [SubcategoriaController::class, 'show']);
 });
 
 // ==== CLIENTES ====================
