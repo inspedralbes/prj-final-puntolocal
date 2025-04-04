@@ -28,9 +28,6 @@ class EstatCompraTest extends TestCase
         // Hacer la solicitud GET
         $response = $this->getJson('/api/admin/estats');
 
-        // Mostrar la respuesta para depurar
-        $response->dump();
-
         // Asegúrate de que la respuesta tenga el código de estado correcto
         $response->assertStatus(200);
 

@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Models\Categoria;
 use App\Models\Cliente;
 use App\Models\Comercio;
 use App\Models\Producto;
@@ -92,11 +93,13 @@ class ClienteTest extends TestCase
             'name' => 'CategoriaTest',
             'imagenes' => 'ImagenTest'
         ]);
+        $categoria = Categoria::where('name', 'CategoriaTest')->first();
 
         DB::table('subcategorias')->insert([
-            'categoria_id' => 1,
+            'categoria_id' => $categoria->id,
             'name' => 'SubcategoriaTest'
         ]);
+        $subcategoria = DB::table('subcategorias')->where('name', 'SubcategoriaTest')->first();
 
         $comercio = Comercio::create([
             'nombre' => 'ComercioTest',
@@ -106,7 +109,7 @@ class ClienteTest extends TestCase
             'ciudad' => 'CiudadTest',
             'provincia' => 'ProvinciaTest',
             'codigo_postal' => 00000,
-            'categoria_id' => 1,
+            'categoria_id' => $categoria->id,
             'descripcion' => 'DescripcionTest',
             'gestion_stock' => 0,
             'puntaje_medio' => 3
@@ -115,7 +118,7 @@ class ClienteTest extends TestCase
         $producto = Producto::create([
             "nombre" => 'ProductoTest',
             "descripcion" => 'DescripcionTest',
-            "subcategoria_id" => 1,
+            "subcategoria_id" => $subcategoria->id,
             "comercio_id" => $comercio->id,
             "precio" => 10,
             "stock" => 10,

@@ -13,6 +13,8 @@ use Tests\TestCase;
 
 class FavoritosTest extends TestCase
 {
+
+    use RefreshDatabase;
     private $cliente;
     private $token;
     private $comercio;

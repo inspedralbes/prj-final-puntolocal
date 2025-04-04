@@ -97,8 +97,6 @@ class ClienteComprasTest extends TestCase
             'Authorization' => "Bearer {$this->token}",
         ]);
 
-        $response->dump();
-
         $response->assertStatus(200)
             ->assertJsonFragment([
                 'total' => 100.00,
@@ -113,8 +111,6 @@ class ClienteComprasTest extends TestCase
         $response = $this->getJson("/api/clientes/compras/{$this->order->id}", [
             'Authorization' => "Bearer {$this->token}",
         ]);
-
-        $response->dump();
 
         $response->assertStatus(200)
             ->assertJsonFragment([

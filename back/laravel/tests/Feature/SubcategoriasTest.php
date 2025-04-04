@@ -42,8 +42,6 @@ class SubcategoriasTest extends TestCase
     {
         $response = $this->getJson("/api/subcategorias/{$this->categoria->id}");
 
-        $response->dump();
-
         $response->assertStatus(200)
             ->assertJsonFragment([
                 'name' => 'SubcategoriaTest',

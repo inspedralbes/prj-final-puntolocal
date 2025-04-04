@@ -62,9 +62,6 @@ class CategoriasTest extends TestCase
         // Hacer la solicitud GET
         $response = $this->getJson('/api/categorias');
 
-        // Mostrar la respuesta para depurar
-        $response->dump();
-
         // Asegúrate de que la respuesta tenga el código de estado correcto
         $response->assertStatus(200);
 
@@ -83,9 +80,6 @@ class CategoriasTest extends TestCase
         // Hacer la solicitud GET para obtener los comercios de la categoría
         $response = $this->getJson('/api/categorias/' . 1 . '/comercios');
 
-        // Mostrar la respuesta para depurar
-        $response->dump();
-
         // Asegúrate de que la respuesta tenga el código de estado correcto
         $response->assertStatus(200);
     }
@@ -94,9 +88,6 @@ class CategoriasTest extends TestCase
     {
         // Hacer la solicitud GET para obtener los comercios de una categoría inexistente
         $response = $this->getJson('/api/categorias/99999/comercios');
-
-        // Mostrar la respuesta para depurar
-        $response->dump();
 
         // Asegúrate de que la respuesta tenga el código de estado correcto
         $response->assertStatus(404);
