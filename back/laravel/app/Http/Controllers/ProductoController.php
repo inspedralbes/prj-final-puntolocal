@@ -59,6 +59,10 @@ class ProductoController extends Controller
         return response()->json($productos);
     }
 
+    public function createExcel(Request $request) {
+        
+    }
+
     public function store(Request $request)
     {
         $user = Auth::user();
