@@ -57,13 +57,24 @@
                             </div>
                         </div>
                     </div>
-                    <button id="createProductButton" @click="toggleCard('crear')"
-                        class="inline-flex items-center bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-                        type="button" data-drawer-target="drawer-create-product-default"
-                        data-drawer-show="drawer-create-product-default" aria-controls="drawer-create-product-default"
-                        data-drawer-placement="right">
-                        Afegir nou producte
-                    </button>
+                    <div class="flex">
+                        <div class=" inline-flex items-center bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-2 cursor-pointer rounded">
+                            <label class="curosr-pointer">
+                                Importar productes
+                                <input type="file" class="hidden" name="archivo" id="archivo"
+                                    onchange="mostrarNombre(this)">
+                            </label>
+                            <div id="nombre-archivo" class="text-sm text-gray-600"></div>
+                        </div>
+
+                        <button id="createProductButton" @click="toggleCard('crear')"
+                            class="ml-4 inline-flex items-center bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                            type="button" data-drawer-target="drawer-create-product-default"
+                            data-drawer-show="drawer-create-product-default"
+                            aria-controls="drawer-create-product-default" data-drawer-placement="right">
+                            Afegir nou producte
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -333,7 +344,7 @@
                     </div>
                     <div class="p-6 space-y-6">
                         <form @submit.prevent="crearProducto">
-                            <div class="grid grid-cols-6 gap-6">
+                            <div class="grid grid-cols-6    -6">
                                 <div class="col-span-6 sm:col-span-3">
                                     <label for="nom-producte" class="block mb-2 text-sm font-medium text-gray-900 ">Nom
                                         del
