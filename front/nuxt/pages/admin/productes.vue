@@ -57,23 +57,51 @@
                             </div>
                         </div>
                     </div>
-                    <div class="flex">
-                        <div class=" inline-flex items-center bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-2 cursor-pointer rounded">
-                            <label class="curosr-pointer">
-                                Importar productes
-                                <input type="file" class="hidden" name="archivo" id="archivo"
-                                    onchange="mostrarNombre(this)">
-                            </label>
-                            <div id="nombre-archivo" class="text-sm text-gray-600"></div>
+
+                    <div class="flex gap-4">
+                        <div class="relative group">
+                            <button
+                                onclick="window.open('https:\\docs.google.com/spreadsheets/d/180jUM-AH0wEwzSJE3yC9ro0rigZ-KBB010MU5fXXtKg/copy', '_blank')"
+                                class="inline-flex items-center bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-2 px-4 rounded">
+                                <img src="../../assets/template.svg" class="h-[30px] w-[30px]"
+                                    alt="Plantilla per productes nous">
+                            </button>
+
+
+                            <div
+                                class="absolute z-10 bottom-full left-1/2 transform -translate-x-1/2 mb-2 hidden group-hover:block bg-yellow-400 text-yellow-900 text-sm font-medium rounded py-1 px-3 whitespace-nowrap shadow-lg max-w-xs truncate">
+                                Plantilla per productes nous
+                            </div>
                         </div>
 
-                        <button id="createProductButton" @click="toggleCard('crear')"
-                            class="ml-4 inline-flex items-center bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-                            type="button" data-drawer-target="drawer-create-product-default"
-                            data-drawer-show="drawer-create-product-default"
-                            aria-controls="drawer-create-product-default" data-drawer-placement="right">
-                            Afegir nou producte
-                        </button>
+                        <div class="relative group">
+                            <div
+                                class="inline-flex items-center bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-2 cursor-pointer rounded">
+                                <img src="../../assets/import.svg" class="h-[30px] w-[30px]"
+                                    alt="Importar plantilla de productes">
+                                <label class="cursor-pointer">
+                                    <input type="file" class="hidden" name="archivo" id="archivo"
+                                        onchange="mostrarNombre(this)">
+                                </label>
+                            </div>
+                            <div
+                                class="absolute z-10 bottom-full left-1/2 transform -translate-x-1/2 mb-2 hidden group-hover:block bg-green-400 text-green-900 text-sm font-medium rounded py-1 px-3 whitespace-nowrap shadow-lg max-w-xs truncate">
+                                Importar plantilla de productes
+                            </div>
+                        </div>
+                        <div class="relative group">
+                            <button id="createProductButton" @click="toggleCard('crear')"
+                                class="gap-2 inline-flex items-center bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                                type="button" data-drawer-target="drawer-create-product-default"
+                                aria-controls="drawer-create-product-default">
+                                <img src="../../assets/plus-circle.svg" class="h-[30px] w-[30px]"
+                                    alt="Afegir nou producte">
+                            </button>
+                            <div
+                                class="absolute z-10 top-full left-1/2 transform -translate-x-1/2 mt-2 hidden group-hover:block bg-blue-400 text-blue-900 text-sm font-medium rounded py-1 px-3 whitespace-nowrap shadow-lg max-w-xs truncate">
+                                Nou producte
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
