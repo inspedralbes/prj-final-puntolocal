@@ -1,6 +1,7 @@
 import { io } from "socket.io-client";
+import { useRuntimeConfig } from "#app";
 
-const socket = io("http://localhost:8001");
-// const socket = io("https://holabarri.cat"); 
+const config = useRuntimeConfig();
+const socket = io(config.public.apiBaseLaravelUrl);
 
 export default socket;

@@ -1,6 +1,6 @@
-# PuntoLocal
+# HolaBarri
 
-Amb **PuntoLocal** proposem una aplicació que centralitza botigues locals, permetent als usuaris cercar productes, fer compres en línia i poder rebre els productes a casa. Els comerços poden gestionar inventaris, promocions i fidelitzar clients amb descomptes i punts, fomentant una economia circular i la digitalització del comerç local.
+Amb **HolaBarri** proposem una aplicació que centralitza botigues locals, permetent als usuaris cercar productes, fer compres en línia i poder rebre els productes a casa. Els comerços poden gestionar inventaris, promocions i fidelitzar clients amb descomptes i punts, fomentant una economia circular i la digitalització del comerç local.
 
 ## 🧑‍🤝‍🧑 Integrants
 

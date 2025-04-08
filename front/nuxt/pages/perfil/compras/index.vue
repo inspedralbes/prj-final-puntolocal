@@ -67,10 +67,9 @@
         loading.value = true;
         const clienteId = authStore.user?.id;
 
-        if (clienteId) {
-            try {
-                const response = await $communicationManager.comprasCliente(clienteId);
-                console.log(response);
+    if (clienteId) {
+        try {
+            const response = await $communicationManager.comprasCliente(clienteId);
 
                 if (response) {
                     compras.value = response;

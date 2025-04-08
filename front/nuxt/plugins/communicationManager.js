@@ -1,15 +1,16 @@
-import { useAuthStore } from '@/stores/authStore';
 import { createPinia, setActivePinia } from 'pinia';
 import BusquedaGeneral from '~/pages/busquedaGeneral.vue';
 
 const pinia = createPinia();
 setActivePinia(pinia);
-// const Host = 'https://holabarri.cat/api';
-const Host = 'http://localhost:8000/api';
 const auth = useAuthStore();
 const comercio = auth.comercio;
+import { useRuntimeConfig } from "#app";
 
-export default defineNuxtPlugin(nuxtApp => {
+export default defineNuxtPlugin((nuxtApp) => {
+
+  const config = useRuntimeConfig();
+  const Host = config.public.apiBaseLaravelUrl;
   const communicationManager = {
     get authStore() {
       return useAuthStore();
@@ -836,9 +837,6 @@ export default defineNuxtPlugin(nuxtApp => {
         console.log(key, value); // Imprime el nombre del campo y su valor
       }
       try {
-        // const id = formData.get('id');
-        console.log(id);
-
         const response = await fetch(`${Host}/producto/${id}`, {
           method: 'POST',
           headers: {
