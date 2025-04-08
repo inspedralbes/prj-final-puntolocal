@@ -1,17 +1,17 @@
-const express = require("express");
-const http = require("http");
-const fetch = require("node-fetch");
-const { Server } = require("socket.io");
+import 'dotenv/config';
+import fetch from 'node-fetch';
+import express from "express";
+import http from "http";
+import { Server } from "socket.io";
 
-// const Host = "https://holabarri.cat/api";
-const Host = "http://localhost:8001/api";
+
+const Host = process.env.API_BASE_URL;
 
 const app = express();
 const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
-    // origin: "https://holabarri.cat",
-    origin: ["http://localhost", "http://localhost:8001", "http://localhost:3000", "http://localhost:8000"],
+    origin: process.env.CORS_ORIGINS.split(','),
     methods: ["GET", "POST"],
     allowedHeaders: ["Content-Type"],  // Los encabezados permitidos
   },
@@ -84,6 +84,6 @@ io.on("connection", (socket) => {
 });
 
 // Asegurarse de que el servidor escucha en todas las interfaces
-server.listen(3000, "0.0.0.0", () => {
-  console.log("Servidor de sockets corriendo en el puerto 3000");
+server.listen(process.env.PORT , "0.0.0.0", () => {
+  console.log("Servidor de sockets corriendo en el puerto", process.env.PORT);
 });

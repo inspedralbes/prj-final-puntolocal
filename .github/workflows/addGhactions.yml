@@ -94,6 +94,12 @@ jobs:
       - name: Ejecutar comandos post-despliegue
         run: |
           ssh -i ~/.ssh/clouding_key ${{ secrets.CLOUDING_USER }}@${{ secrets.CLOUDING_HOST }} "
+            # Crear .env para Node.js
+            echo 'NODE_ENV=production
+            API_BASE_URL=${{ secrets.PROD_API_LARAVEL_URL }}
+            CORS_ORIGINS=${{ secrets.PROD_BASE_URL }}
+            PORT=3000' > /var/www/backend/.env
+            
             # Permisos Laravel
             sudo chown -R www-data:www-data /var/www/backend/laravel/storage
             sudo chown -R www-data:www-data /var/www/backend/laravel/bootstrap/cache
