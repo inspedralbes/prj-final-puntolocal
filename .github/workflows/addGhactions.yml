@@ -102,9 +102,9 @@ jobs:
             
             # Permisos Laravel
             sudo chown -R www-data:www-data /var/www/backend/laravel/storage
-            sudo chown -R www-data:www-data /var/www/backend/laravel/bootstrap/cache
+            # sudo chown -R www-data:www-data /var/www/backend/laravel/bootstrap/cache
             sudo chmod -R 775 /var/www/backend/laravel/storage
-            sudo chmod -R 775 /var/www/backend/laravel/bootstrap/cache
+            # sudo chmod -R 775 /var/www/backend/laravel/bootstrap/cache
 
             # Instalar dependencias Node.js
             cd /var/www/backend && npm ci --production
@@ -112,15 +112,7 @@ jobs:
             # Reiniciar servicios
             sudo systemctl restart php8.2
             sudo systemctl restart nginx
-            export PATH=$PATH:/usr/local/bin
-            if command -v pm2 &> /dev/null; then
-              cd /var/www/backend
-              pm2 delete puntolocal-node || true
-              pm2 start server.js --name puntolocal-node
-              pm2 save
-              pm2 startup
-            else
-              echo 'PM2 no está instalado'
-              exit 1
-            fi
+            pm2 delete puntolocal-node || true
+            pm2 start server.js --name puntolocal-node
+            pm2 save
           "
