@@ -74,21 +74,15 @@
                             </div>
                         </div>
 
-                        <div class="relative group">
-                            <div
-                                class="inline-flex items-center bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-2 cursor-pointer rounded">
-                                <img src="../../assets/import.svg" class="h-[30px] w-[30px]"
-                                    alt="Importar plantilla de productes">
-                                <label class="cursor-pointer">
-                                    <input type="file" class="hidden" name="archivo" id="archivo"
-                                        onchange="mostrarNombre(this)">
-                                </label>
-                            </div>
-                            <div
-                                class="absolute z-10 bottom-full left-1/2 transform -translate-x-1/2 mb-2 hidden group-hover:block bg-green-400 text-green-900 text-sm font-medium rounded py-1 px-3 whitespace-nowrap shadow-lg max-w-xs truncate">
-                                Importar plantilla de productes
-                            </div>
-                        </div>
+                        <!-- Por esto (mueve @change al input) -->
+                        <label
+                            class="inline-flex items-center bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-2 cursor-pointer rounded">
+                            <img src="../../assets/import.svg" class="h-[30px] w-[30px]"
+                                alt="Importar plantilla de productes">
+                            <span class="sr-only">Importar plantilla</span>
+                            <input type="file" class="hidden" name="archivo" id="archivo" accept=".csv,.text/csv"
+                                @change="handleCSVUpload">
+                        </label>
                         <div class="relative group">
                             <button id="createProductButton" @click="toggleCard('crear')"
                                 class="gap-2 inline-flex items-center bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
@@ -503,6 +497,107 @@ const productoNuevo = ref({
     'stock': '',
     'imagen': null,
 });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+function handleCSVUpload(event) {
+    const file = event.target.files[0];
+    if (!file) {
+        console.error('No se seleccionó ningún archivo');
+        return;
+    }
+
+    // Validar tipo de archivo
+    if (!file.name.endsWith('.csv') && file.type !== 'text/csv') {
+        console.error('El archivo no es un CSV válido');
+        return;
+    }
+
+    const reader = new FileReader();
+
+    reader.onload = function (e) {
+        try {
+            const content = e.target.result;
+            const lines = content.split(/\r\n|\n/);
+
+            console.log('Contenido completo del CSV:', lines);
+
+            // Procesar desde la línea 4 (índice 3)
+            const dataFromLine4 = lines.slice(3).filter(line => line.trim() !== '');
+
+            console.log("Datos procesados desde la línea 4:");
+            dataFromLine4.forEach((line, index) => {
+                console.log(`Línea ${index + 4}:`, line);
+                // Usar el parser personalizado
+                const columns = parseCSVLine(line);
+                console.log('Columnas:', columns);
+            });
+        } catch (error) {
+            console.error('Error al procesar el CSV:', error);
+        }
+    };
+
+    reader.onerror = function () {
+        console.error('Error al leer el archivo');
+    };
+
+    reader.readAsText(file);
+    event.target.value = '';
+}
+
+function parseCSVLine(line) {
+    const result = [];
+    let current = '';
+    let insideQuotes = false;
+
+    for (let i = 0; i < line.length; i++) {
+        const char = line[i];
+
+        if (char === '"') {
+            insideQuotes = !insideQuotes;
+        } else if (char === ',' && !insideQuotes) {
+            result.push(current.trim());
+            current = '';
+        } else {
+            current += char;
+        }
+    }
+    result.push(current.trim());
+    return result;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 const id_producto_eliminar = ref();
 
