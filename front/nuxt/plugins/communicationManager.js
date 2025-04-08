@@ -11,7 +11,6 @@ export default defineNuxtPlugin((nuxtApp) => {
 
   const config = useRuntimeConfig();
   const Host = config.public.apiBaseLaravelUrl;
-  console.log(Host);
   const communicationManager = {
     get authStore() {
       return useAuthStore();
@@ -838,9 +837,6 @@ export default defineNuxtPlugin((nuxtApp) => {
         console.log(key, value); // Imprime el nombre del campo y su valor
       }
       try {
-        // const id = formData.get('id');
-        console.log(id);
-
         const response = await fetch(`${Host}/producto/${id}`, {
           method: 'POST',
           headers: {

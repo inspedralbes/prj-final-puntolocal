@@ -70,7 +70,6 @@ async function fetchCompras() {
     if (clienteId) {
         try {
             const response = await $communicationManager.comprasCliente(clienteId);
-            console.log(response);
 
             if (response) {
                 compras.value = response;
