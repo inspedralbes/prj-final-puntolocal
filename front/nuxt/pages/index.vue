@@ -166,7 +166,7 @@ async function fetchComerciosCercanos(lat, lon) {
         console.log(response)
         comercios.value = response;
 
-        const idsComercios = response.map(comercio => comercio.id);
+        const idsComercios = response.comercios.map(comercio => comercio.id);
         const idsComerciosString = idsComercios.join(',');
 
         getProductosCercanos(idsComerciosString);
