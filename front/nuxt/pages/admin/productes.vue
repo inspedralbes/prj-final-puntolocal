@@ -506,13 +506,7 @@ const productoNuevo = ref({
 
 
 
-
-
-
-
-
-
-
+// const x = await $communicationManager.createProductoExcel(data);
 function handleCSVUpload(event) {
     const file = event.target.files[0];
     if (!file) {
@@ -520,9 +514,8 @@ function handleCSVUpload(event) {
         return;
     }
 
-    // Validar tipo de archivo
     if (!file.name.endsWith('.csv') && file.type !== 'text/csv') {
-        console.error('El archivo no es un CSV válido');
+        alert('L\'arxiu ha de ser .csv');
         return;
     }
 
@@ -534,14 +527,11 @@ function handleCSVUpload(event) {
             const lines = content.split(/\r\n|\n/);
 
             console.log('Contenido completo del CSV:', lines);
-
-            // Procesar desde la línea 4 (índice 3)
             const dataFromLine4 = lines.slice(3).filter(line => line.trim() !== '');
 
             console.log("Datos procesados desde la línea 4:");
             dataFromLine4.forEach((line, index) => {
                 console.log(`Línea ${index + 4}:`, line);
-                // Usar el parser personalizado
                 const columns = parseCSVLine(line);
                 console.log('Columnas:', columns);
             });
@@ -578,7 +568,6 @@ function parseCSVLine(line) {
     result.push(current.trim());
     return result;
 }
-
 
 
 

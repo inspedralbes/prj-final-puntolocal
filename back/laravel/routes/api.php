@@ -155,6 +155,7 @@ Route::prefix('producto')->group(function () {
 
     Route::get('/categoria/{categoriaID}', [CategoriaController::class, 'getProductosPorCategoria']);
 
+    Route::post('crear_excel', [ProductoController::class, 'createExcel']);
 });
 
 Route::prefix('cercanos')->group(function () {
