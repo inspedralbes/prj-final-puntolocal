@@ -19,7 +19,7 @@
                 "Belleza Urbana",
                 "Repuestos Auto Express",
                 "Home & Decor Hub",
-                "Accesorios Chic",
+                "Accesorios Chic COPIA",
                 "Electrónica Viva",
                 "Cosmética Natural"
             ];

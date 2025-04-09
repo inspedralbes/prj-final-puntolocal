@@ -266,7 +266,7 @@ onMounted(async () => {
     estats.push(...data.data);
     // console.log(estats);
     socket.on("nuevaOrdenRecibida", (newSuborder) => {
-        // console.log("entra en nuevaOrdenRecibida");
+        console.log("entra en nuevaOrdenRecibida");
         orders.value.push(newSuborder);
         estatsOriginals[newSuborder.id] = newSuborder.estat_compra.id;
     });

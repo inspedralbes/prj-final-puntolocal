@@ -71,6 +71,7 @@ onMounted(() => {
     });
 
   socket.on("nuevaOrdenRecibida", (newOrden) => {
+    console.log("entra en nuevaOrdenRecibida");
     orden.value = newOrden;
     showAlert.value = true;
   });

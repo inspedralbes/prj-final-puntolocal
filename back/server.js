@@ -4,14 +4,16 @@ import express from "express";
 import http from "http";
 import { Server } from "socket.io";
 
-
-const Host = process.env.API_BASE_URL;
+// const Host = process.env.API_BASE_URL;
+// const Host = "http://localhost:8001/api";
+const Host = "http://172.17.0.1:8001/api";
 
 const app = express();
 const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
-    origin: process.env.CORS_ORIGINS.split(','),
+    // origin: process.env.CORS_ORIGINS.split(','),
+    origin: ["http://localhost", "http://localhost:8001", "http://localhost:3000", "http://localhost:8000"],
     methods: ["GET", "POST"],
     allowedHeaders: ["Content-Type"],  // Los encabezados permitidos
   },

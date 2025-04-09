@@ -322,6 +322,7 @@ onMounted(async () => {
     const data = await $communicationManager.getEstats();
     estats.push(...data.data);
     socket.on("nuevaOrdenRecibida", (newSuborder) => {
+        console.log("entra en nuevaOrdenRecibida");
         orders.value.push(newSuborder);
         estatsOriginals[newSuborder.id] = newSuborder.estat_compra.id;
     });

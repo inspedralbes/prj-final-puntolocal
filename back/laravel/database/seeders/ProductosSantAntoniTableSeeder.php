@@ -68,11 +68,11 @@ class ProductosSantAntoniTableSeeder extends Seeder
             ["nombre" => "Aspiradora ciclónica", "comercio_id" => 17, "descripcion" => "Aspiradora sin bolsa con alto poder de succión.", "subcategoria_id" => 19, "precio" => 70, "visible" => 1],
 
             // Accesorios Chic - Accesorios
-            ["nombre" => "Bolso de cuero", "comercio_id" => 18, "descripcion" => "Bolso elegante de piel auténtica.", "subcategoria_id" => 84, "precio" => 60, "visible" => 1],
-            ["nombre" => "Gafas de sol", "comercio_id" => 18, "descripcion" => "Lentes polarizados con protección UV.", "subcategoria_id" => 83, "precio" => 50, "visible" => 1],
-            ["nombre" => "Reloj minimalista", "comercio_id" => 18, "descripcion" => "Reloj con correa de cuero y esfera clásica.", "subcategoria_id" => 82, "precio" => 40, "visible" => 1],
-            ["nombre" => "Collar de plata", "comercio_id" => 18, "descripcion" => "Colgante de plata de ley con diseño exclusivo.", "subcategoria_id" => 81, "precio" => 30, "visible" => 1],
-            ["nombre" => "Pulsera con charms", "comercio_id" => 18, "descripcion" => "Pulsera ajustable con dijes intercambiables.", "subcategoria_id" => 80, "precio" => 20, "visible" => 1],
+            ["nombre" => "Bolso de cuero COPIA", "comercio_id" => 18, "descripcion" => "Bolso elegante de piel auténtica.", "subcategoria_id" => 84, "precio" => 60, "visible" => 1],
+            ["nombre" => "Gafas de sol COPIA", "comercio_id" => 18, "descripcion" => "Lentes polarizados con protección UV.", "subcategoria_id" => 83, "precio" => 50, "visible" => 1],
+            ["nombre" => "Reloj minimalista COPIA", "comercio_id" => 18, "descripcion" => "Reloj con correa de cuero y esfera clásica.", "subcategoria_id" => 82, "precio" => 40, "visible" => 1],
+            ["nombre" => "Collar de plata COPIA", "comercio_id" => 18, "descripcion" => "Colgante de plata de ley con diseño exclusivo.", "subcategoria_id" => 81, "precio" => 30, "visible" => 1],
+            ["nombre" => "Pulsera con charms COPIA", "comercio_id" => 18, "descripcion" => "Pulsera ajustable con dijes intercambiables.", "subcategoria_id" => 80, "precio" => 20, "visible" => 1],
 
             // Electrónica Viva - Tecnología
             ["nombre" => "Tablet de 10 pulgadas", "comercio_id" => 19, "descripcion" => "Pantalla táctil HD con procesador rápido.", "subcategoria_id" => 8, "precio" => 14.99, "visible" => 1],
