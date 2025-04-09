@@ -53,6 +53,9 @@ jobs:
           sed -i "s|GOOGLE_CLIENT_SECRET=.*|GOOGLE_CLIENT_SECRET=${{ secrets.PROD_GOOGLE_CLIENT_SECRET }}|" .env
           sed -i "s|GOOGLE_REDIRECT_URI=.*|GOOGLE_REDIRECT_URI=${{ secrets.PROD_GOOGLE_REDIRECT_URI }}|" .env
           sed -i "s|FRONTEND_URL=.*|FRONTEND_URL=${{ secrets.PROD_BASE_URL }}|" .env
+
+          echo "VIEW_COMPILED_PATH=/tmp" >> .env
+          mkdir -p /tmp
           
           php artisan key:generate
           php artisan config:cache
