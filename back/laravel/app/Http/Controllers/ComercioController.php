@@ -176,7 +176,7 @@
                     'message' => 'No existeix cap comerç amb aquest id.'
                 ], 404);
             }
-            return response()->json(['usuario_id' => $comercio->id], 200);
+            return response()->json(['usuario_id' => $comercio->idUser], 200);
         }
 
         public function search($search) {

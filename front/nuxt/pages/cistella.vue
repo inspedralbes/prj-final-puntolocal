@@ -114,63 +114,70 @@ function toPay() {
 }
 
 async function crearComanda() {
-    const createdOrder = await $communicationManager.createOrder(orderFiltrada.value);
-    if (createdOrder.success) {
-        order_id.value = createdOrder.data.order.id;
-        const subcomandaInfo = computed(() => {
-            return {
-                order_id: order_id.value,
-                suborders: Object.keys(groupedCesta.value).map(comercio => ({
-                    comercio_id: groupedCesta.value[comercio][0].comercio_id,
-                    subtotal: storeTotal(comercio),
-                    productos: groupedCesta.value[comercio].map(({ id, cantidad, precio }) => ({
-                        id,
-                        cantidad,
-                        precio,
+    try {
+        const createdOrder = await $communicationManager.createOrder(orderFiltrada.value);
+        if (createdOrder.success) {
+            console.log("CUMPLE IF(CREATEDORDER.SUCCESS)")
+            order_id.value = createdOrder.data.order.id;
+            const subcomandaInfo = computed(() => {
+                return {
+                    order_id: order_id.value,
+                    suborders: Object.keys(groupedCesta.value).map(comercio => ({
+                        comercio_id: groupedCesta.value[comercio][0].comercio_id,
+                        subtotal: storeTotal(comercio),
+                        productos: groupedCesta.value[comercio].map(({ id, cantidad, precio }) => ({
+                            id,
+                            cantidad,
+                            precio,
+                        })),
                     })),
-                })),
-            }
-        });
-        const createdSuborders = await $communicationManager.createSuborder(subcomandaInfo.value);
+                }
+            });
+            const createdSuborders = await $communicationManager.createSuborder(subcomandaInfo.value);
+            console.log("createdSuborders CREARCOMANDA: ", createdSuborders)
 
-        function agruparOrderSuborders(order, suborders) {
-            return {
-                'order_id': order.data.orderCompleta.id,
-                'created_at': order.data.orderCompleta.created_at,
-                'tipo_envio': {
-                    'id': order.data.orderCompleta.tipo_envio.id,
-                    'nombre': order.data.orderCompleta.tipo_envio.nombre,
-                },
-                'tipo_pago': {
-                    'id': order.data.orderCompleta.tipo_pago.id,
-                    'nombre': order.data.orderCompleta.tipo_pago.nombre,
-                },
-                'cliente': {
-                    'id': order.data.orderCompleta.cliente.id,
-                    'nombre': order.data.orderCompleta.cliente.name,
-                    'apellidos': order.data.orderCompleta.cliente.apellidos
-                },
-                'subcomandes': suborders.data.subcomandes.map(subcomanda => ({
-                    'suborder_id': subcomanda.suborder.id,
-                    'comercio_id': subcomanda.suborder.comercio_id,
-                    'subtotal': subcomanda.suborder.subtotal,
-                    'estat_compra': {
-                        'id': subcomanda.suborder.estat_compra.id,
-                        'nombre': subcomanda.suborder.estat_compra.nombre
-                    }
-                }))
+            function agruparOrderSuborders(order, suborders) {
+                return {
+                    'order_id': order.data.orderCompleta.id,
+                    'created_at': order.data.orderCompleta.created_at,
+                    'tipo_envio': {
+                        'id': order.data.orderCompleta.tipo_envio.id,
+                        'nombre': order.data.orderCompleta.tipo_envio.nombre,
+                    },
+                    'tipo_pago': {
+                        'id': order.data.orderCompleta.tipo_pago.id,
+                        'nombre': order.data.orderCompleta.tipo_pago.nombre,
+                    },
+                    'cliente': {
+                        'id': order.data.orderCompleta.cliente.id,
+                        'nombre': order.data.orderCompleta.cliente.name,
+                        'apellidos': order.data.orderCompleta.cliente.apellidos
+                    },
+                    'subcomandes': suborders.data.subcomandes.map(subcomanda => ({
+                        'suborder_id': subcomanda.suborder.id,
+                        'comercio_id': subcomanda.suborder.comercio_id,
+                        'subtotal': subcomanda.suborder.subtotal,
+                        'estat_compra': {
+                            'id': subcomanda.suborder.estat_compra.id,
+                            'nombre': subcomanda.suborder.estat_compra.nombre
+                        }
+                    }))
+                }
             }
+
+            if (createdOrder && createdSuborders) {
+                const orders = agruparOrderSuborders(createdOrder, createdSuborders);
+                socket.emit("nuevaOrden", orders);
+            }
+        }else{
+            console.log("ALGUN ERROR CREARCOMANDA: ", createdOrder)
         }
 
-        if (createdOrder && createdSuborders) {
-            const orders = agruparOrderSuborders(createdOrder, createdSuborders);
-            socket.emit("nuevaOrden", orders);
-        }
+        isOk.value = true;
+        comercioStore.emptyBasket();
+    } catch (error) {
+        console.error("ERROR CREARCOMANDA: ", createdOrder)
     }
-
-    // goBack();
-    isOk.value = true;
-    comercioStore.emptyBasket();
 }
 
 const orderFiltrada = computed(() => ({

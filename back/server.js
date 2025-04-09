@@ -5,7 +5,8 @@ import http from "http";
 import { Server } from "socket.io";
 
 
-const Host = process.env.API_BASE_URL;
+// const Host = 'http://localhost:8000/api';
+const Host = "http://172.17.0.1:8000/api"
 
 const app = express();
 const server = http.createServer(app);
@@ -26,6 +27,7 @@ async function obtenerUseridComercio(comercio_id) {
       return null;
     }
     const data = await response.json();
+    console.log("DATA OBTENERUSEIDCOMERCIO: ", data)
     return data.usuario_id;
   } catch (error) {
     console.error("Error al realizar la petición:", error);
@@ -47,6 +49,7 @@ io.on("connection", (socket) => {
   });
 
   socket.on("nuevaOrden", async (data) => {
+    console.log("DATA NUEVAORDEN: ",data)
     for (const suborder of data.subcomandes) {
       const suborderData = {
         comercio_id: suborder.comercio_id,
@@ -69,6 +72,8 @@ io.on("connection", (socket) => {
         subtotal: suborder.subtotal,
       };
       const ownerId = await obtenerUseridComercio(suborder.comercio_id);
+      console.log("OWNERID: ", ownerId);
+      console.log("SUBORDERDATA: ", suborderData);
       io.to(`user_${ownerId}`).emit("nuevaOrdenRecibida", suborderData);
     }
   });

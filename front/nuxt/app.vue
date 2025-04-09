@@ -63,17 +63,27 @@ const showAlert = ref(false);
 const orden = ref(null);
 
 onMounted(() => {
+  // alert("test")
   // auth.checkAuth();
 
   if (auth?.comercio) {
+    if (socket.connected){
+      socket.emit("identificarUsuario", { user_id: auth.user.id });
+    }
+
     socket.on("connect", () => {
       socket.emit("identificarUsuario", { user_id: auth.user.id });
     });
 
   socket.on("nuevaOrdenRecibida", (newOrden) => {
+    console.log("NUEVA ORDEN RECIBIDA - COMERCIO: ", newOrden);
     orden.value = newOrden;
     showAlert.value = true;
   });
+
+  socket.on('TestEnviado', () => {
+    console.log("TEST RECIBIDO")
+  })
 }});
 
 // Función para manejar la confirmación
