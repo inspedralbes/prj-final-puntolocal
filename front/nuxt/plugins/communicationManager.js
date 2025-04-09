@@ -888,9 +888,10 @@ export default defineNuxtPlugin(nuxtApp => {
         const response = await fetch(`${Host}/producto/crear_excel`, {
           method: 'POST',
           headers: {
-            'Authorization': this.authStore.token ? `Bearer ${this.authStore.token}` : ''
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${localStorage.getItem('token')}`
           },
-          body: formData
+          body: JSON.stringify(formData)
         });
 
         if (!response.ok) {

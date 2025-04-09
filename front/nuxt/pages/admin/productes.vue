@@ -712,20 +712,19 @@ async function handleCSVUpload(event) {
             dataLines.forEach((line) => {
                 const columns = parseCSVLine(line);
 
-                if (columns.length < 5) return; // Saltar líneas incompletas
-
+                if (columns.length < 5) return;
+                
                 const subcategoriaMatch = columns[0]?.match(/^(\d+)/);
                 const id = subcategoriaMatch ? parseInt(subcategoriaMatch[1], 10) : null;
                 const nom = columns[1] || '';
                 const descripcio = columns[2] || '';
 
-                // Mejor conversión de precios con decimales
                 const rawPreu = columns[3] || '';
                 const cleanedPreu = rawPreu
                     .replace(/\s/g, '')
                     .replace('€', '')
-                    .replace(/\./g, '')  // Elimina puntos de millares
-                    .replace(',', '.');  // Convierte coma decimal a punto
+                    .replace(/\./g, '')
+                    .replace(',', '.');
 
                 const preu = cleanedPreu ? parseFloat(cleanedPreu) : null;
                 const stock = columns[4] ? parseInt(columns[4], 10) : null;
@@ -744,28 +743,18 @@ async function handleCSVUpload(event) {
 
             console.log('Productos procesados:', productos);
 
-            
 
-            const response = await fetch(`http://localhost:8000/api/producto/crear_excel`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${localStorage.getItem('token')}`
-                },
-                body: JSON.stringify(productos)
-            });
 
-            const data = await response.json();
+
+            const result = await $communicationManager.createProductoExcel(productos);
             Swal.fire({
                 icon: "success",
                 title: "Productes creats correctament",
             });
         } catch (error) {
-            console.error("Error al procesar el archivo CSV:", error);
             Swal.fire({
                 icon: "error",
-                title: "Error al procesar el archivo CSV",
-                text: error.message,
+                title: "Error el procesar el fitxer .csv",
             });
         }
     };
@@ -781,7 +770,6 @@ async function handleCSVUpload(event) {
     event.target.value = '';
 }
 
-// Función mejorada para parsear líneas CSV
 function parseCSVLine(line) {
     const result = [];
     let current = '';
