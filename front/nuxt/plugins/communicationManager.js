@@ -233,6 +233,7 @@ export default defineNuxtPlugin((nuxtApp) => {
 
         const productos = await response.json();
         return productos;
+        
       } catch (error) {
         console.error('Error al realizar la petición:', error);
         return null;
