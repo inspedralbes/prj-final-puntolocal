@@ -22,4 +22,16 @@ Se debera conectarse al servidor y copiar a la carpeta .ssh/authorized_keys del 
 
 ## Configurar el ghactions
 
-Se debera configurar el ghactions para que haga las acciones pertinentes
+Se debera configurar el ghactions para que haga las acciones pertinentes. En ternminos simples nuestro ghactions hace lo siguiente:
+
+  * Instalar Dependencias Nuxt
+  * Hacer el Build de Nuxt
+  * Instalar Dependendias Laravel
+  * Instalar Dependencias Node
+  * Configurar Acceso SSH
+  * Transferir los archivos con rsync
+  * Ejecutar comandos post-despliegue
+
+## Configurar los secrets en Github
+
+Se debe ir a la configuración del proyecto de Github y añadir las Respository Secrets necesarios.

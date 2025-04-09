@@ -1,10 +1,11 @@
 <?php
 namespace App\Http\Controllers\Auth;
 
-use App\Http\Controllers\Controller;;
+use App\Http\Controllers\Controller;    
 use App\Models\Cliente;
 use Laravel\Socialite\Facades\Socialite;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class GoogleController extends Controller
 {
@@ -20,28 +21,25 @@ class GoogleController extends Controller
         try {
             $googleUser = Socialite::driver('google')->stateless()->user();
 
-            $user = Cliente::firstOrCreate(
-                ['email' => $googleUser->getEmail()],
+            $user = Cliente::updateOrCreate(
+                ['email' => $googleUser->email],
                 [
                     'name' => $googleUser->user['given_name'],
-                    'apellidos' => $googleUser->user['family_name'],
+                    'apellidos' => $googleUser->user['family_name'] ?? '',
+                    'google_id' => $googleUser->id
                 ]
             );
-            
-            Auth::login($user);
+
             $token = $user->createToken('auth_token')->plainTextToken;
 
-            $userData = [
-                'id' => $user->id,
-                'name' => $user->name,
-                'apellidos' => $user->apellidos,
-                'email' => $user->email,
-                'token' => $token,
-            ];
+            return redirect()->away(env('FRONTEND_URL') . '/auth/callback?' . http_build_query([
+                'user' => json_encode($user),
+                'token' => $token
+            ]));
 
-            return redirect()->to('http://localhost:3000/auth/callback?user=' . urlencode(json_encode($userData)));
         } catch (\Exception $e) {
-            return response()->json(['error' => $e], 500);
+            Log::error('Google Auth Error: ' . $e->getMessage());
+            return redirect()->away(env('FRONTEND_URL') . '/login?error=google_auth_failed');
         }
     }
 }
