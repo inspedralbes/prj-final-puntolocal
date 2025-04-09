@@ -53,9 +53,6 @@ jobs:
           sed -i "s|GOOGLE_CLIENT_SECRET=.*|GOOGLE_CLIENT_SECRET=${{ secrets.PROD_GOOGLE_CLIENT_SECRET }}|" .env
           sed -i "s|GOOGLE_REDIRECT_URI=.*|GOOGLE_REDIRECT_URI=${{ secrets.PROD_GOOGLE_REDIRECT_URI }}|" .env
           sed -i "s|FRONTEND_URL=.*|FRONTEND_URL=${{ secrets.PROD_BASE_URL }}|" .env
-
-          echo "VIEW_COMPILED_PATH=/tmp" >> .env
-          mkdir -p /tmp
           
           php artisan key:generate
           php artisan config:cache
@@ -114,10 +111,6 @@ jobs:
             sudo chown -R www-data:www-data /var/www/backend/laravel/bootstrap/cache
             sudo chmod -R 777 /var/www/backend/laravel/storage
             sudo chmod -R 777 /var/www/backend/laravel/bootstrap/cache
-
-            # Pre-compilar vistas de correo
-            cd /var/www/backend/laravel
-            php artisan view:cache
 
             # Instalar dependencias Node.js
             cd /var/www/backend && npm ci --production

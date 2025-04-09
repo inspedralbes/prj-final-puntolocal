@@ -40,10 +40,10 @@
 
             $verificationUrl = route('verification.verify', ['id' => $cliente->id, 'hash' => sha1($cliente->email)]);
 
-            Mail::send('emails.verify', ['verificationUrl' => $verificationUrl], function ($message) use ($cliente) {
-                $message->to($cliente->email)
-                        ->subject('Verificación de email | ·LOCAL');
-            });
+            // Mail::send('emails.verify', ['verificationUrl' => $verificationUrl], function ($message) use ($cliente) {
+            //     $message->to($cliente->email)
+            //             ->subject('Verificación de email | ·LOCAL');
+            // });
 
             return response()->json([
                 'message' => 'Cliente creado exitosamente. Por favor, verifica tu correo electrónico.',
