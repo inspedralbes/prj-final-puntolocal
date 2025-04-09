@@ -109,8 +109,8 @@ jobs:
             # Permisos Laravel
             sudo chown -R www-data:www-data /var/www/backend/laravel/storage
             sudo chown -R www-data:www-data /var/www/backend/laravel/bootstrap/cache
-            sudo chmod -R 775 /var/www/backend/laravel/storage
-            sudo chmod -R 775 /var/www/backend/laravel/bootstrap/cache
+            sudo chmod -R 777 /var/www/backend/laravel/storage
+            sudo chmod -R 777 /var/www/backend/laravel/bootstrap/cache
 
             # Pre-compilar vistas de correo
             cd /var/www/backend/laravel
