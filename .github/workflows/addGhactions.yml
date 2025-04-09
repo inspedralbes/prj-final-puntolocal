@@ -2,7 +2,7 @@ name: Deploy to Clouding
 
 on:
   push:
-    branches: [main] 
+    branches: [fixGoogleLogin] 
 
 jobs:
   deploy:
@@ -43,10 +43,16 @@ jobs:
           composer install --no-dev --optimize-autoloader
           cp .env.example .env
           
-          # Variables de ejemplo (ajusta según tu proyecto)
+          # Variables de Base de Datos
           sed -i "s|DB_DATABASE=.*|DB_DATABASE=${{ secrets.PROD_DB_NAME }}|" .env
           sed -i "s|DB_USERNAME=.*|DB_USERNAME=${{ secrets.PROD_DB_USER }}|" .env
           sed -i "s|DB_PASSWORD=.*|DB_PASSWORD=${{ secrets.PROD_DB_PASSWORD }}|" .env
+
+          # Variables de Google OAuth
+          sed -i "s|GOOGLE_CLIENT_ID=.*|GOOGLE_CLIENT_ID=${{ secrets.PROD_GOOGLE_CLIENT_ID }}|" .env
+          sed -i "s|GOOGLE_CLIENT_SECRET=.*|GOOGLE_CLIENT_SECRET=${{ secrets.PROD_GOOGLE_CLIENT_SECRET }}|" .env
+          sed -i "s|GOOGLE_REDIRECT_URI=.*|GOOGLE_REDIRECT_URI=${{ secrets.PROD_GOOGLE_REDIRECT_URI }}|" .env
+          sed -i "s|FRONTEND_URL=.*|FRONTEND_URL=${{ secrets.PROD_BASE_URL }}|" .env
           
           php artisan key:generate
           php artisan config:cache
