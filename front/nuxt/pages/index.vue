@@ -38,7 +38,7 @@
                             </svg>
                         </p>
                     </div>
-                    <div id="categorias" class="flex space-x-6 px-4 items-center overflow-x-auto">
+                    <div id="categorias" class="flex space-x-6 px-4 items-center overflow-x-auto w-full md:justify-center md:space-x-10">
                         <div v-for="categoria in categorias" :key="categoria.id"
                             class="flex flex-col items-center justify-center cursor-pointer"
                             @click="irACategoria(categoria.id)">
@@ -78,7 +78,7 @@
                             @click="mostrarIdProducto(producto.id)"></productoComp>
                     </div>
                     <h1 class="text-xl mt-5 font-semibold text-gray-900 mb-4 ml-4">Productes a prop teu</h1>
-                    <div id="productos" class="grid grid-cols-2 gap-4 px-4">
+                    <div id="productos" class="grid grid-cols-2 md:grid-cols-4 gap-4 px-4">
                         <productoComp v-for="(producto, index) in productos" :key="index" :productoId="producto.id"
                             :img="producto.imagen ? `${baseUrl}/storage/${producto.imagen}` : `${baseUrl}/storage/productos/default-image.webp`"
                             :title="producto.nombre" :price="producto.precio" :comercio="producto.comercio_nombre"
@@ -166,7 +166,7 @@ async function fetchComerciosCercanos(lat, lon) {
         console.log(response)
         comercios.value = response;
 
-        const idsComercios = response.map(comercio => comercio.id);
+        const idsComercios = response.comercios.map(comercio => comercio.id);
         const idsComerciosString = idsComercios.join(',');
 
         getProductosCercanos(idsComerciosString);
