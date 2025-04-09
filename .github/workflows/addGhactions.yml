@@ -2,7 +2,7 @@ name: Deploy to Clouding
 
 on:
   push:
-    branches: [fixGoogleLogin] 
+    branches: [main] 
 
 jobs:
   deploy:
@@ -107,10 +107,6 @@ jobs:
             PORT=3000' > /var/www/backend/.env
             
             # Permisos Laravel
-            sudo mkdir -p /var/www/backend/laravel/storage/framework/views
-            sudo mkdir -p /var/www/backend/laravel/storage/framework/cache
-            sudo mkdir -p /var/www/backend/laravel/storage/framework/sessions
-            sudo mkdir -p /var/www/backend/laravel/storage/logs
             sudo chown -R www-data:www-data /var/www/backend/laravel/storage
             sudo chown -R www-data:www-data /var/www/backend/laravel/bootstrap/cache
             sudo chmod -R 775 /var/www/backend/laravel/storage
