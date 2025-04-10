@@ -14,6 +14,7 @@ use App\Http\Controllers\EstatCompraController;
 use App\Http\Controllers\SubcategoriaController;
 use App\Http\Controllers\OrderComercioController;
 use App\Http\Controllers\ComercioFavoritosController;
+use App\Http\Controllers\Auth\VerificationController;
 
 Route::get('/user', function (Request $request) {
     return $request->user();
@@ -116,6 +117,8 @@ Route::prefix('admin/estats')->group(function () {
 });
 
 
+Route::get('/verify/{id}/{hash}', [VerificationController::class, 'verify'])->name('verification.verify');
+
 // Route::middleware('auth:sanctum')->prefix('admin/estats')->group(function () {
 //     // Obtener una comanda específica
 //     Route::get('/{id}', [OrderComercioController::class, 'show']);
@@ -194,3 +197,5 @@ Route::prefix('poblaciones')->group(function () {
     // Ver ciudades por provincia seleccionada
     Route::get('/ciudades/{id}', [ciudadesController::class, 'index']);
 });
+
+Route::get('/verify/{id}/{hash}', [VerificationController::class, 'verify'])->name('verification.verify');
