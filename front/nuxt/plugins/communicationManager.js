@@ -881,6 +881,30 @@ export default defineNuxtPlugin((nuxtApp) => {
       }
     },
 
+    async createProductoExcel(formData) {
+      try {
+        const response = await fetch(`${Host}/producto/crear_excel`, {
+          method: 'POST',
+          headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${localStorage.getItem('token')}`
+          },
+          body: JSON.stringify(formData)
+        });
+
+        if (!response.ok) {
+          console.error(`Error en la petición: ${response.status} ${response.statusText}`);
+          return null;
+        }
+
+        const data = await response.json();
+        return { success: true, data: data };
+      } catch (error) {
+        console.error('Error al realizar la petición:', error);
+        return { success: false, message: error.message };
+      }
+    },
+
     async cambiarVisibilidad(id) {
       try {
         const response = await fetch(`${Host}/producto/visible/${id}`, {

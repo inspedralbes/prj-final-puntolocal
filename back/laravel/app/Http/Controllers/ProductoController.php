@@ -59,6 +59,40 @@ class ProductoController extends Controller
         return response()->json($productos);
     }
 
+    public function createExcel(Request $request)
+    {
+        // Validate that the input is an array
+        $productsData = $request->all();
+
+        if (!is_array($productsData)) {
+            return response()->json([
+                'message' => 'Input should be an array of products',
+                'error' => true
+            ], 400);
+        }
+
+        $createdProducts = [];
+
+        foreach ($productsData as $productData) {
+            $product = Producto::create([
+                'subcategoria_id' => $productData['subcategoria_id'],
+                'comercio_id' => $productData['comercio_id'],
+                'nombre' => $productData['nombre'],
+                'descripcion' => $productData['descripcion'],
+                'precio' => $productData['precio'],
+                'stock' => $productData['stock'],
+                'imagen' => $productData['imagen'] ?? null,
+            ]);
+
+            $createdProducts[] = $product;
+        }
+
+        return response()->json([
+            'message' => count($createdProducts) . ' productes creats correctament',
+            'productes' => $createdProducts,
+        ], 201);
+    }
+
     public function store(Request $request)
     {
         $user = Auth::user();
@@ -254,29 +288,30 @@ class ProductoController extends Controller
         return response()->json(['data' => $productos], 200);
     }
 
-    public function prueba(Request $request) {
+    public function prueba(Request $request)
+    {
         $comercioIds = $request->query('comercioIds');
-            
+
         $comercioIdsArray = explode(',', $comercioIds);
-    
+
         foreach ($comercioIdsArray as $id) {
             if (!is_numeric($id)) {
                 return response()->json(['message' => 'Los IDs de los comercios deben ser números válidos'], 400);
             }
         }
-    
+
         $productos = Producto::whereIn('comercio_id', $comercioIdsArray)
-            ->where('visible', true) 
+            ->where('visible', true)
             ->inRandomOrder()
             ->limit(20)
             ->with('comercio')
             ->get();
-    
+
         if ($productos->isEmpty()) {
             return response()->json(['message' => 'No hay productos disponibles con stock para los comercios seleccionados'], 404);
         }
-    
-        $productosConNombreComercio = $productos->map(function($producto) {
+
+        $productosConNombreComercio = $productos->map(function ($producto) {
             return [
                 'id' => $producto->id,
                 'nombre' => $producto->nombre,
@@ -289,7 +324,7 @@ class ProductoController extends Controller
                 'subcategoria_id' => $producto->subcategoria_id,
             ];
         });
-    
+
         return response()->json([
             'data' => $productosConNombreComercio,
         ], 200);

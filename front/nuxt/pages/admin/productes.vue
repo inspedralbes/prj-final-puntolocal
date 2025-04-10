@@ -57,23 +57,45 @@
                             </div>
                         </div>
                     </div>
-                    <div class="flex">
-                        <div class=" inline-flex items-center bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-2 cursor-pointer rounded">
-                            <label class="curosr-pointer">
-                                Importar productes
-                                <input type="file" class="hidden" name="archivo" id="archivo"
-                                    onchange="mostrarNombre(this)">
-                            </label>
-                            <div id="nombre-archivo" class="text-sm text-gray-600"></div>
+
+                    <div class="flex gap-4">
+                        <div class="relative group">
+                            <button
+                                onclick="window.open('https:\\docs.google.com/spreadsheets/d/180jUM-AH0wEwzSJE3yC9ro0rigZ-KBB010MU5fXXtKg/copy', '_blank')"
+                                class="inline-flex items-center bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-2 px-4 rounded">
+                                <img src="../../assets/template.svg" class="h-[30px] w-[30px]"
+                                    alt="Plantilla per productes nous">
+                            </button>
+
+
+                            <div
+                                class="absolute z-10 bottom-full left-1/2 transform -translate-x-1/2 mb-2 hidden group-hover:block bg-yellow-400 text-yellow-900 text-sm font-medium rounded py-1 px-3 whitespace-nowrap shadow-lg max-w-xs truncate">
+                                Plantilla per productes nous
+                            </div>
                         </div>
 
-                        <button id="createProductButton" @click="toggleCard('crear')"
-                            class="ml-4 inline-flex items-center bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-                            type="button" data-drawer-target="drawer-create-product-default"
-                            data-drawer-show="drawer-create-product-default"
-                            aria-controls="drawer-create-product-default" data-drawer-placement="right">
-                            Afegir nou producte
-                        </button>
+                        <!-- Por esto (mueve @change al input) -->
+                        <label
+                            class="inline-flex items-center bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-2 cursor-pointer rounded">
+                            <img src="../../assets/import.svg" class="h-[30px] w-[30px]"
+                                alt="Importar plantilla de productes">
+                            <span class="sr-only">Importar plantilla</span>
+                            <input type="file" class="hidden" name="archivo" id="archivo" accept=".csv,.text/csv"
+                                @change="handleCSVUpload">
+                        </label>
+                        <div class="relative group">
+                            <button id="createProductButton" @click="toggleCard('crear')"
+                                class="gap-2 inline-flex items-center bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                                type="button" data-drawer-target="drawer-create-product-default"
+                                aria-controls="drawer-create-product-default">
+                                <img src="../../assets/plus-circle.svg" class="h-[30px] w-[30px]"
+                                    alt="Afegir nou producte">
+                            </button>
+                            <div
+                                class="absolute z-10 top-full left-1/2 transform -translate-x-1/2 mt-2 hidden group-hover:block bg-blue-400 text-blue-900 text-sm font-medium rounded py-1 px-3 whitespace-nowrap shadow-lg max-w-xs truncate">
+                                Nou producte
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -442,7 +464,9 @@
 
 <script setup>
 const { $communicationManager } = useNuxtApp();
+import Swal from 'sweetalert2';
 import { useAuthStore } from '../../stores/authStore';
+
 
 const authStore = useAuthStore();
 const token = computed(() => authStore.token);
@@ -475,6 +499,28 @@ const productoNuevo = ref({
     'stock': '',
     'imagen': null,
 });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 const id_producto_eliminar = ref();
 
@@ -609,10 +655,6 @@ async function crearProducto() {
     formData.append("precio", productoNuevo.value.precio || "");
     formData.append("stock", productoNuevo.value.stock);
     formData.append("imagen", productoNuevo.value.imagen.file);
-
-    // for (const [key, value] of formData.entries()) {
-    //     console.log(`${key}:`, value);
-    // }
     const result = await $communicationManager.createProducto(formData);
     // console.log(formData);
 
@@ -636,6 +678,133 @@ async function crearProducto() {
     }
 };
 
+// ===== PUBLICAR PRODUCTE (EXCEL) ======================================
+async function handleCSVUpload(event) {
+    const file = event.target.files[0];
+
+    if (!file.name.endsWith('.csv') && file.type !== 'text/csv') {
+        Swal.fire({
+            icon: "error",
+            title: "El fitxer ha de ser .csv",
+        });
+        return;
+    }
+
+    const reader = new FileReader();
+
+    reader.onload = async function (e) {
+        try {
+            const content = e.target.result;
+            const productos = [];
+            const comercio_id = comercio.value.id;
+            const lines = content.split(/\r\n|\n/);
+
+            const headerIndex = lines.findIndex(line => line.startsWith('Subcategoria'));
+
+            if (headerIndex === -1) {
+                throw new Error("Formato de CSV incorrecto: no se encontró la línea de encabezado");
+            }
+
+            const dataLines = lines.slice(headerIndex + 1).filter(line => {
+                return line.trim() !== '' && !/^,+,$/.test(line);
+            });
+
+            dataLines.forEach((line) => {
+                const columns = parseCSVLine(line);
+
+                if (columns.length < 5) return;
+                
+                const subcategoriaMatch = columns[0]?.match(/^(\d+)/);
+                const id = subcategoriaMatch ? parseInt(subcategoriaMatch[1], 10) : null;
+                const nom = columns[1] || '';
+                const descripcio = columns[2] || '';
+
+                const rawPreu = columns[3] || '';
+                const cleanedPreu = rawPreu
+                    .replace(/\s/g, '')
+                    .replace('€', '')
+                    .replace(/\./g, '')
+                    .replace(',', '.');
+
+                const preu = cleanedPreu ? parseFloat(cleanedPreu) : null;
+                const stock = columns[4] ? parseInt(columns[4], 10) : null;
+
+                if (id && nom && preu !== null && stock !== null) {
+                    productos.push({
+                        subcategoria_id: id,
+                        comercio_id,
+                        nombre: nom,
+                        descripcion: descripcio,
+                        precio: preu,
+                        stock
+                    });
+                }
+            });
+
+            console.log('Productos procesados:', productos);
+
+
+
+
+            const result = await $communicationManager.createProductoExcel(productos);
+            Swal.fire({
+                icon: "success",
+                title: "Productes creats correctament",
+            });
+        } catch (error) {
+            Swal.fire({
+                icon: "error",
+                title: "Error el procesar el fitxer .csv",
+            });
+        }
+    };
+
+    reader.onerror = function () {
+        Swal.fire({
+            icon: "error",
+            title: "Error al leer el archivo",
+        });
+    };
+
+    reader.readAsText(file);
+    event.target.value = '';
+}
+
+function parseCSVLine(line) {
+    const result = [];
+    let current = '';
+    let insideQuotes = false;
+    let escapeNext = false;
+
+    for (let i = 0; i < line.length; i++) {
+        const char = line[i];
+
+        if (escapeNext) {
+            current += char;
+            escapeNext = false;
+            continue;
+        }
+
+        if (char === '\\') {
+            escapeNext = true;
+            continue;
+        }
+
+        if (char === '"') {
+            insideQuotes = !insideQuotes;
+        } else if (char === ',' && !insideQuotes) {
+            result.push(current.trim());
+            current = '';
+        } else {
+            current += char;
+        }
+    }
+    result.push(current.trim());
+    return result;
+}
+
+// ======================================================================
+
 onMounted(async () => {
     document.addEventListener('keydown', closeAll);
     subcategorias.value = await fetchSubcategorias(comercio?.value?.categoria_id);
@@ -649,6 +818,5 @@ onMounted(async () => {
 onBeforeMount(async () => {
     const data = await $communicationManager.getByComercio();
     Object.assign(productos, data);
-    // console.log(productos);
 });
 </script>
