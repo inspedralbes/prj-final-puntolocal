@@ -6,7 +6,8 @@ import { Server } from "socket.io";
 
 
 // const Host = 'http://localhost:8000/api';
-const Host = "http://172.17.0.1:8000/api"
+// const Host = "http://172.17.0.1:8000/api"
+const Host = process.env.API_BASE_URL;
 
 const app = express();
 const server = http.createServer(app);

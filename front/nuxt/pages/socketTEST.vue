@@ -1,8 +1,12 @@
 <script setup>
 import { ref, onMounted } from "vue";
 import { io } from "socket.io-client";
+import { useRuntimeConfig } from "#app";
 
-const socket = io("http://localhost:8001");
+const config = useRuntimeConfig();
+
+//const socket = io("http://localhost:8001");
+const socket = io(config.public.baseNodeUrl);
 const mensajes = ref([]);
 const nuevoMensaje = ref("");
 
