@@ -59,6 +59,9 @@ class ProductoController extends Controller
         return response()->json($productos);
     }
 
+
+
+
     public function createExcel(Request $request)
     {
         // Validate that the input is an array
@@ -93,46 +96,55 @@ class ProductoController extends Controller
         ], 201);
     }
 
+
+
+
+
     public function store(Request $request)
     {
-        $user = Auth::user();
+        try {
+            $user = Auth::user();
 
-        $validated = $request->validate([
-            'subcategoria_id' => 'required|exists:subcategorias,id',
-            'comercio_id' => 'required|exists:comercios,id',
-            'nombre' => 'required|string|max:255',
-            'descripcion' => 'required|string',
-            'precio' => 'required|numeric',
-            'stock' => 'nullable|integer',
-            'imagen' => 'required|image|mimes:jpg,jpeg,png,webp',
-        ]);
+            $validated = $request->validate([
+                'subcategoria_id' => 'required|exists:subcategorias,id',
+                'comercio_id' => 'required|exists:comercios,id',
+                'nombre' => 'required|string|max:255',
+                'descripcion' => 'required|string',
+                'precio' => 'required|numeric',
+                'stock' => 'nullable|integer',
+                'imagen' => 'required|image|mimes:jpg,jpeg,png,webp',
+            ]);
 
-        $imagenPath = $request->file('imagen')->store('productos', 'public');
+            $imagenPath = $request->file('imagen')->store('productos', 'public');
 
-        $comercio = Comercio::findOrFail($validated['comercio_id']);
+            $comercio = Comercio::findOrFail($validated['comercio_id']);
 
-        if ($comercio->idUser !== $user->id) {
+            if ($comercio->idUser !== $user->id) {
+                return response()->json([
+                    'error' => 'No tienes permiso para editar este producto.',
+                ], 403);
+            }
+
+            $producto = Producto::create([
+                'subcategoria_id' => $validated['subcategoria_id'],
+                'comercio_id' => $validated['comercio_id'],
+                'nombre' => $validated['nombre'],
+                'descripcion' => $validated['descripcion'],
+                'precio' => $validated['precio'],
+                'stock' => $validated['stock'],
+                'imagen' => $imagenPath,
+            ]);
+
+            $producto = Producto::with('subcategoria:id,name')->findOrFail($producto->id);
+
             return response()->json([
-                'error' => 'No tienes permiso para editar este producto.',
-            ], 403);
+                'message' => 'Producto creado con éxito.',
+                'producto' => $producto,
+            ], 201);
+        } catch (\Throwable $e) {
+            \Log::error($e);
+            return response()->json(['error' => 'Error inesperado.'], 500);
         }
-
-        $producto = Producto::create([
-            'subcategoria_id' => $validated['subcategoria_id'],
-            'comercio_id' => $validated['comercio_id'],
-            'nombre' => $validated['nombre'],
-            'descripcion' => $validated['descripcion'],
-            'precio' => $validated['precio'],
-            'stock' => $validated['stock'],
-            'imagen' => $imagenPath,
-        ]);
-
-        $producto = Producto::with('subcategoria:id,name')->findOrFail($producto->id);
-
-        return response()->json([
-            'message' => 'Producto creado con éxito.',
-            'producto' => $producto,
-        ], 201);
     }
 
     public function show($id)

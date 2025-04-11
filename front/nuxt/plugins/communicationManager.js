@@ -863,6 +863,7 @@ export default defineNuxtPlugin((nuxtApp) => {
         const response = await fetch(`${Host}/producto`, {
           method: 'POST',
           headers: {
+            'Accept': 'application/json',
             'Authorization': this.authStore.token ? `Bearer ${this.authStore.token}` : ''
           },
           body: formData
@@ -881,13 +882,16 @@ export default defineNuxtPlugin((nuxtApp) => {
       }
     },
 
+
+
+
     async createProductoExcel(formData) {
       try {
         const response = await fetch(`${Host}/producto/crear_excel`, {
           method: 'POST',
           headers: {
-              'Content-Type': 'application/json',
-              'Authorization': `Bearer ${localStorage.getItem('token')}`
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${localStorage.getItem('token')}`
           },
           body: JSON.stringify(formData)
         });
@@ -904,6 +908,10 @@ export default defineNuxtPlugin((nuxtApp) => {
         return { success: false, message: error.message };
       }
     },
+
+
+
+
 
     async cambiarVisibilidad(id) {
       try {

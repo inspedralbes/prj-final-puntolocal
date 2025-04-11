@@ -61,7 +61,7 @@
                     <div class="flex gap-4">
                         <div class="relative group">
                             <button
-                                onclick="window.open('https:\\docs.google.com/spreadsheets/d/180jUM-AH0wEwzSJE3yC9ro0rigZ-KBB010MU5fXXtKg/copy', '_blank')"
+                                onclick="window.open('https:\/\/docs.google.com/spreadsheets/d/180jUM-AH0wEwzSJE3yC9ro0rigZ-KBB010MU5fXXtKg/copy', '_blank')"
                                 class="inline-flex items-center bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-2 px-4 rounded">
                                 <img src="../../assets/template.svg" class="h-[30px] w-[30px]"
                                     alt="Plantilla per productes nous">
@@ -713,7 +713,7 @@ async function handleCSVUpload(event) {
                 const columns = parseCSVLine(line);
 
                 if (columns.length < 5) return;
-                
+
                 const subcategoriaMatch = columns[0]?.match(/^(\d+)/);
                 const id = subcategoriaMatch ? parseInt(subcategoriaMatch[1], 10) : null;
                 const nom = columns[1] || '';
@@ -743,14 +743,18 @@ async function handleCSVUpload(event) {
 
             console.log('Productos procesados:', productos);
 
-
-
-
             const result = await $communicationManager.createProductoExcel(productos);
-            Swal.fire({
-                icon: "success",
-                title: "Productes creats correctament",
-            });
+            if (result) {
+                Swal.fire({
+                    icon: "success",
+                    title: "Productes creats correctament",
+                });
+            } else {
+                Swal.fire({
+                    icon: "error createProductoExcel",
+                    title: "Error el procesar el fitxer .csv",
+                });
+            }
         } catch (error) {
             Swal.fire({
                 icon: "error",
