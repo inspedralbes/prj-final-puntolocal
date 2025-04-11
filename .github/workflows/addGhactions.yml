@@ -53,9 +53,12 @@ jobs:
           sed -i "s|GOOGLE_CLIENT_SECRET=.*|GOOGLE_CLIENT_SECRET=${{ secrets.PROD_GOOGLE_CLIENT_SECRET }}|" .env
           sed -i "s|GOOGLE_REDIRECT_URI=.*|GOOGLE_REDIRECT_URI=${{ secrets.PROD_GOOGLE_REDIRECT_URI }}|" .env
           sed -i "s|FRONTEND_URL=.*|FRONTEND_URL=${{ secrets.PROD_BASE_URL }}|" .env
+          sed -i "s|LOGIN_URL=.*|LOGIN_URL=${{ secrets.PROD_LOGIN_URL }}|" .env
 
           # Varaiables de correo
           sed -i "s|MAIL_PASSWORD=.*|MAIL_PASSWORD=${{ secrets.PROD_MAIL_PASSWORD }}|" .env
+
+          
           
           php artisan key:generate
           php artisan config:cache

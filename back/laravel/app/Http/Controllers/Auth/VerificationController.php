@@ -17,9 +17,9 @@
             if (sha1($user->email) === $hash) {
                 $user->markEmailAsVerified();
                 event(new Verified($user));
-                return redirect()->route('home')->with('message', 'Correo verificado con éxito.');
+                return redirect()->away(env('FRONTEND_URL'))->with('message', 'Correo verificado con éxito.');
             }
 
-            return redirect()->route('home')->with('error', 'El enlace de verificación no es válido.');
+            return redirect()->away(env('LOGIN_URL'))->with('error', 'El enlace de verificación no es válido.');
         }
     }
