@@ -713,7 +713,7 @@ async function handleCSVUpload(event) {
                 const columns = parseCSVLine(line);
 
                 if (columns.length < 5) return;
-                
+
                 const subcategoriaMatch = columns[0]?.match(/^(\d+)/);
                 const id = subcategoriaMatch ? parseInt(subcategoriaMatch[1], 10) : null;
                 const nom = columns[1] || '';
@@ -743,14 +743,18 @@ async function handleCSVUpload(event) {
 
             console.log('Productos procesados:', productos);
 
-
-
-
             const result = await $communicationManager.createProductoExcel(productos);
-            Swal.fire({
-                icon: "success",
-                title: "Productes creats correctament",
-            });
+            if (result) {
+                Swal.fire({
+                    icon: "success",
+                    title: "Productes creats correctament",
+                });
+            } else {
+                Swal.fire({
+                    icon: "error createProductoExcel",
+                    title: "Error el procesar el fitxer .csv",
+                });
+            }
         } catch (error) {
             Swal.fire({
                 icon: "error",
