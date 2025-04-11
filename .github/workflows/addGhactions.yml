@@ -110,10 +110,13 @@ jobs:
             PORT=3000' > /var/www/backend/.env
             
             # Permisos Laravel
+            sudo chmod 755 /var/www
+            sudo chmod 755 /var/www/backend
+            sudo chmod 755 /var/www/backend/laravel
             sudo chown -R www-data:www-data /var/www/backend/laravel/storage
             sudo chown -R www-data:www-data /var/www/backend/laravel/bootstrap/cache
-            sudo chmod -R 777 /var/www/backend/laravel/storage
-            sudo chmod -R 777 /var/www/backend/laravel/bootstrap/cache
+            sudo chmod -R 775 /var/www/backend/laravel/storage
+            sudo chmod -R 775 /var/www/backend/laravel/bootstrap/cache
 
             # Instalar dependencias Node.js
             cd /var/www/backend && npm ci --production
