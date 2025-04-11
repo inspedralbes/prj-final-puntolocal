@@ -61,7 +61,7 @@
                     <div class="flex gap-4">
                         <div class="relative group">
                             <button
-                                onclick="window.open('https:\\docs.google.com/spreadsheets/d/180jUM-AH0wEwzSJE3yC9ro0rigZ-KBB010MU5fXXtKg/copy', '_blank')"
+                                onclick="window.open('https:\/\/docs.google.com/spreadsheets/d/180jUM-AH0wEwzSJE3yC9ro0rigZ-KBB010MU5fXXtKg/copy', '_blank')"
                                 class="inline-flex items-center bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-2 px-4 rounded">
                                 <img src="../../assets/template.svg" class="h-[30px] w-[30px]"
                                     alt="Plantilla per productes nous">
