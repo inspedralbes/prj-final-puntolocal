@@ -196,7 +196,7 @@ const consultarSiTieneLike = async (id) => {
 const fetchComercio = async () => {
     const id = route.params.id;
     try {
-        const response = await $communicationManager.getComercioById(id);
+        const response = await $communicationManager.getComercio(id);
 
         if (response) {
             comercio.value = response.comercio;

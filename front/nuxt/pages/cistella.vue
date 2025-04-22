@@ -32,6 +32,7 @@ const formData = reactive({
 const comercios = ref({});
 const groups = reactive([]);
 const isStoreClosed = ref(false);
+const storesClosed = ref([]);
 const choosed = ref(false);
 const payOption = ref(1);
 const auth = useAuthStore();
@@ -61,6 +62,7 @@ onMounted(async () => {
             comercios.value[id] = comercioData.comercio.nombre;
         }
     }));
+    await checkClosedStores();
 });
 
 // Agrupos los productos por el nombre del comercio
@@ -80,11 +82,44 @@ const storeTotal = (storeName) => {
     return groupedCesta.value[storeName].reduce((acc, item) => acc + item.precio * item.cantidad, 0);
 };
 
+function proximaApertura(horarios) {
+    const daysOfWeek = ['domingo', 'lunes', 'martes', 'miércoles', 'jueves', 'viernes', 'sábado'];
+    
+    const now = new Date();
+    const nowDay = daysOfWeek[now.getDay()];
+    const nowTime = `${now.getHours()}:${now.getMinutes()}`;
+    console.log(horarios)
+    daysOfWeek.map((day, index) => {
+        console.log(daysOfWeek[(now.getDay() + index) % 7])
+        console.log(horarios[daysOfWeek[(now.getDay() + index) % 7]])
+    })
+    // if(nowTime < )
+    console.log(horarios[nowDay]);
+}
+
+async function checkClosedStores() {
+    for (const grouped of comercioStore.cesta) {
+        const comercio_id = grouped.comercio_id
+        const response = await $communicationManager.getComercio(comercio_id);
+        const horarios = JSON.parse(response.comercio.horario);
+
+        if (response.isOpen) {
+            const aux = {
+                comercio_id: response.comercio.id,
+                comercio_nombre: response.comercio.nombre,
+                comerio_proximo_horario: response.comercio.horario,
+                isOpen: response.isOpen
+            }
+            proximaApertura(horarios);
+        }
+    }
+}
+
 function toggleCheckout() {
     if (!isLoggued.value) {
         loginVisible.value = !loginVisible.value;
     } else {
-        chooseShipping.value = !chooseShipping.value;
+        // chooseShipping.value = !chooseShipping.value;
         shipOption.value = null;
         choosed.value = false;
     }
@@ -108,16 +143,14 @@ function choosePayment(event) {
 }
 
 function toPay() {
-    chooseShipping.value = !chooseShipping.value;
+    // chooseShipping.value = !chooseShipping.value;
     togglePayment();
-    // console.log(shipOption.value);
 }
 
 async function crearComanda() {
     try {
         const createdOrder = await $communicationManager.createOrder(orderFiltrada.value);
         if (createdOrder.success) {
-            console.log("CUMPLE IF(CREATEDORDER.SUCCESS)")
             order_id.value = createdOrder.data.order.id;
             const subcomandaInfo = computed(() => {
                 return {
@@ -169,7 +202,7 @@ async function crearComanda() {
                 const orders = agruparOrderSuborders(createdOrder, createdSuborders);
                 socket.emit("nuevaOrden", orders);
             }
-        }else{
+        } else {
             console.log("ALGUN ERROR CREARCOMANDA: ", createdOrder)
         }
 
@@ -365,7 +398,7 @@ const veureOrdre = () => {
             </div>
 
             <!-- PANTALLA DE ELEGIR TIPO DE ENVÍO  -->
-            <div v-if="chooseShipping">
+            <div v-if="false">
                 <div class="bg-gray-900/50 fixed inset-0 z-40 animate-appear" @click="toggleCheckout"></div>
                 <div id="chooseShipping" class="fixed bottom-0 z-40 flex flex-col items-center justify-center p-4">
                     <h3 class="text-3xl font-semibold text-center" style="color: #1E2026">

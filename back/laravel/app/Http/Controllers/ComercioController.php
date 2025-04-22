@@ -3,6 +3,8 @@
 
     use App\Models\Comercio;
     use App\Models\Producto;
+    use Carbon\Carbon;
+    use Date;
     use Illuminate\Support\Str;
     use Illuminate\Http\Request;
     use Illuminate\Support\Facades\DB;
@@ -109,7 +111,39 @@
         }
 
 
+        // CAMBIAR 2 FUNCIONES POR SEPARADO, GETINFOCOMERCIO QUE RECOJA TODA LA INFORMACIÓN DE LOS COMERCIOS Y OTRA QUE DEVUELVA TODOS LOS PRODUCTOS DEL COMERCIO
         public function getComercio($id) {
+            $comercio = Comercio::find($id);
+
+            if ($comercio == null) {
+                return response()->json([
+                    'error' => 'Comercio no encontrado'
+                ], 404);
+            }
+
+            $now = Carbon::now('Europe/Madrid');
+            $isOpen = false;
+            $day = strtolower($now->locale('es')->isoFormat('dddd'));
+
+            $horario = json_decode($comercio->horario, true);
+            if (isset($horario[$day])) {
+                $horario = explode(' - ', $horario[$day]);
+                if (count($horario) === 2) {
+                    $horaApertura = Carbon::createFromFormat('H:i', $horario[0]);
+                    $horaCierre = Carbon::createFromFormat('H:i', $horario[1]);
+                    // dd($now, $horaApertura, $horaCierre);
+
+                    if($now->between($horaApertura, $horaCierre)) $isOpen = true;
+                }
+            }
+
+            return response()->json([
+                'comercio' => $comercio,
+                'isOpen' => $isOpen
+            ], 200);
+        }
+
+        public function getProductosComercio($id) {
             $comercio = Comercio::find($id);
 
             if ($comercio == null) {
@@ -140,7 +174,6 @@
             });
 
             return response()->json([
-                'comercio' => $comercio,
                 'productos' => $productosData,
             ], 200);
         }

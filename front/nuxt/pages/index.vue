@@ -188,7 +188,7 @@ async function getProductosCercanos(comercioIds) {
 
 async function fetchProductos2() {
     try {
-        const response = await $communicationManager.getProductos();
+        const response = await $communicationManager.getRandomProductos();
         if (response && response.data) {
             productos2.value = response.data;
         } else {

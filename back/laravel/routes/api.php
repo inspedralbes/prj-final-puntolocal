@@ -41,6 +41,7 @@ Route::middleware('auth:sanctum')->prefix('cliente')->group(function () {
 
 Route::prefix('comercios')->group(function () {
     Route::get('/{id}', [ComercioController::class, 'getComercio']);
+    Route::get('/{id}/productos', [ComercioController::class, 'getProductosComercio']);
 });
 
 // ==== COMERCIOS ===================
