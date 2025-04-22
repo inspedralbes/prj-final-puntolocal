@@ -7,6 +7,9 @@ definePageMeta({
 });
 
 import { useRuntimeConfig } from "#imports";
+import { useToast } from '@/composables/useToast.js';
+
+const { toast } = useToast();
 const config = useRuntimeConfig();
 const baseUrl = config.public.apiBaseUrl;
 
@@ -51,10 +54,10 @@ async function updateComercio() {
         const jsonResponse = await $communicationManager.updateComercio(formComercio, authStore.comercio.id);
 
         if (jsonResponse) {
-            // console.log('Informació del comerç actualitzada amb èxit')
+            toast('Informació del comerç actualitzada amb èxit', 'success')
             Object.assign(formData, jsonResponse.comercio);
         } else {
-            alert('Hi ha hagut algun error');
+            toast('Hi ha hagut algun error', 'error');
         }
     }
 
@@ -68,7 +71,7 @@ async function updateComercio() {
         const imageResponse = await $communicationManager.updateComercioImagenes(formD, authStore.comercio.id);
 
         if (!imageResponse) {
-            alert('Hi ha hagut algun error');
+            toast('Hi ha hagut algun error', 'error');
         }
     }
 }
