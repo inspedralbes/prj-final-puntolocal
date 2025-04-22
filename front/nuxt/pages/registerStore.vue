@@ -13,7 +13,7 @@ const errorMensaje = ref('');
 const imagen = ref(null);
 
 definePageMeta({
-    layout: 'authentication',
+    layout: 'footer-only',
 });
 
 const formData = reactive({

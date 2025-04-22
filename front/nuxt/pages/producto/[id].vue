@@ -255,7 +255,7 @@ const irAComercio = () => {
 
 async function actualizaFavoritos(productoID) {
     const { $communicationManager } = useNuxtApp();
-    console.log(productoID) 
+    
     try {
         const response = await $communicationManager.updateFavorito(authStore?.user?.id, productoID);
 

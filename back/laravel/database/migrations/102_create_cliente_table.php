@@ -17,6 +17,7 @@
                 $table->timestamp('phone_verified_at')->nullable();
 
                 $table->string('password')->nullable();
+                $table->boolean('is_google_user')->default(false);
                 $table->string('street_address')->nullable();
                 $table->string('ciudad')->nullable();
                 $table->string('provincia')->nullable();
@@ -25,7 +26,6 @@
                 $table->integer('numero_puerta')->nullable();
                 $table->integer('rol')->default(0);                 // Por defecto se pone como cliente. 1 = comercio
 
-                $table->integer('puntos')->nullable();
                 $table->rememberToken();
                 $table->timestamps();
             });

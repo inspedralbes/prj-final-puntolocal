@@ -13,7 +13,7 @@
 
         protected $fillable = [
             'name', 'apellidos', 'email', 'phone',
-            'password', 'street_address', 'ciudad', 'provincia',
+            'password', 'is_google_user', 'street_address', 'ciudad', 'provincia',
             'codigo_postal', 'numero_planta', 'numero_puerta', 'puntos',
         ];
 

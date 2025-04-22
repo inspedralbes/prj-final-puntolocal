@@ -114,6 +114,12 @@
 
             $cliente = $request->user();
 
+            if ($cliente->is_google_user) {
+                return response()->json([
+                    'error' => 'No puedes cambiar la contraseña de una cuenta vinculada con Google.'
+                ], 400);
+            }
+
             if (!Hash::check($request->currentPassword, $cliente->password)) {
                 return response()->json([
                     'error' => 'Contraseña actual incorrecta.'

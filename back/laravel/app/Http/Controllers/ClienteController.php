@@ -127,6 +127,7 @@ class ClienteController extends Controller
             'cliente' => [
                 'nombre' => $cliente->name,
                 'apellidos' => $cliente->apellidos,
+                'is_google_user' => $cliente->is_google_user,
                 'email' => $cliente->email,
                 'phone' => $cliente->phone,
                 'street_address' => $cliente->street_address,

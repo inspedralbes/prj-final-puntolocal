@@ -26,7 +26,10 @@ class GoogleController extends Controller
                 [
                     'name' => $googleUser->user['given_name'],
                     'apellidos' => $googleUser->user['family_name'] ?? '',
-                    'google_id' => $googleUser->id
+                    //'google_id' => $googleUser->id,
+                    'is_google_user' => true,
+                    'password' => null, 
+                    'email_verified_at' => now(),
                 ]
             );
 
