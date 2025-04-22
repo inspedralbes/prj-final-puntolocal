@@ -163,8 +163,8 @@ export default defineNuxtPlugin((nuxtApp) => {
         return null;
       }
 
-      const producto = await response.json();
-      return producto;
+      const comercios = await response.json();
+      return comercios;
     },
 
     async getProductoById(id) {

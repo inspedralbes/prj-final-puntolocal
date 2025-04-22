@@ -31,7 +31,7 @@ const formData = reactive({
 
 const comercios = ref({});
 const groups = reactive([]);
-const chooseShipping = ref(false);
+const isStoreClosed = ref(false);
 const choosed = ref(false);
 const payOption = ref(1);
 const auth = useAuthStore();
