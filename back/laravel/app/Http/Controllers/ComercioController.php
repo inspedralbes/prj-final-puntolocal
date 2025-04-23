@@ -97,13 +97,22 @@ class ComercioController extends Controller
         $comercios = Comercio::select(
             'id',
             'nombre',
-            DB::raw("JSON_UNQUOTE(JSON_EXTRACT(imagenes, '$[0]')) as imagen"),
+            'logo_path as imagen',
+            'latitude',
+            'longitude',
+            'calle_num',
+            'ciudad',
+            'provincia',
+            'codigo_postal',
+            'categoria_id',
             DB::raw("(6371 * acos(cos(radians($latitud)) 
-                            * cos(radians(latitude)) 
-                            * cos(radians(longitude) - radians($longitud)) 
-                            + sin(radians($latitud)) 
-                            * sin(radians(latitude)))) AS distancia")
+                     * cos(radians(latitude)) 
+                     * cos(radians(longitude) - radians($longitud)) 
+                     + sin(radians($latitud)) 
+                     * sin(radians(latitude)))) AS distancia")
         )
+            ->whereNotNull('latitude')
+            ->whereNotNull('longitude')
             ->having('distancia', '<=', $radio)
             ->orderBy('distancia', 'asc')
             ->get();
