@@ -200,3 +200,21 @@ Route::prefix('poblaciones')->group(function () {
 });
 
 Route::get('/verify/{id}/{hash}', [VerificationController::class, 'verify'])->name('verification.verify');
+
+
+
+use App\Http\Controllers\PaymentController;;
+
+Route::post('/create-checkout-session', [PaymentController::class, 'createCheckoutSession']);
+Route::get('/payment/success', [PaymentController::class, 'success'])->name('payment.success');
+Route::get('/payment/cancel', [PaymentController::class, 'cancel'])->name('payment.cancel');
+Route::post('/process-payment', [PaymentController::class, 'processPayment']);
+
+Route::prefix('stripe')->group(function () {
+    Route::post('create-setup-intent', [PaymentController::class, 'createSetupIntent'])->name('stripe.createSetupIntent');
+    Route::post('add-payment-method', [PaymentController::class, 'addPaymentMethod'])->name('stripe.addPaymentMethod');
+    Route::post('retrieve-payment-method', [PaymentController::class, 'retrievePaymentMethod'])->name('stripe.retrievePaymentMethod');
+    Route::post('set-default-payment-method', [PaymentController::class, 'setDefaultPaymentMethod'])->name('stripe.setDefaultPaymentMethod');
+    Route::post('purchase', [PaymentController::class, 'purchase'])->name('stripe.purchase');
+    Route::post('delete-payment-method', [PaymentController::class, 'delete'])->name('stripe.delete');
+});

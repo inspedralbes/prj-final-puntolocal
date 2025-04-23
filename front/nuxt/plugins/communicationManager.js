@@ -706,6 +706,57 @@ export default defineNuxtPlugin((nuxtApp) => {
       }
     },
 
+    async createSetUpIntent() {
+      try {
+        const response = await fetch(Host + '/stripe/create-setup-intent', {
+          method: 'POST',
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+            'Authorization': this.authStore.token ? `Bearer ${this.authStore.token}` : ''
+          }
+        });
+        if (response.ok) {
+          const json = await response.json();
+          return json.data;
+        } else {
+          console.error(`Error en la petición: ${response.status} ${response.statusText}`)
+          return null;
+        }
+
+      } catch (error) {
+        console.error('Error al realizar la petición:', error);
+        return null;
+      }
+    },
+
+    async addPaymentMethod(payment_method) {
+      try {
+        const response = await fetch(Host + '/stripe/add-payment-method', {
+          method: 'POST',
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+            'Authorization': this.authStore.token ? `Bearer ${this.authStore.token}` : ''
+          },
+          body: JSON.stringify({
+            'paymentMethod': payment_method
+          })
+        });
+        if (response.ok) {
+          const json = await response.json();
+          return json.data;
+        } else {
+          console.error(`Error en la petición: ${response.status} ${response.statusText}`)
+          return null;
+        }
+
+      } catch (error) {
+        console.error('Error al realizar la petición:', error);
+        return null;
+      }
+    },
+
     async changePassword(json) {
       try {
         const response = await fetch(Host + '/auth/change-password', {

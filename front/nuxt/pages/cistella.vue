@@ -15,6 +15,7 @@ import { useNuxtApp } from '#app';
 import { useRoute, useRouter } from "vue-router";
 import shoppingBasketIcon from '../assets/shopping-basket.svg';
 import { Socket } from 'socket.io-client';
+import { loadStripe } from '@stripe/stripe-js'
 
 const route = useRoute();
 const router = useRouter();
@@ -40,6 +41,11 @@ const paymentView = ref(false);
 const cistellaView = ref(true);
 const isOk = ref(false);
 const order_id = ref();
+const stripe = ref(null);
+const elements = ref(null);
+const cardElement = ref(null);
+const cardHolderName = ref('');
+
 // const shipOption = ref(2);
 // const paymentView = ref(true);
 // const cistellaView = ref(false);
@@ -108,7 +114,7 @@ function choosePayment(event) {
 }
 
 function toPay() {
-    chooseShipping.value = !chooseShipping.value;
+    chooseShipping.value = false;
     togglePayment();
     // console.log(shipOption.value);
 }
@@ -169,7 +175,7 @@ async function crearComanda() {
                 const orders = agruparOrderSuborders(createdOrder, createdSuborders);
                 socket.emit("nuevaOrden", orders);
             }
-        }else{
+        } else {
             console.log("ALGUN ERROR CREARCOMANDA: ", createdOrder)
         }
 
@@ -200,6 +206,59 @@ const seguirComprant = () => {
 const veureOrdre = () => {
     router.push(`/perfil/compras/${order_id.value}`); // Ajusta la ruta segons la teva aplicació
 };
+
+async function mostrarFormularioPago() {
+    const div = document.getElementById('divAfegirTargeta');
+    div.classList.toggle('hidden');
+
+    // Initialize Stripe
+    if (!stripe.value) {
+        stripe.value = await loadStripe('pk_test_51RGaqjRtaTRoDEKmV6KQUqgfOzfnIovnlBLrG6A3YJ9W6VgGMR0nS7QsOSNtQO4bHHGFbjhRl4p9w5hSytie5a7F00h6uhTBRG')
+        elements.value = stripe.value.elements()
+        cardElement.value = elements.value.create('card')
+        cardElement.value.mount('#card-element')
+    }
+}
+
+const updatePaymentMethod = async () => {
+    //loader 
+    try {
+        // Realizas la llamada a tu API para crear el SetupIntent y obtener el client_secret
+        const response = await $communicationManager.createSetUpIntent();
+        console.log(response);  // Verifica la respuesta de tu API
+        const clientSecret = response.client_secret;  // Asegúrate de acceder a client_secret correctamente
+
+        console.log(clientSecret);  // Verifica que el client_secret es correcto
+
+        // Usas el clientSecret en el método de Stripe
+        const { setupIntent, error } = await stripe.value.confirmCardSetup(
+            clientSecret,
+            {
+                payment_method: {
+                    card: cardElement.value,
+                    billing_details: { name: cardHolderName.value }
+                }
+            }
+        );
+
+        if (error) {
+            console.error(error.message);
+            // Manejo de errores
+        } else {
+            console.log('Card verified successfully');
+            let paymentMethodResponse = await $communicationManager.addPaymentMethod(setupIntent.payment_method)
+            console.log(paymentMethodResponse);
+
+            emit('paymentMethods', paymentMethodResponse.paymentMethods);
+            emit('defaultPaymentMethod', paymentMethodResponse.defaultPaymentMethod);
+            // Manejo de verificación exitosa
+        }
+    } catch (error) {
+        console.error('Error creating SetupIntent:', error);
+    }
+    //loader 
+};
+
 
 </script>
 
@@ -577,6 +636,54 @@ const veureOrdre = () => {
                                     class="w-4 h-4 absolute accent-current right-3 text-gray-400" id="targeta" value="2"
                                     @change="choosePayment" />
                             </label>
+
+                            <button class="border border-black bg-blue-100 p-2" @click="mostrarFormularioPago">
+                                Afegir targeta
+                            </button>
+
+                            <div id="divAfegirTargeta" class="hidden mt-4 p-4 border border-gray-300 bg-gray-100">
+                                <div class="flex justify-center">
+                                    <div class="w-full max-w-md">
+                                        <div class="rounded-lg shadow-sm border border-gray-200 bg-white">
+                                            <div class="p-6">
+                                                <h4 class="text-xl font-semibold mb-4">Añadir método de pago</h4>
+                                                <form>
+                                                    <div class="mb-4">
+                                                        <label class="block text-sm font-medium text-gray-700 mb-1"
+                                                            for="card-holder-name">Titular de la tarjeta</label>
+                                                        <div class="relative">
+                                                            <input
+                                                                class="peer block w-full rounded-md border border-gray-300 py-2 px-3 placeholder-transparent focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                                                                id="card-holder-name"
+                                                                placeholder="Introduce el nombre del titular"
+                                                                type="text" v-model="cardHolderName" />
+                                                            <label for="card-holder-name"
+                                                                class="absolute left-3 -top-2.5 text-sm text-gray-500 bg-white px-1 transition-all peer-placeholder-shown:top-2 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 peer-focus:-top-2.5 peer-focus:text-sm peer-focus:text-gray-500">
+                                                                Nombre del titular
+                                                            </label>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="mb-6">
+                                                        <label
+                                                            class="block text-sm font-medium text-gray-700 mb-2">Información
+                                                            de la tarjeta</label>
+                                                        <div id="card-element"
+                                                            class="border border-gray-300 rounded-md px-3 py-3 bg-white">
+                                                        </div>
+                                                    </div>
+
+                                                    <button @click="updatePaymentMethod" type="button"
+                                                        class="w-full bg-blue-600 text-white font-medium py-2 px-4 rounded-md hover:bg-blue-700 transition">
+                                                        Añadir método de pago
+                                                    </button>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
                         </div>
                     </div>
                 </div>
