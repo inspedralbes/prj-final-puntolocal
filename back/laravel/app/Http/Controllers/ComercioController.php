@@ -123,7 +123,7 @@
 
             $now = Carbon::now('Europe/Madrid');
             $isOpen = false;
-            $day = strtolower($now->locale('es')->isoFormat('dddd'));
+            $day = strtolower($now->locale('ca')->isoFormat('dddd'));
 
             $horario = json_decode($comercio->horario, true);
             if (isset($horario[$day])) {

@@ -83,18 +83,29 @@ const storeTotal = (storeName) => {
 };
 
 function proximaApertura(horarios) {
-    const daysOfWeek = ['domingo', 'lunes', 'martes', 'miércoles', 'jueves', 'viernes', 'sábado'];
-    
+    const daysOfWeek = ['diumenge', 'dilluns', 'dimarts', 'dimecres', 'dijous', 'divendres', 'dissabte'];
     const now = new Date();
-    const nowDay = daysOfWeek[now.getDay()];
-    const nowTime = `${now.getHours()}:${now.getMinutes()}`;
-    console.log(horarios)
-    daysOfWeek.map((day, index) => {
-        console.log(daysOfWeek[(now.getDay() + index) % 7])
-        console.log(horarios[daysOfWeek[(now.getDay() + index) % 7]])
-    })
-    // if(nowTime < )
-    console.log(horarios[nowDay]);
+    const todayIndex = now.getDay();
+    const format = (n) => n.toString().padStart(2, '0')
+    const nowTime = `${format(now.getHours())}:${format(now.getMinutes())}`;
+
+    for (let index = 0; index < daysOfWeek.length; index++) {
+        const dayIndex = (now.getDay() + index) % 7;
+        const dayName = daysOfWeek[dayIndex];
+        const horario = horarios[dayName];
+
+        if (horario !== 'Cerrado') {
+            const [inicio, fin] = horario.split(' - ')
+
+            if(index === 0){
+                if(nowTime < inicio) return `Obre a les ${inicio}`
+            }else{
+                const tomorrow = index === 1;
+                return `Obre ${tomorrow ? 'demà' : 'el ' + dayName} a les ${inicio}`;
+            }
+        }
+    }
+    return null;
 }
 
 async function checkClosedStores() {
@@ -103,14 +114,15 @@ async function checkClosedStores() {
         const response = await $communicationManager.getComercio(comercio_id);
         const horarios = JSON.parse(response.comercio.horario);
 
-        if (response.isOpen) {
+        console.log(response)
+        if (!response.isOpen) {
             const aux = {
                 comercio_id: response.comercio.id,
                 comercio_nombre: response.comercio.nombre,
                 comerio_proximo_horario: response.comercio.horario,
                 isOpen: response.isOpen
             }
-            proximaApertura(horarios);
+            console.log(proximaApertura(horarios));
         }
     }
 }
