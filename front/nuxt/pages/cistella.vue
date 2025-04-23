@@ -31,7 +31,6 @@ const formData = reactive({
 
 const comercios = ref({});
 const groups = reactive([]);
-const isStoreClosed = ref(false);
 const storesClosed = ref([]);
 const choosed = ref(false);
 const payOption = ref(1);
@@ -39,11 +38,9 @@ const auth = useAuthStore();
 const shipOption = ref(null);
 const paymentView = ref(false);
 const cistellaView = ref(true);
+const comerciosInfo = ref([]);
 const isOk = ref(false);
 const order_id = ref();
-// const shipOption = ref(2);
-// const paymentView = ref(true);
-// const cistellaView = ref(false);
 const isLoggued = computed(() => {
     return auth?.user !== null;
 });
@@ -60,9 +57,11 @@ onMounted(async () => {
         const comercioData = await $communicationManager.getComercio(id);
         if (comercioData && comercioData.comercio.nombre) {
             comercios.value[id] = comercioData.comercio.nombre;
+            comerciosInfo.value.push(comercioData);
         }
     }));
-    await checkClosedStores();
+    storesClosed.value = await checkClosedStores();
+    console.log(storesClosed.value);
 });
 
 // Agrupos los productos por el nombre del comercio
@@ -95,7 +94,7 @@ function proximaApertura(horarios) {
         const horario = horarios[dayName];
 
         if (horario !== 'Cerrado') {
-            const [inicio, fin] = horario.split(' - ')
+            const [inicio, fin] = horario.split(' - ');
 
             if(index === 0){
                 if(nowTime < inicio) return `Obre a les ${inicio}`
@@ -109,22 +108,21 @@ function proximaApertura(horarios) {
 }
 
 async function checkClosedStores() {
-    for (const grouped of comercioStore.cesta) {
-        const comercio_id = grouped.comercio_id
-        const response = await $communicationManager.getComercio(comercio_id);
-        const horarios = JSON.parse(response.comercio.horario);
+    let arrayClosed = [];
+    for (const data of comerciosInfo.value) {
+        
+        const horarios = JSON.parse(data.comercio.horario);
 
-        console.log(response)
-        if (!response.isOpen) {
-            const aux = {
-                comercio_id: response.comercio.id,
-                comercio_nombre: response.comercio.nombre,
-                comerio_proximo_horario: response.comercio.horario,
-                isOpen: response.isOpen
-            }
-            console.log(proximaApertura(horarios));
+        if (!data.isOpen) {
+            arrayClosed.push({
+                comercio_id: data.comercio.id,
+                comercio_nombre: data.comercio.nombre,
+                comerio_proximo_horario: proximaApertura(horarios),
+                isOpen: data.isOpen
+            })
         }
     }
+    return arrayClosed;
 }
 
 function toggleCheckout() {

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Cliente;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
@@ -139,17 +140,18 @@ class ClienteController extends Controller
         ], 200);
     }
 
-    // public function checkUser()
-    // {
-    //     try {
-    //         $user = "Hola";
-    //         if (!$user) {
-    //             return response()->json(['success' => false, "message" => 'User not authenticated'], 200);
-    //         } else {
-    //             return response()->json(['success' => true, "message" => 'User authenticated'], 200);
-    //         }
-    //     } catch (\Throwable $th) {
-    //         return response()->json(['success' => false, "message" => `Error: $th`]);
-    //     }
-    // }
+    public function checkUser()
+    {
+        try {
+            $user = Auth::user();
+            Log::info($user);
+            if (!$user) {
+                return response()->json(['success' => false, "message" => 'User not authenticated'], 200);
+            } else {
+                return response()->json(['success' => true, "message" => 'User authenticated', "user" => $user], 200);
+            }
+        } catch (\Throwable $th) {
+            return response()->json(['success' => false, "message" => `Error: $th`]);
+        }
+    }
 }

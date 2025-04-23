@@ -18,6 +18,8 @@ class OrderComercioController extends Controller
     {
         try {
             $user = Auth::user();
+            dd($user);
+
             $comercio = Comercio::where('idUser', $user->id)->first();
 
             $orders = OrderComercio::with('estatCompra', 'order:id,tipo_envio,tipo_pago,cliente_id', 'order.tipoEnvio', 'order.tipoPago', 'order.cliente')
