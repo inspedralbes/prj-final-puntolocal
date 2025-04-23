@@ -1241,7 +1241,7 @@ export default defineNuxtPlugin((nuxtApp) => {
 
     ///////////////////////////// DELETE //////////////////////////////////
 
-    async deleteComercioImagen(id, imagePath) {
+    async deleteComercioImagen(id, tipo_imagen) {
       try {
         const response = await fetch(`${Host}/comercios/${id}/imagenes`, {
           method: 'DELETE',
@@ -1250,7 +1250,7 @@ export default defineNuxtPlugin((nuxtApp) => {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${this.authStore.token}`
           },
-          body: JSON.stringify({ image: imagePath })
+          body: JSON.stringify(tipo_imagen)
         });
         if (!response.ok) {
           console.error(`Error en la petición: ${response.status} ${response.statusText}`);

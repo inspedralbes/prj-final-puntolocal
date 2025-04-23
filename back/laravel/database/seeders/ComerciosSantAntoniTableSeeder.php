@@ -122,7 +122,6 @@
                     'descripcion' => $comercios_descripciones[$i],
                     'gestion_stock' => rand(0, 1),
                     'puntaje_medio' => $faker->randomFloat(1, 1, 5),
-                    'imagenes' => json_encode([$faker->imageUrl()]),
                     'horario' => json_encode([
                         'lunes' => '09:00 - 18:00',
                         'martes' => '09:00 - 18:00',
@@ -135,7 +134,8 @@
                     'latitude' => $comercios_latitudes[$i],
                     'longitude' => $comercios_longitudes[$i],
                     'ubicacion_verified_at' => now(),
-                    'imagen' => json_encode($comercios_imagenes[$i]),
+                    'logo_path' => json_encode([$faker->imageUrl()]),
+                    'imagen_local_path' => json_encode($comercios_imagenes[$i]),
                 ]);
                 $usuarios++;
             }

@@ -14,7 +14,10 @@ const config = useRuntimeConfig();
 const baseUrl = config.public.apiBaseUrl;
 
 let formData = reactive({});
-let formComercio = reactive({});
+let formComercio = reactive({
+    logoImage: null,
+    localImage: null
+});
 const authStore = useAuthStore();
 const loading = ref(true);
 const categorias = ref('');
@@ -29,94 +32,188 @@ async function getComercioData() {
     const response = await $communicationManager.getComercio(authStore.comercio.id);
 
     if (response) {
+        // Procesar imágenes
+        if (response.comercio.logo_path) {
+            formComercio.logoImage = `${baseUrl}/storage/${response.comercio.logo_path}`;
+        } else {
+            formComercio.logoImage = null;
+        }
+
+        if (response.comercio.imagen_local_path) {
+            formComercio.localImage = `${baseUrl}/storage/${response.comercio.imagen_local_path}`;
+        } else {
+            formComercio.localImage = null;
+        }
+
+        // Mantener compatibilidad con el formato antiguo (opcional)
         if (response.comercio.imagenes) {
             try {
                 const parsed = JSON.parse(response.comercio.imagenes);
-                response.comercio.imagenes = parsed.map(img => `${baseUrl}/storage/${img}`);
+                if (parsed.length > 0 && !formComercio.logoImage) {
+                    formComercio.logoImage = `${baseUrl}/storage/${parsed[0]}`;
+                }
+                if (parsed.length > 1 && !formComercio.localImage) {
+                    formComercio.localImage = `${baseUrl}/storage/${parsed[1]}`;
+                }
             } catch (error) {
                 console.error("Error parsing imagenes:", error);
             }
-            // console.log(response.comercio.imagenes)
         }
+
+        // Copiar el resto de los datos
         Object.assign(formData, response.comercio);
-        Object.assign(formComercio, response.comercio);
-        // console.log(formComercio)
+        Object.assign(formComercio, {
+            ...response.comercio,
+            logoImage: formComercio.logoImage,
+            localImage: formComercio.localImage
+        });
+
+        console.log('logo', formComercio.logoImage);
+        console.log('local', formComercio.localImage);
     } else {
-        alert('Hi ha hagut algun error');
+        toast('Hi ha hagut algun error carregant les dades del comerç', 'error');
     }
 }
 
 async function updateComercio() {
     const { $communicationManager } = useNuxtApp();
+    let hasChanges = false;
 
-    // Update JSON data
-    if (JSON.stringify(formComercio) != JSON.stringify(formData)) {
-        const jsonResponse = await $communicationManager.updateComercio(formComercio, authStore.comercio.id);
-
+    // Update datos básicos (excluyendo campos de imágenes)
+    const { logoImage, localImage, ...comercioData } = formComercio;
+    if (JSON.stringify(comercioData) !== JSON.stringify(formData)) {
+        const jsonResponse = await $communicationManager.updateComercio(comercioData, authStore.comercio.id);
+        
         if (jsonResponse) {
-            toast('Informació del comerç actualitzada amb èxit', 'success')
+            toast('Informació del comerç actualitzada amb èxit', 'success');
             Object.assign(formData, jsonResponse.comercio);
+            hasChanges = true;
         } else {
             toast('Hi ha hagut algun error', 'error');
         }
     }
 
-    // Update images with actual file objects
-    if (formComercio.selectedFiles && formComercio.selectedFiles.length > 0) {
-        const formD = new FormData();
-        formComercio.selectedFiles.forEach((file, index) => {
-            formD.append(`imagenes[${index}]`, file);
-        });
+    // Manejo de imágenes
+    const formD = new FormData();
+    let shouldUpdateImages = false;
 
+    // Logo
+    if (formComercio.logoFile) {
+        formD.append('logo', formComercio.logoFile);
+        shouldUpdateImages = true;
+    } else if (!formComercio.logoImage && formData.logo_path) {
+        // Si se eliminó el logo
+        formD.append('logo', ''); // Envía campo vacío para indicar eliminación
+        shouldUpdateImages = true;
+    }
+
+    // Imagen del local
+    if (formComercio.localFile) {
+        formD.append('imagen_local', formComercio.localFile);
+        shouldUpdateImages = true;
+    } else if (!formComercio.localImage && formData.imagen_local_path) {
+        // Si se eliminó la imagen del local
+        formD.append('imagen_local', ''); // Envía campo vacío para indicar eliminación
+        shouldUpdateImages = true;
+    }
+
+    // Actualizar imágenes si hay cambios
+    if (shouldUpdateImages) {
         const imageResponse = await $communicationManager.updateComercioImagenes(formD, authStore.comercio.id);
-
-        if (!imageResponse) {
-            toast('Hi ha hagut algun error', 'error');
+        
+        if (imageResponse) {
+            toast('Imatges actualitzades amb èxit', 'success');
+            // Actualizar datos locales con las nuevas rutas
+            if (imageResponse.logo_path) {
+                formComercio.logoImage = `${baseUrl}/storage/${imageResponse.logo_path}`;
+            } else {
+                formComercio.logoImage = null;
+            }
+            
+            if (imageResponse.imagen_local_path) {
+                formComercio.localImage = `${baseUrl}/storage/${imageResponse.imagen_local_path}`;
+            } else {
+                formComercio.localImage = null;
+            }
+            
+            hasChanges = true;
+        } else {
+            toast('Hi ha hagut algun error amb les imatges', 'error');
         }
+    }
+
+    if (hasChanges) {
+        // Refrescar datos del comercio
+        await getComercioData();
     }
 }
 
-function handleImageUpload(event) {
+function handleLogoUpload(event) {
     const files = event.target.files;
     const allowedTypes = ["image/jpeg", "image/png", "image/svg+xml", "image/webp"];
 
-    // Prepare array for actual file objects
-    if (!formComercio.selectedFiles) {
-        formComercio.selectedFiles = [];
-    }
-
-    //SOLO 1 IMAGEN
     if (files.length === 0) return;
 
     const file = files[0];
 
     if (!allowedTypes.includes(file.type)) {
-        console.log("Solo se permiten imágenes en formato JPG, PNG, SVG o WEBP.");
+        toast("Solo se permiten imágenes en formato JPG, PNG, SVG o WEBP.", "error");
         return;
     }
 
     const reader = new FileReader();
     reader.onload = (e) => {
-        // Reemplaza la imagen en lugar de agregar más
-        formComercio.imagenes = [e.target.result];
+        formComercio.logoImage = e.target.result;
     };
     reader.readAsDataURL(file);
-
-    // Evita duplicaciones y solo añade el nuevo archivo
-    if (files.length > 0) {
-        formComercio.selectedFiles = [...files].filter(file => allowedTypes.includes(file.type));
-    }
+    
+    formComercio.logoFile = file;
 }
 
-async function removeImage(index) {
-    const { $communicationManager } = useNuxtApp();
-    const fullUrl = formComercio.imagenes[index];
-    const prefix = `${baseUrl}/storage/`;
-    const imagePath = fullUrl.replace(prefix, '');
+function handleLocalImageUpload(event) {
+    const files = event.target.files;
+    const allowedTypes = ["image/jpeg", "image/png", "image/svg+xml", "image/webp"];
 
-    const response = await $communicationManager.deleteComercioImagen(authStore.comercio.id, imagePath);
-    if (response && !response.error) {
-        formComercio.imagenes.splice(index, 1);
+    if (files.length === 0) return;
+
+    const file = files[0];
+
+    if (!allowedTypes.includes(file.type)) {
+        toast("Solo se permiten imágenes en formato JPG, PNG, SVG o WEBP.", "error");
+        return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = (e) => {
+        formComercio.localImage = e.target.result;
+    };
+    reader.readAsDataURL(file);
+    
+    formComercio.localFile = file;
+}
+
+async function removeImage(imageType) {
+    const { $communicationManager } = useNuxtApp();
+    
+    try {
+        const response = await $communicationManager.deleteComercioImagen(
+            authStore.comercio.id, 
+            { tipo_imagen: imageType }
+        );
+
+        if (response) {
+            if (imageType === 'logo') {
+                formComercio.logoImage = null;
+                formComercio.logoFile = null;
+            } else {
+                formComercio.localImage = null;
+                formComercio.localFile = null;
+            }
+            toast('Imatge eliminada amb èxit', 'success');
+        }
+    } catch (error) {
+        toast('Hi ha hagut algun error eliminant la imatge', 'error');
+        console.error('Error deleting image:', error);
     }
 }
 
@@ -129,7 +226,6 @@ onMounted(() => {
     getCategorias();
     loading.value = false;
 })
-
 </script>
 
 <template>
@@ -241,41 +337,87 @@ onMounted(() => {
                                     </div>
                                 </div>
                             </div>
-                            <div><label class="text-lg font-semibold text-gray-800 mb-4 ">Imágenes del
-                                    Comercio</label>
+                            <div>
+                                <h3 class="text-lg font-semibold text-gray-800 mb-6">Imágenes del Comercio</h3>
+                                
                                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                    <div v-for="(imagen, index) in formComercio.imagenes" :key="index"
-                                        class="relative group">
-                                        <img :src="imagen" alt="Imagen del comercio"
-                                            class="w-full h-48 object-cover rounded-lg">
-                                        <div
-                                            class="absolute inset-0 bg-black bg-opacity-50 opacity-0 group-hover:opacity-100 transition-opacity rounded-lg flex items-center justify-center">
-                                            <button type="button" @click="removeImage(index)"
-                                                class="p-2 bg-red-600 text-white rounded-full hover:bg-red-700"><svg
-                                                    xmlns="http://www.w3.org/2000/svg" width="16" height="16"
-                                                    fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
-                                                    <path
-                                                        d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0z" />
-                                                    <path
-                                                        d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h3.5a1 1 0 0 1 1 1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4zM2.5 3h11V2h-11z" />
-                                                </svg></button>
+                                    <!-- Logo del comercio -->
+                                    <div class="mb-6">
+                                        <label class="block text-sm font-medium text-gray-600 mb-2 sm:text-xl">Logo del Comercio</label>
+                                        
+                                        <div v-if="formComercio.logoImage" class="relative group w-48 h-48 mb-4">
+                                            <img :src="formComercio.logoImage" alt="Logo del comercio"
+                                                class="w-full h-full object-contain rounded-lg border border-gray-300">
+                                            <div
+                                                class="absolute inset-0 bg-black bg-opacity-50 opacity-0 group-hover:opacity-100 transition-opacity rounded-lg flex items-center justify-center">
+                                                <button type="button" @click="removeImage('logo')"
+                                                    class="p-2 bg-red-600 text-white rounded-full hover:bg-red-700">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                                        fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
+                                                        <path
+                                                            d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0z" />
+                                                        <path
+                                                            d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h3.5a1 1 0 0 1 1 1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4zM2.5 3h11V2h-11z" />
+                                                    </svg>
+                                                </button>
+                                            </div>
                                         </div>
+                                        
+                                        <input type="file" @change="handleLogoUpload" class="hidden" ref="logoFileInput"
+                                            accept=".jpg,.jpeg,.png,.svg,.webp">
+                                        <button type="button" style="font-size: 16px;" @click="$refs.logoFileInput.click()"
+                                            class="flex items-center px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-500">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+                                                viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                                stroke-linecap="round" stroke-linejoin="round"
+                                                class="lucide lucide-image w-4 h-4 mr-2">
+                                                <rect width="18" height="18" x="3" y="3" rx="2" ry="2"></rect>
+                                                <circle cx="9" cy="9" r="2"></circle>
+                                                <path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"></path>
+                                            </svg>
+                                            {{ formComercio.logoImage ? 'Cambiar Logo' : 'Añadir Logo' }}
+                                        </button>
+                                    </div>
+                                    
+                                    <!-- Imagen del local -->
+                                    <div class="mb-6">
+                                        <label class="block text-sm font-medium text-gray-600 mb-2 sm:text-xl">Imagen del Local</label>
+                                        
+                                        <div v-if="formComercio.localImage" class="relative group w-48 h-48 mb-4">
+                                            <img :src="formComercio.logoImage" alt="Logo del comercio"
+                                                class="w-full h-full object-contain rounded-lg border border-gray-300">
+                                            <div
+                                                class="absolute inset-0 bg-black bg-opacity-50 opacity-0 group-hover:opacity-100 transition-opacity rounded-lg flex items-center justify-center">
+                                                <button type="button" @click="removeImage('imagen_local')"
+                                                    class="p-2 bg-red-600 text-white rounded-full hover:bg-red-700">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                                        fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
+                                                        <path
+                                                            d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0z" />
+                                                        <path
+                                                            d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h3.5a1 1 0 0 1 1 1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4zM2.5 3h11V2h-11z" />
+                                                    </svg>
+                                                </button>
+                                            </div>
+                                        </div>
+                                        
+                                        <input type="file" @change="handleLocalImageUpload" class="hidden" ref="localFileInput"
+                                            accept=".jpg,.jpeg,.png,.svg,.webp">
+                                        <button type="button" style="font-size: 16px;" @click="$refs.localFileInput.click()"
+                                            class="flex items-center px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-500">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+                                                viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                                stroke-linecap="round" stroke-linejoin="round"
+                                                class="lucide lucide-image w-4 h-4 mr-2">
+                                                <rect width="18" height="18" x="3" y="3" rx="2" ry="2"></rect>
+                                                <circle cx="9" cy="9" r="2"></circle>
+                                                <path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"></path>
+                                            </svg>
+                                            {{ formComercio.localImage ? 'Cambiar Imagen del Local' : 'Añadir Imagen del Local' }}
+                                        </button>
                                     </div>
                                 </div>
-                                <!-- Incluir "multiple" para varias imagenes -->
-                                <input type="file" @change="handleImageUpload" class="hidden" ref="fileInput"
-                                    accept=".jpg,.jpeg,.png,.svg,.webp">
-                                <div class="w-full flex justify-between items-center">
-                                    <button type="button" style="font-size: 18px;" @click="$refs.fileInput.click()"
-                                        class="mt-4 flex items-center px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-500 "><svg
-                                            xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                            stroke-linecap="round" stroke-linejoin="round"
-                                            class="lucide lucide-image w-4 h-4 mr-2">
-                                            <rect width="18" height="18" x="3" y="3" rx="2" ry="2"></rect>
-                                            <circle cx="9" cy="9" r="2"></circle>
-                                            <path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"></path>
-                                        </svg>Añadir Imagen</button>
+                                <div class="w-full flex justify-end items-center mt-6">
                                     <ButtonComp
                                         style="width: 150px; height: 50px; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 18px;"
                                         @click="updateComercio">Guardar</ButtonComp>

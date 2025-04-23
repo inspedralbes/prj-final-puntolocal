@@ -11,6 +11,9 @@ use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Database\QueryException;
+use Illuminate\Validation\ValidationException;
 
 class ComercioController extends Controller
 {
@@ -209,7 +212,8 @@ class ComercioController extends Controller
                 'nombre' => $comercio->nombre,
                 'categoria_id' => $comercio->categoria_id,
                 'puntaje_medio' => $comercio->puntaje_medio,
-                'imagenes' => $comercio->imagenes,
+                'logo_path' => $comercio->logo_path,
+                'imagen_local_path' => $comercio->imagen_local_path,
                 'horario' => $comercio->horario,
             ];
         });
@@ -258,68 +262,109 @@ class ComercioController extends Controller
 
     public function updateComercioImagenes(Request $request, $id)
     {
-        $comercio = Comercio::find($id);
-        if ($comercio == null) {
-            return response()->json([
-                'error' => 'Comerç no trobat'
-            ], 404);
-        }
+        try {
+            $comercio = Comercio::findOrFail($id);
 
-        $validator = Validator::make($request->all(), [
-            'imagenes' => 'nullable|array',
-            'imagenes.*' => 'image|mimes:jpg,jpeg,png,svg,webp|max:2048',
-        ]);
+            $validator = Validator::make($request->all(), [
+                'logo' => 'nullable|image|mimes:jpg,jpeg,png,svg,webp|max:2048',
+                'imagen_local' => 'nullable|image|mimes:jpg,jpeg,png,svg,webp|max:2048',
+            ]);
 
-        if ($validator->fails()) {
-            return response()->json([
-                'error' => 'Camp invàlid',
-            ], 422);
-        }
-
-        $imagenesPaths = [];
-        if ($request->hasFile('imagenes')) {
-            foreach ($request->file('imagenes') as $imagen) {
-                $path = $imagen->store('comercios', 'public');
-                $imagenesPaths[] = $path;
+            if ($validator->fails()) {
+                return response()->json([
+                    'error' => 'Error de validació',
+                    'errors' => $validator->errors()
+                ], 422);
             }
+
+            $updateData = [];
+
+            // Procesar logo
+            if ($request->hasFile('logo')) {
+                // Eliminar logo anterior si existe
+                if ($comercio->logo_path) {
+                    Storage::disk('public')->delete($comercio->logo_path);
+                }
+
+                $logoPath = $request->file('logo')->store('comercios/logos', 'public');
+                $updateData['logo_path'] = $logoPath;
+            }
+
+            // Procesar imagen del local
+            if ($request->hasFile('imagen_local')) {
+                // Eliminar imagen anterior si existe
+                if ($comercio->imagen_local_path) {
+                    Storage::disk('public')->delete($comercio->imagen_local_path);
+                }
+
+                $imagenLocalPath = $request->file('imagen_local')->store('comercios/locales', 'public');
+                $updateData['imagen_local_path'] = $imagenLocalPath;
+            }
+
+            // Actualizar solo si hay cambios
+            if (!empty($updateData)) {
+                $comercio->update($updateData);
+            }
+
+            return response()->json([
+                'message' => 'Imatges actualitzades correctament',
+                'comercio' => $comercio->fresh()
+            ]);
+
+        } catch (ModelNotFoundException $e) {
+            return response()->json(['error' => 'Comerç no trobat'], 404);
+        } catch (\Exception $e) {
+            \Log::error("Error en updateComercioImagenes: " . $e->getMessage());
+            return response()->json([
+                'error' => 'Error del servidor',
+                'details' => env('APP_DEBUG') ? $e->getMessage() : null
+            ], 500);
         }
-
-        $comercio->update([
-            'imagenes' => json_encode($imagenesPaths),
-        ]);
-
-        return response()->json([
-            'message' => 'Imatges actualitzades exitosament.',
-            'comercio' => $comercio
-        ], 200);
     }
 
     public function deleteComercioImagen(Request $request, $id)
     {
-        $comercio = Comercio::find($id);
-        if (!$comercio) {
+        try {
+            $comercio = Comercio::findOrFail($id);
+
+            $request->validate([
+                'tipo_imagen' => 'required|in:logo,imagen_local'
+            ]);
+
+            $tipoImagen = $request->input('tipo_imagen');
+            $campoPath = $tipoImagen . '_path';
+
+            if (empty($comercio->$campoPath)) {
+                return response()->json([
+                    'error' => "No existeix la imatge de tipus $tipoImagen per a aquest comerç"
+                ], 404);
+            }
+
+            // Eliminar del almacenamiento
+            Storage::disk('public')->delete($comercio->$campoPath);
+
+            // Actualizar campo a null
+            $comercio->$campoPath = null;
+            $comercio->save();
+
+            return response()->json([
+                'message' => "Imatge de $tipoImagen eliminada correctament",
+                'comercio' => $comercio->fresh()
+            ]);
+
+        } catch (ModelNotFoundException $e) {
             return response()->json(['error' => 'Comerç no trobat'], 404);
+        } catch (ValidationException $e) {
+            return response()->json([
+                'error' => 'Dades invàlides',
+                'errors' => $e->errors()
+            ], 422);
+        } catch (\Exception $e) {
+            \Log::error("Error en deleteComercioImagen: " . $e->getMessage());
+            return response()->json([
+                'error' => 'Error del servidor',
+                'details' => env('APP_DEBUG') ? $e->getMessage() : null
+            ], 500);
         }
-
-        $imageToRemove = $request->input('image'); // Path or filename
-        if (!$imageToRemove) {
-            return response()->json(['error' => `No s'ha proporcionat la imatge a eliminar`], 422);
-        }
-
-        $images = json_decode($comercio->imagenes, true) ?? [];
-        $index = array_search($imageToRemove, $images);
-        if ($index === false) {
-            return response()->json(['error' => `La imatge no s'ha trobat`], 404);
-        }
-
-        Storage::disk('public')->delete($images[$index]);
-        array_splice($images, $index, 1);
-        $comercio->imagenes = json_encode($images);
-        $comercio->save();
-
-        return response()->json([
-            'message' => 'Imatge eliminada correctament.',
-            'comercio' => $comercio
-        ], 200);
     }
 }
