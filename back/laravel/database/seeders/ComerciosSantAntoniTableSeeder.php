@@ -109,38 +109,38 @@ class ComerciosSantAntoniTableSeeder extends Seeder
 
         $usuarios = 1;
 
-        for ($i = 0; $i < 10; $i++) {
-            DB::table('comercios')->insert([
-                'nombre' => $comercios[$i],
-                'idUser' => $usuarios,
-                'phone' => "603" . $faker->numberBetween(100000, 999999),
-                'email' => $comercios_email[$i],
-                'calle_num' => $comercios_calles[$i],
-                'ciudad' => "Castelldefels",
-                'provincia' => "Barcelona",
-                'codigo_postal' => '08860',
-                'num_planta' => '0',
-                'num_puerta' => '0',
-                'categoria_id' => $comercios_categorias[$i],
-                'descripcion' => $comercios_descripciones[$i],
-                'gestion_stock' => rand(0, 1),
-                'puntaje_medio' => $faker->randomFloat(1, 1, 5),
-                'imagenes' => json_encode([$faker->imageUrl()]),
-                'horario' => json_encode([
-                    'dilluns' => '09:00 - 18:00',
-                    'dimarts' => '09:00 - 18:00',
-                    'dimecres' => '09:00 - 18:00',
-                    'dijous' => '09:00 - 18:00',
-                    'divendres' => '09:00 - 18:00',
-                    'dissabte' => '10:00 - 20:00',
-                    'diumenge' => 'Cerrado',
-                ]),
-                'latitude' => $comercios_latitudes[$i],
-                'longitude' => $comercios_longitudes[$i],
-                'ubicacion_verified_at' => now(),
-                'imagen' => json_encode($comercios_imagenes[$i]),
-            ]);
-            $usuarios++;
+            for ($i = 0; $i < 10; $i++) {
+                DB::table('comercios')->insert([
+                    'nombre' => $comercios[$i],
+                    'idUser' => $usuarios,
+                    'phone' => "603" . $faker->numberBetween(100000, 999999),
+                    'email' => $comercios_email[$i],
+                    'calle_num' => $comercios_calles[$i],
+                    'ciudad' => "Castelldefels",
+                    'provincia' => "Barcelona",
+                    'codigo_postal' => '08860',
+                    'num_planta' => '0',
+                    'num_puerta' => '0',
+                    'categoria_id' => $comercios_categorias[$i],
+                    'descripcion' => $comercios_descripciones[$i],
+                    'gestion_stock' => rand(0, 1),
+                    'puntaje_medio' => $faker->randomFloat(1, 1, 5),
+                    'imagenes' => json_encode([$faker->imageUrl()]),
+                    'horario' => json_encode([
+                        'dilluns' => '09:00 - 18:00',
+                        'dimarts' => '09:00 - 18:00',
+                        'dimecres' => '09:00 - 18:00',
+                        'dijous' => '09:00 - 18:00',
+                        'divendres' => '09:00 - 18:00',
+                        'dissabte' => '10:00 - 20:00',
+                        'diumenge' => 'Cerrado',
+                    ]),
+                    'latitude' => $comercios_latitudes[$i],
+                    'longitude' => $comercios_longitudes[$i],
+                    'ubicacion_verified_at' => now(),
+                    'imagen' => json_encode($comercios_imagenes[$i]),
+                ]);
+                $usuarios++;
+            }
         }
     }
-}
