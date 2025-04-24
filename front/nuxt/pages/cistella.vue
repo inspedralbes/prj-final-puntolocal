@@ -31,6 +31,7 @@ const formData = reactive({
 
 const comercios = ref({});
 const groups = reactive([]);
+// Array global para almacenar los comercios cerrados
 const storesClosed = ref([]);
 const choosed = ref(false);
 const payOption = ref(1);
@@ -50,6 +51,22 @@ const goBack = () => {
     router.back();
 };
 
+// Función para verificar los comercios cerrados
+const checkClosedStores = () => {
+    const closedStores = [];
+
+    // Recorremos la información de comercios
+    comerciosInfo.value.forEach(comercioData => {
+        // Si isOpen es false, agregamos el comercio al array de cerrados
+        if (comercioData.isOpen === true) {
+            closedStores.push(comercioData.comercio);
+        }
+    });
+
+    console.log(closedStores);
+    return closedStores;
+};
+
 // Fetch de los comercios que tienen id en la cesta
 onMounted(async () => {
     const uniqueComercioIds = [...new Set(comercioStore.cesta.map(item => item.comercio_id))];
@@ -60,8 +77,22 @@ onMounted(async () => {
             comerciosInfo.value.push(comercioData);
         }
     }));
-    storesClosed.value = await checkClosedStores();
-    console.log(storesClosed.value);
+    // Actualizar la lista de comercios cerrados
+    storesClosed.value = checkClosedStores();
+    console.log("Comercios cerrados:", storesClosed.value);
+});
+
+// También puedes crear una versión computada si necesitas que se actualice automáticamente
+const closedStoresComputed = computed(() => {
+    const closedStores = [];
+
+    comerciosInfo.value.forEach(comercioData => {
+        if (comercioData.isOpen === false) {
+            closedStores.push(comercioData.comercio);
+        }
+    });
+
+    return closedStores;
 });
 
 // Agrupos los productos por el nombre del comercio
@@ -105,24 +136,6 @@ function proximaApertura(horarios) {
         }
     }
     return null;
-}
-
-async function checkClosedStores() {
-    let arrayClosed = [];
-    for (const data of comerciosInfo.value) {
-
-        const horarios = JSON.parse(data.comercio.horario);
-
-        if (!data.isOpen) {
-            arrayClosed.push({
-                comercio_id: data.comercio.id,
-                comercio_nombre: data.comercio.nombre,
-                comerio_proximo_horario: proximaApertura(horarios),
-                isOpen: data.isOpen
-            })
-        }
-    }
-    return arrayClosed;
 }
 
 function toggleCheckout() {
@@ -243,7 +256,6 @@ const seguirComprant = () => {
 const veureOrdre = () => {
     router.push(`/perfil/compras/${order_id.value}`); // Ajusta la ruta segons la teva aplicació
 };
-
 </script>
 
 <template>
