@@ -131,7 +131,7 @@
                 if (count($horario) === 2) {
                     $horaApertura = Carbon::createFromFormat('H:i', $horario[0]);
                     $horaCierre = Carbon::createFromFormat('H:i', $horario[1]);
-                    dd($now, $horaApertura, $horaCierre);
+                    // dd($now, $horaApertura, $horaCierre);
 
                     if($now->between($horaApertura, $horaCierre)) $isOpen = true;
                 }
