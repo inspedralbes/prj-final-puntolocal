@@ -8,7 +8,7 @@ use App\Http\Controllers\ProductoController;
 use App\Http\Controllers\ComercioController;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\CategoriaController;
-use App\Http\Controllers\ciudadesController;
+use App\Http\Controllers\CiudadesController;
 use App\Http\Controllers\ProvinciasController;
 use App\Http\Controllers\EstatCompraController;
 use App\Http\Controllers\SubcategoriaController;
@@ -196,7 +196,7 @@ Route::prefix('poblaciones')->group(function () {
     Route::get('/provincias', [ProvinciasController::class, 'index']);
 
     // Ver ciudades por provincia seleccionada
-    Route::get('/ciudades/{id}', [ciudadesController::class, 'index']);
+    Route::get('/ciudades/{id}', [CiudadesController::class, 'index']);
 });
 
 Route::get('/verify/{id}/{hash}', [VerificationController::class, 'verify'])->name('verification.verify');
@@ -210,7 +210,7 @@ Route::get('/payment/success', [PaymentController::class, 'success'])->name('pay
 Route::get('/payment/cancel', [PaymentController::class, 'cancel'])->name('payment.cancel');
 Route::post('/process-payment', [PaymentController::class, 'processPayment']);
 
-Route::prefix('stripe')->group(function () {
+Route::middleware('auth:sanctum')->prefix('stripe')->group(function () {
     Route::post('create-setup-intent', [PaymentController::class, 'createSetupIntent'])->name('stripe.createSetupIntent');
     Route::post('add-payment-method', [PaymentController::class, 'addPaymentMethod'])->name('stripe.addPaymentMethod');
     Route::post('retrieve-payment-method', [PaymentController::class, 'retrievePaymentMethod'])->name('stripe.retrievePaymentMethod');

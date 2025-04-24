@@ -5,7 +5,7 @@
     use App\Http\Controllers\Controller;
     use Illuminate\Http\Request;
 
-    class ciudadesController extends Controller {
+    class CiudadesController extends Controller {
         public function index($parent_code) {
             $ciudades = ciudades::where('parent_code', $parent_code)->get();
             return response()->json($ciudades);
