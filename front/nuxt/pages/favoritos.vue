@@ -24,7 +24,7 @@
         </div>
         <div v-else>
             <!-- Productos Favoritos -->
-            <div v-if="mostrarProductos" class="grid grid-cols-2 m-3 gap-2">
+            <div v-if="mostrarProductos" class="grid grid-cols-1 md:grid-cols-2 m-3 gap-2">
                 <div v-for="(producto, index) in favoritos" :key="producto.id"
                     class="bg-white rounded-lg shadow-md overflow-hidden" @click="navigateTo(`/producto/${producto.id}`)">
                     <img :src="`${baseUrl}/storage/${producto.imagen}`" :alt="producto.nombre"
@@ -49,7 +49,7 @@
             </div>
 
             <!-- Comercios Favoritos -->
-            <div v-else class="grid grid-cols-2 m-3 gap-2">
+            <div v-else class="grid grid-cols-1 md:grid-cols-2 m-3 gap-2">
                 <div v-for="(comercio, index) in comerciosFavoritos" :key="comercio.id" @click="navigateTo(`/comercio/${comercio.comercio.id}`)"
                     class="bg-white rounded-lg shadow-md overflow-hidden">
                     <div >
@@ -60,10 +60,10 @@
                             <p class="text-gray-500 text-xs mt-1 line-clamp-2 break-all">{{ comercio.comercio.descripcion }}</p>
                             <div class="flex justify-between items-center mt-3">
                                 <span class="font-semibold text-sm">{{ comercio.comercio.ciudad }}</span>
-                                <span @click.stop="toggleFavoritosComercio(comercio?.id)">
+                                <span @click.stop="toggleFavoritosComercio(comercio?.comercio?.id)">
                                     <svg width="1.2em" height="1.2em" viewBox="0 0 24 24" fill="#ea4823" stroke="#ea4823"
                                         stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                                        style="position: relative; top: 5px; margin-left: 5px; margin-right: 5px;">
+                                        style="position: relative; top: 5px; margin-left: 5px; margin-right: 5px; margin-bottom: 7px;">
                                         <path
                                             d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z">
                                         </path>
@@ -140,12 +140,11 @@ async function toggleFavoritos(productoID) {
 
 async function toggleFavoritosComercio(comercioID) {
     try {
-        const response = await $communicationManager.updateFavoritoComercio(authStore.user.id, comercioID);
+        const response = await $communicationManager.darLikeComercio(comercioID);
 
         if (response) {
-            authStore.toggleFavoritoComercio(comercioID)
-
-            const index = comerciosFavoritos.findIndex(comercio => comercio.id === comercioID);
+            authStore.toggleFavoritoComercio(comercioID) 
+            const index = comerciosFavoritos.findIndex(comercio => comercio.comercio_id === comercioID);
             if (index !== -1) {
                 comerciosFavoritos.splice(index, 1);
             }

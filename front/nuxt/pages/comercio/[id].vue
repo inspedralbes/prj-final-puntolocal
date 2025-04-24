@@ -154,6 +154,7 @@ import { useNuxtApp } from "#app";
 import { ref, onMounted, computed } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import loading from "../../components/loading.vue";
+import { useAuthStore } from "#imports";
 
 import { useRuntimeConfig } from "#imports";
 import PuntuacionComp from "~/components/PuntuacionComp.vue";
@@ -161,6 +162,7 @@ const config = useRuntimeConfig();
 const baseUrl = config.public.apiBaseUrl;
 const backgroundShadow = ref(false);
 
+const authStore = useAuthStore();
 const route = useRoute();
 const productos = ref([]);
 const router = useRouter();
@@ -171,7 +173,6 @@ const selectedSubcategorias = ref([]);
 const view = ref('productos');
 const { $communicationManager } = useNuxtApp();
 const infoVisible = ref(false);
-const tieneLike = ref(false);
 const isLiked = ref(false);
 
 const mostrarIdProducto = (id) => {
@@ -182,6 +183,10 @@ const mostrarIdProducto = (id) => {
 const darLikeComercio = async (id) => {
     try {
         const response = await $communicationManager.darLikeComercio(id);
+        if(response) {
+            authStore.toggleFavoritoComercio(id);
+            toggleColor();
+        }
         console.log("Like dado al comercio con id:", id);
         console.log(response);
     } catch (error) {
@@ -196,7 +201,7 @@ function toggleColor() {
 const consultarSiTieneLike = async (id) => {
     try {
         const response = await $communicationManager.consultarSiTieneLikeComercio(id);
-        tieneLike.value = response;
+        isLiked.value = response;
         console.log("¿El usuario sigue este comercio?", response);
     } catch (error) {
         console.error("Error al consultar si tiene like:", error);

@@ -4,7 +4,7 @@
     use Illuminate\Database\Eloquent\Factories\HasFactory;
     use Illuminate\Database\Eloquent\Model;
 
-    class comercioFavoritos extends Model {
+    class ComercioFavoritos extends Model {
         use hasFactory;
         
         protected $table = 'comercios_favoritos';
