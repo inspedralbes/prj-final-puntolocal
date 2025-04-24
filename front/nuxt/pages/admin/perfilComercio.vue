@@ -195,6 +195,14 @@ function handleLocalImageUpload(event) {
 async function removeImage(imageType) {
     const { $communicationManager } = useNuxtApp();
     
+    if (imageType === 'logo') {
+        formComercio.logoImage = null;
+        formComercio.logoFile = null;
+    } else {
+        formComercio.localImage = null;
+        formComercio.localFile = null;
+    }
+
     try {
         const response = await $communicationManager.deleteComercioImagen(
             authStore.comercio.id, 
@@ -202,13 +210,6 @@ async function removeImage(imageType) {
         );
 
         if (response) {
-            if (imageType === 'logo') {
-                formComercio.logoImage = null;
-                formComercio.logoFile = null;
-            } else {
-                formComercio.localImage = null;
-                formComercio.localFile = null;
-            }
             toast('Imatge eliminada amb èxit', 'success');
         }
     } catch (error) {
