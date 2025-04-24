@@ -96,9 +96,9 @@ function proximaApertura(horarios) {
         if (horario !== 'Cerrado') {
             const [inicio, fin] = horario.split(' - ');
 
-            if(index === 0){
-                if(nowTime < inicio) return `Obre a les ${inicio}`
-            }else{
+            if (index === 0) {
+                if (nowTime < inicio) return `Obre a les ${inicio}`
+            } else {
                 const tomorrow = index === 1;
                 return `Obre ${tomorrow ? 'demà' : 'el ' + dayName} a les ${inicio}`;
             }
@@ -110,7 +110,7 @@ function proximaApertura(horarios) {
 async function checkClosedStores() {
     let arrayClosed = [];
     for (const data of comerciosInfo.value) {
-        
+
         const horarios = JSON.parse(data.comercio.horario);
 
         if (!data.isOpen) {
