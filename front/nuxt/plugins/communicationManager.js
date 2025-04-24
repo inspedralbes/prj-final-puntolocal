@@ -239,7 +239,6 @@ export default defineNuxtPlugin((nuxtApp) => {
       }
     },
 
-
     async getProductosCercanos(comercioIds) {
       try {
         const response = await fetch(`${Host}/cercanos/productos?comercioIds=${comercioIds}`, {
@@ -263,7 +262,6 @@ export default defineNuxtPlugin((nuxtApp) => {
         return null;
       }
     },
-
 
     async getCategoriasGenerales() {
       try {
@@ -757,6 +755,31 @@ export default defineNuxtPlugin((nuxtApp) => {
       }
     },
 
+    async retrievePaymentCards() {
+      try {
+        const response = await fetch(Host + '/stripe/retrieve-payment-method', {
+          method: 'POST',
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+            'Authorization': this.authStore.token ? `Bearer ${this.authStore.token}` : ''
+          }
+        });
+        
+        if (response.ok) {
+          const json = await response.json();
+          return json;
+        } else {
+          console.error(`Error en la petición: ${response.status} ${response.statusText}`)
+          return null;
+        }
+
+      } catch (error) {
+        console.error(error);
+        return null;
+      }
+    },
+
     async changePassword(json) {
       try {
         const response = await fetch(Host + '/auth/change-password', {
@@ -933,9 +956,6 @@ export default defineNuxtPlugin((nuxtApp) => {
       }
     },
 
-
-
-
     async createProductoExcel(formData) {
       try {
         const response = await fetch(`${Host}/producto/crear_excel`, {
@@ -959,10 +979,6 @@ export default defineNuxtPlugin((nuxtApp) => {
         return { success: false, message: error.message };
       }
     },
-
-
-
-
 
     async cambiarVisibilidad(id) {
       try {

@@ -37,14 +37,17 @@ const choosed = ref(false);
 const payOption = ref(1);
 const auth = useAuthStore();
 const shipOption = ref(null);
-const paymentView = ref(false);
-const cistellaView = ref(true);
+const paymentView = ref(true);
+const cistellaView = ref(false);
 const isOk = ref(false);
 const order_id = ref();
 const stripe = ref(null);
 const elements = ref(null);
 const cardElement = ref(null);
 const cardHolderName = ref('');
+const containerCardElement = null;
+const divAfegirTargetaShow = ref(false);
+const savedPaymentCards = ref([]);
 
 // const shipOption = ref(2);
 // const paymentView = ref(true);
@@ -53,10 +56,6 @@ const isLoggued = computed(() => {
     return auth?.user !== null;
 });
 const loginVisible = ref(false);
-
-const goBack = () => {
-    router.back();
-};
 
 // Fetch de los comercios que tienen id en la cesta
 onMounted(async () => {
@@ -67,6 +66,7 @@ onMounted(async () => {
             comercios.value[id] = comercioData.comercio.nombre;
         }
     }));
+    savedPaymentCards.value = await getPaymentsCards();
 });
 
 // Agrupos los productos por el nombre del comercio
@@ -96,14 +96,6 @@ function toggleCheckout() {
     }
 }
 
-function togglePayment() {
-    paymentView.value = !paymentView.value;
-}
-
-const comprar = () => {
-    toggleCheckout();
-}
-
 function chooseShip(event) {
     shipOption.value = event.currentTarget.value;
     choosed.value = shipOption.value !== null;
@@ -111,19 +103,19 @@ function chooseShip(event) {
 
 function choosePayment(event) {
     payOption.value = event.target.value;
+    divAfegirTargetaShow.value = false;
+    stripe.value = null;
 }
 
 function toPay() {
     chooseShipping.value = false;
     togglePayment();
-    // console.log(shipOption.value);
 }
 
 async function crearComanda() {
     try {
         const createdOrder = await $communicationManager.createOrder(orderFiltrada.value);
         if (createdOrder.success) {
-            console.log("CUMPLE IF(CREATEDORDER.SUCCESS)")
             order_id.value = createdOrder.data.order.id;
             const subcomandaInfo = computed(() => {
                 return {
@@ -203,13 +195,16 @@ const seguirComprant = () => {
     router.push('/'); // Ajusta la ruta segons la teva aplicació
 };
 
+const togglePayment = () => {
+    paymentView.value = !paymentView.value
+}
+
 const veureOrdre = () => {
     router.push(`/perfil/compras/${order_id.value}`); // Ajusta la ruta segons la teva aplicació
 };
 
 async function mostrarFormularioPago() {
-    const div = document.getElementById('divAfegirTargeta');
-    div.classList.toggle('hidden');
+    divAfegirTargetaShow.value = true;
 
     // Initialize Stripe
     if (!stripe.value) {
@@ -220,6 +215,16 @@ async function mostrarFormularioPago() {
     }
 }
 
+const getPaymentsCards = async () => {
+    try {
+        const response = await $communicationManager.retrievePaymentCards();
+        console.log(response);
+        return response.paymentMethods;
+    } catch (error) {
+        console.error(error);
+    }
+}
+
 const updatePaymentMethod = async () => {
     //loader 
     try {
@@ -227,8 +232,6 @@ const updatePaymentMethod = async () => {
         const response = await $communicationManager.createSetUpIntent();
         console.log("Response: ", response);  // Verifica la respuesta de tu API
         const clientSecret = response.client_secret;  // Asegúrate de acceder a client_secret correctamente
-
-        console.log(clientSecret);  // Verifica que el client_secret es correcto
 
         // Usas el clientSecret en el método de Stripe
         const { setupIntent, error } = await stripe.value.confirmCardSetup(
@@ -249,13 +252,17 @@ const updatePaymentMethod = async () => {
             let paymentMethodResponse = await $communicationManager.addPaymentMethod(setupIntent.payment_method)
             console.log(paymentMethodResponse)
             // Manejo de verificación exitosa
+            savedPaymentCards.value = await getPaymentsCards();
         }
     } catch (error) {
-        console.error('Error creating SetupIntent:', error);
+        console.error('Error creating SetupIntent: ', error);
     }
     //loader 
 };
 
+document.addEventListener('DOMContentLoaded', function (e) {
+    containerCardElement = document.getElementById('divAfegirTargeta');
+})
 </script>
 
 <template>
@@ -594,7 +601,7 @@ const updatePaymentMethod = async () => {
                                         </g>
                                     </svg>
                                 </div>
-                                Efectiu
+                                <p>Efectiu</p>
                                 <input checked="" type="radio" name="status"
                                     class="peer/html w-4 h-4 absolute accent-current right-3" id="efectiu" value="1"
                                     @change="choosePayment" />
@@ -609,27 +616,23 @@ const updatePaymentMethod = async () => {
                                         <g id="SVGRepo_iconCarrier">
                                             <path
                                                 d="M3 8C3 6.34315 4.34315 5 6 5H18C19.6569 5 21 6.34315 21 8V16C21 17.6569 19.6569 19 18 19H6C4.34315 19 3 17.6569 3 16V8Z"
-                                                stroke="rgb(156 163 175 / var(--tw-text-opacity, 1))" stroke-width="2">
+                                                stroke="currentColor" stroke-width="2">
                                             </path>
-                                            <path d="M3 10H21" stroke="rgb(156 163 175 / var(--tw-text-opacity, 1))"
-                                                stroke-width="2"></path>
-                                            <path d="M14 15L17 15" stroke="rgb(156 163 175 / var(--tw-text-opacity, 1))"
-                                                stroke-width="2" stroke-linecap="round">
+                                            <path d="M3 10H21" stroke="currentColor" stroke-width="2"></path>
+                                            <path d="M14 15L17 15" stroke="currentColor" stroke-width="2"
+                                                stroke-linecap="round">
                                             </path>
                                         </g>
                                     </svg>
                                 </div>
-                                <p class="text-gray-400">Targeta (Pròximament)</p>
-                                <input type="radio" disabled name="status"
-                                    class="w-4 h-4 absolute accent-current right-3 text-gray-400" id="targeta" value="2"
-                                    @change="choosePayment" />
+                                <p>Targeta</p>
+                                <input type="radio" name="status"
+                                    class="peer/html w-4 h-4 absolute accent-current right-3" id="targeta" value="2"
+                                    @change="mostrarFormularioPago" />
                             </label>
 
-                            <button class="border border-black bg-blue-100 p-2" @click="mostrarFormularioPago">
-                                Afegir targeta
-                            </button>
 
-                            <div id="divAfegirTargeta" class="hidden mt-4 p-4 border border-gray-300 bg-gray-100">
+                            <div v-if="divAfegirTargetaShow" class="mt-4 p-4 border border-gray-300 bg-gray-100">
                                 <div class="flex justify-center">
                                     <div class="w-full max-w-md">
                                         <div class="rounded-lg shadow-sm border border-gray-200 bg-white">
@@ -672,84 +675,115 @@ const updatePaymentMethod = async () => {
                                 </div>
                             </div>
 
-                        </div>
-                    </div>
-                </div>
-                <div class="footer flex items-center justify-between mt-auto border-t border-gray-300 fixed">
-                    <button @click="togglePayment"
-                        class="btn-cancel w-[39%] h-[60px] justify-center border rounded-md border border-gray-400 px-4 py-2 text-xl text-gray-500 font-medium disabled:cursor-wait ">
-                        Cancel·lar
-                    </button>
-                    <button @click="crearComanda"
-                        class="btn-ok w-[59%] h-[60px] justify-center rounded-md border border-transparent px-4 py-2 text-xl font-semibold disabled:cursor-wait disabled:opacity-50">
-                        Pagar
-                    </button>
-                </div>
-            </div>
-
-            <!-- CISTELLA VIEW CON TODOS LOS PRODUCTOS -->
-            <div class="divide-y divide-gray-300 pb-2">
-                <div v-for="(items, storeName) in groupedCesta" :key="storeName" class="px-3 pt-1">
-                    <div class="flex justify-between items-center border-b border-gray-200 m-4">
-                        <div class="flex items-center">
-                            <svg width="1.3em" height="1.3em" viewBox="0 0 24 24" fill="none"
-                                xmlns="http://www.w3.org/2000/svg">
-                                <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
-                                <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
-                                <g id="SVGRepo_iconCarrier">
-                                    <path fill-rule="evenodd" clip-rule="evenodd"
-                                        d="M7.30681 1.24996C6.50585 1.24969 5.95624 1.24951 5.46776 1.38342C4.44215 1.66458 3.58414 2.36798 3.1073 3.31853C2.88019 3.77127 2.77258 4.31024 2.61576 5.0957L1.99616 8.19383C1.76456 9.35186 2.08191 10.4718 2.74977 11.3115L2.74977 14.0564C2.74975 15.8942 2.74974 17.3498 2.9029 18.489C3.06053 19.6614 3.39265 20.6104 4.14101 21.3587C4.88937 22.1071 5.83832 22.4392 7.01074 22.5969C8.14996 22.75 9.60559 22.75 11.4434 22.75H12.5562C14.3939 22.75 15.8496 22.75 16.9888 22.5969C18.1612 22.4392 19.1102 22.1071 19.8585 21.3587C20.6069 20.6104 20.939 19.6614 21.0966 18.489C21.2498 17.3498 21.2498 15.8942 21.2498 14.0564V11.3115C21.9176 10.4718 22.235 9.35187 22.0034 8.19383L21.3838 5.0957C21.227 4.31024 21.1194 3.77127 20.8923 3.31853C20.4154 2.36798 19.5574 1.66458 18.5318 1.38342C18.0433 1.24951 17.4937 1.24969 16.6927 1.24996H7.30681ZM18.2682 12.75C18.7971 12.75 19.2969 12.6435 19.7498 12.4524V14C19.7498 15.9068 19.7482 17.2615 19.61 18.2891C19.4747 19.2952 19.2211 19.8749 18.7979 20.2981C18.3747 20.7213 17.795 20.975 16.7889 21.1102C16.3434 21.1701 15.8365 21.2044 15.2498 21.2239V18.4678C15.2498 18.028 15.2498 17.6486 15.2216 17.3373C15.1917 17.0082 15.1257 16.6822 14.9483 16.375C14.7508 16.0329 14.4668 15.7489 14.1248 15.5514C13.8176 15.3741 13.4916 15.308 13.1624 15.2782C12.8511 15.25 12.4718 15.25 12.032 15.25H11.9675C11.5278 15.25 11.1484 15.25 10.8371 15.2782C10.5079 15.308 10.182 15.3741 9.87477 15.5514C9.53272 15.7489 9.24869 16.0329 9.05121 16.375C8.87384 16.6822 8.80778 17.0082 8.77795 17.3373C8.74973 17.6486 8.74975 18.028 8.74977 18.4678L8.74977 21.2239C8.16304 21.2044 7.6561 21.1701 7.21062 21.1102C6.20453 20.975 5.62488 20.7213 5.20167 20.2981C4.77846 19.8749 4.52479 19.2952 4.38953 18.2891C4.25136 17.2615 4.24977 15.9068 4.24977 14V12.4523C4.70264 12.6435 5.20244 12.75 5.73132 12.75C7.00523 12.75 8.14422 12.1216 8.83783 11.1458C9.54734 12.1139 10.6929 12.75 11.9996 12.75C13.3063 12.75 14.452 12.1138 15.1615 11.1455C15.8551 12.1215 16.9942 12.75 18.2682 12.75ZM10.2498 21.248C10.6382 21.2499 11.0539 21.25 11.4998 21.25H12.4998C12.9457 21.25 13.3614 21.2499 13.7498 21.248V18.5C13.7498 18.0189 13.749 17.7082 13.7277 17.4727C13.7073 17.2476 13.6729 17.1659 13.6493 17.125C13.5835 17.011 13.4888 16.9163 13.3748 16.8505C13.3339 16.8269 13.2522 16.7925 13.027 16.772C12.7916 16.7507 12.4809 16.75 11.9998 16.75C11.5187 16.75 11.208 16.7507 10.9725 16.772C10.7474 16.7925 10.6656 16.8269 10.6248 16.8505C10.5108 16.9163 10.4161 17.011 10.3502 17.125C10.3267 17.1659 10.2922 17.2476 10.2718 17.4727C10.2505 17.7082 10.2498 18.0189 10.2498 18.5V21.248ZM8.67082 2.74999H7.41748C6.46302 2.74999 6.13246 2.75654 5.86433 2.83005C5.24897 2.99874 4.73416 3.42078 4.44806 3.99112C4.3234 4.23962 4.25214 4.56248 4.06496 5.4984L3.46703 8.48801C3.18126 9.91687 4.27415 11.25 5.73132 11.25C6.91763 11.25 7.91094 10.3511 8.02898 9.17063L8.09757 8.48474L8.10155 8.44273L8.67082 2.74999ZM9.59103 8.62499L10.1785 2.74999H13.8208L14.405 8.59198C14.5473 10.0151 13.4298 11.25 11.9996 11.25C10.5804 11.25 9.46911 10.0341 9.59103 8.62499ZM18.1352 2.83005C17.8671 2.75654 17.5365 2.74999 16.5821 2.74999H15.3285L15.9706 9.17063C16.0886 10.3511 17.0819 11.25 18.2682 11.25C19.7254 11.25 20.8183 9.91687 20.5325 8.48801L19.9346 5.4984C19.7474 4.56248 19.6762 4.23962 19.5515 3.99112C19.2654 3.42078 18.7506 2.99874 18.1352 2.83005Z"
-                                        fill="#000000"></path>
-                                </g>
-                            </svg>
-                            <h2 class="text-lg ml-2 truncate">{{ storeName }}</h2>
-                        </div>
-                        <h3 class="font-semibold text-xl">{{ storeTotal(storeName).toFixed(2) }} €</h3>
-                    </div>
-                    <div v-for="item in items" :key="item.id" class="m-4 flex">
-                        <button @click="comercioStore.removeFromBasket(item.id)" class="mr-3">
-                            <svg viewBox="0 0 24 24" fill="none" width="1.3em" height="1.3em"
-                                xmlns="http://www.w3.org/2000/svg">
-                                <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
-                                <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
-                                <g id="SVGRepo_iconCarrier">
-                                    <path fill-rule="evenodd" clip-rule="evenodd"
-                                        d="M7 4C7 2.34315 8.34315 1 10 1H14C15.6569 1 17 2.34315 17 4V5H21C21.5523 5 22 5.44772 22 6C22 6.55228 21.5523 7 21 7H19.9394L19.1153 20.1871C19.0164 21.7682 17.7053 23 16.1211 23H7.8789C6.29471 23 4.98356 21.7682 4.88474 20.1871L4.06055 7H3C2.44772 7 2 6.55228 2 6C2 5.44772 2.44772 5 3 5H7V4ZM9 5H15V4C15 3.44772 14.5523 3 14 3H10C9.44772 3 9 3.44772 9 4V5ZM6.06445 7L6.88085 20.0624C6.91379 20.5894 7.35084 21 7.8789 21H16.1211C16.6492 21 17.0862 20.5894 17.1191 20.0624L17.9355 7H6.06445Z"
-                                        fill="#000000"></path>
-                                </g>
-                            </svg>
-                        </button>
-                        <div id="contain-image" class="mr-4 w-[80px] h-[100px] overflow-hidden">
-                            <img :src="`${baseUrl}/storage/${item.imagen}`" alt="" />
-                        </div>
-                        <div class="flex flex-col w-full justify-between flex-grow">
-                            <div class="flex justify-between">
-                                <div class="w-[75%]">
-                                    <h3 class="text-lg font-medium line-clamp-2">{{ item.nombre }}</h3>
+                            <div v-if="savedPaymentCards.length > 0" class="p-4 space-y-4">
+                                <h1 class="text-2xl font-bold">Selecciona la tarjeta de crédito</h1>
+                                <div v-for="(creditCard, index) in savedPaymentCards.value" :key="index"
+                                    @click="selectPaymentMethod(creditCard)"
+                                    class="bg-white shadow rounded mb-2 cursor-pointer" :class="{
+                                        'bg-blue-600 text-white': creditCard.id === (defaultPaymentMethods.data?.id || '')
+                                    }">
+                                    <div class="p-4">
+                                        <div class="flex justify-between items-center">
+                                            <div class="flex items-center">
+                                                <i class="bi bi-credit-card text-xl mr-3"></i>
+                                                <div>
+                                                    <p class="text-base font-semibold">{{
+                                                        creditCard.billing_details.name }}</p>
+                                                    <p class="text-sm">{{ creditCard.card.exp_month }}/{{
+                                                        creditCard.card.exp_year }}</p>
+                                                    <p class="text-xs">**** {{ creditCard.card.last4 }}</p>
+                                                </div>
+                                            </div>
+                                            <button class="p-0 text-sm" @click.stop="deletePaymentMethod(creditCard)"
+                                                aria-label="Eliminar">
+                                                <i class="bi bi-trash3 text-xl"
+                                                    :class="creditCard.id === (defaultPaymentMethods.data?.id || '') ? 'text-white' : 'text-blue-600'"></i>
+                                            </button>
+                                        </div>
+                                    </div>
                                 </div>
-                                <p>{{ item?.precio?.toFixed(2) }}€</p>
                             </div>
-                            <div id="btn-quantity" class="text-lg flex items-center mb-1">
-                                <button @click="comercioStore.decreaseProductQuantity(item.id)"
-                                    class="border w-[1.5em] h-[1.5em] flex items-center justify-center">
-                                    <svg width="1.1em" height="1.1em" viewBox="0 0 24 24"
-                                        xmlns="http://www.w3.org/2000/svg" fill="#000000">
-                                        <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
-                                        <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round">
-                                        </g>
-                                        <g id="SVGRepo_iconCarrier">
-                                            <g>
-                                                <path fill="none" d="M0 0h24v24H0z"></path>
-                                                <path d="M5 11h14v2H5z"></path>
+                        </div>
+                    </div>
+                    <div class="footer flex items-center justify-between mt-auto border-t border-gray-300 fixed">
+                        <button @click="togglePayment"
+                            class="btn-cancel w-[39%] h-[60px] justify-center border rounded-md border border-gray-400 px-4 py-2 text-xl text-gray-500 font-medium disabled:cursor-wait ">
+                            Cancel·lar
+                        </button>
+                        <button @click="crearComanda"
+                            class="btn-ok w-[59%] h-[60px] justify-center rounded-md border border-transparent px-4 py-2 text-xl font-semibold disabled:cursor-wait disabled:opacity-50">
+                            Pagar
+                        </button>
+                    </div>
+                </div>
+
+                <!-- CISTELLA VIEW CON TODOS LOS PRODUCTOS -->
+                <div class="divide-y divide-gray-300 pb-2">
+                    <div v-for="(items, storeName) in groupedCesta" :key="storeName" class="px-3 pt-1">
+                        <div class="flex justify-between items-center border-b border-gray-200 m-4">
+                            <div class="flex items-center">
+                                <svg width="1.3em" height="1.3em" viewBox="0 0 24 24" fill="none"
+                                    xmlns="http://www.w3.org/2000/svg">
+                                    <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                                    <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round">
+                                    </g>
+                                    <g id="SVGRepo_iconCarrier">
+                                        <path fill-rule="evenodd" clip-rule="evenodd"
+                                            d="M7.30681 1.24996C6.50585 1.24969 5.95624 1.24951 5.46776 1.38342C4.44215 1.66458 3.58414 2.36798 3.1073 3.31853C2.88019 3.77127 2.77258 4.31024 2.61576 5.0957L1.99616 8.19383C1.76456 9.35186 2.08191 10.4718 2.74977 11.3115L2.74977 14.0564C2.74975 15.8942 2.74974 17.3498 2.9029 18.489C3.06053 19.6614 3.39265 20.6104 4.14101 21.3587C4.88937 22.1071 5.83832 22.4392 7.01074 22.5969C8.14996 22.75 9.60559 22.75 11.4434 22.75H12.5562C14.3939 22.75 15.8496 22.75 16.9888 22.5969C18.1612 22.4392 19.1102 22.1071 19.8585 21.3587C20.6069 20.6104 20.939 19.6614 21.0966 18.489C21.2498 17.3498 21.2498 15.8942 21.2498 14.0564V11.3115C21.9176 10.4718 22.235 9.35187 22.0034 8.19383L21.3838 5.0957C21.227 4.31024 21.1194 3.77127 20.8923 3.31853C20.4154 2.36798 19.5574 1.66458 18.5318 1.38342C18.0433 1.24951 17.4937 1.24969 16.6927 1.24996H7.30681ZM18.2682 12.75C18.7971 12.75 19.2969 12.6435 19.7498 12.4524V14C19.7498 15.9068 19.7482 17.2615 19.61 18.2891C19.4747 19.2952 19.2211 19.8749 18.7979 20.2981C18.3747 20.7213 17.795 20.975 16.7889 21.1102C16.3434 21.1701 15.8365 21.2044 15.2498 21.2239V18.4678C15.2498 18.028 15.2498 17.6486 15.2216 17.3373C15.1917 17.0082 15.1257 16.6822 14.9483 16.375C14.7508 16.0329 14.4668 15.7489 14.1248 15.5514C13.8176 15.3741 13.4916 15.308 13.1624 15.2782C12.8511 15.25 12.4718 15.25 12.032 15.25H11.9675C11.5278 15.25 11.1484 15.25 10.8371 15.2782C10.5079 15.308 10.182 15.3741 9.87477 15.5514C9.53272 15.7489 9.24869 16.0329 9.05121 16.375C8.87384 16.6822 8.80778 17.0082 8.77795 17.3373C8.74973 17.6486 8.74975 18.028 8.74977 18.4678L8.74977 21.2239C8.16304 21.2044 7.6561 21.1701 7.21062 21.1102C6.20453 20.975 5.62488 20.7213 5.20167 20.2981C4.77846 19.8749 4.52479 19.2952 4.38953 18.2891C4.25136 17.2615 4.24977 15.9068 4.24977 14V12.4523C4.70264 12.6435 5.20244 12.75 5.73132 12.75C7.00523 12.75 8.14422 12.1216 8.83783 11.1458C9.54734 12.1139 10.6929 12.75 11.9996 12.75C13.3063 12.75 14.452 12.1138 15.1615 11.1455C15.8551 12.1215 16.9942 12.75 18.2682 12.75ZM10.2498 21.248C10.6382 21.2499 11.0539 21.25 11.4998 21.25H12.4998C12.9457 21.25 13.3614 21.2499 13.7498 21.248V18.5C13.7498 18.0189 13.749 17.7082 13.7277 17.4727C13.7073 17.2476 13.6729 17.1659 13.6493 17.125C13.5835 17.011 13.4888 16.9163 13.3748 16.8505C13.3339 16.8269 13.2522 16.7925 13.027 16.772C12.7916 16.7507 12.4809 16.75 11.9998 16.75C11.5187 16.75 11.208 16.7507 10.9725 16.772C10.7474 16.7925 10.6656 16.8269 10.6248 16.8505C10.5108 16.9163 10.4161 17.011 10.3502 17.125C10.3267 17.1659 10.2922 17.2476 10.2718 17.4727C10.2505 17.7082 10.2498 18.0189 10.2498 18.5V21.248ZM8.67082 2.74999H7.41748C6.46302 2.74999 6.13246 2.75654 5.86433 2.83005C5.24897 2.99874 4.73416 3.42078 4.44806 3.99112C4.3234 4.23962 4.25214 4.56248 4.06496 5.4984L3.46703 8.48801C3.18126 9.91687 4.27415 11.25 5.73132 11.25C6.91763 11.25 7.91094 10.3511 8.02898 9.17063L8.09757 8.48474L8.10155 8.44273L8.67082 2.74999ZM9.59103 8.62499L10.1785 2.74999H13.8208L14.405 8.59198C14.5473 10.0151 13.4298 11.25 11.9996 11.25C10.5804 11.25 9.46911 10.0341 9.59103 8.62499ZM18.1352 2.83005C17.8671 2.75654 17.5365 2.74999 16.5821 2.74999H15.3285L15.9706 9.17063C16.0886 10.3511 17.0819 11.25 18.2682 11.25C19.7254 11.25 20.8183 9.91687 20.5325 8.48801L19.9346 5.4984C19.7474 4.56248 19.6762 4.23962 19.5515 3.99112C19.2654 3.42078 18.7506 2.99874 18.1352 2.83005Z"
+                                            fill="#000000"></path>
+                                    </g>
+                                </svg>
+                                <h2 class="text-lg ml-2 truncate">{{ storeName }}</h2>
+                            </div>
+                            <h3 class="font-semibold text-xl">{{ storeTotal(storeName).toFixed(2) }} €</h3>
+                        </div>
+                        <div v-for="item in items" :key="item.id" class="m-4 flex">
+                            <button @click="comercioStore.removeFromBasket(item.id)" class="mr-3">
+                                <svg viewBox="0 0 24 24" fill="none" width="1.3em" height="1.3em"
+                                    xmlns="http://www.w3.org/2000/svg">
+                                    <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                                    <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round">
+                                    </g>
+                                    <g id="SVGRepo_iconCarrier">
+                                        <path fill-rule="evenodd" clip-rule="evenodd"
+                                            d="M7 4C7 2.34315 8.34315 1 10 1H14C15.6569 1 17 2.34315 17 4V5H21C21.5523 5 22 5.44772 22 6C22 6.55228 21.5523 7 21 7H19.9394L19.1153 20.1871C19.0164 21.7682 17.7053 23 16.1211 23H7.8789C6.29471 23 4.98356 21.7682 4.88474 20.1871L4.06055 7H3C2.44772 7 2 6.55228 2 6C2 5.44772 2.44772 5 3 5H7V4ZM9 5H15V4C15 3.44772 14.5523 3 14 3H10C9.44772 3 9 3.44772 9 4V5ZM6.06445 7L6.88085 20.0624C6.91379 20.5894 7.35084 21 7.8789 21H16.1211C16.6492 21 17.0862 20.5894 17.1191 20.0624L17.9355 7H6.06445Z"
+                                            fill="#000000"></path>
+                                    </g>
+                                </svg>
+                            </button>
+                            <div id="contain-image" class="mr-4 w-[80px] h-[100px] overflow-hidden">
+                                <img :src="`${baseUrl}/storage/${item.imagen}`" alt="" />
+                            </div>
+                            <div class="flex flex-col w-full justify-between flex-grow">
+                                <div class="flex justify-between">
+                                    <div class="w-[75%]">
+                                        <h3 class="text-lg font-medium line-clamp-2">{{ item.nombre }}</h3>
+                                    </div>
+                                    <p>{{ item?.precio?.toFixed(2) }}€</p>
+                                </div>
+                                <div id="btn-quantity" class="text-lg flex items-center mb-1">
+                                    <button @click="comercioStore.decreaseProductQuantity(item.id)"
+                                        class="border w-[1.5em] h-[1.5em] flex items-center justify-center">
+                                        <svg width="1.1em" height="1.1em" viewBox="0 0 24 24"
+                                            xmlns="http://www.w3.org/2000/svg" fill="#000000">
+                                            <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                                            <g id="SVGRepo_tracerCarrier" stroke-linecap="round"
+                                                stroke-linejoin="round">
                                             </g>
-                                        </g>
-                                    </svg>
-                                </button>
-                                <h4 class="border-t border-b min-w-[1.5em] h-[1.5em] flex items-center justify-center">
-                                    {{ item.cantidad }}</h4>
-                                <button @click="comercioStore.increaseProductQuantity(item.id)"
-                                    class="border w-[1.5em] h-[1.5em] flex items-center justify-center">
-                                    <!--
+                                            <g id="SVGRepo_iconCarrier">
+                                                <g>
+                                                    <path fill="none" d="M0 0h24v24H0z"></path>
+                                                    <path d="M5 11h14v2H5z"></path>
+                                                </g>
+                                            </g>
+                                        </svg>
+                                    </button>
+                                    <h4
+                                        class="border-t border-b min-w-[1.5em] h-[1.5em] flex items-center justify-center">
+                                        {{ item.cantidad }}</h4>
+                                    <button @click="comercioStore.increaseProductQuantity(item.id)"
+                                        class="border w-[1.5em] h-[1.5em] flex items-center justify-center">
+                                        <!--
                                         <svg width="1em" height="1em" fill="#000000" viewBox="0 0 1920 1920"
                                             xmlns="http://www.w3.org/2000/svg">
                                             <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
@@ -762,25 +796,26 @@ const updatePaymentMethod = async () => {
                                             </g>
                                         </svg>
                                     -->
-                                    +
-                                </button>
+                                        +
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
 
-            <div class="footer flex items-center justify-between mt-auto border-t border-gray-300 mb-[60px]">
-                <div id="precio" class="font-semibold text-gray-800">
-                    <p class="text-gray-600 font-light text-sm">Precio total:</p>
-                    <h3 class="text-2xl">
-                        <p>{{ comercioStore.totalPrice.toFixed(2) }} €</p>
-                    </h3>
-                </div>
-                <div id="carrito" class="flex items-center space-x-4">
-                    <button id="btn-comprar" class="text-xl font-semibold bg-[#276BF2]" @click="toggleCheckout()">
-                        Checkout ({{ comercioStore.totalItems }})
-                    </button>
+                <div class="footer flex items-center justify-between mt-auto border-t border-gray-300 mb-[60px]">
+                    <div id="precio" class="font-semibold text-gray-800">
+                        <p class="text-gray-600 font-light text-sm">Precio total:</p>
+                        <h3 class="text-2xl">
+                            <p>{{ comercioStore.totalPrice.toFixed(2) }} €</p>
+                        </h3>
+                    </div>
+                    <div id="carrito" class="flex items-center space-x-4">
+                        <button id="btn-comprar" class="text-xl font-semibold bg-[#276BF2]" @click="toggleCheckout()">
+                            Checkout ({{ comercioStore.totalItems }})
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
