@@ -718,7 +718,7 @@ export default defineNuxtPlugin((nuxtApp) => {
         });
         if (response.ok) {
           const json = await response.json();
-          return json.data;
+          return json;
         } else {
           console.error(`Error en la petición: ${response.status} ${response.statusText}`)
           return null;
@@ -745,7 +745,7 @@ export default defineNuxtPlugin((nuxtApp) => {
         });
         if (response.ok) {
           const json = await response.json();
-          return json.data;
+          return json;
         } else {
           console.error(`Error en la petición: ${response.status} ${response.statusText}`)
           return null;

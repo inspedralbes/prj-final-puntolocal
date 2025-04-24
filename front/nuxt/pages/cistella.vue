@@ -225,7 +225,7 @@ const updatePaymentMethod = async () => {
     try {
         // Realizas la llamada a tu API para crear el SetupIntent y obtener el client_secret
         const response = await $communicationManager.createSetUpIntent();
-        console.log(response);  // Verifica la respuesta de tu API
+        console.log("Response: ", response);  // Verifica la respuesta de tu API
         const clientSecret = response.client_secret;  // Asegúrate de acceder a client_secret correctamente
 
         console.log(clientSecret);  // Verifica que el client_secret es correcto
@@ -247,10 +247,7 @@ const updatePaymentMethod = async () => {
         } else {
             console.log('Card verified successfully');
             let paymentMethodResponse = await $communicationManager.addPaymentMethod(setupIntent.payment_method)
-            console.log(paymentMethodResponse);
-
-            emit('paymentMethods', paymentMethodResponse.paymentMethods);
-            emit('defaultPaymentMethod', paymentMethodResponse.defaultPaymentMethod);
+            console.log(paymentMethodResponse)
             // Manejo de verificación exitosa
         }
     } catch (error) {
@@ -258,7 +255,6 @@ const updatePaymentMethod = async () => {
     }
     //loader 
 };
-
 
 </script>
 
@@ -484,19 +480,11 @@ const updatePaymentMethod = async () => {
                             <h3 class="ml-3">Recollida</h3>
                         </button>
                     </div>
-                    <!-- <div id="map-ubi"
-                        class="w-full h-[130px] bg-gray-200 mt-3 rounded flex items-center justify-center overflow-hidden">
-                        <img src="../assets/mapubi.png" alt="plano ubicación">
-                    </div> -->
                     <button :disabled="!choosed" @click="toPay"
                         class="mt-3 w-full h-[60px] justify-center rounded-md border border-transparent px-4 py-2 text-xl font-semibold disabled:cursor-not-allowed"
                         :class="{ 'btn-ok': choosed, 'bg-[#6393F2]': !choosed, 'text-white': !choosed }">
                         <h3>Continuar</h3>
                     </button>
-                    <!-- <button @click="toggleCheckout()"
-                        class="mt-3 w-full h-[60px] justify-center rounded-md border border-red-300 px-4 py-2 text-xl font-semibold text-red-500">
-                        <h3>Cancel·lar</h3>
-                    </button> -->
                 </div>
             </div>
 
