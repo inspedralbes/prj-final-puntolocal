@@ -10,7 +10,8 @@ const listaProvincias = ref([]);
 const listaCiudades = ref([]);
 const todasLasCiudades = ref([]);
 const errorMensaje = ref('');
-const imagen = ref(null);
+const logoImage = ref(null);
+const localImage = ref(null);
 
 definePageMeta({
     layout: 'footer-only',
@@ -56,10 +57,17 @@ async function obtenerCoordenadas() {
     }
 }
 
-const handleFileUpload = (event) => {
+const handleLogoUpload = (event) => {
     const file = event.target.files[0];
     if (file) {
-        imagen.value = file;
+        logoImage.value = file;
+    }
+};
+
+const handleLocalImageUpload = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+        localImage.value = file;
     }
 };
 
@@ -95,8 +103,11 @@ async function realizarRegistro() {
         data.append(key, formData[key]);
     }
 
-    if (imagen.value) {
-        data.append('imagen', imagen.value);
+    if (logoImage.value) {
+        data.append('logo', logoImage.value);
+    }
+    if (localImage.value) {
+        data.append('imagen_local', localImage.value);
     }
 
     try {
@@ -297,10 +308,25 @@ onMounted(async () => {
                         </div>
 
                         <div class="col-span-2">
-                            <label for="imagen" class="block text-sm font-medium text-gray-700">Imagen</label>
-                            <div class="mt-1">
-                                <input id="imagen" type="file" @change="handleFileUpload" accept="image/*"
-                                    class="block w-full text-sm text-gray-900 border border-gray-300 rounded-md cursor-pointer bg-white shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div>
+                                    <label for="logo" class="block text-sm font-medium text-gray-700">Logo del
+                                        Comercio</label>
+                                    <div class="mt-1">
+                                        <input id="logo" type="file" @change="handleLogoUpload" accept="image/*"
+                                            class="block w-full text-sm text-gray-900 border border-gray-300 rounded-md cursor-pointer bg-white shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <label for="imagen_local" class="block text-sm font-medium text-gray-700">Imagen del
+                                        Local</label>
+                                    <div class="mt-1">
+                                        <input id="imagen_local" type="file" @change="handleLocalImageUpload"
+                                            accept="image/*"
+                                            class="block w-full text-sm text-gray-900 border border-gray-300 rounded-md cursor-pointer bg-white shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
+                                    </div>
+                                </div>
                             </div>
                         </div>
 

@@ -8,7 +8,7 @@ use App\Http\Controllers\ProductoController;
 use App\Http\Controllers\ComercioController;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\CategoriaController;
-use App\Http\Controllers\ciudadesController;
+use App\Http\Controllers\CiudadesController;
 use App\Http\Controllers\ProvinciasController;
 use App\Http\Controllers\EstatCompraController;
 use App\Http\Controllers\SubcategoriaController;
@@ -196,7 +196,7 @@ Route::prefix('poblaciones')->group(function () {
     Route::get('/provincias', [ProvinciasController::class, 'index']);
 
     // Ver ciudades por provincia seleccionada
-    Route::get('/ciudades/{id}', [ciudadesController::class, 'index']);
+    Route::get('/ciudades/{id}', [CiudadesController::class, 'index']);
 });
 
 Route::get('/verify/{id}/{hash}', [VerificationController::class, 'verify'])->name('verification.verify');

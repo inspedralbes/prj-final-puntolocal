@@ -35,7 +35,8 @@ class ComercioController extends Controller
             'gestion_stock' => 'required|integer',
             'latitude' => 'required|numeric',
             'longitude' => 'required|numeric',
-            'imagen' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048'
+            'logo' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
+            'imagen_local' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048'
         ]);
 
         if ($validator->fails()) {
@@ -44,12 +45,18 @@ class ComercioController extends Controller
             ], 422);
         }
 
-        $imagePath = null;
-        if ($request->hasFile('imagen')) {
-            $image = $request->file('imagen');
-            $imageName = uniqid() . '.' . $image->getClientOriginalExtension();
-            $imagePath = $request->file('imagen')->store('localComercios', 'public');
-            $imagePath = str_replace('public/', '', $imagePath);
+        // Procesar logo
+        $logoPath = null;
+        if ($request->hasFile('logo')) {
+            $logoPath = $request->file('logo')->store('comercios/logos', 'public');
+            $logoPath = str_replace('public/', '', $logoPath);
+        }
+
+        // Procesar imagen del local
+        $imagenLocalPath = null;
+        if ($request->hasFile('imagen_local')) {
+            $imagenLocalPath = $request->file('imagen_local')->store('comercios/locales', 'public');
+            $imagenLocalPath = str_replace('public/', '', $imagenLocalPath);
         }
 
         $comercio = Comercio::create([
@@ -69,7 +76,8 @@ class ComercioController extends Controller
             'puntaje_medio' => 0,
             'latitude' => $request->latitude,
             'longitude' => $request->longitude,
-            'imagen' => $imagePath,
+            'logo_path' => $logoPath,
+            'imagen_local_path' => $imagenLocalPath,
         ]);
 
         Mail::send('emails.nuevo_comercio', ['comercio' => $comercio], function ($message) {

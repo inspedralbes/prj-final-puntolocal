@@ -48,9 +48,9 @@
         </div>
 
         <div class="bg-[#276BF2] w-full h-[20vh] rounded-b-3xl flex flex-col items-center relative mb-12">
-            <img :src="`${baseUrl}/storage/${comercio?.imagen_local_path}`" alt="imagen del comercio"
-                        class="w-full h-full object-cover rounded-b-3xl">
-            <div class="flex justify-between items-center p-4 w-full">
+            <img v-if="comercio?.imagen_local_path" :src="`${baseUrl}/storage/${comercio?.imagen_local_path}`" alt="imagen del comercio"
+                        class="absolute z-0 w-full h-full opacity-80 object-cover rounded-b-3xl">
+            <div class="flex justify-between items-center z-10 p-4 w-full">
                 <div class="bg-white rounded-full flex items-center justify-center p-2">
                     <svg @click="goBack" width="2em" height="2em" viewBox="0 0 24 24" fill="none"
                         xmlns="http://www.w3.org/2000/svg">

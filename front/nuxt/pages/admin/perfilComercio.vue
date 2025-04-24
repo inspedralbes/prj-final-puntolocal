@@ -385,7 +385,7 @@ onMounted(() => {
                                         <label class="block text-sm font-medium text-gray-600 mb-2 sm:text-xl">Imagen del Local</label>
                                         
                                         <div v-if="formComercio.localImage" class="relative group w-48 h-48 mb-4">
-                                            <img :src="formComercio.logoImage" alt="Logo del comercio"
+                                            <img :src="formComercio.localImage" alt="Logo del comercio"
                                                 class="w-full h-full object-contain rounded-lg border border-gray-300">
                                             <div
                                                 class="absolute inset-0 bg-black bg-opacity-50 opacity-0 group-hover:opacity-100 transition-opacity rounded-lg flex items-center justify-center">
