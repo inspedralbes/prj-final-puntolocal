@@ -133,6 +133,10 @@ const storeTotal = (storeName) => {
 };
 
 function toggleCheckout() {
+    if( storesClosed.value.length === 0 ){
+        toPay();
+        return;
+    }
     if (!isLoggued.value) {
         loginVisible.value = !loginVisible.value;
     } else {
@@ -417,8 +421,8 @@ const veureOrdre = () => {
             <div v-if="chooseShipping">
                 <div class="bg-gray-900/50 fixed inset-0 z-40 animate-appear" @click="toggleCheckout"></div>
                 <div id="chooseShipping" class="fixed bottom-0 z-40 flex flex-col items-center justify-center p-4">
-                    <h3 class="text-3xl font-semibold text-center" style="color: #1E2026">
-                        Com vols rebre la teva comanda?
+                    <h3 v-if="storesClosed.length > 0" class="text-3xl font-semibold text-center">
+                        Hi han comerços tancats
                     </h3>
                     <!-- <div class="flex w-full justify-between contain-buttons mt-3">
                         <button @click="chooseShip" value="1" disabled
@@ -475,9 +479,8 @@ const veureOrdre = () => {
                         </button>
                     </div> -->
 
-                    <div class="h-[100%] p-6 bg-gray-50 rounded-xl w-[95%]">
+                    <div class="h-[100%] py-6 rounded-xl w-[95%]">
                         <div v-if="storesClosed.length > 0">
-                            <h1 class="text-2xl font-semibold text-red-600 mb-4">Hi han comerços tancats</h1>
                             <div v-for="(store, index) in storesClosed" :key="index"
                                 class="bg-white border border-gray-200 rounded-lg p-4 mb-3 shadow-sm">
                                 <p class="text-gray-800">
@@ -485,6 +488,9 @@ const veureOrdre = () => {
                                     <span class="text-gray-600">{{ store.comercio_proximo_horario }}</span>
                                 </p>
                             </div>
+                        </div>
+                        <div v-else class="mb-3">
+                            <p class="text-black text-2xl">Desitges fer la compra?</p>
                         </div>
                     </div>
 
