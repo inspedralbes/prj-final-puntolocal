@@ -19,6 +19,7 @@ import { Socket } from 'socket.io-client';
 const route = useRoute();
 const router = useRouter();
 const comercioStore = useComercioStore();
+const dataLoaded = ref(false);
 const { $communicationManager } = useNuxtApp();
 const socket = io(config.public.baseNodeUrl);
 
@@ -51,67 +52,7 @@ const goBack = () => {
     router.back();
 };
 
-// Función para verificar los comercios cerrados
-const checkClosedStores = () => {
-    const closedStores = [];
-
-    // Recorremos la información de comercios
-    comerciosInfo.value.forEach(comercioData => {
-        // Si isOpen es false, agregamos el comercio al array de cerrados
-        if (comercioData.isOpen === true) {
-            closedStores.push(comercioData.comercio);
-        }
-    });
-
-    console.log(closedStores);
-    return closedStores;
-};
-
-// Fetch de los comercios que tienen id en la cesta
-onMounted(async () => {
-    const uniqueComercioIds = [...new Set(comercioStore.cesta.map(item => item.comercio_id))];
-    await Promise.all(uniqueComercioIds.map(async (id) => {
-        const comercioData = await $communicationManager.getComercio(id);
-        if (comercioData && comercioData.comercio.nombre) {
-            comercios.value[id] = comercioData.comercio.nombre;
-            comerciosInfo.value.push(comercioData);
-        }
-    }));
-    // Actualizar la lista de comercios cerrados
-    storesClosed.value = checkClosedStores();
-    console.log("Comercios cerrados:", storesClosed.value);
-});
-
-// También puedes crear una versión computada si necesitas que se actualice automáticamente
-const closedStoresComputed = computed(() => {
-    const closedStores = [];
-
-    comerciosInfo.value.forEach(comercioData => {
-        if (comercioData.isOpen === false) {
-            closedStores.push(comercioData.comercio);
-        }
-    });
-
-    return closedStores;
-});
-
-// Agrupos los productos por el nombre del comercio
-const groupedCesta = computed(() => {
-    return comercioStore.cesta.reduce((groups, item) => {
-        const comercioNombre = comercios.value[item.comercio_id] || 'Cargando...';
-        if (!groups[comercioNombre]) {
-            groups[comercioNombre] = [];
-        }
-        groups[comercioNombre].push(item);
-        return groups;
-    }, {});
-});
-
-// Calculate total for a single store
-const storeTotal = (storeName) => {
-    return groupedCesta.value[storeName].reduce((acc, item) => acc + item.precio * item.cantidad, 0);
-};
-
+// Función para calcular la próxima apertura
 function proximaApertura(horarios) {
     const daysOfWeek = ['diumenge', 'dilluns', 'dimarts', 'dimecres', 'dijous', 'divendres', 'dissabte'];
     const now = new Date();
@@ -138,11 +79,68 @@ function proximaApertura(horarios) {
     return null;
 }
 
+// Función actualizada para verificar los comercios cerrados
+async function checkClosedStores() {
+    let arrayClosed = [];
+    for (const data of comerciosInfo.value) {
+        const horarios = JSON.parse(data.comercio.horario);
+        if (!data.isOpen) {
+            arrayClosed.push({
+                comercio_id: data.comercio.id,
+                comercio_nombre: data.comercio.nombre,
+                comercio_proximo_horario: proximaApertura(horarios),
+                isOpen: data.isOpen
+            });
+        }
+    }
+    return arrayClosed;
+}
+
+onMounted(async () => {
+    try {
+        const uniqueComercioIds = [...new Set(comercioStore.cesta.map(item => item.comercio_id))];
+        await Promise.all(uniqueComercioIds.map(async (id) => {
+            const comercioData = await $communicationManager.getComercio(id);
+            if (comercioData && comercioData.comercio.nombre) {
+                comercios.value[id] = comercioData.comercio.nombre;
+                comerciosInfo.value.push(comercioData);
+            }
+        }));
+        storesClosed.value = await checkClosedStores();
+        console.log("Comercios cerrados:", storesClosed.value);
+        dataLoaded.value = true;
+    } catch (error) {
+        console.error("Error loading basket data:", error);
+    }
+});
+
+// También puedes crear una versión computada si necesitas que se actualice automáticamente
+const closedStoresComputed = computed(async () => {
+    return await checkClosedStores();
+});
+
+// Agrupos los productos por el nombre del comercio
+const groupedCesta = computed(() => {
+    return comercioStore.cesta.reduce((groups, item) => {
+        const comercioNombre = comercios.value[item.comercio_id] || 'Cargando...';
+        if (!groups[comercioNombre]) {
+            groups[comercioNombre] = [];
+        }
+        groups[comercioNombre].push(item);
+        return groups;
+    }, {});
+});
+
+// Calculate total for a single store
+const storeTotal = (storeName) => {
+    return groupedCesta.value[storeName].reduce((acc, item) => acc + item.precio * item.cantidad, 0);
+};
+
 function toggleCheckout() {
     if (!isLoggued.value) {
         loginVisible.value = !loginVisible.value;
     } else {
-        // chooseShipping.value = !chooseShipping.value;
+        chooseShipping.value = !chooseShipping.value;
         shipOption.value = null;
         choosed.value = false;
     }
@@ -729,6 +727,20 @@ const veureOrdre = () => {
                     </div>
                 </div>
             </div>
+
+            <div class="h-[100%] p-6 bg-gray-50 rounded-xl w-[95%]">
+                <div v-if="storesClosed.length > 0">
+                    <h1 class="text-2xl font-semibold text-red-600 mb-4">Hi han comerços tancats</h1>
+                    <div v-for="(store, index) in storesClosed" :key="index"
+                        class="bg-white border border-gray-200 rounded-lg p-4 mb-3 shadow-sm">
+                        <p class="text-gray-800">
+                            <strong class="text-gray-900">{{ store.comercio_nombre }}</strong>:
+                            <span class="text-gray-600">{{ store.comercio_proximo_horario }}</span>
+                        </p>
+                    </div>
+                </div>
+            </div>
+
 
             <div class="footer flex items-center justify-between mt-auto border-t border-gray-300 mb-[60px]">
                 <div id="precio" class="font-semibold text-gray-800">
