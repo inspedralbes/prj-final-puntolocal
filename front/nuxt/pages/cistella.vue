@@ -30,19 +30,19 @@ const formData = reactive({
     password: '',
 });
 
-const comercios = ref({});
-const groups = reactive([]);
-// Array global para almacenar los comercios cerrados
-const storesClosed = ref([]);
-const choosed = ref(false);
+const order_id = ref();
+const isOk = ref(false);
 const payOption = ref(1);
+const comercios = ref({});
+const choosed = ref(false);
 const auth = useAuthStore();
+const groups = reactive([]);
+const storesClosed = ref([]);
 const shipOption = ref(null);
+const comerciosInfo = ref([]);
 const paymentView = ref(false);
 const cistellaView = ref(true);
-const comerciosInfo = ref([]);
-const isOk = ref(false);
-const order_id = ref();
+const chooseShipping = ref(false);
 const isLoggued = computed(() => {
     return auth?.user !== null;
 });
@@ -52,7 +52,6 @@ const goBack = () => {
     router.back();
 };
 
-// Función para calcular la próxima apertura
 function proximaApertura(horarios) {
     const daysOfWeek = ['diumenge', 'dilluns', 'dimarts', 'dimecres', 'dijous', 'divendres', 'dissabte'];
     const now = new Date();
@@ -79,7 +78,6 @@ function proximaApertura(horarios) {
     return null;
 }
 
-// Función actualizada para verificar los comercios cerrados
 async function checkClosedStores() {
     let arrayClosed = [];
     for (const data of comerciosInfo.value) {
@@ -114,7 +112,6 @@ onMounted(async () => {
     }
 });
 
-// También puedes crear una versión computada si necesitas que se actualice automáticamente
 const closedStoresComputed = computed(async () => {
     return await checkClosedStores();
 });
@@ -131,7 +128,6 @@ const groupedCesta = computed(() => {
     }, {});
 });
 
-// Calculate total for a single store
 const storeTotal = (storeName) => {
     return groupedCesta.value[storeName].reduce((acc, item) => acc + item.precio * item.cantidad, 0);
 };
@@ -164,7 +160,7 @@ function choosePayment(event) {
 }
 
 function toPay() {
-    // chooseShipping.value = !chooseShipping.value;
+    chooseShipping.value = !chooseShipping.value;
     togglePayment();
 }
 
@@ -248,11 +244,11 @@ const subcomandaInfo = computed(() => {
 });
 
 const seguirComprant = () => {
-    router.push('/'); // Ajusta la ruta segons la teva aplicació
+    router.push('/');
 };
 
 const veureOrdre = () => {
-    router.push(`/perfil/compras/${order_id.value}`); // Ajusta la ruta segons la teva aplicació
+    router.push(`/perfil/compras/${order_id.value}`);
 };
 </script>
 
@@ -418,7 +414,7 @@ const veureOrdre = () => {
             </div>
 
             <!-- PANTALLA DE ELEGIR TIPO DE ENVÍO  -->
-            <div v-if="false">
+            <div v-if="chooseShipping">
                 <div class="bg-gray-900/50 fixed inset-0 z-40 animate-appear" @click="toggleCheckout"></div>
                 <div id="chooseShipping" class="fixed bottom-0 z-40 flex flex-col items-center justify-center p-4">
                     <h3 class="text-3xl font-semibold text-center" style="color: #1E2026">
