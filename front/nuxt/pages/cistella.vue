@@ -420,7 +420,7 @@ const veureOrdre = () => {
                     <h3 class="text-3xl font-semibold text-center" style="color: #1E2026">
                         Com vols rebre la teva comanda?
                     </h3>
-                    <div class="flex w-full justify-between contain-buttons mt-3">
+                    <!-- <div class="flex w-full justify-between contain-buttons mt-3">
                         <button @click="chooseShip" value="1" disabled
                             class="flex items-center rounded-md px-3 py-4 min-w-[48%] text-lg font-bold disabled:opacity-50 cursor-not-allowed"
                             :class="{ 'selected': shipOption === '1', 'noSelected': shipOption !== '1' }">
@@ -473,20 +473,26 @@ const veureOrdre = () => {
                             </svg>
                             <h3 class="ml-3">Recollida</h3>
                         </button>
-                    </div>
-                    <!-- <div id="map-ubi"
-                        class="w-full h-[130px] bg-gray-200 mt-3 rounded flex items-center justify-center overflow-hidden">
-                        <img src="../assets/mapubi.png" alt="plano ubicación">
                     </div> -->
+
+                    <div class="h-[100%] p-6 bg-gray-50 rounded-xl w-[95%]">
+                        <div v-if="storesClosed.length > 0">
+                            <h1 class="text-2xl font-semibold text-red-600 mb-4">Hi han comerços tancats</h1>
+                            <div v-for="(store, index) in storesClosed" :key="index"
+                                class="bg-white border border-gray-200 rounded-lg p-4 mb-3 shadow-sm">
+                                <p class="text-gray-800">
+                                    <strong class="text-gray-900">{{ store.comercio_nombre }}</strong>:
+                                    <span class="text-gray-600">{{ store.comercio_proximo_horario }}</span>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
                     <button :disabled="!choosed" @click="toPay"
                         class="mt-3 w-full h-[60px] justify-center rounded-md border border-transparent px-4 py-2 text-xl font-semibold disabled:cursor-not-allowed"
                         :class="{ 'btn-ok': choosed, 'bg-[#6393F2]': !choosed, 'text-white': !choosed }">
                         <h3>Continuar</h3>
                     </button>
-                    <!-- <button @click="toggleCheckout()"
-                        class="mt-3 w-full h-[60px] justify-center rounded-md border border-red-300 px-4 py-2 text-xl font-semibold text-red-500">
-                        <h3>Cancel·lar</h3>
-                    </button> -->
                 </div>
             </div>
 
@@ -724,18 +730,7 @@ const veureOrdre = () => {
                 </div>
             </div>
 
-            <div class="h-[100%] p-6 bg-gray-50 rounded-xl w-[95%]">
-                <div v-if="storesClosed.length > 0">
-                    <h1 class="text-2xl font-semibold text-red-600 mb-4">Hi han comerços tancats</h1>
-                    <div v-for="(store, index) in storesClosed" :key="index"
-                        class="bg-white border border-gray-200 rounded-lg p-4 mb-3 shadow-sm">
-                        <p class="text-gray-800">
-                            <strong class="text-gray-900">{{ store.comercio_nombre }}</strong>:
-                            <span class="text-gray-600">{{ store.comercio_proximo_horario }}</span>
-                        </p>
-                    </div>
-                </div>
-            </div>
+
 
 
             <div class="footer flex items-center justify-between mt-auto border-t border-gray-300 mb-[60px]">
