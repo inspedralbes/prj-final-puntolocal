@@ -66,7 +66,7 @@
                 <p class="font-semibold text-white text-xl">Perfil de comerç</p>
                 <div class="bg-white rounded-full flex items-center justify-center p-3"
                     @click="darLikeComercio(comercio.id)">
-                    <svg @click="toggleColor" width="1.5em" height="1.5em" viewBox="0 0 24 24" fill="none" stroke="#000"
+                    <svg width="1.5em" height="1.5em" viewBox="0 0 24 24" fill="none" stroke="#000"
                         stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
                         :class="isLiked ? 'fill-red-500 stroke-red-500' : 'fill-white stroke-red-500'">
                         <path
@@ -78,7 +78,7 @@
             </div>
             <div class="w-[85vw] bg-white border rounded-md absolute bottom-[-50px] flex items-center p-2">
                 <div class="w-[80px] h-[80px] border border-gray-400 rounded-md bg-gray-100 mr-2 overflow-hidden">
-                    <svg v-if="!comercio?.logo_path" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <svg v-if="comercio?.logo_path" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
                         <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
                         <g id="SVGRepo_iconCarrier">
@@ -183,12 +183,13 @@ const mostrarIdProducto = (id) => {
 const darLikeComercio = async (id) => {
     try {
         const response = await $communicationManager.darLikeComercio(id);
-        if(response) {
+        console.log("Response:", response);
+        if(response.message) {
+            console.log('entro')
             authStore.toggleFavoritoComercio(id);
             toggleColor();
         }
         console.log("Like dado al comercio con id:", id);
-        console.log(response);
     } catch (error) {
         console.error("Error al dar like al comercio:", error);
     }
@@ -201,7 +202,7 @@ function toggleColor() {
 const consultarSiTieneLike = async (id) => {
     try {
         const response = await $communicationManager.consultarSiTieneLikeComercio(id);
-        isLiked.value = response;
+        isLiked.value = response.seguido;
         console.log("¿El usuario sigue este comercio?", response);
     } catch (error) {
         console.error("Error al consultar si tiene like:", error);
