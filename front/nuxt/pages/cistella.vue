@@ -234,7 +234,7 @@ async function crearComanda() {
 
 const orderFiltrada = computed(() => ({
     'total': comercioStore.totalPrice.toFixed(2),
-    'tipo_envio': shipOption.value,
+    'tipo_envio': 1,
     'tipo_pago': payOption.value,
 }));
 
