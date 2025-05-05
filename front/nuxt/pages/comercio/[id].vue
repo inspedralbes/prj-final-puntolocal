@@ -212,13 +212,14 @@ const consultarSiTieneLike = async (id) => {
 const fetchComercio = async () => {
     const id = route.params.id;
     try {
-        const response = await $communicationManager.getComercioById(id);
+        const responseComercio = await $communicationManager.getComercio(id);
+        const responseProductos = await $communicationManager.getProductosComercio(id);
 
-        if (response) {
-            comercio.value = response.comercio;
-            productos.value = response.productos;
+        if (responseComercio && responseProductos) {
+            comercio.value = responseComercio.comercio;
+            productos.value = responseProductos.productos;
 
-            const subcats = response.productos.map(producto => producto.subcategoria);
+            const subcats = responseProductos.productos.map(producto => producto.subcategoria);
             subcategorias.value = [...new Map(subcats.map(sub => [sub.id, sub])).values()];
 
             isLoading.value = false;

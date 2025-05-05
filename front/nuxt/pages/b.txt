@@ -30,19 +30,19 @@ const formData = reactive({
     password: '',
 });
 
-const order_id = ref();
-const isOk = ref(false);
-const payOption = ref(1);
 const comercios = ref({});
-const choosed = ref(false);
-const auth = useAuthStore();
 const groups = reactive([]);
+// Array global para almacenar los comercios cerrados
 const storesClosed = ref([]);
+const choosed = ref(false);
+const payOption = ref(1);
+const auth = useAuthStore();
 const shipOption = ref(null);
-const comerciosInfo = ref([]);
 const paymentView = ref(false);
 const cistellaView = ref(true);
-const chooseShipping = ref(false);
+const comerciosInfo = ref([]);
+const isOk = ref(false);
+const order_id = ref();
 const isLoggued = computed(() => {
     return auth?.user !== null;
 });
@@ -52,6 +52,7 @@ const goBack = () => {
     router.back();
 };
 
+// Función para calcular la próxima apertura
 function proximaApertura(horarios) {
     const daysOfWeek = ['diumenge', 'dilluns', 'dimarts', 'dimecres', 'dijous', 'divendres', 'dissabte'];
     const now = new Date();
@@ -78,6 +79,7 @@ function proximaApertura(horarios) {
     return null;
 }
 
+// Función actualizada para verificar los comercios cerrados
 async function checkClosedStores() {
     let arrayClosed = [];
     for (const data of comerciosInfo.value) {
@@ -112,6 +114,7 @@ onMounted(async () => {
     }
 });
 
+// También puedes crear una versión computada si necesitas que se actualice automáticamente
 const closedStoresComputed = computed(async () => {
     return await checkClosedStores();
 });
@@ -128,6 +131,7 @@ const groupedCesta = computed(() => {
     }, {});
 });
 
+// Calculate total for a single store
 const storeTotal = (storeName) => {
     return groupedCesta.value[storeName].reduce((acc, item) => acc + item.precio * item.cantidad, 0);
 };
@@ -136,8 +140,7 @@ function toggleCheckout() {
     if (!isLoggued.value) {
         loginVisible.value = !loginVisible.value;
     } else {
-        chooseShipping.value = true;
-        paymentView.value = false;
+        // chooseShipping.value = !chooseShipping.value;
         shipOption.value = null;
         choosed.value = false;
     }
@@ -161,9 +164,8 @@ function choosePayment(event) {
 }
 
 function toPay() {
-    chooseShipping.value = false;
-    paymentView.value = true;
-    return;
+    // chooseShipping.value = !chooseShipping.value;
+    togglePayment();
 }
 
 async function crearComanda() {
@@ -228,7 +230,7 @@ async function crearComanda() {
         isOk.value = true;
         comercioStore.emptyBasket();
     } catch (error) {
-        console.error("ERROR CREARCOMANDA: ", error)
+        console.error("ERROR CREARCOMANDA: ", createdOrder)
     }
 }
 
@@ -246,11 +248,11 @@ const subcomandaInfo = computed(() => {
 });
 
 const seguirComprant = () => {
-    router.push('/');
+    router.push('/'); // Ajusta la ruta segons la teva aplicació
 };
 
 const veureOrdre = () => {
-    router.push(`/perfil/compras/${order_id.value}`);
+    router.push(`/perfil/compras/${order_id.value}`); // Ajusta la ruta segons la teva aplicació
 };
 </script>
 
@@ -416,24 +418,79 @@ const veureOrdre = () => {
             </div>
 
             <!-- PANTALLA DE ELEGIR TIPO DE ENVÍO  -->
-            <div v-if="chooseShipping">
+            <div v-if="false">
                 <div class="bg-gray-900/50 fixed inset-0 z-40 animate-appear" @click="toggleCheckout"></div>
                 <div id="chooseShipping" class="fixed bottom-0 z-40 flex flex-col items-center justify-center p-4">
-                    <h3 v-if="storesClosed.length > 0" class="text-3xl font-semibold text-center">
-                        Hi han comerços tancats
+                    <h3 class="text-3xl font-semibold text-center" style="color: #1E2026">
+                        Com vols rebre la teva comanda?
                     </h3>
-
-                    <div v-if="storesClosed.length > 0" class="closed-stores-warning">
-                        <div v-for="store in storesClosed" :key="store.comercio_id">
-                            {{ store.comercio_nombre }} - {{ store.comercio_proximo_horario }}
-                        </div>
+                    <div class="flex w-full justify-between contain-buttons mt-3">
+                        <button @click="chooseShip" value="1" disabled
+                            class="flex items-center rounded-md px-3 py-4 min-w-[48%] text-lg font-bold disabled:opacity-50 cursor-not-allowed"
+                            :class="{ 'selected': shipOption === '1', 'noSelected': shipOption !== '1' }">
+                            <svg widths="1.8em" height="1.8em" fill="currentColor" version="1.1" id="Layer_1"
+                                xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+                                viewBox="0 0 512 512" xml:space="preserve" transform="matrix(-1, 0, 0, 1, 0, 0)">
+                                <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                                <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+                                <g id="SVGRepo_iconCarrier">
+                                    <g>
+                                        <g>
+                                            <polygon
+                                                points="438.32,62.807 438.32,109.573 407.95,109.573 407.95,62.807 343.661,62.807 343.661,192.019 502.609,192.019 502.609,62.807 ">
+                                            </polygon>
+                                        </g>
+                                    </g>
+                                    <g>
+                                        <g>
+                                            <path
+                                                d="M486.376,345.54c-1.198-1.768-2.476-3.476-3.833-5.119c-2.035-2.464-4.243-4.779-6.605-6.928 c-11.815-10.741-27.501-17.296-44.688-17.296c-8.021,0-15.714,1.427-22.841,4.041c-25.45,9.337-43.657,33.81-43.657,62.456 c0,2.292,0.116,4.556,0.344,6.79c0.682,6.698,2.363,13.106,4.89,19.07c0.421,0.994,0.866,1.976,1.333,2.945 c5.143,10.657,13.046,19.742,22.776,26.321c4.423,2.99,9.223,5.464,14.313,7.33c7.126,2.614,14.819,4.041,22.841,4.041 c26.355,0,49.178-15.411,59.931-37.694c0.468-0.969,0.912-1.951,1.333-2.945c2.527-5.965,4.207-12.372,4.891-19.07 c0.228-2.233,0.344-4.498,0.344-6.79C497.748,368.943,493.553,356.154,486.376,345.54z M431.249,403.056 c-11.228,0-20.361-9.134-20.361-20.361s9.134-20.361,20.361-20.361c11.228,0,20.361,9.134,20.361,20.361 S442.477,403.056,431.249,403.056z">
+                                            </path>
+                                        </g>
+                                    </g>
+                                    <g>
+                                        <g>
+                                            <path
+                                                d="M446.434,256.367v-33.978H259.901v54.282h-81.64V149.607h37.733v-30.37H107.044L35.24,324.023 C14.29,335.229,0,357.321,0,382.695c0,36.667,29.831,66.498,66.498,66.498s66.498-29.831,66.498-66.498 c0-3.845-0.346-7.608-0.976-11.276h172.497h30.525c5.604-48.119,46.608-85.591,96.207-85.591c23.322,0,44.745,8.286,61.482,22.067 L512,284.451C493.705,269.384,471.147,259.321,446.434,256.367z M66.498,403.056c-11.228,0-20.361-9.134-20.361-20.361 c0-11.228,9.134-20.361,20.361-20.361s20.361,9.134,20.361,20.361C86.86,393.923,77.725,403.056,66.498,403.056z">
+                                            </path>
+                                        </g>
+                                    </g>
+                                </g>
+                            </svg>
+                            <h3 class="ml-3">Enviament</h3>
+                        </button>
+                        <button @click="chooseShip" value="2"
+                            class="flex items-center rounded-md px-3 py-4 min-w-[48%] text-lg font-bold disabled:opacity-50"
+                            :class="{ 'selected': shipOption === '2', 'noSelected': shipOption !== '2' }">
+                            <svg width="1.8em" height="1.8em" viewBox="0 0 24 24" fill="none"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                                <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+                                <g id="SVGRepo_iconCarrier">
+                                    <path
+                                        d="M16.5276 2H7.47201C6.26919 2 5.66778 2 5.18448 2.2987C4.70117 2.5974 4.43221 3.13531 3.8943 4.21114L2.49068 7.75929C2.16639 8.57905 1.88266 9.54525 2.42854 10.2375C2.79476 10.7019 3.36244 11 3.99978 11C5.10435 11 5.99978 10.1046 5.99978 9C5.99978 10.1046 6.89522 11 7.99978 11C9.10435 11 9.99978 10.1046 9.99978 9C9.99978 10.1046 10.8952 11 11.9998 11C13.1044 11 13.9998 10.1046 13.9998 9C13.9998 10.1046 14.8952 11 15.9998 11C17.1044 11 17.9998 10.1046 17.9998 9C17.9998 10.1046 18.8952 11 19.9998 11C20.6371 11 21.2048 10.7019 21.5711 10.2375C22.117 9.54525 21.8333 8.57905 21.509 7.75929L20.1054 4.21114C19.5674 3.13531 19.2985 2.5974 18.8152 2.2987C18.3319 2 17.7305 2 16.5276 2Z"
+                                        fill="currentColor"></path>
+                                    <path fill-rule="evenodd" clip-rule="evenodd"
+                                        d="M20 21.25H22C22.4142 21.25 22.75 21.5858 22.75 22C22.75 22.4142 22.4142 22.75 22 22.75H2C1.58579 22.75 1.25 22.4142 1.25 22C1.25 21.5858 1.58579 21.25 2 21.25H4L4 12.5C4.74363 12.5 5.43309 12.2681 6 11.8727C6.56692 12.2681 7.25638 12.5 8 12.5C8.74363 12.5 9.43309 12.2681 10 11.8727C10.5669 12.2681 11.2564 12.5 12 12.5C12.7436 12.5 13.4331 12.2681 14 11.8727C14.5669 12.2681 15.2564 12.5 16 12.5C16.7436 12.5 17.4331 12.2681 18 11.8727C18.5669 12.2681 19.2564 12.5 20 12.5L20 21.25ZM9.5 21.25H14.5V18.5C14.5 17.5654 14.5 17.0981 14.299 16.75C14.1674 16.522 13.978 16.3326 13.75 16.2009C13.4019 16 12.9346 16 12 16C11.0654 16 10.5981 16 10.25 16.2009C10.022 16.3326 9.83261 16.522 9.70096 16.75C9.5 17.0981 9.5 17.5654 9.5 18.5V21.25Z"
+                                        fill="currentColor"></path>
+                                </g>
+                            </svg>
+                            <h3 class="ml-3">Recollida</h3>
+                        </button>
                     </div>
-
-                    <button @click="toPay"
-                        class="mt-3 w-full h-[60px] justify-center text-white rounded-md border border-transparent px-4 py-2 text-xl font-semibold bg-[#6393F2]">
-                        <h3 v-if="storesClosed.length == 0">Continuar</h3>
-                        <h3 v-else>Continuar Igualment</h3>
+                    <!-- <div id="map-ubi"
+                        class="w-full h-[130px] bg-gray-200 mt-3 rounded flex items-center justify-center overflow-hidden">
+                        <img src="../assets/mapubi.png" alt="plano ubicación">
+                    </div> -->
+                    <button :disabled="!choosed" @click="toPay"
+                        class="mt-3 w-full h-[60px] justify-center rounded-md border border-transparent px-4 py-2 text-xl font-semibold disabled:cursor-not-allowed"
+                        :class="{ 'btn-ok': choosed, 'bg-[#6393F2]': !choosed, 'text-white': !choosed }">
+                        <h3>Continuar</h3>
                     </button>
+                    <!-- <button @click="toggleCheckout()"
+                        class="mt-3 w-full h-[60px] justify-center rounded-md border border-red-300 px-4 py-2 text-xl font-semibold text-red-500">
+                        <h3>Cancel·lar</h3>
+                    </button> -->
                 </div>
             </div>
 
@@ -671,7 +728,18 @@ const veureOrdre = () => {
                 </div>
             </div>
 
-
+            <div class="h-[100%] p-6 bg-gray-50 rounded-xl w-[95%]">
+                <div v-if="storesClosed.length > 0">
+                    <h1 class="text-2xl font-semibold text-red-600 mb-4">Hi han comerços tancats</h1>
+                    <div v-for="(store, index) in storesClosed" :key="index"
+                        class="bg-white border border-gray-200 rounded-lg p-4 mb-3 shadow-sm">
+                        <p class="text-gray-800">
+                            <strong class="text-gray-900">{{ store.comercio_nombre }}</strong>:
+                            <span class="text-gray-600">{{ store.comercio_proximo_horario }}</span>
+                        </p>
+                    </div>
+                </div>
+            </div>
 
 
             <div class="footer flex items-center justify-between mt-auto border-t border-gray-300 mb-[60px]">

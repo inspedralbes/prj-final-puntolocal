@@ -163,8 +163,8 @@ export default defineNuxtPlugin((nuxtApp) => {
         return null;
       }
 
-      const producto = await response.json();
-      return producto;
+      const comercios = await response.json();
+      return comercios;
     },
 
     async getProductoById(id) {
@@ -191,14 +191,13 @@ export default defineNuxtPlugin((nuxtApp) => {
       }
     },
 
-    async getComercioById(id) {
+    async getComercio(id) {
       try {
         const response = await fetch(`${Host}/comercios/${id}`, {
           method: 'GET',
           headers: {
             'Accept': 'application/json',
             'Content-Type': 'application/json',
-            // 'Authorization': this.authStore.token ? `Bearer ${this.authStore.token}` : ''
           }
         });
 
@@ -207,15 +206,38 @@ export default defineNuxtPlugin((nuxtApp) => {
           return null;
         }
 
-        const producto = await response.json();
-        return producto;
+        const data = await response.json();
+        return data;
       } catch (error) {
         console.error('Error al realizar la petición:', error);
         return null;
       }
     },
 
-    async getProductos() {
+    async getProductosComercio(id) {
+      try {
+        const response = await fetch(`${Host}/comercios/${id}/productos`, {
+          method: 'GET',
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+          }
+        });
+
+        if (!response.ok) {
+          console.error(`Error en la petición: ${response.status} ${response.statusText}`);
+          return null;
+        }
+
+        const data = await response.json();
+        return data;
+      } catch (error) {
+        console.error('Error al realizar la petición:', error);
+        return null;
+      }
+    },
+
+    async getRandomProductos() {
       try {
         const response = await fetch(`${Host}/producto/random`, {
           method: 'GET',
