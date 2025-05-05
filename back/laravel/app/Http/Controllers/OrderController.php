@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Order;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Stripe\PaymentIntent;
+use Stripe\Stripe;
 
 class OrderController extends Controller {
     public function index() {
@@ -36,7 +38,28 @@ class OrderController extends Controller {
                 'tipo_envio' => 'required|exists:tipo_envios,id',
                 'tipo_pago' => 'required|exists:tipo_pagos,id',
                 'total' => 'required|numeric',
+                'payment_method_id' => 'nullable|string'
             ]);
+
+            $total = intval($request->total * 100);
+            $comision = intval($total * 0.05);
+            $total -= $comision;
+
+            if($request->tipo_pago === '2'){
+                Stripe::setApiKey(config('cashier.secret'));
+    
+                $paymentIntent = PaymentIntent::create([
+                    'amount' => $total,
+                    'currency' => 'eur',
+                    'payment_method' => $request->payment_method_id,
+                    'customer' => $user->stripe_id,
+                    'confirm' => true,
+                    'automatic_payment_methods' => [
+                        'enabled' => true,
+                        'allow_redirects' => 'never',
+                    ],
+                ]);
+            }
 
             $order = Order::create([
                 'tipo_envio' => $validated['tipo_envio'],

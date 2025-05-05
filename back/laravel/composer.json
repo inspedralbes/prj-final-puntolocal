@@ -15,7 +15,8 @@
         "laravel/framework": "^11.31",
         "laravel/sanctum": "^4.0",
         "laravel/socialite": "^5.17",
-        "laravel/tinker": "^2.9"
+        "laravel/tinker": "^2.9",
+        "stripe/stripe-php": "^16.6"
     },
     "require-dev": {
         "laravel/pail": "^1.1",

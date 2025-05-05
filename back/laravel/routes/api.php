@@ -216,6 +216,8 @@ Route::middleware('auth:sanctum')->prefix( 'stripe')->group(function () {
     Route::post('add-payment-method', [PaymentController::class, 'addPaymentMethod'])->name('stripe.addPaymentMethod');
     Route::post('retrieve-payment-method', [PaymentController::class, 'retrievePaymentMethod'])->name('stripe.retrievePaymentMethod');
     Route::post('set-default-payment-method', [PaymentController::class, 'setDefaultPaymentMethod'])->name('stripe.setDefaultPaymentMethod');
+    Route::post('create-express-account', [PaymentController::class, 'createExpressAccount'])->name('stripe.createExpressAccount');
+    Route::post('generate-onboarding-link', [PaymentController::class, 'generateOnboardingLink'])->name('stripe.generateOnboardingLink');
     Route::post('purchase', [PaymentController::class, 'purchase'])->name('stripe.purchase');
     Route::post('delete-payment-method', [PaymentController::class, 'delete'])->name('stripe.delete');
 });

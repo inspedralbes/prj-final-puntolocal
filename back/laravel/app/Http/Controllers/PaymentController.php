@@ -2,10 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Comercio;
+use Exception;
 use Illuminate\Http\Request;
 use Stripe\Stripe;
 use Stripe\Charge;
-use Exception;
+use Stripe\Account;
+use Stripe\AccountLink;
 use App\Models\Cliente;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
@@ -22,16 +25,18 @@ class PaymentController extends Controller
 
         $session = Session::create([
             'payment_method_types' => ['card'],
-            'line_items' => [[
-                'price_data' => [
-                    'currency' => 'eur',
-                    'product_data' => [
-                        'name' => 'Producto de Prueba',
+            'line_items' => [
+                [
+                    'price_data' => [
+                        'currency' => 'eur',
+                        'product_data' => [
+                            'name' => 'Producto de Prueba',
+                        ],
+                        'unit_amount' => 1000, // 10.00 EUR
                     ],
-                    'unit_amount' => 1000, // 10.00 EUR
-                ],
-                'quantity' => 1,
-            ]],
+                    'quantity' => 1,
+                ]
+            ],
             'mode' => 'payment',
             'success_url' => route('payment.success') . '?session_id={CHECKOUT_SESSION_ID}',
             'cancel_url' => route('payment.cancel'),
@@ -44,8 +49,7 @@ class PaymentController extends Controller
     {
         $request->validate([
             'payment_method_id' => 'required|string',
-            'amount' => 'required|numeric|min:50', // Mínimo 50 centavos
-            'currency' => 'required|string|size:3'
+            'cesta' => 'required|array',
         ]);
 
         Stripe::setApiKey(config('cashier.secret'));
@@ -53,37 +57,35 @@ class PaymentController extends Controller
         try {
             // Crear un PaymentIntent
             $paymentIntent = PaymentIntent::create([
-                'amount' => (int)$request->amount,
-                'currency' => $request->currency,
+                'currency' => 'eur',
                 'payment_method' => $request->payment_method_id,
-                'confirmation_method' => 'manual',
                 'confirm' => true,
                 // Evitar redireccionamientos
-                'return_url' => route('payment.success'),
-                'use_stripe_sdk' => false,
-                'off_session' => true
+                // 'return_url' => url('http://localhost/'),
+                // 'use_stripe_sdk' => false,
+                // 'off_session' => true
             ]);
 
             // Verificar el estado del pago
-            if ($paymentIntent->status === 'succeeded') {
-                // Pago exitoso
-                return response()->json([
-                    'success' => true,
-                    'payment_intent' => $paymentIntent->id
-                ]);
-            } elseif ($paymentIntent->status === 'requires_action') {
-                // Esto no debería ocurrir con off_session y use_stripe_sdk en false
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Se requiere autenticación adicional'
-                ], 400);
-            } else {
-                // Otro estado
-                return response()->json([
-                    'success' => false,
-                    'message' => 'El pago no pudo ser procesado'
-                ], 400);
-            }
+            // if ($paymentIntent->status === 'succeeded') {
+            //     // Pago exitoso
+            //     return response()->json([
+            //         'success' => true,
+            //         'payment_intent' => $paymentIntent->id
+            //     ]);
+            // } elseif ($paymentIntent->status === 'requires_action') {
+            //     // Esto no debería ocurrir con off_session y use_stripe_sdk en false
+            //     return response()->json([
+            //         'success' => false,
+            //         'message' => 'Se requiere autenticación adicional'
+            //     ], 400);
+            // } else {
+            //     // Otro estado
+            //     return response()->json([
+            //         'success' => false,
+            //         'message' => 'El pago no pudo ser procesado'
+            //     ], 400);
+            // }
         } catch (ApiErrorException $e) {
             return response()->json([
                 'success' => false,
@@ -172,7 +174,8 @@ class PaymentController extends Controller
             'status' => 'success',
             'message' => 'Payment Method retrieved successfully!',
             'paymentMethods' => $paymentMethods,
-            'defaultPaymentMethod' => $defaultPaymentMethod]);
+            'defaultPaymentMethod' => $defaultPaymentMethod
+        ]);
     }
 
     public function setDefaultPaymentMethod(Request $request)
@@ -205,20 +208,22 @@ class PaymentController extends Controller
 
     public function purchase(Request $request)
     {
-        $data = $request->validate([
-            'paymentMethod' => 'required',
-            'price'=>'required',
-            'products' => 'required',
-            'shippingAddress' => 'required',
-            'billingAddress' => 'required'
-        ],
-        [
-            'paymentMethod.required'=>'Payment Method is required.',
-            'price.required'=>'Price is required.',
-            'products.required'=>'Products is required.',
-            'shippingAddress.required'=>'Shipping Address is required.',
-            'billingAddress.required'=>'Billing Address is required.'
-        ]);
+        $data = $request->validate(
+            [
+                'paymentMethod' => 'required',
+                'price' => 'required',
+                'products' => 'required',
+                'shippingAddress' => 'required',
+                'billingAddress' => 'required'
+            ],
+            [
+                'paymentMethod.required' => 'Payment Method is required.',
+                'price.required' => 'Price is required.',
+                'products.required' => 'Products is required.',
+                'shippingAddress.required' => 'Shipping Address is required.',
+                'billingAddress.required' => 'Billing Address is required.'
+            ]
+        );
 
         $user = Auth::user();
 
@@ -232,7 +237,7 @@ class PaymentController extends Controller
         } catch (\Exception $e) {
             return response()->json(['success' => false, 'error' => $e->getMessage()], 500);
         }
-//        return $data['products'];
+        //        return $data['products'];
         $order = new Comanda();
         $order->idUser = $user->id;
         $order->idBillingAddress = $data['billingAddress']['id'];
@@ -241,7 +246,7 @@ class PaymentController extends Controller
         $order->price = $data['price'];
         $order->save();
 
-        foreach ($data['products'] as $productInCart){
+        foreach ($data['products'] as $productInCart) {
             $orderProducts = new ArticuloComanda();
             $orderProducts->idOrder = $order->id;
             $orderProducts->idProduct = $productInCart['id'];
@@ -260,7 +265,7 @@ class PaymentController extends Controller
         $invoice->save();
 
 
-        Mail::to($user->email)->send(new FinishBuyMailMailer($user, route('invoice.index', ['order_id'=>$order->id])));
+        Mail::to($user->email)->send(new FinishBuyMailMailer($user, route('invoice.index', ['order_id' => $order->id])));
 
         return response()->json([
             'status' => 'success',
@@ -272,12 +277,14 @@ class PaymentController extends Controller
 
     public function delete(Request $request)
     {
-        $data = $request->validate([
-            'paymentMethod' => 'required',
-        ],
-        [
-            'paymentMethod.required'=>'Payment Method is required.',
-        ]);
+        $data = $request->validate(
+            [
+                'paymentMethod' => 'required',
+            ],
+            [
+                'paymentMethod.required' => 'Payment Method is required.',
+            ]
+        );
 
         $user = Auth::user();
 
@@ -287,6 +294,51 @@ class PaymentController extends Controller
         return response()->json([
             'status' => 'success',
             'message' => 'Payment Method deleted successfully!'
+        ]);
+    }
+
+    public function createExpressAccount(Request $request)
+    {
+        $user = Auth::user(); // o el vendedor que quieras registrar
+
+        $comercio_user = Comercio::where('idUser', $user->id)->first();
+
+        Stripe::setApiKey(config('cashier.secret'));
+
+        $account = Account::create([
+            'type' => 'express',
+            'country' => 'ES',
+            'email' => $comercio_user->email,
+            'capabilities' => [
+                'card_payments' => ['requested' => true],
+                'transfers' => ['requested' => true],
+            ],
+        ]);
+
+        // Guardar el ID de la cuenta conectada
+        $comercio_user->stripe_account_id = $account->id;
+        $comercio_user->save();
+
+        return response()->json(['account_id' => $account->id]);
+    }
+
+    public function generateOnboardingLink()
+    {
+        $user = Auth::user();
+
+        $comercio_user = Comercio::where('idUser', $user->id)->first();
+
+        Stripe::setApiKey(config('cashier.secret'));
+
+        $accountLink = AccountLink::create([
+            'account' => $comercio_user->stripe_account_id,
+            'refresh_url' => url('/connect/refresh'),
+            'return_url' => url('http://localhost/admin'),
+            'type' => 'account_onboarding',
+        ]);
+
+        return response()->json([
+            "onboarding_url" => $accountLink->url
         ]);
     }
 }

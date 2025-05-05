@@ -765,7 +765,7 @@ export default defineNuxtPlugin((nuxtApp) => {
             'Authorization': this.authStore.token ? `Bearer ${this.authStore.token}` : ''
           }
         });
-        
+
         if (response.ok) {
           const json = await response.json();
           return json;
@@ -1341,6 +1341,79 @@ export default defineNuxtPlugin((nuxtApp) => {
     //     return null;
     //   }
     // }
+
+
+    // STRIPE
+
+    async selectPaymentMethod(card) {
+      try {
+        const response = await fetch(Host + '/stripe/set-default-payment-method', {
+          method: 'POST',
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+            'Authorization': this.authStore.token ? `Bearer ${this.authStore.token}` : ''
+          },
+          body: JSON.stringify({ payment_method_id: card.id })
+        });
+        const data = await response.json();
+        return data;
+      } catch (error) {
+        console.error("Error: ", error);
+      }
+    },
+
+    async purchaseProducts() {
+      try {
+        const response = await fetch(Host + '/stripe/purchase', {
+          method: 'POST',
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+            'Authorization': this.authStore.token ? `Bearer ${this.authStore.token}` : ''
+          },
+          body: JSON.stringify({ payment_method_id: card.id })
+        });
+        const data = await response.json();
+        return data;
+      } catch (error) {
+        console.error("Error: ", error);
+      }
+    },
+
+    async createStripeID() {
+      try {
+        const response = await fetch(Host + '/stripe/create-express-account', {
+          method: 'POST',
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+            'Authorization': this.authStore.token ? `Bearer ${this.authStore.token}` : ''
+          }
+        })
+        const data = await response.json();
+        return data;
+      } catch (error) {
+        console.error("Error: ", error);
+      }
+    },
+
+    async getStripeOnboardingUrl() {
+      try {
+        const response = await fetch(Host + '/stripe/generate-onboarding-link', {
+          method: 'POST',
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+            'Authorization': this.authStore.token ? `Bearer ${this.authStore.token}` : ''
+          }
+        })
+        const data = await response.json();
+        return data;
+      } catch (error) {
+        console.error("Error: ", error);
+      }
+    }
   };
 
   // Inyectar el communicationManager en la app

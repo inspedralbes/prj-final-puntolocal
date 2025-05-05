@@ -141,6 +141,13 @@
                                 </div>
                                 <ul class="py-1" role="none">
                                     <li>
+                                        <button @click="configurarStripe()"
+                                            class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white"
+                                            role="menuitem">
+                                            Configurar datos bancarios
+                                        </button>
+                                    </li>
+                                    <li>
                                         <NuxtLink to="/"
                                             class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white"
                                             role="menuitem">
@@ -573,6 +580,7 @@ import { useRoute, useRouter } from "vue-router";
 const route = useRoute();
 const authStore = useAuthStore();
 const comercio = authStore.comercio;
+const { $communicationManager } = useNuxtApp();
 
 const sidebarOpen = ref(false);
 
@@ -621,11 +629,18 @@ const handleClickOutside = (event) => {
 };
 
 async function goToLogout() {
-    const { $communicationManager } = useNuxtApp();
     await $communicationManager.logout();
     authStore.logout();
     localStorage.removeItem('animationShown');
     navigateTo('/login');
+}
+
+async function configurarStripe() {
+    const stripe_id = await $communicationManager.createStripeID();
+    if (stripe_id) {
+        const data = await $communicationManager.getStripeOnboardingUrl();
+        window.location.href = data.onboarding_url;
+    }
 }
 
 onMounted(() => {

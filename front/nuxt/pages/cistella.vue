@@ -5,36 +5,26 @@ definePageMeta({
 
 import { useRuntimeConfig } from "#imports";
 const config = useRuntimeConfig();
-const baseUrl = config.public.apiBaseUrl;
 
 import { io } from "socket.io-client";
 import { computed, onMounted, ref } from 'vue';
 import { useAuthStore } from '@/stores/authStore';
 import { useComercioStore } from '@/stores/comercioStore';
 import { useNuxtApp } from '#app';
-import shoppingBasketIcon from '../assets/shopping-basket.svg';
-import { Socket } from 'socket.io-client';
 import { CistellaCompraRealizadaPopUpComp, CistellaProductoComandaComp } from "#components";
 import CistellaBuidaPopUpComp from "~/components/Cistella/CistellaBuidaPopUpComp.vue";
 
-const route = useRoute();
 const router = useRouter();
 const comercioStore = useComercioStore();
 const { $communicationManager } = useNuxtApp();
 const socket = io(config.public.baseNodeUrl);
 
-const authStore = useAuthStore();
-const errorMessage = ref('');
-const formData = reactive({
-    email: '',
-    password: '',
-});
-
 const comercios = ref({});
 const groups = reactive([]);
 const chooseShipping = ref(false);
 const choosed = ref(false);
-const payOption = ref(1);
+const payOption = ref("1");
+const paymentCardID = ref(null);
 const auth = useAuthStore();
 const shipOption = ref(null);
 const paymentView = ref(true);
@@ -93,6 +83,10 @@ function chooseMethodPayment(option) {
     payOption.value = option;
 }
 
+function choosePaymentCard(card) {
+    paymentCardID.value = card.defaultPaymentMethod.id;
+}
+
 function toPay() {
     chooseShipping.value = false;
     togglePayment();
@@ -100,12 +94,22 @@ function toPay() {
 
 async function crearComanda() {
     try {
+        const payment_method = orderFiltrada.value.tipo_pago;
+        console.log("Tipo de pago: ", payment_method);
+        // const total_amount = Math.round(orderFiltrada.value.total * 100);
+        console.log('orderFiltrada: ', orderFiltrada.value);
+        const total_amount = orderFiltrada.value.total;
+        console.log("Payment card: ", paymentCardID?.value);
+
+
+        // Creamos la orden, da igual si es en efectivo o tarjeta
         const createdOrder = await $communicationManager.createOrder(orderFiltrada.value);
         if (createdOrder.success) {
             order_id.value = createdOrder.data.order.id;
             const subcomandaInfo = computed(() => {
                 return {
                     order_id: order_id.value,
+                    payment_method_id: payOption.value,
                     suborders: Object.keys(groupedCesta.value).map(comercio => ({
                         comercio_id: groupedCesta.value[comercio][0].comercio_id,
                         subtotal: storeTotal(comercio),
@@ -117,6 +121,8 @@ async function crearComanda() {
                     })),
                 }
             });
+            console.log("Subcomandas: ", subcomandaInfo.value);
+
             const createdSuborders = await $communicationManager.createSuborder(subcomandaInfo.value);
             console.log("createdSuborders CREARCOMANDA: ", createdSuborders)
 
@@ -153,12 +159,10 @@ async function crearComanda() {
                 const orders = agruparOrderSuborders(createdOrder, createdSuborders);
                 socket.emit("nuevaOrden", orders);
             }
-        } else {
-            console.log("ALGUN ERROR CREARCOMANDA: ", createdOrder)
         }
 
-        isOk.value = true;
-        comercioStore.emptyBasket();
+        // isOk.value = true;
+        // comercioStore.emptyBasket();
     } catch (error) {
         console.error("ERROR CREAR COMANDA: ", createdOrder)
     }
@@ -168,6 +172,7 @@ const orderFiltrada = computed(() => ({
     'total': comercioStore.totalPrice.toFixed(2),
     'tipo_envio': 2,
     'tipo_pago': payOption.value,
+    'payment_method_id': paymentCardID.value
 }));
 
 const subcomandaInfo = computed(() => {
@@ -176,10 +181,6 @@ const subcomandaInfo = computed(() => {
         subtotal: storeTotal(comercio),
     }));
 });
-
-const seguirComprant = () => {
-    router.push('/'); // Ajusta la ruta segons la teva aplicació
-};
 
 const togglePayment = () => {
     paymentView.value = !paymentView.value
@@ -277,10 +278,8 @@ const veureOrdre = () => {
             <div v-if="paymentView" class="w-full h-screen bg-white fixed inset-0 z-40">
 
                 <!-- HEADER -->
-                <CistellaHeaderComp
-                    text="Pagament"
-                    class="flex items-center justify-center p-4 h-[80px] fixed inset-0 z-50 bg-white"
-                />
+                <CistellaHeaderComp text="Pagament"
+                    class="flex items-center justify-center p-4 h-[80px] fixed inset-0 z-50 bg-white" />
 
                 <div class="mt-[80px] pb-[88px] p-2 h-screen bg-gray-100 overflow-scroll">
                     <!-- RESUMEN DE LA COMANDA -->
@@ -288,11 +287,13 @@ const veureOrdre = () => {
                         :totalPrice="comercioStore.totalPrice" />
 
                     <!-- MÉTODOS DE PAGO (EFECTIVO O TARJETA) -->
-                    <CistellaMetodesPagamentComp @chooseMethod="chooseMethodPayment" />
+                    <CistellaMetodesPagamentComp @chooseMethod="chooseMethodPayment"
+                        @choosePaymentCard="choosePaymentCard" />
                 </div>
 
                 <!-- FOOTER CON LOS BOTONES DE CANCELAR Y PAGAR -->
-                <CistellaFooterButtonsComp :togglePayment="togglePayment" :crearComanda="crearComanda" />
+                <CistellaFooterButtonsComp :togglePayment="togglePayment" :crearComanda="crearComanda"
+                    :paymentCardID="paymentCardID" :payOption="payOption" />
             </div>
 
             <!-- CISTELLA VIEW CON TODOS LOS PRODUCTOS -->

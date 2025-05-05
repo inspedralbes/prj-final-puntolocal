@@ -12,15 +12,20 @@ const cardHolderName = ref('');
 const containerCardElement = null;
 const paymentOption = ref('1');
 const newPaymentMethodShow = ref(false);
+const selectedCard = ref(null);
 
 onMounted(async () => {
     savedPaymentCards.value = await getPaymentsCards();
-})
+});
 
-const emit = defineEmits(['chooseMethod']);
+const emit = defineEmits(['chooseMethod', 'choosePaymentCard']);
 
 function chooseMethod(option) {
     emit('chooseMethod', option)
+}
+
+function choosePaymentCard(card_id) {
+    emit('choosePaymentCard', card_id)
 }
 
 function choosePayment(event) {
@@ -45,7 +50,7 @@ async function agregarTarjeta() {
     newPaymentMethodShow.value = true;
 
     // if (!stripe.value) {
-        await restoreStripe();
+    await restoreStripe();
     // }
 }
 
@@ -97,6 +102,16 @@ const getPaymentsCards = async () => {
     } catch (error) {
         console.error(error);
         return null;
+    }
+}
+
+const selectPaymentMethod = async (card) => {
+    try {
+        const response = await $communicationManager.selectPaymentMethod(card);
+        selectedCard.value = response;
+        choosePaymentCard(selectedCard.value)
+    } catch (error) {
+        console.error("Error: ", error);
     }
 }
 </script>
@@ -169,11 +184,12 @@ const getPaymentsCards = async () => {
             <div v-if="paymentOption === '2' && savedPaymentCards">
                 <div v-if="savedPaymentCards.length > 0 && !newPaymentMethodShow"
                     class="flex flex-col w-full justify-center items-center">
-                    <button @click="agregarTarjeta" class="my-2 bg-[#276BF2] text-white p-3 rounded-md">Añadir nuevo
-                        método de pago</button>
+                    <button @click="agregarTarjeta" class="my-2 bg-[#276BF2] text-white p-3 rounded-md">
+                        Añadir nuevo método de pago
+                    </button>
                     <div v-for="(creditCard, index) in savedPaymentCards" :key="index"
                         @click="selectPaymentMethod(creditCard)"
-                        class="bg-white shadow rounded mb-2 cursor-pointer w-full" :class="{}">
+                        class="shadow rounded mb-2 cursor-pointer w-full" :class="creditCard.id === selectedCard?.defaultPaymentMethod.id ? 'bg-blue-100' : 'bg-white'">
                         <div class="p-4">
                             <div class="flex justify-between items-center">
                                 <div class="flex items-center">
