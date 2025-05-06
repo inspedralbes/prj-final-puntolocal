@@ -198,7 +198,7 @@ namespace App\Http\Controllers;
 
     public function getLocations()
     {
-        $comercios = Comercio::select('id', 'nombre', 'latitude', 'longitude', 'puntaje_medio', 'horario', 'phone', 'email', 'calle_num', 'categoria_id', 'imagen')
+        $comercios = Comercio::select('id', 'nombre', 'latitude', 'longitude', 'puntaje_medio', 'horario', 'phone', 'email', 'calle_num', 'categoria_id', 'logo_path', 'imagen_local_path')
             ->whereNotNull('ubicacion_verified_at')
             ->get();
 
