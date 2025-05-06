@@ -36,10 +36,11 @@ const groups = reactive([]);
 const storesClosed = ref([]);
 const shipOption = ref(null);
 const comerciosInfo = ref([]);
-const paymentView = ref(true);
+const paymentView = ref(false);
 const cistellaView = ref(true);
 const isOk = ref(false);
 const order_id = ref();
+const chooseShipping = ref(false);
 const isLoggued = computed(() => {
     return auth?.user !== null;
 });
@@ -227,8 +228,8 @@ async function crearComanda() {
             }
         }
 
-        // isOk.value = true;
-        // comercioStore.emptyBasket();
+        isOk.value = true;
+        comercioStore.emptyBasket();
     } catch (error) {
         console.error("ERROR CREAR COMANDA: ", createdOrder)
     }
