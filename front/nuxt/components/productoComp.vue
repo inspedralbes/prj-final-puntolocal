@@ -1,5 +1,5 @@
 <template>
-    <div id="producto" :data-testid="testId">
+    <div id="producto" :data-testid="productoId">
         <div id="contain-image" :class="customClass">
             <img :src="img">
             <span @click.stop="actualizaFavoritos(productoId)" id="contain-fav">
@@ -101,7 +101,6 @@ img {
 const props = defineProps({
     productoId: {
         type: String,
-        default: 'a',
     },
     img: {
         type: String,
@@ -113,7 +112,7 @@ const props = defineProps({
     },
     price: {
         type: Number,
-        // required: true,
+        required: true,
     },
     comercio: {
         type: String,
@@ -131,7 +130,7 @@ const authStore = useAuthStore();
 
 async function actualizaFavoritos(productoID) {
     const { $communicationManager } = useNuxtApp();
-    console.log(productoID)
+    
     try {
         const response = await $communicationManager.updateFavorito(authStore.user.id, productoID);
 

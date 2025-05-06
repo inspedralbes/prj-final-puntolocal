@@ -71,7 +71,7 @@
                         </p>
                     </div>
                     <div class="flex space-x-1 pl-4 items-center overflow-x-auto scrollbar-none">
-                        <productoComp v-for="(producto, index) in productos2" :key="index" :id="producto.id"
+                        <productoComp v-for="(producto, index) in productos2" :key="index" :id="producto.id.toString()" :productoId="producto.id.toString()"
                             :img="producto.imagen ? `${baseUrl}/storage/${producto.imagen}` : `${baseUrl}/storage/productos/default-image.webp`"
                             :title="producto.nombre" :price="producto.precio" :comercio="producto.comercio"
                             :customClass="'w-[170px]'" price-class="text-gray-900 "
@@ -79,7 +79,7 @@
                     </div>
                     <h1 class="text-xl mt-5 font-semibold text-gray-900 mb-4 ml-4">Productes a prop teu</h1>
                     <div id="productos" class="grid grid-cols-2 md:grid-cols-4 gap-4 px-4">
-                        <productoComp v-for="(producto, index) in productos" :key="index" :productoId="producto.id"
+                        <productoComp v-for="(producto, index) in productos" :key="index" :productoId="producto.id.toString()"
                             :img="producto.imagen ? `${baseUrl}/storage/${producto.imagen}` : `${baseUrl}/storage/productos/default-image.webp`"
                             :title="producto.nombre" :price="producto.precio" :comercio="producto.comercio_nombre"
                             :customClass="'w-full'" price-class="text-gray-900"
