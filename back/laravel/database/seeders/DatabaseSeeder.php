@@ -22,8 +22,8 @@
             $this->call(CiudadesTableSeeder::class);
 
             // ORDERS
-            // $this->call(OrdersTableSeeder::class);
-            // $this->call(OrderComerciosTableSeeder::class);
-            // $this->call(ProductosCompraTableSeeder::class);
+            $this->call(OrdersTableSeeder::class);
+            $this->call(OrderComerciosTableSeeder::class);
+            $this->call(ProductosCompraTableSeeder::class);
         }
     }

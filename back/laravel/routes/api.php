@@ -15,6 +15,7 @@ use App\Http\Controllers\SubcategoriaController;
 use App\Http\Controllers\OrderComercioController;
 use App\Http\Controllers\ComercioFavoritosController;
 use App\Http\Controllers\Auth\VerificationController;
+use App\Http\Controllers\StatsController;
 
 Route::get('/user', function (Request $request) {
     return $request->user();
@@ -58,6 +59,10 @@ Route::middleware('auth:sanctum')->prefix('favoritos')->group(function () {
     Route::get('/comercios-favoritos', [ComercioFavoritosController::class, 'index']);
     Route::post('/like/{id}', [ComercioFavoritosController::class, 'afegirLikeComerci']);
     Route::get('/verificar-seguido/{id}', [ComercioFavoritosController::class, 'verificarSeguido']);
+});
+
+Route::middleware('auth:sanctum')->group(function () {
+    Route::get('/stats/orders', [StatsController::class, 'sales']);
 });
 
 Route::prefix('comercios')->group(function () {
