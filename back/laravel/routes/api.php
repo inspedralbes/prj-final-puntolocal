@@ -15,6 +15,7 @@ use App\Http\Controllers\SubcategoriaController;
 use App\Http\Controllers\OrderComercioController;
 use App\Http\Controllers\ComercioFavoritosController;
 use App\Http\Controllers\Auth\VerificationController;
+use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\StatsController;
 
 Route::get('/user', function (Request $request) {
@@ -189,7 +190,7 @@ Route::middleware('auth:sanctum')->prefix('producto')->group(function () {
 });
 
 // ==== CLIENTES ====================
-Route::middleware('auth:sanctum')->prefix('clientes')->group(function () {
+Route::middleware('auth:sanctum')->prefix( 'clientes')->group(function () {
     Route::get('{id}', [ClienteController::class, 'obtenerDatosCliente']);
 
     Route::get('{id}/compras', [OrderController::class, 'comprasCliente']);
@@ -206,3 +207,22 @@ Route::prefix('poblaciones')->group(function () {
 });
 
 Route::get('/verify/{id}/{hash}', [VerificationController::class, 'verify'])->name('verification.verify');
+
+
+
+
+// Route::post('/create-checkout-session', [PaymentController::class, 'createCheckoutSession']);
+// Route::get('/payment/success', [PaymentController::class, 'success'])->name('payment.success');
+// Route::get('/payment/cancel', [PaymentController::class, 'cancel'])->name('payment.cancel');
+// Route::post('/process-payment', [PaymentController::class, 'processPayment']);
+
+Route::middleware('auth:sanctum')->prefix( 'stripe')->group(function () {
+    Route::post('create-setup-intent', [PaymentController::class, 'createSetupIntent'])->name('stripe.createSetupIntent');
+    Route::post('add-payment-method', [PaymentController::class, 'addPaymentMethod'])->name('stripe.addPaymentMethod');
+    Route::post('retrieve-payment-method', [PaymentController::class, 'retrievePaymentMethod'])->name('stripe.retrievePaymentMethod');
+    Route::post('set-default-payment-method', [PaymentController::class, 'setDefaultPaymentMethod'])->name('stripe.setDefaultPaymentMethod');
+    Route::post('create-express-account', [PaymentController::class, 'createExpressAccount'])->name('stripe.createExpressAccount');
+    Route::post('generate-onboarding-link', [PaymentController::class, 'generateOnboardingLink'])->name('stripe.generateOnboardingLink');
+    Route::post('purchase', [PaymentController::class, 'purchase'])->name('stripe.purchase');
+    Route::post('delete-payment-method', [PaymentController::class, 'delete'])->name('stripe.delete');
+});

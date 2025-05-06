@@ -261,7 +261,6 @@ export default defineNuxtPlugin((nuxtApp) => {
       }
     },
 
-
     async getProductosCercanos(comercioIds) {
       try {
         const response = await fetch(`${Host}/cercanos/productos?comercioIds=${comercioIds}`, {
@@ -285,7 +284,6 @@ export default defineNuxtPlugin((nuxtApp) => {
         return null;
       }
     },
-
 
     async getCategoriasGenerales() {
       try {
@@ -747,6 +745,82 @@ export default defineNuxtPlugin((nuxtApp) => {
       }
     },
 
+    async createSetUpIntent() {
+      try {
+        const response = await fetch(Host + '/stripe/create-setup-intent', {
+          method: 'POST',
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+            'Authorization': this.authStore.token ? `Bearer ${this.authStore.token}` : ''
+          }
+        });
+        if (response.ok) {
+          const json = await response.json();
+          return json;
+        } else {
+          console.error(`Error en la petición: ${response.status} ${response.statusText}`)
+          return null;
+        }
+
+      } catch (error) {
+        console.error('Error al realizar la petición:', error);
+        return null;
+      }
+    },
+
+    async addPaymentMethod(payment_method) {
+      try {
+        const response = await fetch(Host + '/stripe/add-payment-method', {
+          method: 'POST',
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+            'Authorization': this.authStore.token ? `Bearer ${this.authStore.token}` : ''
+          },
+          body: JSON.stringify({
+            'paymentMethod': payment_method
+          })
+        });
+        if (response.ok) {
+          const json = await response.json();
+          return json;
+        } else {
+          console.error(`Error en la petición: ${response.status} ${response.statusText}`)
+          return null;
+        }
+
+      } catch (error) {
+        console.error('Error al realizar la petición:', error);
+        return null;
+      }
+    },
+
+    async retrievePaymentCards() {
+      try {
+        const response = await fetch(Host + '/stripe/retrieve-payment-method', {
+          method: 'POST',
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+            'Authorization': this.authStore.token ? `Bearer ${this.authStore.token}` : ''
+          }
+        });
+
+        if (response.ok) {
+          const json = await response.json();
+          return json;
+        } else {
+          console.error(`Error en la petición: ${response.status} ${response.statusText}`)
+          return null;
+        }
+
+      } catch (error) {
+        console.error(error);
+        return null;
+      }
+    },
+
     async changePassword(json) {
       try {
         const response = await fetch(Host + '/auth/change-password', {
@@ -923,9 +997,6 @@ export default defineNuxtPlugin((nuxtApp) => {
       }
     },
 
-
-
-
     async createProductoExcel(formData) {
       try {
         const response = await fetch(`${Host}/producto/crear_excel`, {
@@ -949,10 +1020,6 @@ export default defineNuxtPlugin((nuxtApp) => {
         return { success: false, message: error.message };
       }
     },
-
-
-
-
 
     async cambiarVisibilidad(id) {
       try {
@@ -1315,6 +1382,79 @@ export default defineNuxtPlugin((nuxtApp) => {
     //     return null;
     //   }
     // }
+
+
+    // STRIPE
+
+    async selectPaymentMethod(card) {
+      try {
+        const response = await fetch(Host + '/stripe/set-default-payment-method', {
+          method: 'POST',
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+            'Authorization': this.authStore.token ? `Bearer ${this.authStore.token}` : ''
+          },
+          body: JSON.stringify({ payment_method_id: card.id })
+        });
+        const data = await response.json();
+        return data;
+      } catch (error) {
+        console.error("Error: ", error);
+      }
+    },
+
+    async purchaseProducts() {
+      try {
+        const response = await fetch(Host + '/stripe/purchase', {
+          method: 'POST',
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+            'Authorization': this.authStore.token ? `Bearer ${this.authStore.token}` : ''
+          },
+          body: JSON.stringify({ payment_method_id: card.id })
+        });
+        const data = await response.json();
+        return data;
+      } catch (error) {
+        console.error("Error: ", error);
+      }
+    },
+
+    async createStripeID() {
+      try {
+        const response = await fetch(Host + '/stripe/create-express-account', {
+          method: 'POST',
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+            'Authorization': this.authStore.token ? `Bearer ${this.authStore.token}` : ''
+          }
+        })
+        const data = await response.json();
+        return data;
+      } catch (error) {
+        console.error("Error: ", error);
+      }
+    },
+
+    async getStripeOnboardingUrl() {
+      try {
+        const response = await fetch(Host + '/stripe/generate-onboarding-link', {
+          method: 'POST',
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+            'Authorization': this.authStore.token ? `Bearer ${this.authStore.token}` : ''
+          }
+        })
+        const data = await response.json();
+        return data;
+      } catch (error) {
+        console.error("Error: ", error);
+      }
+    }
   };
 
   // Inyectar el communicationManager en la app

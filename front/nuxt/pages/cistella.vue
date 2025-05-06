@@ -5,18 +5,15 @@ definePageMeta({
 
 import { useRuntimeConfig } from "#imports";
 const config = useRuntimeConfig();
-const baseUrl = config.public.apiBaseUrl;
 
 import { io } from "socket.io-client";
 import { computed, onMounted, ref } from 'vue';
 import { useAuthStore } from '@/stores/authStore';
 import { useComercioStore } from '@/stores/comercioStore';
 import { useNuxtApp } from '#app';
-import { useRoute, useRouter } from "vue-router";
-import shoppingBasketIcon from '../assets/shopping-basket.svg';
-import { Socket } from 'socket.io-client';
+import { CistellaCompraRealizadaPopUpComp, CistellaProductoComandaComp } from "#components";
+import CistellaBuidaPopUpComp from "~/components/Cistella/CistellaBuidaPopUpComp.vue";
 
-const route = useRoute();
 const router = useRouter();
 const comercioStore = useComercioStore();
 const dataLoaded = ref(false);
@@ -30,19 +27,19 @@ const formData = reactive({
     password: '',
 });
 
-const order_id = ref();
-const isOk = ref(false);
-const payOption = ref(1);
 const comercios = ref({});
 const choosed = ref(false);
+const payOption = ref("1");
+const paymentCardID = ref(null);
 const auth = useAuthStore();
 const groups = reactive([]);
 const storesClosed = ref([]);
 const shipOption = ref(null);
 const comerciosInfo = ref([]);
-const paymentView = ref(false);
+const paymentView = ref(true);
 const cistellaView = ref(true);
-const chooseShipping = ref(false);
+const isOk = ref(false);
+const order_id = ref();
 const isLoggued = computed(() => {
     return auth?.user !== null;
 });
@@ -143,37 +140,42 @@ function toggleCheckout() {
     }
 }
 
-function togglePayment() {
-    paymentView.value = !paymentView.value;
-}
-
-const comprar = () => {
-    toggleCheckout();
-}
-
 function chooseShip(event) {
     shipOption.value = event.currentTarget.value;
     choosed.value = shipOption.value !== null;
 }
 
-function choosePayment(event) {
-    payOption.value = event.target.value;
+function chooseMethodPayment(option) {
+    payOption.value = option;
+}
+
+function choosePaymentCard(card) {
+    paymentCardID.value = card.defaultPaymentMethod.id;
 }
 
 function toPay() {
     chooseShipping.value = false;
-    paymentView.value = true;
-    return;
+    togglePayment();
 }
 
 async function crearComanda() {
     try {
+        const payment_method = orderFiltrada.value.tipo_pago;
+        console.log("Tipo de pago: ", payment_method);
+        // const total_amount = Math.round(orderFiltrada.value.total * 100);
+        console.log('orderFiltrada: ', orderFiltrada.value);
+        const total_amount = orderFiltrada.value.total;
+        console.log("Payment card: ", paymentCardID?.value);
+
+
+        // Creamos la orden, da igual si es en efectivo o tarjeta
         const createdOrder = await $communicationManager.createOrder(orderFiltrada.value);
         if (createdOrder.success) {
             order_id.value = createdOrder.data.order.id;
             const subcomandaInfo = computed(() => {
                 return {
                     order_id: order_id.value,
+                    payment_method_id: payOption.value,
                     suborders: Object.keys(groupedCesta.value).map(comercio => ({
                         comercio_id: groupedCesta.value[comercio][0].comercio_id,
                         subtotal: storeTotal(comercio),
@@ -185,6 +187,8 @@ async function crearComanda() {
                     })),
                 }
             });
+            console.log("Subcomandas: ", subcomandaInfo.value);
+
             const createdSuborders = await $communicationManager.createSuborder(subcomandaInfo.value);
             console.log("createdSuborders CREARCOMANDA: ", createdSuborders)
 
@@ -221,14 +225,12 @@ async function crearComanda() {
                 const orders = agruparOrderSuborders(createdOrder, createdSuborders);
                 socket.emit("nuevaOrden", orders);
             }
-        } else {
-            console.log("ALGUN ERROR CREARCOMANDA: ", createdOrder)
         }
 
-        isOk.value = true;
-        comercioStore.emptyBasket();
+        // isOk.value = true;
+        // comercioStore.emptyBasket();
     } catch (error) {
-        console.error("ERROR CREARCOMANDA: ", error)
+        console.error("ERROR CREAR COMANDA: ", createdOrder)
     }
 }
 
@@ -236,6 +238,7 @@ const orderFiltrada = computed(() => ({
     'total': comercioStore.totalPrice.toFixed(2),
     'tipo_envio': 1,
     'tipo_pago': payOption.value,
+    'payment_method_id': paymentCardID.value
 }));
 
 const subcomandaInfo = computed(() => {
@@ -245,6 +248,9 @@ const subcomandaInfo = computed(() => {
     }));
 });
 
+const togglePayment = () => {
+    paymentView.value = !paymentView.value
+}
 const seguirComprant = () => {
     router.push('/');
 };
@@ -255,166 +261,18 @@ const veureOrdre = () => {
 </script>
 
 <template>
-    <header class="border-b flex items-center p-4 max-h-[75px]">
-        <div class="flex items-center">
-            <h3 class="text-2xl ml-4">Cistella</h3>
-        </div>
-    </header>
+    <CistellaHeaderComp text="Cistella" />
     <div v-if="isOk" class="fixed inset-0 flex items-center justify-center bg-black/50 z-50">
-        <div class="bg-white p-6 rounded-2xl shadow-xl max-w-sm text-center animate-fadeIn">
-            <!-- Ícono de confirmación -->
-            <div class="w-16 h-16 bg-green-500 text-white rounded-full mx-auto mb-4 flex items-center justify-center">
-                <span class="text-2xl font-bold">✔</span>
-            </div>
-
-            <h2 class="text-2xl font-semibold text-gray-800">Comanda realitzada amb èxit!</h2>
-            <p class="text-gray-600 mt-2">Rebràs un correu quan la teva comanda estigui llesta per a recollir.</p>
-
-            <div class="mt-6 flex gap-4">
-                <button @click="seguirComprant"
-                    class="flex-1 bg-gray-200 hover:bg-gray-300 text-gray-800 font-medium py-2 px-4 rounded-lg">
-                    Seguir comprant
-                </button>
-                <button @click="veureOrdre"
-                    class="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg">
-                    Veure la comanda
-                </button>
-            </div>
-        </div>
+        <CistellaCompraRealizadaPopUpComp :veureOrdre="veureOrdre" />
     </div>
+
     <div class="mt-[80px] mb-[80px] w-full">
         <div v-if="Object.keys(groupedCesta).length === 0" class="w-full flex flex-col items-center mt-[180px]">
-            <svg width="10em" height="10em" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
-                <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
-                <g id="SVGRepo_iconCarrier">
-                    <path d="M8 12L8 8C8 5.79086 9.79086 4 12 4V4C14.2091 4 16 5.79086 16 8L16 12" stroke="#276BF2"
-                        stroke-width="1.3" stroke-linecap="round"></path>
-                    <path
-                        d="M3.69435 12.6678C3.83942 10.9269 3.91196 10.0565 4.48605 9.52824C5.06013 9 5.9336 9 7.68053 9H16.3195C18.0664 9 18.9399 9 19.514 9.52824C20.088 10.0565 20.1606 10.9269 20.3057 12.6678L20.8195 18.8339C20.904 19.8474 20.9462 20.3542 20.6491 20.6771C20.352 21 19.8435 21 18.8264 21H5.1736C4.15655 21 3.64802 21 3.35092 20.6771C3.05382 20.3542 3.09605 19.8474 3.18051 18.8339L3.69435 12.6678Z"
-                        stroke="#276BF2" stroke-width="1.3"></path>
-                </g>
-            </svg>
-            <p class="text-2xl font-semibold">La teva cistella està buida</p>
-            <p class="text-base font-normal text-gray-600 text-center">
-                Quan afegeixes nous productes,<br> la teva comanda apareixerà aqui.
-            </p>
-            <NuxtLink to="/">
-                <button
-                    class="flex items-center text-lg font-bold px-3 py-2 rounded-lg mt-2 border-2 text-white border-[#276BF2] bg-[#447EF2]">
-                    <svg width="1.7em" height="1.7em" viewBox="0 0 24 24" fill="none"
-                        xmlns="http://www.w3.org/2000/svg">
-                        <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
-                        <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
-                        <g id="SVGRepo_iconCarrier">
-                            <path
-                                d="M4.78571 5H18.2251C19.5903 5 20.5542 6.33739 20.1225 7.63246L18.4558 12.6325C18.1836 13.4491 17.4193 14 16.5585 14H6.07142M4.78571 5L4.74531 4.71716C4.60455 3.73186 3.76071 3 2.76541 3H2M4.78571 5L6.07142 14M6.07142 14L6.25469 15.2828C6.39545 16.2681 7.23929 17 8.23459 17H17M17 17C15.8954 17 15 17.8954 15 19C15 20.1046 15.8954 21 17 21C18.1046 21 19 20.1046 19 19C19 17.8954 18.1046 17 17 17ZM11 19C11 20.1046 10.1046 21 9 21C7.89543 21 7 20.1046 7 19C7 17.8954 7.89543 17 9 17C10.1046 17 11 17.8954 11 19Z"
-                                stroke="currentColor" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round">
-                            </path>
-                        </g>
-                    </svg>
-                    <span class="ml-1">
-                        Començar a comprar
-                    </span>
-                </button>
-            </NuxtLink>
+            <!-- EN CASO DE QUE NO HAYA NADA EN LA CESTA, APARECE PANTALLA DE CISTELLA BUIDA -->
+            <CistellaBuidaPopUpComp />
         </div>
-        <div v-else>
-            <div v-if="loginVisible" class="w-full flex items-center justify-center">
-                <div class="bg-gray-900/50 fixed inset-0 z-40"></div>
-                <div class="fixed top-0 right-0 z-40 w-full h-screen flex items-center">
-                    <div
-                        class="bg-white mx-5 px-4 pb-4 pt-4 sm:rounded-lg sm:px-10 sm:pb-6 sm:shadow rounded-md w-full">
-                        <h2 class="text-2xl font-bold text-center mb-2">Inicia sessió</h2>
-                        <form @submit.prevent="login" class="space-y-6">
-                            <div>
-                                <label for="email" class="block text-sm font-medium text-gray-700">Correu
-                                    electrònic /
-                                    Usuari</label>
-                                <div class="mt-1">
-                                    <input id="email" v-model="formData.email" type="text" data-testid="username"
-                                        required=""
-                                        class="block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm">
-                                </div>
-                            </div>
-                            <div>
-                                <label for="password"
-                                    class="block text-sm font-medium text-gray-700">Contrasenya</label>
-                                <div class="mt-1">
-                                    <input id="password" name="password" v-model="formData.password" type="password"
-                                        data-testid="password" autocomplete="current-password"
-                                        class="block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm">
-                                </div>
-                            </div>
-                            <div class="text-red-600">
-                                {{ errorMessage }}
-                            </div>
-                            <div class="flex items-center justify-between">
-                                <div class="flex items-center">
-                                    <input id="remember_me" name="remember_me" type="checkbox"
-                                        class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500 disabled:cursor-wait disabled:opacity-50">
-                                    <label for="remember_me" class="ml-2 block text-sm text-gray-900">Recorda'm</label>
-                                </div>
-                                <div class="text-sm">
-                                    <NuxtLink to="/reset" class="font-medium text-indigo-400 hover:text-indigo-500">Has
-                                        oblidat la teva contrasenya?</NuxtLink>
-                                </div>
-                            </div>
-                            <div>
-                                <ButtonComp test-id="login" @submit.prevent="login">
-                                    Iniciar sessió
-                                </ButtonComp>
-                            </div>
-                        </form>
-                        <div class="mt-6">
-                            <div class="relative">
-                                <div class="absolute inset-0 flex items-center">
-                                    <div class="w-full border-t border-gray-300"></div>
-                                </div>
-                                <div class="relative flex justify-center text-sm">
-                                    <span class="bg-white px-2 text-gray-500">O continua amb</span>
-                                </div>
-                            </div>
-                            <div class="mt-6 grid grid-cols-2 gap-3">
-                                <button @click="loginWithGoogle"
-                                    class="inline-flex w-full items-center justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-500 shadow-sm hover:bg-gray-50 disabled:cursor-wait disabled:opacity-50">
-                                    <span class="sr-only">Inicia sessió amb Google</span>
-                                    <svg class="h-6 w-6" fill="currentColor" viewBox="-3 -2 24 24" aria-hidden="true">
-                                        <clipPath id="p.0">
-                                            <path d="m0 0l20.0 0l0 20.0l-20.0 0l0 -20.0z" clip-rule="nonzero"></path>
-                                        </clipPath>
-                                        <g clip-path="url(#p.0)">
-                                            <path fill="currentColor" fill-opacity="0.0" d="m0 0l20.0 0l0 20.0l-20.0 0z"
-                                                fill-rule="evenodd"></path>
-                                            <path fill="currentColor"
-                                                d="m19.850197 8.270351c0.8574047 4.880001 -1.987587 9.65214 -6.6881847 11.218641c-4.700598 1.5665016 -9.83958 -0.5449295 -12.08104 -4.963685c-2.2414603 -4.4187555 -0.909603 -9.81259 3.1310139 -12.6801605c4.040616 -2.867571 9.571754 -2.3443127 13.002944 1.2301085l-2.8127813 2.7000687l0 0c-2.0935059 -2.1808972 -5.468274 -2.500158 -7.933616 -0.75053835c-2.4653416 1.74962 -3.277961 5.040613 -1.9103565 7.7366734c1.3676047 2.6960592 4.5031037 3.9843292 7.3711267 3.0285425c2.868022 -0.95578575 4.6038647 -3.8674583 4.0807285 -6.844941z"
-                                                fill-rule="evenodd"></path>
-                                            <path fill="currentColor"
-                                                d="m10.000263 8.268785l9.847767 0l0 3.496233l-9.847767 0z"
-                                                fill-rule="evenodd"></path>
-                                        </g>
-                                    </svg>
-                                </button>
-                                <button
-                                    class="inline-flex w-full justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-500 shadow-sm hover:bg-gray-50 disabled:cursor-wait disabled:opacity-50">
-                                    <span class="sr-only">Inicia sessió amb Facebook</span>
-                                    <svg class="h-6 w-6" fill="currentColor" xmlns="http://www.w3.org/2000/svg"
-                                        width="800px" height="800px" viewBox="2 2 28 28" version="1.1">
-                                        <path
-                                            d="M21.95 5.005l-3.306-.004c-3.206 0-5.277 2.124-5.277 5.415v2.495H10.05v4.515h3.317l-.004 9.575h4.641l.004-9.575h3.806l-.003-4.514h-3.803v-2.117c0-1.018.241-1.533 1.566-1.533l2.366-.001.01-4.256z" />
-                                    </svg>
-                                </button>
-                            </div>
-                        </div>
-                        <div class="m-auto mt-6 w-fit md:mt-8">
-                            <span class="m-auto">No tens compte?
-                                <NuxtLink class="font-semibold text-indigo-600" to="/register">Crear compte</NuxtLink>
-                            </span>
-                        </div>
-                    </div>
-                </div>
-            </div>
 
+        <div v-else>
             <!-- PANTALLA DE ELEGIR TIPO DE ENVÍO  -->
             <div v-if="chooseShipping">
                 <div class="bg-gray-900/50 fixed inset-0 z-40 animate-appear" @click="toggleCheckout"></div>
@@ -439,153 +297,24 @@ const veureOrdre = () => {
 
             <!-- PAYMENT VIEW CON EL SUBTOTAL Y BOTÓN DE PAGAR -->
             <div v-if="paymentView" class="w-full h-screen bg-white fixed inset-0 z-40">
-                <div class="flex items-center justify-center p-4 h-[80px] fixed inset-0 z-50 bg-white">
-                    <h3 class="text-2xl ml-4">Pagament</h3>
-                </div>
-                <div class="mt-[80px] pb-[88px] p-2 h-screen bg-gray-100 overflow-scroll">
-                    <div id="allOrder" class="rounded-md bg-white p-2">
-                        <div class="w-full flex items-center">
-                            <svg width="1.5em" height="1.5em" viewBox="0 0 1024 1024" class="icon" version="1.1"
-                                xmlns="http://www.w3.org/2000/svg" fill="#000000">
-                                <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
-                                <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
-                                <g id="SVGRepo_iconCarrier">
-                                    <path
-                                        d="M533 1024l-147.7-84.8-136.4 78.3h-11.3c-17.3 0-34.2-3.4-50.1-10.1-15.3-6.5-29.1-15.7-40.8-27.6-11.7-11.7-21-25.5-27.5-40.8-6.7-15.9-10.1-32.7-10.1-50.1V128.5c0-17.4 3.4-34.2 10.1-50.1 6.5-15.3 15.8-29.1 27.6-40.8 11.7-11.8 25.5-21 40.8-27.5C203.3 3.4 220.2 0 237.5 0h590.9c17.3 0 34.2 3.4 50.1 10.1 15.3 6.5 29.1 15.7 40.8 27.6 11.7 11.7 21 25.5 27.5 40.8 6.7 15.9 10.1 32.7 10.1 50.1V889c0 17.4-3.4 34.2-10.1 50.1-6.5 15.3-15.8 29.1-27.6 40.8-11.7 11.8-25.5 21-40.8 27.5-15.8 6.7-32.7 10.1-50 10.1h-11.3l-136.4-78.3L533 1024z m147.7-182.6l157.2 90.3c2.5-0.6 5-1.4 7.5-2.4 5.2-2.2 9.9-5.4 13.9-9.4 4.1-4.1 7.2-8.7 9.4-14 2.3-5.3 3.4-11.1 3.4-17V128.5c0-5.9-1.1-11.7-3.4-17-2.2-5.2-5.4-9.9-9.4-13.9-4.1-4.1-8.7-7.2-13.9-9.4-5.4-2.3-11.1-3.4-17-3.4H237.5c-5.9 0-11.6 1.1-17 3.4-5.2 2.2-9.9 5.4-13.9 9.4-4.1 4.1-7.2 8.7-9.4 14-2.3 5.3-3.4 11.1-3.4 17V889c0 5.9 1.1 11.7 3.4 17 2.2 5.2 5.4 9.9 9.4 13.9 4.1 4.1 8.7 7.2 13.9 9.4 2.4 1 4.9 1.8 7.5 2.4l157.2-90.3L533 926.2l147.7-84.8z"
-                                        fill="#276BF2"></path>
-                                    <path
-                                        d="M490.6 310.9H321c-23.4 0-42.4-19-42.4-42.4s19-42.4 42.4-42.4h169.6c23.4 0 42.4 19 42.4 42.4s-19 42.4-42.4 42.4zM702.5 487.6H321c-23.4 0-42.4-19-42.4-42.4s19-42.4 42.4-42.4h381.6c23.4 0 42.4 19 42.4 42.4-0.1 23.4-19 42.4-42.5 42.4z"
-                                        fill="#276BF2"></path>
-                                </g>
-                            </svg>
-                            <h3 class="text-xl ml-1">Resum de la comanda</h3>
-                        </div>
-                        <div class="my-3 max-h-[250px] overflow-scroll">
-                            <div v-for="(items) in groupedCesta">
-                                <div v-for="item in items" :key="item.id" class="flex mb-1">
-                                    <div id="contain-image" class="mr-4 w-[70px] h-[70px] overflow-hidden">
-                                        <img :src="`${baseUrl}/storage/${item.imagen}`" alt="" />
-                                    </div>
-                                    <div class="flex flex-col w-full justify-center">
-                                        <div class="flex justify-between">
-                                            <div class="w-[75%]">
-                                                <h3 class="text-lg font-medium line-clamp-2">{{ item.nombre }}</h3>
-                                            </div>
-                                            <p class="text-gray-500">x{{ item.cantidad }}</p>
-                                        </div>
-                                        <p>{{ (item.cantidad * item.precio).toFixed(2) }}€</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
 
-                        <hr class="border-t-2 border-gray-300 border-dashed">
-                        <div id="allTotal" class="mt-3">
-                            <div class="w-full flex flex-col">
-                                <div class="w-full flex justify-between">
-                                    <h3 class="text-base text-gray-500 font-normal">Subtotal</h3>
-                                    <h3 class="text-base text-gray-500">{{ comercioStore.totalPrice.toFixed(2) }} €</h3>
-                                </div>
-                                <div class="w-full flex justify-between">
-                                    <h3 class="text-base text-gray-500 font-normal">Descompte</h3>
-                                    <h3 class="text-base text-gray-500">0 €</h3>
-                                </div>
-                                <div v-if="shipOption === 1" class="w-full flex justify-between">
-                                    <h3 class="text-base text-gray-500 font-normal">Enviament</h3>
-                                    <h3 class="text-base text-gray-500">2,5 €</h3>
-                                </div>
-                            </div>
-                            <div class="border-t border-gray-300 mt-3 flex justify-between w-full">
-                                <h3 class="font-medium text-xl">
-                                    Total <span class="font-light text-xs text-gray-700">(IVA incl.)</span>
-                                </h3>
-                                <h3 class="font-medium text-xl">{{ comercioStore.totalPrice.toFixed(2) }} €</h3>
-                            </div>
-                        </div>
-                    </div>
-                    <div id="methodsPay" class="mt-3 rounded-md bg-white p-2">
-                        <div class="w-full flex items-center mb-3">
-                            <svg width="1.7em" height="1.7em" viewBox="0 0 24 24" fill="none"
-                                xmlns="http://www.w3.org/2000/svg">
-                                <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
-                                <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
-                                <g id="SVGRepo_iconCarrier">
-                                    <path
-                                        d="M19 8V8C20.1046 8 21 8.89543 21 10V18C21 19.1046 20.1046 20 19 20H6C4.34315 20 3 18.6569 3 17V7C3 5.34315 4.34315 4 6 4H17C18.1046 4 19 4.89543 19 6V8ZM19 8H7M17 14H16"
-                                        stroke="#276BF2" stroke-width="2" stroke-linecap="round"
-                                        stroke-linejoin="round"></path>
-                                </g>
-                            </svg>
-                            <h3 class="ml-1 text-xl">Mètodes de pagament</h3>
-                        </div>
-                        <div>
-                            <label for="efectiu" name="status"
-                                class="font-medium text-lg h-14 relative hover:bg-zinc-100 flex items-center pl-3 gap-2 rounded-lg has-[:checked]:text-[#276BF2] has-[:checked]:bg-blue-50 has-[:checked]:ring-[#276BF2] has-[:checked]:ring-1 select-none">
-                                <div class="w-5 fill-[#276BF2]">
-                                    <svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" fill="currentColor"
-                                        class="bi bi-cash-coin">
-                                        <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
-                                        <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round">
-                                        </g>
-                                        <g id="SVGRepo_iconCarrier">
-                                            <path fill-rule="evenodd"
-                                                d="M11 15a4 4 0 1 0 0-8 4 4 0 0 0 0 8zm5-4a5 5 0 1 1-10 0 5 5 0 0 1 10 0z">
-                                            </path>
-                                            <path
-                                                d="M9.438 11.944c.047.596.518 1.06 1.363 1.116v.44h.375v-.443c.875-.061 1.386-.529 1.386-1.207 0-.618-.39-.936-1.09-1.1l-.296-.07v-1.2c.376.043.614.248.671.532h.658c-.047-.575-.54-1.024-1.329-1.073V8.5h-.375v.45c-.747.073-1.255.522-1.255 1.158 0 .562.378.92 1.007 1.066l.248.061v1.272c-.384-.058-.639-.27-.696-.563h-.668zm1.36-1.354c-.369-.085-.569-.26-.569-.522 0-.294.216-.514.572-.578v1.1h-.003zm.432.746c.449.104.655.272.655.569 0 .339-.257.571-.709.614v-1.195l.054.012z">
-                                            </path>
-                                            <path
-                                                d="M1 0a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h4.083c.058-.344.145-.678.258-1H3a2 2 0 0 0-2-2V3a2 2 0 0 0 2-2h10a2 2 0 0 0 2 2v3.528c.38.34.717.728 1 1.154V1a1 1 0 0 0-1-1H1z">
-                                            </path>
-                                            <path
-                                                d="M9.998 5.083 10 5a2 2 0 1 0-3.132 1.65 5.982 5.982 0 0 1 3.13-1.567z">
-                                            </path>
-                                        </g>
-                                    </svg>
-                                </div>
-                                Efectiu
-                                <input checked="" type="radio" name="status"
-                                    class="peer/html w-4 h-4 absolute accent-current right-3" id="efectiu" value="1"
-                                    @change="choosePayment" />
-                            </label>
-                            <label for="targeta"
-                                class="font-medium text-lg h-14 relative flex items-center pl-3 gap-2 rounded-lg has-[:checked]:text-blue-500 has-[:checked]:bg-blue-50 has-[:checked]:ring-blue-300 has-[:checked]:ring-1 select-none">
-                                <div class="w-5">
-                                    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                        <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
-                                        <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round">
-                                        </g>
-                                        <g id="SVGRepo_iconCarrier">
-                                            <path
-                                                d="M3 8C3 6.34315 4.34315 5 6 5H18C19.6569 5 21 6.34315 21 8V16C21 17.6569 19.6569 19 18 19H6C4.34315 19 3 17.6569 3 16V8Z"
-                                                stroke="rgb(156 163 175 / var(--tw-text-opacity, 1))" stroke-width="2">
-                                            </path>
-                                            <path d="M3 10H21" stroke="rgb(156 163 175 / var(--tw-text-opacity, 1))"
-                                                stroke-width="2"></path>
-                                            <path d="M14 15L17 15" stroke="rgb(156 163 175 / var(--tw-text-opacity, 1))"
-                                                stroke-width="2" stroke-linecap="round">
-                                            </path>
-                                        </g>
-                                    </svg>
-                                </div>
-                                <p class="text-gray-400">Targeta (Pròximament)</p>
-                                <input type="radio" disabled name="status"
-                                    class="w-4 h-4 absolute accent-current right-3 text-gray-400" id="targeta" value="2"
-                                    @change="choosePayment" />
-                            </label>
-                        </div>
-                    </div>
+                <!-- HEADER -->
+                <CistellaHeaderComp text="Pagament"
+                    class="flex items-center justify-center p-4 h-[80px] fixed inset-0 z-50 bg-white" />
+
+                <div class="mt-[80px] pb-[88px] p-2 h-screen bg-gray-100 overflow-scroll">
+                    <!-- RESUMEN DE LA COMANDA -->
+                    <CistellaResumComandaComp :productosComercios="groupedCesta"
+                        :totalPrice="comercioStore.totalPrice" />
+
+                    <!-- MÉTODOS DE PAGO (EFECTIVO O TARJETA) -->
+                    <CistellaMetodesPagamentComp @chooseMethod="chooseMethodPayment"
+                        @choosePaymentCard="choosePaymentCard" />
                 </div>
-                <div class="footer flex items-center justify-between mt-auto border-t border-gray-300 fixed">
-                    <button @click="togglePayment"
-                        class="btn-cancel w-[39%] h-[60px] justify-center border rounded-md border border-gray-400 px-4 py-2 text-xl text-gray-500 font-medium disabled:cursor-wait ">
-                        Cancel·lar
-                    </button>
-                    <button @click="crearComanda"
-                        class="btn-ok w-[59%] h-[60px] justify-center rounded-md border border-transparent px-4 py-2 text-xl font-semibold disabled:cursor-wait disabled:opacity-50">
-                        Pagar
-                    </button>
-                </div>
+
+                <!-- FOOTER CON LOS BOTONES DE CANCELAR Y PAGAR -->
+                <CistellaFooterButtonsComp :togglePayment="togglePayment" :crearComanda="crearComanda"
+                    :paymentCardID="paymentCardID" :payOption="payOption" />
             </div>
 
             <!-- CISTELLA VIEW CON TODOS LOS PRODUCTOS -->
@@ -608,65 +337,7 @@ const veureOrdre = () => {
                         <h3 class="font-semibold text-xl">{{ storeTotal(storeName).toFixed(2) }} €</h3>
                     </div>
                     <div v-for="item in items" :key="item.id" class="m-4 flex">
-                        <button @click="comercioStore.removeFromBasket(item.id)" class="mr-3">
-                            <svg viewBox="0 0 24 24" fill="none" width="1.3em" height="1.3em"
-                                xmlns="http://www.w3.org/2000/svg">
-                                <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
-                                <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
-                                <g id="SVGRepo_iconCarrier">
-                                    <path fill-rule="evenodd" clip-rule="evenodd"
-                                        d="M7 4C7 2.34315 8.34315 1 10 1H14C15.6569 1 17 2.34315 17 4V5H21C21.5523 5 22 5.44772 22 6C22 6.55228 21.5523 7 21 7H19.9394L19.1153 20.1871C19.0164 21.7682 17.7053 23 16.1211 23H7.8789C6.29471 23 4.98356 21.7682 4.88474 20.1871L4.06055 7H3C2.44772 7 2 6.55228 2 6C2 5.44772 2.44772 5 3 5H7V4ZM9 5H15V4C15 3.44772 14.5523 3 14 3H10C9.44772 3 9 3.44772 9 4V5ZM6.06445 7L6.88085 20.0624C6.91379 20.5894 7.35084 21 7.8789 21H16.1211C16.6492 21 17.0862 20.5894 17.1191 20.0624L17.9355 7H6.06445Z"
-                                        fill="#000000"></path>
-                                </g>
-                            </svg>
-                        </button>
-                        <div id="contain-image" class="mr-4 w-[80px] h-[100px] overflow-hidden">
-                            <img :src="`${baseUrl}/storage/${item.imagen}`" alt="" />
-                        </div>
-                        <div class="flex flex-col w-full justify-between flex-grow">
-                            <div class="flex justify-between">
-                                <div class="w-[75%]">
-                                    <h3 class="text-lg font-medium line-clamp-2">{{ item.nombre }}</h3>
-                                </div>
-                                <p>{{ item?.precio?.toFixed(2) }}€</p>
-                            </div>
-                            <div id="btn-quantity" class="text-lg flex items-center mb-1">
-                                <button @click="comercioStore.decreaseProductQuantity(item.id)"
-                                    class="border w-[1.5em] h-[1.5em] flex items-center justify-center">
-                                    <svg width="1.1em" height="1.1em" viewBox="0 0 24 24"
-                                        xmlns="http://www.w3.org/2000/svg" fill="#000000">
-                                        <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
-                                        <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round">
-                                        </g>
-                                        <g id="SVGRepo_iconCarrier">
-                                            <g>
-                                                <path fill="none" d="M0 0h24v24H0z"></path>
-                                                <path d="M5 11h14v2H5z"></path>
-                                            </g>
-                                        </g>
-                                    </svg>
-                                </button>
-                                <h4 class="border-t border-b min-w-[1.5em] h-[1.5em] flex items-center justify-center">
-                                    {{ item.cantidad }}</h4>
-                                <button @click="comercioStore.increaseProductQuantity(item.id)"
-                                    class="border w-[1.5em] h-[1.5em] flex items-center justify-center">
-                                    <!--
-                                        <svg width="1em" height="1em" fill="#000000" viewBox="0 0 1920 1920"
-                                            xmlns="http://www.w3.org/2000/svg">
-                                            <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
-                                            <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round">
-                                            </g>
-                                            <g id="SVGRepo_iconCarrier">
-                                                <path
-                                                    d="M91f5.744 213v702.744H213v87.842h702.744v702.744h87.842v-702.744h702.744v-87.842h-702.744V213z"
-                                                    fill-rule="evenodd" stroke="black" stroke-width="80" fill="none"></path>
-                                            </g>
-                                        </svg>
-                                    -->
-                                    +
-                                </button>
-                            </div>
-                        </div>
+                        <CistellaProductoComandaComp :producto="item" />
                     </div>
                 </div>
             </div>
@@ -733,15 +404,6 @@ const veureOrdre = () => {
 
 #btn-quantity {
     width: max-content;
-}
-
-#contain-image {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    overflow: hidden;
-    border-radius: 5px;
-    border: 1px solid #dde0e2;
 }
 
 img {
