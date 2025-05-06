@@ -21,10 +21,10 @@ class OrderComerciosTableSeeder extends Seeder
         for ($i = 0; $i < $cantidad; $i++) {
             DB::table("order_comercios")->insert([
                 'order_id' => $faker->numberBetween(1,20),
-                'comercio_id' => $faker->numberBetween(1,11),
+                'comercio_id' => $faker->numberBetween(11,20),
                 'subtotal' => $faker->randomFloat(2, 5, 1000),
                 'estat' => $faker->numberBetween(1,5),
-                'created_at' => now(),
+                'created_at' => $faker->dateTimeBetween('-1 month', 'now'),
             ]);
         }
     }
