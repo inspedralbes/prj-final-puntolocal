@@ -84,7 +84,7 @@
                     <p class="text-xl text-gray-900">Venedor</p>
                     <div @click="irAComercio" id="comercioShop" class="flex h-[120px] mt-3 rounded-md border">
                         <div class="h-full w-[120px] border-r rounded-md bg-gray-200">
-                            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <svg v-if="!producto?.logo_path" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
                                 <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
                                 <g id="SVGRepo_iconCarrier">
@@ -93,6 +93,7 @@
                                         fill="#FFFFFF"></path>
                                 </g>
                             </svg>
+                            <img v-else :src="`${baseUrl}/storage/${producto?.logo_path}`" class="w-full h-[120px] object-cover" />
                         </div>
                         <div class="p-2 text-gray-600">
                             <p class="text-xl text-black">{{ producto?.comercio }}</p>
@@ -255,7 +256,7 @@ const irAComercio = () => {
 
 async function actualizaFavoritos(productoID) {
     const { $communicationManager } = useNuxtApp();
-    console.log(productoID) 
+    
     try {
         const response = await $communicationManager.updateFavorito(authStore?.user?.id, productoID);
 

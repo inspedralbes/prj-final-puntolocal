@@ -149,7 +149,9 @@ class ProductoController extends Controller
 
     public function show($id)
     {
-        $producto = Producto::with('subcategoria', 'comercio')->where('id', $id)->first();
+        $producto = Producto::with(['subcategoria', 'comercio' => function($query) {
+            $query->select('id', 'nombre', 'logo_path');
+        }])->where('id', $id)->first();
 
         if (!$producto) {
             return response()->json(['message' => 'Producto no encontrado'], 404);
@@ -163,10 +165,10 @@ class ProductoController extends Controller
             "subcategoria" => $producto->subcategoria ? $producto->subcategoria->name : null,
             "comercio_id" => $producto->comercio_id,
             "comercio" => $producto->comercio->nombre,
+            "logo_path" => $producto->comercio->logo_path,
             "precio" => $producto->precio,
             "stock" => $producto->stock,
             "visible" => $producto->visible,
-            "imagen" => $producto->imagen,
         ], 200);
     }
 

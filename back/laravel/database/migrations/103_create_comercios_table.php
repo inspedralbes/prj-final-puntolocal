@@ -36,7 +36,10 @@
                 $table->text('descripcion');
                 $table->boolean('gestion_stock');
                 $table->float('puntaje_medio');
-                $table->json('imagenes')->nullable();
+                
+                $table->string('logo_path')->nullable();
+                $table->string('imagen_local_path')->nullable();
+
                 $table->json('horario')->nullable();
                 $table->timestamps();
             });

@@ -146,6 +146,9 @@ async function login() {
         authStore.login(response.user, response.token, response.comercio);
         const res = await $communicationManager.getFavoritos(response.user.id);
         authStore.setFavoritos(res);
+        const resComercio = await $communicationManager.getComercioFavoritos();
+        const comercioIds = resComercio.map(item => item.comercio_id);
+        authStore.setComercioFavoritos(comercioIds);
         navigateTo('/');
     } else {
         errorMessage.value = 'Hi ha hagut algun error, revisi les seves dades';

@@ -141,6 +141,13 @@
                                 </div>
                                 <ul class="py-1" role="none">
                                     <li>
+                                        <button @click="configurarStripe()"
+                                            class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white"
+                                            role="menuitem">
+                                            Configurar datos bancarios
+                                        </button>
+                                    </li>
+                                    <li>
                                         <NuxtLink to="/"
                                             class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white"
                                             role="menuitem">
@@ -172,11 +179,11 @@
                     class="flex-1 px-3 space-y-1 bg-white divide-y divide-gray-200 dark:bg-gray-800 dark:divide-gray-700">
                     <ul class="pb-2 space-y-2">
                         <li>
-                            <NuxtLink to="/admin"
+                            <NuxtLink to="/admin/stats"
                                 class="flex items-center p-2 text-base rounded-lg hover:bg-gray-100 group dark:text-gray-200 dark:hover:bg-gray-700 text-[#276BF2]"
-                                :class="{ 'text-gray-900': route.path !== '/admin' && route.path !== '/admin/' }">
+                                :class="{ 'text-gray-900': route.path !== '/admin/stats' && route.path !== '/admin/stats' }">
                                 <svg class="w-6 h-6 text-[#276BF2]"
-                                    :class="{ 'text-gray-500': route.path !== '/admin' && route.path !== '/admin/' }"
+                                    :class="{ 'text-gray-500': route.path !== '/admin/stats' && route.path !== '/admin/stats' }"
                                     fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
                                     <path d="M2 10a8 8 0 018-8v8h8a8 8 0 11-16 0z"></path>
                                     <path d="M12 2.252A8.014 8.014 0 0117.748 8H12V2.252z"></path>
@@ -573,6 +580,7 @@ import { useRoute, useRouter } from "vue-router";
 const route = useRoute();
 const authStore = useAuthStore();
 const comercio = authStore.comercio;
+const { $communicationManager } = useNuxtApp();
 
 const sidebarOpen = ref(false);
 
@@ -621,11 +629,18 @@ const handleClickOutside = (event) => {
 };
 
 async function goToLogout() {
-    const { $communicationManager } = useNuxtApp();
     await $communicationManager.logout();
     authStore.logout();
     localStorage.removeItem('animationShown');
     navigateTo('/login');
+}
+
+async function configurarStripe() {
+    const stripe_id = await $communicationManager.createStripeID();
+    if (stripe_id) {
+        const data = await $communicationManager.getStripeOnboardingUrl();
+        window.location.href = data.onboarding_url;
+    }
 }
 
 onMounted(() => {

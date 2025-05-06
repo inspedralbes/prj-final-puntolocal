@@ -4,16 +4,17 @@
     use Illuminate\Database\Eloquent\Factories\HasFactory;
     use Illuminate\Foundation\Auth\User as Authenticatable;
     use Illuminate\Notifications\Notifiable;
-    use Laravel\Sanctum\HasApiTokens; 
+use Laravel\Cashier\Billable;
+use Laravel\Sanctum\HasApiTokens; 
 
     class Cliente extends Authenticatable {
-        use HasFactory, Notifiable, HasApiTokens;
+        use HasFactory, Notifiable, HasApiTokens, Billable;
 
         protected $table = 'cliente';
 
         protected $fillable = [
             'name', 'apellidos', 'email', 'phone',
-            'password', 'street_address', 'ciudad', 'provincia',
+            'password', 'is_google_user', 'street_address', 'ciudad', 'provincia',
             'codigo_postal', 'numero_planta', 'numero_puerta', 'puntos',
         ];
 

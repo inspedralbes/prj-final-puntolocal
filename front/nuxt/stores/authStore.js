@@ -8,6 +8,7 @@ export const useAuthStore = defineStore('auth', {
     user: typeof window !== 'undefined' ? JSON.parse(localStorage.getItem('user')) || null : null,
     comercio: typeof window !== 'undefined' ? JSON.parse(localStorage.getItem('comercio')) || null : null,
     favoritos: typeof window !== 'undefined' ? new Set(JSON.parse(localStorage.getItem('favoritos')) || []) : new Set(),
+    favoritosComercio: typeof window !== 'undefined' ? new Set(JSON.parse(localStorage.getItem('favoritosComercio')) || []) : new Set(),
   }),
   getters: {
     userName: (state) => state.user ? state.user.name : '',
@@ -33,12 +34,14 @@ export const useAuthStore = defineStore('auth', {
       this.token = null;
       this.comercio = null;
       this.favoritos = null
+      this.favoritosComercio = null
       if (typeof window !== 'undefined') {
         localStorage.removeItem('isAuthenticated');
         localStorage.removeItem('token');
         localStorage.removeItem('user');
         localStorage.removeItem('comercio');
         localStorage.removeItem('favoritos');
+        localStorage.removeItem('favoritosComercio');
       }
     },
     initialize() {
@@ -48,6 +51,7 @@ export const useAuthStore = defineStore('auth', {
         const user = JSON.parse(localStorage.getItem('user'));
         const comercio = JSON.parse(localStorage.getItem('comercio'));
         const favoritos = JSON.parse(localStorage.getItem('favoritos'));
+        const favoritosComercio = JSON.parse(localStorage.getItem('favoritosComercio'));
         if (token && user && comercio) {
           this.login(user, token, comercio);
         }
@@ -89,6 +93,12 @@ export const useAuthStore = defineStore('auth', {
         localStorage.setItem('favoritos', JSON.stringify([...this.favoritos]));
       }
     },
+    setComercioFavoritos(favoritosComercio) {
+      this.favoritosComercio = new Set(favoritosComercio);
+      if (typeof window !== 'undefined') {
+        localStorage.setItem('favoritosComercio', JSON.stringify([...this.favoritosComercio]));
+      }
+    },
     toggleFavorito(id) {
       if (this.favoritos.has(id)) {
         this.favoritos.delete(id);
@@ -99,6 +109,16 @@ export const useAuthStore = defineStore('auth', {
         localStorage.setItem('favoritos', JSON.stringify([...this.favoritos])); // Guardar el Set como Array
       }
     },
+    toggleFavoritoComercio(id) {
+      if (this.favoritosComercio.has(id)) {
+        this.favoritosComercio.delete(id);
+      } else {
+        this.favoritosComercio.add(id);
+      }
+      if (typeof window !== 'undefined') {
+        localStorage.setItem('favoritosComercio', JSON.stringify([...this.favoritosComercio]));
+      }
+    }
 
   },
   persist: {

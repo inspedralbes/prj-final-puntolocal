@@ -163,8 +163,8 @@ export default defineNuxtPlugin((nuxtApp) => {
         return null;
       }
 
-      const producto = await response.json();
-      return producto;
+      const comercios = await response.json();
+      return comercios;
     },
 
     async getProductoById(id) {
@@ -191,14 +191,13 @@ export default defineNuxtPlugin((nuxtApp) => {
       }
     },
 
-    async getComercioById(id) {
+    async getComercio(id) {
       try {
         const response = await fetch(`${Host}/comercios/${id}`, {
           method: 'GET',
           headers: {
             'Accept': 'application/json',
             'Content-Type': 'application/json',
-            // 'Authorization': this.authStore.token ? `Bearer ${this.authStore.token}` : ''
           }
         });
 
@@ -207,15 +206,38 @@ export default defineNuxtPlugin((nuxtApp) => {
           return null;
         }
 
-        const producto = await response.json();
-        return producto;
+        const data = await response.json();
+        return data;
       } catch (error) {
         console.error('Error al realizar la petición:', error);
         return null;
       }
     },
 
-    async getProductos() {
+    async getProductosComercio(id) {
+      try {
+        const response = await fetch(`${Host}/comercios/${id}/productos`, {
+          method: 'GET',
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+          }
+        });
+
+        if (!response.ok) {
+          console.error(`Error en la petición: ${response.status} ${response.statusText}`);
+          return null;
+        }
+
+        const data = await response.json();
+        return data;
+      } catch (error) {
+        console.error('Error al realizar la petición:', error);
+        return null;
+      }
+    },
+
+    async getRandomProductos() {
       try {
         const response = await fetch(`${Host}/producto/random`, {
           method: 'GET',
@@ -238,7 +260,6 @@ export default defineNuxtPlugin((nuxtApp) => {
         return null;
       }
     },
-
 
     async getProductosCercanos(comercioIds) {
       try {
@@ -263,7 +284,6 @@ export default defineNuxtPlugin((nuxtApp) => {
         return null;
       }
     },
-
 
     async getCategoriasGenerales() {
       try {
@@ -611,6 +631,25 @@ export default defineNuxtPlugin((nuxtApp) => {
       }
     },
 
+    async getStatsSales(selectedPeriod) {
+      try {
+        const response = await fetch(`${Host}/stats/orders?period=${selectedPeriod}`, {
+          method: 'GET',
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+            'Authorization': this.authStore.token ? `Bearer ${this.authStore.token}` : ''
+          }
+        });
+
+        const jsonResponse = await response.json();
+        return jsonResponse;
+      } catch (error) {
+        console.error('Error al realizar la petición:', error);
+        return null;
+      }
+    },
+
     ///////////////////////////// POST //////////////////////////////////
     async register(json) {
       try {
@@ -647,7 +686,7 @@ export default defineNuxtPlugin((nuxtApp) => {
         });
         if (response.ok) {
           const json = await response.json();
-          return json.data;
+          return json;
         } else {
           console.error(`Error en la petición: ${response.status} ${response.statusText}`)
           return null;
@@ -702,6 +741,82 @@ export default defineNuxtPlugin((nuxtApp) => {
 
       } catch (error) {
         console.error('Error al realizar la petición:', error);
+        return null;
+      }
+    },
+
+    async createSetUpIntent() {
+      try {
+        const response = await fetch(Host + '/stripe/create-setup-intent', {
+          method: 'POST',
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+            'Authorization': this.authStore.token ? `Bearer ${this.authStore.token}` : ''
+          }
+        });
+        if (response.ok) {
+          const json = await response.json();
+          return json;
+        } else {
+          console.error(`Error en la petición: ${response.status} ${response.statusText}`)
+          return null;
+        }
+
+      } catch (error) {
+        console.error('Error al realizar la petición:', error);
+        return null;
+      }
+    },
+
+    async addPaymentMethod(payment_method) {
+      try {
+        const response = await fetch(Host + '/stripe/add-payment-method', {
+          method: 'POST',
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+            'Authorization': this.authStore.token ? `Bearer ${this.authStore.token}` : ''
+          },
+          body: JSON.stringify({
+            'paymentMethod': payment_method
+          })
+        });
+        if (response.ok) {
+          const json = await response.json();
+          return json;
+        } else {
+          console.error(`Error en la petición: ${response.status} ${response.statusText}`)
+          return null;
+        }
+
+      } catch (error) {
+        console.error('Error al realizar la petición:', error);
+        return null;
+      }
+    },
+
+    async retrievePaymentCards() {
+      try {
+        const response = await fetch(Host + '/stripe/retrieve-payment-method', {
+          method: 'POST',
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+            'Authorization': this.authStore.token ? `Bearer ${this.authStore.token}` : ''
+          }
+        });
+
+        if (response.ok) {
+          const json = await response.json();
+          return json;
+        } else {
+          console.error(`Error en la petición: ${response.status} ${response.statusText}`)
+          return null;
+        }
+
+      } catch (error) {
+        console.error(error);
         return null;
       }
     },
@@ -882,9 +997,6 @@ export default defineNuxtPlugin((nuxtApp) => {
       }
     },
 
-
-
-
     async createProductoExcel(formData) {
       try {
         const response = await fetch(`${Host}/producto/crear_excel`, {
@@ -908,10 +1020,6 @@ export default defineNuxtPlugin((nuxtApp) => {
         return { success: false, message: error.message };
       }
     },
-
-
-
-
 
     async cambiarVisibilidad(id) {
       try {
@@ -1241,7 +1349,7 @@ export default defineNuxtPlugin((nuxtApp) => {
 
     ///////////////////////////// DELETE //////////////////////////////////
 
-    async deleteComercioImagen(id, imagePath) {
+    async deleteComercioImagen(id, tipo_imagen) {
       try {
         const response = await fetch(`${Host}/comercios/${id}/imagenes`, {
           method: 'DELETE',
@@ -1250,7 +1358,7 @@ export default defineNuxtPlugin((nuxtApp) => {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${this.authStore.token}`
           },
-          body: JSON.stringify({ image: imagePath })
+          body: JSON.stringify(tipo_imagen)
         });
         if (!response.ok) {
           console.error(`Error en la petición: ${response.status} ${response.statusText}`);
@@ -1274,6 +1382,79 @@ export default defineNuxtPlugin((nuxtApp) => {
     //     return null;
     //   }
     // }
+
+
+    // STRIPE
+
+    async selectPaymentMethod(card) {
+      try {
+        const response = await fetch(Host + '/stripe/set-default-payment-method', {
+          method: 'POST',
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+            'Authorization': this.authStore.token ? `Bearer ${this.authStore.token}` : ''
+          },
+          body: JSON.stringify({ payment_method_id: card.id })
+        });
+        const data = await response.json();
+        return data;
+      } catch (error) {
+        console.error("Error: ", error);
+      }
+    },
+
+    async purchaseProducts() {
+      try {
+        const response = await fetch(Host + '/stripe/purchase', {
+          method: 'POST',
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+            'Authorization': this.authStore.token ? `Bearer ${this.authStore.token}` : ''
+          },
+          body: JSON.stringify({ payment_method_id: card.id })
+        });
+        const data = await response.json();
+        return data;
+      } catch (error) {
+        console.error("Error: ", error);
+      }
+    },
+
+    async createStripeID() {
+      try {
+        const response = await fetch(Host + '/stripe/create-express-account', {
+          method: 'POST',
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+            'Authorization': this.authStore.token ? `Bearer ${this.authStore.token}` : ''
+          }
+        })
+        const data = await response.json();
+        return data;
+      } catch (error) {
+        console.error("Error: ", error);
+      }
+    },
+
+    async getStripeOnboardingUrl() {
+      try {
+        const response = await fetch(Host + '/stripe/generate-onboarding-link', {
+          method: 'POST',
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+            'Authorization': this.authStore.token ? `Bearer ${this.authStore.token}` : ''
+          }
+        })
+        const data = await response.json();
+        return data;
+      } catch (error) {
+        console.error("Error: ", error);
+      }
+    }
   };
 
   // Inyectar el communicationManager en la app

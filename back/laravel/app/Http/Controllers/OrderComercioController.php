@@ -8,6 +8,10 @@ use App\Models\Order;
 use App\Models\ProductoOrder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Stripe\Exception\ApiErrorException;
+use Stripe\PaymentIntent;
+use Stripe\Stripe;
+use Stripe\Transfer;
 
 class OrderComercioController extends Controller
 {
@@ -18,13 +22,15 @@ class OrderComercioController extends Controller
     {
         try {
             $user = Auth::user();
+            dd($user);
+
             $comercio = Comercio::where('idUser', $user->id)->first();
 
             $orders = OrderComercio::with('estatCompra', 'order:id,tipo_envio,tipo_pago,cliente_id', 'order.tipoEnvio', 'order.tipoPago', 'order.cliente')
-            ->where('comercio_id', $comercio->id)
-            ->whereHas('estatCompra', function($query) {
-                $query->whereIn('id', [1, 2, 3]);
-            })->get();
+                ->where('comercio_id', $comercio->id)
+                ->whereHas('estatCompra', function ($query) {
+                    $query->whereIn('id', [1, 2, 3]);
+                })->get();
 
             if (!$orders) {
                 return response()->json(['message' => 'No tiene ninguna orden'], 404);
@@ -43,10 +49,10 @@ class OrderComercioController extends Controller
             $comercio = Comercio::where('idUser', $user->id)->first();
 
             $orders = OrderComercio::with('estatCompra', 'order:id,tipo_envio,tipo_pago,cliente_id', 'order.tipoEnvio', 'order.tipoPago', 'order.cliente')
-            ->where('comercio_id', $comercio->id)
-            ->whereHas('estatCompra', function($query) {
-                $query->whereIn('id', [4, 5]);
-            })->get();
+                ->where('comercio_id', $comercio->id)
+                ->whereHas('estatCompra', function ($query) {
+                    $query->whereIn('id', [4, 5]);
+                })->get();
 
             if (!$orders) {
                 return response()->json(['message' => 'No tiene ninguna orden'], 404);
@@ -76,6 +82,7 @@ class OrderComercioController extends Controller
 
             $request->validate([
                 'order_id' => 'required|exists:orders,id',
+                'payment_method_id' => 'nullable|string',
                 'suborders' => 'required|array',
                 'suborders.*.comercio_id' => 'required|exists:comercios,id',
                 'suborders.*.subtotal' => 'required|numeric|min:0',
@@ -121,6 +128,32 @@ class OrderComercioController extends Controller
                         'suborder' => $suborderCompleta->toArray(),
                         'productos' => $productos->toArray()
                     ];
+
+                    if ($request->payment_method_id === "2") {
+
+                        // Transfer para enviar dinero desde cuenta base a cuenta comercios
+                        // $comercio = Comercio::where('id', $suborderCreated['comercio_id'])->first();
+
+                        // $monto = intval($suborderCreated['subtotal']*100);
+                        // $comision = intval($monto * 0.05);
+                        // $monto -= $comision;
+
+                        // Stripe::setApiKey(config('cashier.secret'));
+
+                        // try {
+                        //     Transfer::create([
+                        //         'amount' => $monto,
+                        //         'currency' => 'eur',
+                        //         'destination' => $comercio->stripe_account_id,
+                        //         'transfer_group' => 'order_' . $order->id,
+                        //     ]);
+                        // } catch (ApiErrorException $e) {
+                        //     return response()->json([
+                        //         'success' => false,
+                        //         'message' => $e->getMessage()
+                        //     ], 400);
+                        // }
+                    }
                 }
 
                 ProductoOrder::insert($productosInsertar);

@@ -2,7 +2,7 @@
     namespace App\Http\Controllers;
 
     use Illuminate\Http\Request;
-    use App\Models\comercioFavoritos;
+    use App\Models\ComercioFavoritos;
     use App\Http\Controllers\Controller;
     use Illuminate\Support\Facades\Auth;
 
@@ -23,7 +23,7 @@
 
         public function afegirLikeComerci(Request $request, $comercioId) {
             $clienteId = Auth::id();
-        
+            
             if (!$comercioId) {
                 return response()->json(['error' => 'ID de comercio no proporcionado'], 400);
             }

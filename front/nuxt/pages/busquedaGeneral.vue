@@ -71,7 +71,7 @@
                 <div v-for="(comercio, index) in Object.values(comercios)" :key="index"
                     @click="navigateTo('comercio/' + comercio.id)"
                     class="relative border rounded shadow-md m-4 overflow-visible">
-                    <img src="" class="w-full h-[250px] object-cover" />
+                    <img :src="`${baseUrl}/storage/${comercio.imagen_local_path}`" class="w-full h-[250px] object-cover" />
                     <div class="absolute bottom-0 left-0 w-full bg-gray-200 bg-opacity-70 p-4 h-fit">
                         <h3 class="text-center">{{ comercio.nombre }}</h3>
                         <h5 class="text-center">{{ getNombreCategoria(comercio.categoria_id) }}</h5>

@@ -187,7 +187,7 @@ const agregarMarcadoresDesdeResponse = async () => {
         const categoria_icon = ref();
         const response = await $communicationManager.getLocations();
 
-        response.forEach((comercio) => {
+        response.comercios.forEach((comercio) => {
             if (!isNaN(comercio.latitude) && !isNaN(comercio.longitude)) {
                 let horarioParseado = {};
 

@@ -7,11 +7,13 @@ import {
 } from '@/stores/authStore';
 import { ref } from 'vue';
 import Loading from "@/components/loading.vue";
+import { useToast } from '@/composables/useToast.js';
 
 definePageMeta({
     layout: 'footer-only'
 });
 
+const { toast } = useToast()
 const authStore = useAuthStore();
 const loading = ref(true);
 let formData = reactive([]);
@@ -81,31 +83,31 @@ async function changePassword() {
     } = useNuxtApp();
 
     if (!formDataPassword.currentPassword || !formDataPassword.newPassword || !formDataPassword.confirmPassword) {
-        console.log('És necessari completar tots els camps');
+        toast("És necessari completar tots els camps", "error");
         return;
     }
 
     if (formDataPassword.newPassword.length < 8) {
-        console.log('La contrasenya ha de tenir mínim 8 caràcters');
+        toast("La contrasenya ha de tenir mínim 8 caràcters", "error");
         return;
     }
 
     if (formDataPassword.newPassword != formDataPassword.confirmPassword) {
-        console.log('Les contrasenyes no coincideixen');
+        toast("Les contrasenyes no coincideixen", "error");
         return;
     }
 
     if (formDataPassword.currentPassword == formDataPassword.newPassword) {
-        console.log(`La nova contrasenya no pot ser igual a l'anterior`)
+        toast("La nova contrasenya no pot ser igual a l'anterior", "error");
         return;
     }
 
     const response = await $communicationManager.changePassword(formDataPassword);
 
     if (response) {
-        console.log(`S'ha canviat la contrasenya correctament.`)
+        toast(`S'ha canviat la contrasenya correctament`, 'success')
     } else {
-        console.log('Hi ha hagut un error, revisi les seves dades')
+        toast('Hi ha hagut un error, revisi les seves dades', 'error')
     }
 }
 
@@ -120,7 +122,7 @@ async function updateDatosPersonales() {
         formDataClient.email === formData.email &&
         formDataClient.phone === formData.phone
     ) {
-        console.log(`No s'han modificat les dades`);
+        toast(`No s'han modificat les dades`, 'error');
         return;
     }
 
@@ -129,9 +131,9 @@ async function updateDatosPersonales() {
     if (response) {
         formData = response;
         authStore.setUser(response);
-        console.log('Dades personals actualitzades correctament');
+        toast('Dades personals actualitzades correctament', 'success')
     } else {
-        console.log('Hi ha hagut un error, revisi les seves dades');
+        toast('Hi ha hagut un error, revisi les seves dades', 'error');
     }
 
 }
@@ -149,7 +151,7 @@ async function updateDatosFacturacion() {
         formDataStreet.numero_planta === formData.numero_planta &&
         formDataStreet.numero_puerta === formData.numero_puerta
     ) {
-        console.log(`No s'han modificat les dades`);
+        toast(`No s'han modificat les dades`, 'error');
         return;
     }
 
@@ -158,9 +160,9 @@ async function updateDatosFacturacion() {
     if (response) {
         formData = response;
         authStore.setUser(response);
-        console.log('Dades personals actualitzades correctament');
+        toast('Dades personals actualitzades correctament', 'success');
     } else {
-        console.log('Hi ha hagut un error, revisi les seves dades');
+        toast('Hi ha hagut un error, revisi les seves dades', 'error');
     }
 
 }
@@ -188,7 +190,7 @@ onMounted(() => {
                 <button @click="showSection('password')" :class="[
                     'w-full md:w-auto px-4 py-2 text-md font-medium rounded-lg transition-colors duration-200',
                     currentSection === 'password' ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-600 hover:bg-blue-600 hover:text-white'
-                ]">
+                ]" v-if="!formData.is_google_user">
                     Contrasenya
                 </button>
                 <button @click="showSection('address')" :class="[
