@@ -128,27 +128,29 @@ class OrderComercioController extends Controller
                     ];
 
                     if ($request->payment_method_id === "2") {
-                        $comercio = Comercio::where('id', $suborderCreated['comercio_id'])->first();
 
-                        $monto = intval($suborderCreated['subtotal']*100);
-                        $comision = intval($monto * 0.05);
-                        $monto -= $comision;
+                        // Transfer para enviar dinero desde cuenta base a cuenta comercios
+                        // $comercio = Comercio::where('id', $suborderCreated['comercio_id'])->first();
 
-                        Stripe::setApiKey(config('cashier.secret'));
+                        // $monto = intval($suborderCreated['subtotal']*100);
+                        // $comision = intval($monto * 0.05);
+                        // $monto -= $comision;
 
-                        try {
-                            Transfer::create([
-                                'amount' => $monto,
-                                'currency' => 'eur',
-                                'destination' => $comercio->stripe_account_id,
-                                'transfer_group' => 'order_' . $order->id,
-                            ]);
-                        } catch (ApiErrorException $e) {
-                            return response()->json([
-                                'success' => false,
-                                'message' => $e->getMessage()
-                            ], 400);
-                        }
+                        // Stripe::setApiKey(config('cashier.secret'));
+
+                        // try {
+                        //     Transfer::create([
+                        //         'amount' => $monto,
+                        //         'currency' => 'eur',
+                        //         'destination' => $comercio->stripe_account_id,
+                        //         'transfer_group' => 'order_' . $order->id,
+                        //     ]);
+                        // } catch (ApiErrorException $e) {
+                        //     return response()->json([
+                        //         'success' => false,
+                        //         'message' => $e->getMessage()
+                        //     ], 400);
+                        // }
                     }
                 }
 
