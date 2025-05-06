@@ -22,29 +22,23 @@
         <div v-else>
             <div class="bg-white p-4 rounded-xl mb-6 border border-gray-200" style="min-height: 16rem;">
                 <div class="flex items-center justify-center h-64">
-                    <canvas ref="chartCanvas" :key="`chart-${selectedPeriod}`" class="w-full h-full"></canvas>
+                    <div v-if="!hasEnoughData" class="text-center p-4">
+                        <i class="bi bi-bar-chart-line text-4xl text-gray-400 mb-2"></i>
+                        <p class="text-gray-500">No hi ha suficients dades per mostrar el gràfic</p>
+                        <p class="text-sm text-gray-400">Es necessiten múltiples punts de dades per generar una
+                            representació gràfica</p>
+                    </div>
+                    <canvas v-else ref="chartCanvas" :key="`chart-${selectedPeriod}`" class="w-full h-full"></canvas>
                 </div>
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <StatCard 
-                    title="Mitjana del període" 
-                    :value="formatCurrency(stats.average)" 
-                    icon="bi-graph-up"
-                    color="#4F46E5"
-                />
-                <StatCard 
-                    title="Vendes totals" 
-                    :value="formatCurrency(totalSales)" 
-                    icon="bi-currency-euro"
-                    color="#10B981"
-                />
-                <StatCard 
-                    title="Període analitzat" 
-                    :value="periodLabels[selectedPeriod]" 
-                    icon="bi-calendar"
-                    color="#eb8b3b"
-                />
+                <StatCard title="Mitjana del període" :value="formatCurrency(stats.average)" icon="bi-graph-up"
+                    color="#4F46E5" />
+                <StatCard title="Vendes totals" :value="formatCurrency(totalSales)" icon="bi-currency-euro"
+                    color="#10B981" />
+                <StatCard title="Període analitzat" :value="periodLabels[selectedPeriod]" icon="bi-calendar"
+                    color="#eb8b3b" />
             </div>
         </div>
     </div>
@@ -101,6 +95,10 @@ const formatCurrency = (value) => {
     }).format(value);
 };
 
+const hasEnoughData = computed(() => {
+    return stats.value.labels?.length > 1;
+});
+
 const loadChart = () => {
     try {
         if (chartInstance) {
@@ -129,7 +127,7 @@ const loadChart = () => {
                 plugins: { legend: { display: false } },
                 scales: {
                     y: { beginAtZero: true },
-                    x: { }
+                    x: {}
                 }
             }
         });
@@ -154,13 +152,15 @@ const fetchStats = async () => {
         };
 
         // 1. Desactivar loading ANTES de renderizar
-        loading.value = false; 
+        loading.value = false;
 
         // 2. Esperar 2 ciclos de actualización del DOM
-        await nextTick();   
+        await nextTick();
 
         // 3. Renderizar después de que el canvas esté disponible
-        loadChart();
+        if (hasEnoughData.value) {
+            loadChart();
+        }
 
     } catch (error) {
         console.error('Error:', error);
