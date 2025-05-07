@@ -133,7 +133,7 @@
 
             <div v-if="view === 'productos'">
                 <div id="productos" class="grid grid-cols-2 gap-4 mt-4">
-                    <productoComp v-for="(producto, index) in filteredProductos" :key="index" :productoId="producto.id"
+                    <productoComp v-for="(producto, index) in filteredProductos" :key="index"  :id="producto.producto_id.toString()" :productoId="producto.producto_id.toString()"
                         :img="producto.imagen ? `${baseUrl}/storage/${producto.imagen}` : `${baseUrl}/storage/productos/default-image.webp`"
                         :title="producto.nombre" :price="producto.precio" :customClass="'w-full'"
                         price-class="text-gray-900" @click="mostrarIdProducto(producto.producto_id)">
@@ -185,7 +185,6 @@ const darLikeComercio = async (id) => {
         const response = await $communicationManager.darLikeComercio(id);
         console.log("Response:", response);
         if(response.message) {
-            console.log('entro')
             authStore.toggleFavoritoComercio(id);
             toggleColor();
         }
@@ -243,6 +242,7 @@ const toggleView = (newView) => {
 
 const filteredProductos = computed(() => {
     if (selectedSubcategorias.value.length === 0) {
+        console.log(productos.value)
         return productos.value;
     }
     return productos.value.filter(producto =>

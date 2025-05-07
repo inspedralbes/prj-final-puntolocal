@@ -1,8 +1,8 @@
 <template>
-    <div id="producto" :data-testid="productoId">
-        <div id="contain-image" :class="customClass">
+    <div class="producto" :data-testid="productoId">
+        <div class="contain-image" :class="customClass">
             <img :src="img">
-            <span @click.stop="actualizaFavoritos(productoId)" id="contain-fav">
+            <span @click.stop="actualizaFavoritos(productoId)" class="contain-fav">
                 <svg v-if="authStore?.favoritos?.has(productoId)" width="1.2em" height="1.2em" viewBox="0 0 24 24" fill="#ea4823"
                     stroke="#ea4823" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
                     style="position: relative; top: 5px; margin-left: 5px; margin-right: 5px;">
@@ -18,26 +18,26 @@
                     </path>
                 </svg>
             </span>
-            <span id="contain-nom">
+            <span class="contain-nom">
                 <h3>{{ comercio }}</h3>
             </span>
         </div>
         <div style="width: 185px;">
-            <h3 id="title" class="truncate">{{ title }}</h3>
-            <h2 id="price">{{ price }}€</h2>
+            <h3 class="title truncate">{{ title }}</h3>
+            <h2 class="price">{{ price }}€</h2>
         </div>
     </div>
 </template>
 
 <style scoped>
-#producto {
+.producto {
     width: 100%;
     display: flex;
     flex-direction: column;
     overflow: hidden;
 }
 
-#title {
+.title {
     font-weight: 500;
     color: #1a1b1b;
     overflow: hidden;
@@ -45,13 +45,13 @@
     white-space: nowrap;
 }
 
-#price {
+.price {
     font-weight: 700;
     font-size: 18px;
     margin-bottom: 0;
 }
 
-#contain-image {
+.contain-image {
     height: 160px;
     position: relative;
     display: flex;
@@ -69,7 +69,7 @@ img {
     object-position: center; /* Centra la imagen dentro del contenedor */
 }
 
-#contain-fav {
+.contain-fav {
     position: absolute;
     top: 10px;
     right: 10px;
@@ -79,7 +79,7 @@ img {
     border-radius: 8px;
 }
 
-#contain-nom {
+.contain-nom {
     position: absolute;
     bottom: 10px;
     left: 10px;
@@ -90,7 +90,7 @@ img {
     max-width: 150px;
 }
 
-#contain-nom h3{
+.contain-nom h3{
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -116,7 +116,6 @@ const props = defineProps({
     },
     comercio: {
         type: String,
-        required: true,
     },
     customClass: {
         type: String,
@@ -130,7 +129,7 @@ const authStore = useAuthStore();
 
 async function actualizaFavoritos(productoID) {
     const { $communicationManager } = useNuxtApp();
-    
+
     try {
         const response = await $communicationManager.updateFavorito(authStore.user.id, productoID);
 

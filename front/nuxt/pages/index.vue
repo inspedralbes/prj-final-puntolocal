@@ -130,10 +130,6 @@ onMounted(async () => {
     }, 5000);
 });
 
-// watch(isDarkMode, (newValue) => {
-//     document.body.classList.toggle("dark", newValue);
-// });
-
 async function checkLocationPermission() {
     if (localStorage.getItem("locationPermission") === "granted") {
         await getLocation();
