@@ -2,7 +2,7 @@
     <div class="bg-gray-100">
         <div>
             <div class="min-h-screen transition-colors duration-300">
-                <StoreCarousel :comercios="comercios.slice(0, 5)" v-if="comercios.length"/>
+                <StoreCarousel :comercios="comercios?.comercios?.slice(0, 5)" v-if="comercios?.comercios?.length" />
                 <!-- <div id="banner" class="bg-white mt-2 px-4 w-full h-[150px] flex items-center justify-between relative">
                     <div v-if="comercios.length"
                         :style="{ backgroundImage: 'url(' + comercios[currentIndex].imagen + ')', backgroundSize: 'cover' }"
@@ -38,15 +38,15 @@
                             </svg>
                         </p>
                     </div>
-                    <div id="categorias" class="flex space-x-6 px-4 items-center overflow-x-auto w-full md:justify-center md:space-x-10">
+                    <div id="categorias"
+                        class="flex space-x-6 px-4 items-center overflow-x-auto w-full md:justify-center md:space-x-10">
                         <div v-for="categoria in categorias" :key="categoria.id"
                             class="flex flex-col items-center justify-center cursor-pointer"
                             @click="irACategoria(categoria.id)">
                             <div class="w-[4em] h-[4em] rounded-full p-2 border bg-gray-50 overflow-hidden">
                                 <img :src="categoria.imagenes" alt="imgCategoria">
                             </div>
-                            <p
-                                class="flex items-center justify-center mt-1 text-sm font-medium text-gray-800">
+                            <p class="flex items-center justify-center mt-1 text-sm font-medium text-gray-800">
                                 {{ categoria.name }}
                             </p>
                         </div>
@@ -71,7 +71,8 @@
                         </p>
                     </div>
                     <div class="flex space-x-1 pl-4 items-center overflow-x-auto scrollbar-none">
-                        <productoComp v-for="(producto, index) in productos2" :key="index" :id="producto.id.toString()" :productoId="producto.id.toString()"
+                        <productoComp v-for="(producto, index) in productos2" :key="index" :id="producto.id.toString()"
+                            :productoId="producto.id.toString()"
                             :img="producto.imagen ? `${baseUrl}/storage/${producto.imagen}` : `${baseUrl}/storage/productos/default-image.webp`"
                             :title="producto.nombre" :price="producto.precio" :comercio="producto.comercio"
                             :customClass="'w-[170px]'" price-class="text-gray-900 "
@@ -79,14 +80,15 @@
                     </div>
                     <h1 class="text-xl mt-5 font-semibold text-gray-900 mb-4 ml-4">Productes a prop teu</h1>
                     <div id="productos" class="grid grid-cols-2 md:grid-cols-4 gap-4 px-4">
-                        <productoComp v-for="(producto, index) in productos" :key="index" :productoId="producto.id.toString()"
+                        <productoComp v-for="(producto, index) in productos" :key="index"
+                            :productoId="producto.id.toString()"
                             :img="producto.imagen ? `${baseUrl}/storage/${producto.imagen}` : `${baseUrl}/storage/productos/default-image.webp`"
                             :title="producto.nombre" :price="producto.precio" :comercio="producto.comercio_nombre"
-                            :customClass="'w-full'" price-class="text-gray-900"
-                            @click="mostrarIdProducto(producto.id)">
+                            :customClass="'w-full'" price-class="text-gray-900" @click="mostrarIdProducto(producto.id)">
                         </productoComp>
                         <div v-if="productos.length === 0" class="text-center py-4 text-gray-500">
-                            <p>No hi ha productes de comerços a prop teu. Si vols veure la ubicació, accepta la permís de
+                            <p>No hi ha productes de comerços a prop teu. Si vols veure la ubicació, accepta la permís
+                                de
                                 geolocalització.</p>
                         </div>
                     </div>
@@ -159,8 +161,8 @@ async function getLocation() {
 async function fetchComerciosCercanos(lat, lon) {
     try {
         const response = await $communicationManager.getComerciosCercanos(lat, lon);
-        console.log(response)
         comercios.value = response;
+        console.log("COMERCIOS CERCANOS: ", comercios.value)
 
         const idsComercios = response.comercios.map(comercio => comercio.id);
         const idsComerciosString = idsComercios.join(',');
