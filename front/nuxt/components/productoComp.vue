@@ -1,10 +1,10 @@
 <template>
-    <div class="producto" :data-testid="productoId">
-        <div class="contain-image" :class="customClass">
+    <div id="producto" :data-testid="productoId">
+        <div id="contain-image" :class="customClass">
             <img :src="img">
-            <span @click.stop="actualizaFavoritos(productoId)" class="contain-fav">
-                <svg v-if="authStore?.favoritos?.has(productoId)" width="1.2em" height="1.2em" viewBox="0 0 24 24" fill="#ea4823"
-                    stroke="#ea4823" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+            <span @click.stop="actualizaFavoritos(productoId)" id="contain-fav">
+                <svg v-if="authStore?.favoritos?.has(productoId)" width="1.2em" height="1.2em" viewBox="0 0 24 24"
+                    fill="#ea4823" stroke="#ea4823" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
                     style="position: relative; top: 5px; margin-left: 5px; margin-right: 5px;">
                     <path
                         d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z">
@@ -18,26 +18,26 @@
                     </path>
                 </svg>
             </span>
-            <span class="contain-nom">
+            <span v-if="!route.path.includes('comercio')" id="contain-nom">
                 <h3>{{ comercio }}</h3>
             </span>
         </div>
         <div style="width: 185px;">
-            <h3 class="title truncate">{{ title }}</h3>
-            <h2 class="price">{{ price }}€</h2>
+            <h3 id="title" class="truncate">{{ title }}</h3>
+            <h2 id="price">{{ price }}€</h2>
         </div>
     </div>
 </template>
 
 <style scoped>
-.producto {
+#producto {
     width: 100%;
     display: flex;
     flex-direction: column;
     overflow: hidden;
 }
 
-.title {
+#title {
     font-weight: 500;
     color: #1a1b1b;
     overflow: hidden;
@@ -45,13 +45,13 @@
     white-space: nowrap;
 }
 
-.price {
+#price {
     font-weight: 700;
     font-size: 18px;
     margin-bottom: 0;
 }
 
-.contain-image {
+#contain-image {
     height: 160px;
     position: relative;
     display: flex;
@@ -63,13 +63,17 @@
 }
 
 img {
-    max-width: 100%; /* Limita el ancho al tamaño del contenedor */
-    max-height: 100%; /* Limita la altura al tamaño del contenedor */
-    object-fit: contain; /* Mantiene la proporción de la imagen */
-    object-position: center; /* Centra la imagen dentro del contenedor */
+    max-width: 100%;
+    /* Limita el ancho al tamaño del contenedor */
+    max-height: 100%;
+    /* Limita la altura al tamaño del contenedor */
+    object-fit: contain;
+    /* Mantiene la proporción de la imagen */
+    object-position: center;
+    /* Centra la imagen dentro del contenedor */
 }
 
-.contain-fav {
+#contain-fav {
     position: absolute;
     top: 10px;
     right: 10px;
@@ -79,7 +83,7 @@ img {
     border-radius: 8px;
 }
 
-.contain-nom {
+#contain-nom {
     position: absolute;
     bottom: 10px;
     left: 10px;
@@ -90,7 +94,7 @@ img {
     max-width: 150px;
 }
 
-.contain-nom h3{
+#contain-nom h3 {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -98,6 +102,9 @@ img {
 </style>
 
 <script setup>
+import { useRoute } from 'vue-router';
+const route = useRoute();
+
 const props = defineProps({
     productoId: {
         type: String,
