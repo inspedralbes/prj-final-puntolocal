@@ -3,10 +3,10 @@ Llistat d'alguns dels punts que han de quedar explicats en aquesta carpeta. Pode
 
 És obligatori modificar aquest document!!
 
-# Document comercial:
+Document comercial:
 ## [Enllaç](https://holabarri.cat/docs/comercial_2425_holabarri.pdf)
 
-# Presentació de les funcionalitats: 
+Presentació de les funcionalitats: 
 ## [Enllaç](https://holabarri.cat/docs/resum_2425_holabarri.pdf)
 
 
