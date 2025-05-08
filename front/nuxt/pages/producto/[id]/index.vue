@@ -1,8 +1,6 @@
 <template>
-    <div
-        class="min-h-screen bg-gray-100 flex flex-col text-gray-900 transition-colors duration-300">
-        <div id="header"
-            class="w-full flex items-center justify-between p-4 bg-white fixed top-0 border-b">
+    <div class="min-h-screen bg-gray-100 flex flex-col text-gray-900 transition-colors duration-300">
+        <div id="header" class="w-full z-50 flex items-center justify-between p-4 bg-white fixed top-0 border-b">
 
             <!-- Botón de retroceso -->
             <div @click="goBack" class="text-xl text-gray-700 cursor-pointer">
@@ -84,7 +82,8 @@
                     <p class="text-xl text-gray-900">Venedor</p>
                     <div @click="irAComercio" id="comercioShop" class="flex h-[120px] mt-3 rounded-md border">
                         <div class="h-full w-[120px] border-r rounded-md bg-gray-200">
-                            <svg v-if="!producto?.logo_path" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <svg v-if="!producto?.logo_path" viewBox="0 0 24 24" fill="none"
+                                xmlns="http://www.w3.org/2000/svg">
                                 <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
                                 <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
                                 <g id="SVGRepo_iconCarrier">
@@ -93,7 +92,8 @@
                                         fill="#FFFFFF"></path>
                                 </g>
                             </svg>
-                            <img v-else :src="`${baseUrl}/storage/${producto?.logo_path}`" class="w-full h-[120px] object-cover" />
+                            <img v-else :src="`${baseUrl}/storage/${producto?.logo_path}`"
+                                class="w-full h-[120px] object-cover" />
                         </div>
                         <div class="p-2 text-gray-600">
                             <p class="text-xl text-black">{{ producto?.comercio }}</p>
@@ -114,72 +114,38 @@
                 <div>
                     <div class="flex items-center">
                         <p class="text-xl text-gray-900">Ressenyes</p>
-                        <p class="text-gray-500 ml-1">(34)</p>
+                        <p class="text-gray-500 ml-1">({{ reviews.length }})</p>
                     </div>
                     <div class="mt-3 divide-y divide-gray-200 border-t border-gray-200">
-                        <!-- RESEÑA -->
-                        <div class="bg-white p-4 max-w-md">
+                        <div v-for="(review, idx) in reviews" :key="review.id" class="bg-white p-4 max-w-md">
                             <div class="flex justify-between mb-2">
                                 <div class="flex items-center">
-                                    <div class="bg-gray-200 rounded-full w-[40px] h-[40px] mr-2"></div>
+                                    <div class="flex items-center justify-center bg-gray-200 rounded-full w-[40px] h-[40px] mr-2">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22"
+                                            fill="currentColor" class="bi bi-person-fill" viewBox="0 0 16 16">
+                                            <path
+                                                d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6" />
+                                        </svg>
+                                    </div>
                                     <div>
-                                        <p class="font-semibold text-gray-900">Luisa Viñedo Ruiz</p>
+                                        <p class="font-semibold text-gray-900">{{ review.cliente.name }} {{
+                                            review.cliente.apellidos }}</p>
                                         <div class="flex items-center">
-                                            <span v-for="n in 4" :key="n" class="text-yellow-500">&#9733;</span>
-                                            <span class="text-gray-400">&#9733;</span>
+                                            <PuntuacionComp :rating="review.rating" :customClass="'relative w-4 h-4'" />
                                         </div>
                                     </div>
                                 </div>
-                                <p class="text-gray-500 text-sm mt-0.5">Mar 5</p>
+                                <p class="text-gray-500 text-sm mt-0.5">{{ formatDate(review.created_at) }}</p>
                             </div>
-                            <p class="font-bold text-gray-900 mb-1">Increíble experiencia desde el primer día</p>
-                            <p class="text-gray-700 text-sm">
-                                Todo ha funcionado perfectamente. La atención ha sido excelente y no he tenido ningún
-                                problema hasta ahora.
+                            <p class="text-gray-700 mt-2 text-md">
+                                {{ review.comment }}
                             </p>
                         </div>
-                        <div class="bg-white p-4 max-w-md">
-                            <div class="flex justify-between mb-2">
-                                <div class="flex items-center">
-                                    <div class="bg-gray-200 rounded-full w-[40px] h-[40px] mr-2"></div>
-                                    <div>
-                                        <p class="font-semibold text-gray-900">Daniel Montes Pérez</p>
-                                        <div class="flex items-center">
-                                            <span v-for="n in 3" :key="n" class="text-yellow-500">&#9733;</span>
-                                            <span class="text-gray-400">&#9733;</span>
-                                            <span class="text-gray-400">&#9733;</span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <p class="text-gray-500 text-sm mt-0.5">Gen 12</p>
-                            </div>
-                            <p class="font-bold text-gray-900 mb-1">Buena calidad y servicio confiable</p>
-                            <p class="text-gray-700 text-sm">
-                                Me sorprendió lo bien que ha resultado. Definitivamente lo recomendaría a cualquiera que
-                                busque algo de calidad.
-                            </p>
-                        </div>
-                        <div class="bg-white p-4 max-w-md">
-                            <div class="flex justify-between mb-2">
-                                <div class="flex items-center">
-                                    <div class="bg-gray-200 rounded-full w-[40px] h-[40px] mr-2"></div>
-                                    <div>
-                                        <p class="font-semibold text-gray-900">Ana Beltrán García</p>
-                                        <div class="flex items-center">
-                                            <span v-for="n in 3" :key="n" class="text-yellow-500">&#9733;</span>
-                                            <span class="text-gray-400">&#9733;</span>
-                                            <span class="text-gray-400">&#9733;</span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <p class="text-gray-500 text-sm mt-0.5">Feb 22</p>
-                            </div>
-                            <p class="font-bold text-gray-900 mb-1">Cumple con lo prometido</p>
-                            <p class="text-gray-700 text-sm">
-                                Desde el primer momento supe que había hecho una buena elección. No me ha decepcionado
-                                en absoluto.
-                            </p>
-                        </div>
+                    </div>
+                    <div class="flex justify-center">
+                        <button @click="showMoreReviews" class="px-4 py-2 text-md bg-gray-400 mt-3 rounded-lg">
+                            Veure totes les resenyes
+                        </button>
                     </div>
                 </div>
             </div>
@@ -206,7 +172,7 @@ import { useNuxtApp } from "#app";
 import { ref, onMounted } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { useAuthStore } from "#imports";
-import PuntuacionComp from "../../components/PuntuacionComp.vue";
+import PuntuacionComp from "@/components/PuntuacionComp.vue";
 import { useComercioStore } from '@/stores/comercioStore';
 
 const { $communicationManager } = useNuxtApp();
@@ -218,6 +184,8 @@ const selectedColor = ref(null);
 const textCistella = ref('');
 const buttonRef = ref(null)
 const clicked = ref(false);
+const reviews = ref([]);
+const perPage = 5;
 
 import { useRuntimeConfig } from "#imports";
 const config = useRuntimeConfig();
@@ -242,6 +210,18 @@ const fetchProducto = async () => {
     }
 };
 
+const fetchReviews = async () => {
+    try {
+        const response = await $communicationManager.getProductoRatings(route.params.id, '5');
+        if (response) {
+            reviews.value = response.ratings?.data || [];
+            producto.value.valoracion = response.average;
+        }
+    } catch (error) {
+        console.error("Error fetching product ratings:", error);
+    }
+};
+
 const goBack = () => {
     router.back();
 };
@@ -256,7 +236,7 @@ const irAComercio = () => {
 
 async function actualizaFavoritos(productoID) {
     const { $communicationManager } = useNuxtApp();
-    
+
     try {
         const response = await $communicationManager.updateFavorito(authStore?.user?.id, productoID);
 
@@ -270,7 +250,7 @@ async function actualizaFavoritos(productoID) {
 }
 
 function addToBasket(producto) {
-    if(!clicked.value){
+    if (!clicked.value) {
         if (buttonRef.value) {
             buttonRef.value.classList.add('scale-90');
             buttonRef.value.classList.add('bg-green-500');
@@ -287,13 +267,22 @@ function addToBasket(producto) {
     }
 }
 
+function formatDate(dateStr) {
+    return dateStr ? dateStr.slice(0, 10) : '';
+}
+
+function showMoreReviews() {
+    router.push(`/producto/${producto.value.id}/ratings`);
+}
+
 onMounted(() => {
     fetchProducto();
+    fetchReviews();
 });
 </script>
 
 
 <style scoped>
-@import '../../assets/productoConcreto.css';
-@import '../../assets/productoConcreto.css';
+@import '@/assets/productoConcreto.css';
+@import '@/assets/productoConcreto.css';
 </style>

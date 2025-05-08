@@ -63,6 +63,9 @@ class RatingController extends Controller
 
         $ratings = Rating::where('rateable_type', Comercio::class)
             ->where('rateable_id', $comercioId)
+            ->join('clientes', 'ratings.cliente_id', '=', 'clientes.id')
+            ->select('ratings.*', 'clientes.name', 'clientes.apellidos')
+            ->where('rateable_id', $comercioId)
             ->paginate(10);
 
         return response()->json([
@@ -72,11 +75,19 @@ class RatingController extends Controller
     }
 
     // Obtener valoraciones de un producto
-    public function getProductoRatings($productoId)
+    public function getProductoRatings(Request $request, $productoId)
     {
-        $ratings = Rating::where('rateable_type', Producto::class)
+        $perPage = $request->input('per_page', 5); 
+
+        $query = Rating::with(['cliente:id,name,apellidos'])
+            ->where('rateable_type', Producto::class)
             ->where('rateable_id', $productoId)
-            ->paginate(10);
+            ->latest();
+
+        // Determinar si es paginación o todos
+        $ratings = ($perPage === 'all')
+            ? $query->get()
+            : $query->paginate($perPage);
 
         return response()->json([
             'average' => $this->calculateAverage(Producto::class, $productoId),

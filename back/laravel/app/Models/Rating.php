@@ -13,4 +13,9 @@ class Rating extends Model
     {
         return $this->morphTo();
     }
+
+    public function cliente()
+    {
+        return $this->belongsTo(Cliente::class, 'cliente_id');
+    }
 }

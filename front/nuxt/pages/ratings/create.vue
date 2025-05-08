@@ -4,19 +4,19 @@
 
         <form @submit.prevent="submitRating">
             <div class="mb-4">
-                <label class="block text-gray-700 mb-2">Puntuación (1-5)</label>
+                <label class="block text-gray-700 mb-2">Puntuació (1-5)</label>
                 <select v-model="form.rating" class="w-full p-2 border rounded">
                     <option v-for="i in 5" :key="i" :value="i">{{ i }}</option>
                 </select>
             </div>
 
             <div class="mb-4">
-                <label class="block text-gray-700 mb-2">Comentario (opcional)</label>
+                <label class="block text-gray-700 mb-2">Comentari (opcional)</label>
                 <textarea v-model="form.comment" class="w-full p-2 border rounded"></textarea>
             </div>
 
             <button type="submit" class="w-full bg-indigo-600 text-white py-2 rounded-lg hover:bg-indigo-700">
-                Enviar Valoración
+                Enviar Valoració
             </button>
         </form>
     </div>
