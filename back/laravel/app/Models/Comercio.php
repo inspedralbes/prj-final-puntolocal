@@ -46,4 +46,5 @@
         {
             return $this->morphMany(Rating::class, 'rateable');
         }
+        
     }

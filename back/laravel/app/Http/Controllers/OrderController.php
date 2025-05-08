@@ -6,13 +6,15 @@ use App\Models\Order;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
-class OrderController extends Controller {
-    public function index() {
+class OrderController extends Controller
+{
+    public function index()
+    {
         try {
             $user = Auth::user();
-            $orders = Order::with( 'tipoEnvio', 'tipoPago', 'estatCompra', )->orderBy("created_at","desc")->where('cliente_id', $user->id)->get();
+            $orders = Order::with('tipoEnvio', 'tipoPago', 'estatCompra', )->orderBy("created_at", "desc")->where('cliente_id', $user->id)->get();
 
-            if(empty($orders)){
+            if (empty($orders)) {
                 return response()->json(['message' => 'No tiene órdenes'], 404);
             }
 
@@ -46,67 +48,98 @@ class OrderController extends Controller {
                 'estat' => 1,
             ]);
 
-            $orderCompleta = Order::where("id", $order->id)->with('cliente:id,name,apellidos','tipoEnvio', 'tipoPago', 'estatCompra')->first();
+            $orderCompleta = Order::where("id", $order->id)->with('cliente:id,name,apellidos', 'tipoEnvio', 'tipoPago', 'estatCompra')->first();
 
             return response()->json([
                 'message' => 'Orden creada con éxito.',
                 'order' => $order,
                 'orderCompleta' => $orderCompleta
             ], 201);
-            
+
         } catch (\Exception $e) {
             return response()->json(['error' => 'Ocurrió un error al crear la orden: ' . $e->getMessage()], 500);
         }
     }
 
-    public function show($id) {
+    public function show($id)
+    {
         try {
             $order = Order::with([
                 'tipoEnvio',
                 'tipoPago',
-                'estatCompra', 
-                'cliente', 
+                'estatCompra',
+                'cliente',
                 'orderComercios.comercio',
                 'orderComercios.productosCompra.producto'
-                ])
-            ->where('id', $id)
-            ->first();
-    
+            ])
+                ->where('id', $id)
+                ->first();
+
             if (!$order) {
                 return response()->json(['message' => 'Compra no encontrada.'], 404);
             }
-    
+
             foreach ($order->orderComercios as $orderComercio) {
                 if ($orderComercio->comercio) {
                     $orderComercio->comercio_nombre = $orderComercio->comercio->nombre;
                 }
-    
+
                 foreach ($orderComercio->productosCompra as $productoCompra) {
                     if ($productoCompra->producto) {
                         $productoCompra->producto_nombre = $productoCompra->producto->nombre;
                     }
                 }
             }
-    
+
             return response()->json($order, 200);
         } catch (\Exception $e) {
             return response()->json(['error' => 'Ocurrió un error al obtener los detalles de la compra: ' . $e->getMessage()], 500);
         }
     }
-    
+
     public function showOrdersComercios($id)
     {
         try {
             $user = Auth::user();
-            $order = Order::with('tipoEnvio', 'tipoPago', 'estatCompra', 'orderComercios.estatCompra', 'orderComercios.comercio:id,nombre','orderComercios.productosCompra.producto')->where('id', $id)->where('cliente_id', $user->id)->first();
+            $order = Order::with([
+                'tipoEnvio',
+                'tipoPago',
+                'estatCompra',
+                'orderComercios' => function ($query) use ($user) {
+                    $query->with([
+                        'estatCompra',
+                        'comercio:id,nombre',
+                        'productosCompra.producto.ratings' => function ($q) use ($user) {
+                            $q->where('cliente_id', $user->id);
+                        },
+                        'ratings' => function ($q) use ($user) {
+                            $q->where('cliente_id', $user->id);
+                        }
+                    ]);
+                }
+            ])->where('id', $id)->where('cliente_id', $user->id)->first();
 
             if (!$order) {
                 return response()->json(['message' => 'Comanda no encontrada.'], 404);
             }
 
+            if ($order->orderComercios) {
+                $order->orderComercios->each(function ($comercioOrder) {
+                    $comercioOrder->can_rate = $comercioOrder->comercio->ratings->isEmpty() ?? true;
+                    unset($comercioOrder->comercio->ratings);
+            
+                    if ($comercioOrder->productosCompra) {
+                        $comercioOrder->productosCompra->each(function ($productoOrder) {
+                            $productoOrder->producto->can_rate = optional($productoOrder->producto->ratings)->isEmpty() ?? true;
+                            unset($productoOrder->producto->ratings);
+                        });
+                    }
+                });
+            }
+
             return response()->json($order, 200);
         } catch (\Exception $e) {
-            return response()->json(['error' => 'Ocurrió un error al obtener los detalles de la compra: ' . $e->getMessage()], 500);
+            return response()->json(['error' => $e->getMessage()], 500);
         }
     }
 

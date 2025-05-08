@@ -14,6 +14,8 @@ class RatingController extends Controller
     // Crear nueva valoración
     public function store(Request $request)
     {
+        //var_dump($request->all());
+
         $validated = $request->validate([
             'rateable_type' => ['required', 'string', Rule::in(['comercio', 'producto'])],
             'rateable_id' => 'required|integer',
