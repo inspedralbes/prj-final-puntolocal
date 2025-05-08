@@ -1,24 +1,26 @@
-# Documentació
-Llistat d'alguns dels punts que han de quedar explicats en aquesta carpeta. Poden ser tots en aquest fitxer o en diversos fitxers enllaçats.
+# 📚 Documentació del projecte Holabarri
 
-És obligatori modificar aquest document!!
+Aquest directori conté la documentació essencial del projecte **Holabarri**. L'objectiu és proporcionar una guia clara sobre el funcionament, arquitectura i desplegament del sistema.
 
-## [Document comercial d'holabarri](https://holabarri.cat/docs/comercial_2425_holabarri.pdf)
+📌 **És obligatori mantenir aquest document actualitzat.**
 
-## [Presentació de les funcionalitats d'holabarri](https://holabarri.cat/docs/resum_2425_holabarri.pdf)
+---
 
+## 📄 Documents generals
 
-## Documentació bàsica MÍNIMA
- * Objectius
- * Arquitectura bàsica
-   * Tecnologies utilitzades
-   * Interrelació entre els diversos components
- * Com crees l'entorn de desenvolupament
- * Com desplegues l'aplicació a producció
- * Llistat d'endpoints de l'API de backend
-    * Rutes
-   * Exemples de JSON de peticó
-   * Exemples de JSON de resposta i els seus codis d'estat 200? 404?
- * Aplicació Android
- * Altres elements importants.
- * ...
+- 👉 [Document comercial d'Holabarri (2024-2025)](https://holabarri.cat/docs/comercial_2425_holabarri.pdf)  
+- 👉 [Presentació de funcionalitats d'Holabarri (2024-2025)](https://holabarri.cat/docs/resum_2425_holabarri.pdf)
+
+---
+
+## 📌 Contingut mínim de la documentació tècnica
+
+A continuació es detallen els punts mínims que cal cobrir en aquest document o en altres fitxers vinculats:
+
+- Arquitectura del sistema
+- Flux de dades principal
+- Estructura de carpetes i fitxers
+- Dependències i versions
+- Instruccions de desplegament
+- Guia per a desenvolupadors
+- Documentació de l’API (veure [API.md](./API.md), si escau)
