@@ -3,8 +3,8 @@
         <div id="contain-image" :class="customClass">
             <img :src="img">
             <span @click.stop="actualizaFavoritos(productoId)" id="contain-fav">
-                <svg v-if="authStore?.favoritos?.has(productoId)" width="1.2em" height="1.2em" viewBox="0 0 24 24" fill="#ea4823"
-                    stroke="#ea4823" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                <svg v-if="authStore?.favoritos?.has(productoId)" width="1.2em" height="1.2em" viewBox="0 0 24 24"
+                    fill="#ea4823" stroke="#ea4823" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
                     style="position: relative; top: 5px; margin-left: 5px; margin-right: 5px;">
                     <path
                         d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z">
@@ -18,7 +18,7 @@
                     </path>
                 </svg>
             </span>
-            <span id="contain-nom">
+            <span v-if="!route.path.includes('comercio')" id="contain-nom">
                 <h3>{{ comercio }}</h3>
             </span>
         </div>
@@ -63,10 +63,14 @@
 }
 
 img {
-    max-width: 100%; /* Limita el ancho al tamaño del contenedor */
-    max-height: 100%; /* Limita la altura al tamaño del contenedor */
-    object-fit: contain; /* Mantiene la proporción de la imagen */
-    object-position: center; /* Centra la imagen dentro del contenedor */
+    max-width: 100%;
+    /* Limita el ancho al tamaño del contenedor */
+    max-height: 100%;
+    /* Limita la altura al tamaño del contenedor */
+    object-fit: contain;
+    /* Mantiene la proporción de la imagen */
+    object-position: center;
+    /* Centra la imagen dentro del contenedor */
 }
 
 #contain-fav {
@@ -90,7 +94,7 @@ img {
     max-width: 150px;
 }
 
-#contain-nom h3{
+#contain-nom h3 {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -98,6 +102,9 @@ img {
 </style>
 
 <script setup>
+import { useRoute } from 'vue-router';
+const route = useRoute();
+
 const props = defineProps({
     productoId: {
         type: String,
@@ -116,7 +123,6 @@ const props = defineProps({
     },
     comercio: {
         type: String,
-        required: true,
     },
     customClass: {
         type: String,
@@ -130,7 +136,7 @@ const authStore = useAuthStore();
 
 async function actualizaFavoritos(productoID) {
     const { $communicationManager } = useNuxtApp();
-    
+
     try {
         const response = await $communicationManager.updateFavorito(authStore.user.id, productoID);
 

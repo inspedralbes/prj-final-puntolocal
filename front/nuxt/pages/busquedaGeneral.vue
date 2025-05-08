@@ -5,80 +5,61 @@
     <div v-else>
         <nav class="sticky top-[76px] z-50 flex justify-center w-full bg-white text-lg border-b border-gray-300">
             <div class="flex justify-around w-[60vw]">
-                <button class="border-b-2" :class="{
-                    'text-black': currentSection === 'productos', 'border-[#276BF2]': currentSection === 'productos',
-                    'text-gray-400': currentSection !== 'productos', 'border-white': currentSection !== 'productos'
-                }"
-                    @click="showSection('productos'), getProductsBySearch()">
+                <button class="border-b-2" :class="[
+                    'transition-all',
+                    currentSection === 'productos' ? 'text-black border-[#276BF2]' : 'text-gray-400 border-white'
+                ]" @click="showSection('productos'), getProductsBySearch()">
                     Productes
                 </button>
                 <button
-                    class="hover:text-black hover:border-b-2 hover:border-blue-500 text-gray-400 border-b-2 border-white"
+                    class="hover:text-black hover:border-b-2 hover:border-blue-500 text-gray-400 border-b-2 border-white transition-all"
                     @click="showSection('comercios'); getComerciosBySearch()">
                     Comerços
                 </button>
             </div>
         </nav>
-        <div v-if="currentSection === 'productos'" class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div v-if="Object.values(productos).length > 0">
+        <div v-if="currentSection === 'productos'" class="p-5">
+            <div v-if="Object.values(productos).length > 0" class="grid grid-cols-2 gap-4">
                 <div v-for="(product, index) in Object.values(productos)" :key="index"
-                    class="p-4 border rounded shadow-md">
-                    <div class="flex h-50px] items-center">
-                        <img :src="`${baseUrl}/storage/${product.imagen}`" class="h-[180px] w-[150px] border" />
-                        <div class="flex flex-col ml-5">
-                            <h2 class="text-xl font-bold mb-2 line-clamp-2 break-all">{{ product.nombre }}</h2>
-                            <div class="flex mt-2">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="#e9ec27"
-                                    class="bi bi-star-fill" viewBox="0 0 16 16">
-                                    <path
-                                        d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z" />
-                                </svg>
-                                <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="#e9ec27"
-                                    class="bi bi-star-fill" viewBox="0 0 16 16">
-                                    <path
-                                        d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z" />
-                                </svg>
-                                <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="#e9ec27"
-                                    class="bi bi-star-fill" viewBox="0 0 16 16">
-                                    <path
-                                        d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z" />
-                                </svg>
-                                <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="#e9ec27"
-                                    class="bi bi-star-fill" viewBox="0 0 16 16">
-                                    <path
-                                        d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z" />
-                                </svg>
-                                <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="#e9ec27"
-                                    class="bi bi-star-half" viewBox="0 0 16 16">
-                                    <path
-                                        d="M5.354 5.119 7.538.792A.52.52 0 0 1 8 .5c.183 0 .366.097.465.292l2.184 4.327 4.898.696A.54.54 0 0 1 16 6.32a.55.55 0 0 1-.17.445l-3.523 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256a.5.5 0 0 1-.146.05c-.342.06-.668-.254-.6-.642l.83-4.73L.173 6.765a.55.55 0 0 1-.172-.403.6.6 0 0 1 .085-.302.51.51 0 0 1 .37-.245zM8 12.027a.5.5 0 0 1 .232.056l3.686 1.894-.694-3.957a.56.56 0 0 1 .162-.505l2.907-2.77-4.052-.576a.53.53 0 0 1-.393-.288L8.001 2.223 8 2.226z" />
-                                </svg>
+                    class="border rounded-xl overflow-hidden"
+                    @click="mostrarIdProducto(product.id)">
+                    <div class="flex flex-col">
+                        <img :src="`${baseUrl}/storage/${product.imagen}`" class="h-[180px] w-full" />
+                        <div class="flex flex-col p-2">
+                            <p class="text-[15px]">{{ product.comercio }}</p>
+                            <p class="text-[20px] mb-2 line-clamp-2 break-all">{{ product.nombre }}</p>
+                            <div class="flex items-center">
+                                <p class="text-sm font-medium">3.5</p>
+                                <PuntuacionComp :rating="3.5" class="mx-1" :customClass="'relative w-4 h-4'" />
+                                <p class="text-sm font-medium">(132)</p>
                             </div>
-                            <p class="mt-3 text-xl">{{ product.precio }} €</p>
-                            <button @click="addToBasket(product)"
+                            <p class="mt-3 text-xl flex">{{ product.precio }} <span class="text-base">€</span></p>
+                            <!-- <button @click="addToBasket(product)"
                                 class="pt-1 pb-1 pl-2 pr-2 mt-4 w-fit bg-[#276BF2] rounded-lg text-white">Afegir a la
-                                cistella</button>
+                                cistella</button> -->
                         </div>
                     </div>
                 </div>
             </div>
             <div v-else>
-                <p class="text-center text-lg mt-4">No hay coincidencias</p>
+                <p class="text-center text-lg mt-4">No hi ha coincidències</p>
             </div>
         </div>
         <div v-else v-if="currentSection === 'comercios'">
             <div v-if="Object.values(comercios).length > 0">
                 <div v-for="(comercio, index) in Object.values(comercios)" :key="index"
                     @click="navigateTo('comercio/' + comercio.id)"
-                    class="relative border rounded shadow-md m-4 overflow-visible">
-                    <img :src="`${baseUrl}/storage/${comercio.imagen_local_path}`" class="w-full h-[250px] object-cover" />
+                    class="relative border rounded-xl m-4 overflow-hidden">
+                    <img :src="`${baseUrl}/storage/${comercio.imagen_local_path}`"
+                        class="w-full h-[250px] object-cover" />
                     <div class="absolute bottom-0 left-0 w-full bg-gray-200 bg-opacity-70 p-4 h-fit">
-                        <h3 class="text-center">{{ comercio.nombre }}</h3>
-                        <h5 class="text-center">{{ getNombreCategoria(comercio.categoria_id) }}</h5>
+
+                        <p class="text-center">{{ comercio.nombre }}</p>
+                        <p class="text-center">{{ getNombreCategoria(comercio.categoria_id) }}</p>
                         <div class="flex items-left justify-between">
                             <div class="flex items-center">
-                                <p>{{ comercio.puntaje_medio }}</p>
-                                <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="#e9ec27"
+                                <p class="mr-1">{{ comercio.puntaje_medio }}</p>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="#facc15"
                                     class="bi bi-star-fill" viewBox="0 0 16 16">
                                     <path
                                         d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z" />
@@ -103,7 +84,7 @@
 
 <script setup>
 import Loading from "@/components/loading.vue";
-import { useRoute } from '#imports';
+import { useRoute, useRouter } from '#imports';
 import { useComercioStore } from '@/stores/comercioStore';
 
 import { useRuntimeConfig } from "#imports";
@@ -119,6 +100,7 @@ let productos = reactive({});
 const comercios = reactive({});
 const categorias = ref([]);
 const route = useRoute();
+const router = useRouter();
 let searchQuery = route.query.search || '';
 const currentSection = ref('productos');
 
@@ -128,6 +110,10 @@ function addToBasket(producto) {
     if (confirm('¿Quieres ir a la cesta?')) {
         navigateTo('/cistella');
     }
+}
+
+function mostrarIdProducto(id) {
+    router.push(`/producto/${id}`);
 }
 
 function showSection(section) {
@@ -144,6 +130,7 @@ async function getProductsBySearch() {
     const { $communicationManager } = useNuxtApp();
 
     const response = await $communicationManager.busquedaProductos(searchQuery);
+    console.log(response);
 
     Object.keys(productos).forEach(key => delete productos[key]);
     if (response.data) {
