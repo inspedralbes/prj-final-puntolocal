@@ -41,4 +41,10 @@
         public function orders() {
             return $this->hasMany(Order::class,'comercio_id');
         }
+
+        public function ratings()
+        {
+            return $this->morphMany(Rating::class, 'rateable');
+        }
+        
     }

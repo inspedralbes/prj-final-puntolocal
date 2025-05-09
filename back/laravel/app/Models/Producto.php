@@ -25,4 +25,9 @@
         public function comercio() {
             return $this->belongsTo(Comercio::class, 'comercio_id');
         }
+
+        public function ratings()
+        {
+            return $this->morphMany(Rating::class, 'rateable');
+        }
     }

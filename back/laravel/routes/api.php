@@ -17,6 +17,7 @@ use App\Http\Controllers\ComercioFavoritosController;
 use App\Http\Controllers\Auth\VerificationController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\StatsController;
+use App\Http\Controllers\RatingController;
 
 Route::get('/user', function (Request $request) {
     return $request->user();
@@ -71,9 +72,11 @@ Route::prefix('comercios')->group(function () {
     Route::get('/search/{search}', [ComercioController::class, 'search']);
     Route::get('/getUserid/{id}', [ComercioController::class, 'getUserID']);
     Route::get('/comercios-cercanos/{latitud}/{longitud}', [ComercioController::class, 'getComerciosCercanos']);
+    Route::get('/{id}/ratings', [RatingController::class, 'getComercioRatings']);
 });
-Route::get('/getLocations', [ComercioController::class, 'getLocations']);
 
+Route::get('/getLocations', [ComercioController::class, 'getLocations']);
+Route::middleware('auth:sanctum')->post('/ratings', [RatingController::class, 'store']);
 
 // ==== COMANDES ===================
 Route::middleware('auth:sanctum')->prefix('comandes')->group(function () {
@@ -167,6 +170,8 @@ Route::prefix('producto')->group(function () {
     Route::get('/categoria/{categoriaID}', [CategoriaController::class, 'getProductosPorCategoria']);
 
     Route::post('crear_excel', [ProductoController::class, 'createExcel']);
+
+    Route::get('/{id}/ratings', [RatingController::class, 'getProductoRatings']);
 });
 
 Route::prefix('cercanos')->group(function () {
