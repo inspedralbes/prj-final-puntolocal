@@ -71,8 +71,9 @@
                                 </path>
                             </g>
                         </svg>
-                        <h3 class="ml-1 text-gray-600 font-bold text-xl">{{ producto?.valoracion ||
-                            '3.9' }}</h3>
+                        <h3 class="ml-1 text-gray-600 font-bold text-xl">
+                            {{ producto?.valoracion ? parseFloat(producto.valoracion).toFixed(2) : '0.0' }}
+                        </h3>
                     </span>
                 </div>
                 <p class="text-gray-600 mt-2 text-justify">
@@ -143,7 +144,7 @@
                         </div>
                     </div>
                     <div class="flex justify-center">
-                        <button @click="showMoreReviews" class="px-4 py-2 text-md bg-gray-400 mt-3 rounded-lg">
+                        <button v-if="reviews && reviews.length > 4" @click="showMoreReviews" class="px-4 py-2 text-md bg-gray-400 rounded-lg">
                             Veure totes les resenyes
                         </button>
                     </div>
@@ -185,7 +186,6 @@ const textCistella = ref('');
 const buttonRef = ref(null)
 const clicked = ref(false);
 const reviews = ref([]);
-const perPage = 5;
 
 import { useRuntimeConfig } from "#imports";
 const config = useRuntimeConfig();
@@ -216,6 +216,7 @@ const fetchReviews = async () => {
         if (response) {
             reviews.value = response.ratings?.data || [];
             producto.value.valoracion = response.average;
+            console.log("Reseñas:", reviews.value);
         }
     } catch (error) {
         console.error("Error fetching product ratings:", error);
