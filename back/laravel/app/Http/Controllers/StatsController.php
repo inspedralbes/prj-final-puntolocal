@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Comercio;
 use App\Models\Order;
 use App\Models\OrderComercio;
+use App\Models\ProductoOrder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Carbon\Carbon;
@@ -47,7 +49,7 @@ class StatsController extends Controller
 
     private function getWeeklyStats($comerciosIds)
     {
-        $endDate = Carbon::today()->endOfDay(); 
+        $endDate = Carbon::today()->endOfDay();
         $startDate = Carbon::today()->subWeek()->startOfDay();
 
         $sales = OrderComercio::whereIn('comercio_id', $comerciosIds)
@@ -100,5 +102,40 @@ class StatsController extends Controller
     private function getMonthName($monthNumber)
     {
         return Carbon::create()->month($monthNumber)->locale('ca_ES')->monthName;
+    }
+
+    public function getTopProductsClients()
+    {
+        try {
+            $user = Auth::user();
+
+            if (!$user)
+                return response()->json(['error' => 'Usuario no encontrado'], 404);
+
+            $comercio = Comercio::where('idUser', $user->id)->first();
+
+            if (!$comercio)
+                return response()->json(['error' => 'Comercio no encontrado'], 404);
+
+            $orders = OrderComercio::with('order:id,cliente_id')
+                ->where('comercio_id', $comercio->id)
+                ->get();
+
+            $topClients = $orders->groupBy('order.cliente_id')
+                ->map(fn($group) => $group->sum('subtotal'))
+                ->sortDesc()
+                ->take(5)
+                ->toArray();
+
+            // $topProducst => 
+
+            if (!$orders) {
+                return response()->json(['message' => 'No tiene ninguna orden'], 404);
+            }
+
+            return response()->json(['topClients' => $topClients, 'orders' => $orders], 200);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Ocurrió un error al obtener los detalles de la compra: ' . $e->getMessage()], 500);
+        }
     }
 }

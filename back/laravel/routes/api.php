@@ -62,10 +62,6 @@ Route::middleware('auth:sanctum')->prefix('favoritos')->group(function () {
     Route::get('/verificar-seguido/{id}', [ComercioFavoritosController::class, 'verificarSeguido']);
 });
 
-Route::middleware('auth:sanctum')->group(function () {
-    Route::get('/stats/orders', [StatsController::class, 'sales']);
-});
-
 Route::prefix('comercios')->group(function () {
     Route::get('/{id}', [ComercioController::class, 'getComercio']);
     Route::get('/search/{search}', [ComercioController::class, 'search']);
@@ -225,4 +221,9 @@ Route::middleware('auth:sanctum')->prefix( 'stripe')->group(function () {
     Route::post('generate-onboarding-link', [PaymentController::class, 'generateOnboardingLink'])->name('stripe.generateOnboardingLink');
     Route::post('purchase', [PaymentController::class, 'purchase'])->name('stripe.purchase');
     Route::post('delete-payment-method', [PaymentController::class, 'delete'])->name('stripe.delete');
+});
+
+Route::middleware('auth:sanctum')->prefix('stats')->group(function () {
+    Route::get('orders', [StatsController::class, 'sales']);
+    Route::get('top-products-clients', [StatsController::class, 'getTopProductsClients']);
 });
