@@ -55,10 +55,12 @@ jobs:
           sed -i "s|FRONTEND_URL=.*|FRONTEND_URL=${{ secrets.PROD_BASE_URL }}|" .env
           sed -i "s|LOGIN_URL=.*|LOGIN_URL=${{ secrets.PROD_LOGIN_URL }}|" .env
 
-          # Varaiables de correo
+          # Variables de correo
           sed -i "s|MAIL_PASSWORD=.*|MAIL_PASSWORD=${{ secrets.PROD_MAIL_PASSWORD }}|" .env
 
-          
+          # Variables de stripe
+          sed -i "s|STRIPE_KEY=.*|STRIPE_KEY=${{ secrets.PROD_STRIPE_KEY }}|" .env
+          sed -i "s|STRIPE_SECRET=.*|STRIPE_SECRET=${{ secrets.PROD_STRIPE_SECRET }}|" .env
           
           php artisan key:generate
           php artisan config:cache
