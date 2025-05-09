@@ -57,11 +57,3 @@ A continuació es detallen els punts mínims que cal cobrir en aquest document o
 ### 🚀 Instruccions de desplegament
 
 El desplegament del projecte es realitza mitjançant **GitHub Actions**, que automatitza la pujada del codi a la branca `dev`. Aquesta branca representa l'entorn de desenvolupament i qualsevol `push` o `pull request` pot desencadenar workflows automàtics definits al fitxer `Ghactions.md`.
-
-#### Passos bàsics per al desplegament:
-
-1. **Clona el repositori:**
-
-   ```bash
-   git clone https://github.com/holabarri/holabarri.git
-   cd holabarri
