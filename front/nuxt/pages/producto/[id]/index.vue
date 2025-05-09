@@ -144,7 +144,7 @@
                         </div>
                     </div>
                     <div class="flex justify-center">
-                        <button v-if="reviews && reviews.length > 4" @click="showMoreReviews" class="px-4 py-2 text-md bg-gray-400 rounded-lg">
+                        <button v-if="reviews && reviews.length > 4" @click="showMoreReviews" class="px-4 py-2 text-md border-2 rounded-lg">
                             Veure totes les resenyes
                         </button>
                     </div>

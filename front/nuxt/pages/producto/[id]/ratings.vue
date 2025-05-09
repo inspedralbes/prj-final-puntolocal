@@ -38,26 +38,40 @@
             </div>
         </div>
         <div class="p-4 mt-[58px]">
-            <div v-for="review in reviews" :key="review.id" class="bg-white p-4 mb-2">
-                <div class="flex justify-between mb-2">
-                    <div class="flex items-center">
-                        <div class="flex items-center justify-center bg-gray-200 rounded-full w-10 h-10 mr-2">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor"
-                                class="bi bi-person-fill" viewBox="0 0 16 16">
-                                <path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6" />
-                            </svg>
+            <div v-if="isLoading" class="space-y-2 animate-pulse">
+                <div v-for="n in 8" :key="n" class="bg-white p-4 mb-2">
+                    <div class="flex justify-between mb-2">
+                        <div class="flex items-center space-x-2">
+                            <div class="bg-gray-200 w-10 h-10 rounded-full"></div>
+                            <div class="w-24 bg-gray-200 h-4"></div>
                         </div>
-                        <div>
-                            <p class="font-semibold text-gray-900">{{ review.cliente.name }} {{ review.cliente.apellidos
-                                }}</p>
-                            <div class="flex items-center">
-                                <PuntuacionComp :rating="review.rating" :customClass="'relative w-4 h-4'" />
+                        <div class="w-16 bg-gray-200 h-4"></div>
+                    </div>
+                    <div class="w-full bg-gray-200 h-4"></div>
+                </div>
+            </div>
+            <div v-else>
+                <div v-for="review in reviews" :key="review.id" class="bg-white p-4 mb-2">
+                    <div class="flex justify-between mb-2">
+                        <div class="flex items-center">
+                            <div class="flex items-center justify-center bg-gray-200 rounded-full w-10 h-10 mr-2">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor"
+                                    class="bi bi-person-fill" viewBox="0 0 16 16">
+                                    <path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6" />
+                                </svg>
+                            </div>
+                            <div>
+                                <p class="font-semibold text-gray-900">{{ review.cliente.name }} {{
+                                    review.cliente.apellidos }}</p>
+                                <div class="flex items-center">
+                                    <PuntuacionComp :rating="review.rating" :customClass="'relative w-4 h-4'" />
+                                </div>
                             </div>
                         </div>
+                        <p class="text-gray-500 text-sm">{{ formatDate(review.created_at) }}</p>
                     </div>
-                    <p class="text-gray-500 text-sm">{{ formatDate(review.created_at) }}</p>
+                    <p class="text-gray-700">{{ review.comment }}</p>
                 </div>
-                <p class="text-gray-700">{{ review.comment }}</p>
             </div>
         </div>
     </div>
@@ -68,6 +82,7 @@ import { ref, onMounted } from "vue";
 import { useNuxtApp, useRoute, useRouter } from "#app";
 
 const reviews = ref([]);
+const isLoading = ref(true);
 const { $communicationManager } = useNuxtApp();
 const route = useRoute();
 const router = useRouter();
@@ -90,8 +105,10 @@ async function fetchAllReviews() {
         if (response) {
             reviews.value = response.ratings || [];
         }
+        isLoading.value = false;
     } catch (error) {
         console.error("Error fetching full ratings:", error);
+        isLoading.value = false;
     }
 }
 
