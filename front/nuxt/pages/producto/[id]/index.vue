@@ -97,11 +97,11 @@
                                 class="w-full h-[120px] object-cover" />
                         </div>
                         <div class="p-2 text-gray-600">
-                            <p class="text-xl text-black">{{ producto?.comercio }}</p>
+                            <p class="text-xl text-black">{{ producto?.comercio?.nombre }}</p>
                             <div class="flex items-center">
-                                <p class="text-base font-medium">3.5</p>
-                                <PuntuacionComp :rating="3.5" class="mx-1" />
-                                <p class="text-base font-medium">(132)</p>
+                                <p class="text-base font-medium">{{ producto?.comercio?.puntaje_medio }}</p>
+                                <PuntuacionComp :rating="producto?.comercio?.puntaje_medio" class="mx-1" />
+                                <p class="text-base font-medium">({{ producto?.comercio_amount_ratings }})</p>
                             </div>
                             <p class="text-base">800 mts</p>
                         </div>
@@ -216,7 +216,6 @@ const fetchReviews = async () => {
         if (response) {
             reviews.value = response.ratings?.data || [];
             producto.value.valoracion = response.average;
-            console.log("Reseñas:", reviews.value);
         }
     } catch (error) {
         console.error("Error fetching product ratings:", error);

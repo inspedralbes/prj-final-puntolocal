@@ -54,7 +54,23 @@ class RatingController extends Controller
             'comment' => $validated['comment']
         ]);
 
+        // Actualizar puntuación del comercio
+        if ($validated['rateable_type'] === 'comercio') {
+            $this->updateComercioPuntaje($validated['rateable_id']);
+        }
+
         return response()->json($rating, 201);
+    }
+
+    private function updateComercioPuntaje($comercioId)
+    {
+        $promedio = Rating::where('rateable_type', Comercio::class)
+            ->where('rateable_id', $comercioId)
+            ->avg('rating');
+
+        Comercio::where('id', $comercioId)->update([
+            'puntaje_medio' => round($promedio, 2) 
+        ]);
     }
 
     // Obtener valoraciones de un comercio
@@ -77,7 +93,7 @@ class RatingController extends Controller
     // Obtener valoraciones de un producto
     public function getProductoRatings(Request $request, $productoId)
     {
-        $perPage = $request->input('per_page', 5); 
+        $perPage = $request->input('per_page', 5);
 
         $query = Rating::with(['cliente:id,name,apellidos'])
             ->where('rateable_type', Producto::class)
@@ -95,11 +111,20 @@ class RatingController extends Controller
         ]);
     }
 
-    // Calcular promedio (método interno)
+    // Calcular promedio
     private function calculateAverage($modelClass, $id)
     {
-        return Rating::where('rateable_type', $modelClass)
+        $avg = Rating::where('rateable_type', $modelClass)
             ->where('rateable_id', $id)
             ->avg('rating');
+
+        // Actualizar puntaje si es comercio
+        if ($modelClass === Comercio::class) {
+            Comercio::where('id', $id)->update([
+                'puntaje_medio' => round($avg, 2)
+            ]);
+        }
+
+        return $avg;
     }
 }

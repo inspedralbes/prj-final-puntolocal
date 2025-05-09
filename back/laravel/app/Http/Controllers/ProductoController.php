@@ -150,12 +150,16 @@ class ProductoController extends Controller
     public function show($id)
     {
         $producto = Producto::with(['subcategoria', 'comercio' => function($query) {
-            $query->select('id', 'nombre', 'logo_path');
+            $query->select('id', 'nombre', 'logo_path', 'puntaje_medio');
         }])->where('id', $id)->first();
 
         if (!$producto) {
             return response()->json(['message' => 'Producto no encontrado'], 404);
         }
+
+        $ratingCount = \App\Models\Rating::where('rateable_type', \App\Models\Comercio::class)
+            ->where('rateable_id', $producto->comercio_id)
+            ->count();
 
         return response()->json([
             "id" => $producto->id,
@@ -164,11 +168,13 @@ class ProductoController extends Controller
             "subcategoria_id" => $producto->subcategoria_id,
             "subcategoria" => $producto->subcategoria ? $producto->subcategoria->name : null,
             "comercio_id" => $producto->comercio_id,
-            "comercio" => $producto->comercio->nombre,
+            "comercio" => $producto->comercio,
             "logo_path" => $producto->comercio->logo_path,
             "precio" => $producto->precio,
             "stock" => $producto->stock,
             "visible" => $producto->visible,
+            "puntaje_medio" => $producto->comercio->puntaje_medio,
+            "comercio_amount_ratings" => $ratingCount,
         ], 200);
     }
 
