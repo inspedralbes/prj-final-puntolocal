@@ -1,0 +1,12 @@
+                    <div class="h-full p-6 bg-gray-50 rounded-xl shadow-md">
+                        <div v-if="storesClosed.length > 0">
+                            <h1 class="text-2xl font-semibold text-red-600 mb-4">Hi han comerços tancats</h1>
+                            <div v-for="(store, index) in storesClosed" :key="index"
+                                class="bg-white border border-gray-200 rounded-lg p-4 mb-3 shadow-sm">
+                                <p class="text-gray-800">
+                                    <strong class="text-gray-900">{{ store.comercio_nombre }}</strong>:
+                                    <span class="text-gray-600">{{ store.comercio_proximo_horario }}</span>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
