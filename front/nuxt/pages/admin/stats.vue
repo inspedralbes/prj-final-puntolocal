@@ -1,46 +1,181 @@
 <template>
-    <div class="bg-gray-50 p-6 rounded-xl shadow-sm md:mt-16">
-        <div class="flex flex-col md:flex-row justify-between items-start mb-6">
-            <h2 class="text-2xl font-bold text-gray-800 mb-4 md:mb-0">
-                Estadístiques de Vendes
-            </h2>
-
-            <div class="flex gap-2">
-                <button v-for="period in periods" :key="period" @click="selectedPeriod = period"
-                    class="px-4 py-2 rounded-lg transition-colors font-medium" :style="selectedPeriod === period
-                        ? 'background-color: #4F46E5; color: white'
-                        : 'background-color: #E0E7FF; color: #4F46E5; hover:bg-[#C7D2FE]'">
-                    {{ periodLabels[period] }}
-                </button>
+    <div class="bg-gray-50 p-6 md:mt-16 grid grid-cols-6 gap-5">
+        <section class="col-span-4">
+            <div v-if="loading" class="text-center py-8">
+                <Loading size="xl" color="#4F46E5" />
             </div>
-        </div>
 
-        <div v-if="loading" class="text-center py-8">
-            <Loading size="xl" color="#4F46E5" />
-        </div>
+            <div v-else class="bg-white p-4 rounded-xl border border-gray-200 h-[450px]">
+                <div class="flex flex-col md:flex-row justify-between items-start mb-6">
+                    <h2 class="text-xl font-bold text-gray-800 mb-4 md:mb-0">
+                        Vendes
+                    </h2>
 
-        <div v-else>
-            <div class="bg-white p-4 rounded-xl mb-6 border border-gray-200" style="min-height: 16rem;">
-                <div class="flex items-center justify-center h-64">
-                    <div v-if="!hasEnoughData" class="text-center p-4">
-                        <i class="bi bi-bar-chart-line text-4xl text-gray-400 mb-2"></i>
-                        <p class="text-gray-500">No hi ha suficients dades per mostrar el gràfic</p>
-                        <p class="text-sm text-gray-400">Es necessiten múltiples punts de dades per generar una
-                            representació gràfica</p>
+                    <div class="flex gap-2">
+                        <button v-for="period in periods" :key="period" @click="selectedPeriod = period"
+                            class="px-4 py-2 rounded-lg transition-colors font-medium" :style="selectedPeriod === period
+                                ? 'background-color: #4F46E5; color: white'
+                                : 'background-color: #E0E7FF; color: #4F46E5; hover:bg-[#C7D2FE]'">
+                            {{ periodLabels[period] }}
+                        </button>
                     </div>
-                    <canvas v-else ref="chartCanvas" :key="`chart-${selectedPeriod}`" class="w-full h-full"></canvas>
+                </div>
+
+                <div>
+                    <div class="flex items-center justify-center h-64">
+                        <div v-if="!hasEnoughData" class="text-center p-4">
+                            <i class="bi bi-bar-chart-line text-4xl text-gray-400 mb-2"></i>
+                            <p class="text-gray-500">No hi ha suficients dades per mostrar el gràfic</p>
+                            <p class="text-sm text-gray-400">Es necessiten múltiples punts de dades per generar una
+                                representació gràfica</p>
+                        </div>
+                        <canvas v-else ref="chartCanvas" :key="`chart-${selectedPeriod}`"
+                            class="w-full h-full"></canvas>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <StatCard title="Mitjana del període" :value="formatCurrency(stats.average)" icon="bi-graph-up"
+                        color="#4F46E5" />
+                    <StatCard title="Vendes totals" :value="formatCurrency(totalSales)" icon="bi-currency-euro"
+                        color="#10B981" />
+                    <StatCard title="Període analitzat" :value="periodLabels[selectedPeriod]" icon="bi-calendar"
+                        color="#eb8b3b" />
                 </div>
             </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <StatCard title="Mitjana del període" :value="formatCurrency(stats.average)" icon="bi-graph-up"
-                    color="#4F46E5" />
-                <StatCard title="Vendes totals" :value="formatCurrency(totalSales)" icon="bi-currency-euro"
-                    color="#10B981" />
-                <StatCard title="Període analitzat" :value="periodLabels[selectedPeriod]" icon="bi-calendar"
-                    color="#eb8b3b" />
+        </section>
+        <section class="col-span-2">
+            <div v-if="loading" class="text-center py-8">
+                <Loading size="xl" color="#4F46E5" />
             </div>
-        </div>
+
+            <div v-else class="bg-white p-4 rounded-xl border border-gray-200 h-[450px]">
+                <header class="flex flex-col md:flex-row justify-between items-start mb-6">
+                    <h2 class="text-xl font-bold text-gray-800 mb-4 md:mb-0">
+                        Estadístiques mes actual
+                    </h2>
+                </header>
+
+                <div class="w-full bg-gray-50 h-[50px] border-b mb-3 rounded-md">
+                    <div class="w-full flex divide-x h-full items-center text-gray-700 text-sm">
+                        <div class="w-full flex justify-center"><button>Top productes</button></div>
+                        <div class="w-full flex justify-center"><button>Top clients</button></div>
+                    </div>
+                </div>
+
+                <div class="w-full divide-y">
+                    <div class="flex flex-col justify-center py-3">
+                        <div class="flex justify-between">
+                            <section class="flex gap-3">
+                                <img src="#" alt="" width="50px" height="50px" class="rounded-md border">
+                                <div>
+                                    <p>Nombre del producto</p>
+                                    <p class="text-sm text-green-400">% subida verde</p>
+                                </div>
+                            </section>
+                            <p class="font-bold">Precio €</p>
+                        </div>
+                    </div>
+                    <div class="flex flex-col justify-center py-3">
+                        <div class="flex justify-between">
+                            <section class="flex gap-3">
+                                <img src="#" alt="" width="50px" height="50px" class="rounded-md border">
+                                <div>
+                                    <p>Nombre del producto</p>
+                                    <p class="text-sm text-green-400">% subida verde</p>
+                                </div>
+                            </section>
+                            <p class="font-bold">Precio €</p>
+                        </div>
+                    </div>
+                    <div class="flex flex-col justify-center py-3">
+                        <div class="flex justify-between">
+                            <section class="flex gap-3">
+                                <img src="#" alt="" width="50px" height="50px" class="rounded-md border">
+                                <div>
+                                    <p>Nombre del producto</p>
+                                    <p class="text-sm text-green-400">% subida verde</p>
+                                </div>
+                            </section>
+                            <p class="font-bold">Precio €</p>
+                        </div>
+                    </div>
+                    <div class="flex flex-col justify-center py-3">
+                        <div class="flex justify-between">
+                            <section class="flex gap-3">
+                                <img src="#" alt="" width="50px" height="50px" class="rounded-md border">
+                                <div>
+                                    <p>Nombre del producto</p>
+                                    <p class="text-sm text-green-400">% subida verde</p>
+                                </div>
+                            </section>
+                            <p class="font-bold">Precio €</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section class="col-span-3">
+            <div v-if="loading" class="text-center py-8">
+                <Loading size="xl" color="#4F46E5" />
+            </div>
+
+            <div v-else class="bg-white p-6 rounded-xl border border-gray-200 h-[180px] flex flex-col justify-center">
+                <header class="flex flex-col md:flex-row justify-between items-start mb-2">
+                    <h3 class="text-xl font-bold text-gray-800 mb-2 md:mb-0">
+                        Clients
+                    </h3>
+                </header>
+                <section>
+                    <p class="text-gray-700 text-xl"><span class="text-green-400 text-md">% subida</span> 228 clients
+                        totals aquest últim mes</p>
+                </section>
+            </div>
+        </section>
+        <section class="col-span-3">
+            <div
+                class="bg-white border border-gray-200 rounded-lg p-6 h-[180px]">
+                <div class="w-full">
+                    <div class="flex items-center gap-8">
+                        <div class="flex flex-col items-center">
+                            <h3 class="mb-2 text-base font-normal text-gray-500 dark:text-gray-400">Valoracions</h3>
+                            <span class="text-2xl font-bold leading-none text-gray-900 sm:text-3xl dark:text-white">
+                                3,3
+                            </span>
+                            <PuntuacionComp :rating="3.5" />
+                        </div>
+                        <div class="flex-grow">
+                            <div class="flex items-center mb-2">
+                                <div class="mr-5 text-sm font-medium dark:text-white">5</div>
+                                <div class="w-full bg-gray-200 rounded-full h-2.5 dark:bg-gray-700">
+                                </div>
+                            </div>
+                            <div class="flex items-center mb-2">
+                                <div class="mr-5 text-sm font-medium dark:text-white">4</div>
+                                <div class="w-full bg-gray-200 rounded-full h-2.5 dark:bg-gray-700">
+                                </div>
+                            </div>
+                            <div class="flex items-center mb-2">
+                                <div class="mr-5 text-sm font-medium dark:text-white">3</div>
+                                <div class="w-full bg-gray-200 rounded-full h-2.5 dark:bg-gray-700">
+                                </div>
+                            </div>
+                            <div class="flex items-center mb-2">
+                                <div class="mr-5 text-sm font-medium dark:text-white">2</div>
+                                <div class="w-full bg-gray-200 rounded-full h-2.5 dark:bg-gray-700">
+                                </div>
+                            </div>
+                            <div class="flex items-center mb-2">
+                                <div class="mr-5 text-sm font-medium dark:text-white">1</div>
+                                <div class="w-full bg-gray-200 rounded-full h-2.5 dark:bg-gray-700">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="traffic-channels-chart" class="w-full"></div>
+            </div>
+        </section>
     </div>
 </template>
 

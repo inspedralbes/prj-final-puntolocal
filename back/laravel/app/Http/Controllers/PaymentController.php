@@ -111,8 +111,6 @@ class PaymentController extends Controller
             return response()->json(['error' => 'User not found'], 404);
         }
 
-        Log::info('User: ' . $user);
-
         // Si el usuario no tiene un Stripe ID, lo crea
         if (!$user->hasStripeId()) {
             $user->createAsStripeCustomer();
