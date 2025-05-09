@@ -108,7 +108,14 @@ class OrderController extends Controller
                 'orderComercios' => function ($query) use ($user) {
                     $query->with([
                         'estatCompra',
-                        'comercio:id,nombre',
+                        'comercio' => function ($q) use ($user) {
+                            $q->select('id', 'nombre')
+                                ->with([
+                                    'ratings' => function ($qr) use ($user) {
+                                        $qr->where('cliente_id', $user->id);
+                                    }
+                                ]);
+                        },
                         'productosCompra.producto.ratings' => function ($q) use ($user) {
                             $q->where('cliente_id', $user->id);
                         },
@@ -127,7 +134,7 @@ class OrderController extends Controller
                 $order->orderComercios->each(function ($comercioOrder) {
                     $comercioOrder->can_rate = $comercioOrder->comercio->ratings->isEmpty() ?? true;
                     unset($comercioOrder->comercio->ratings);
-            
+
                     if ($comercioOrder->productosCompra) {
                         $comercioOrder->productosCompra->each(function ($productoOrder) {
                             $productoOrder->producto->can_rate = optional($productoOrder->producto->ratings)->isEmpty() ?? true;
