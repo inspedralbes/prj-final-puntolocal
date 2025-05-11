@@ -64,52 +64,15 @@
                 </div>
 
                 <div class="w-full divide-y">
-                    <div class="flex flex-col justify-center py-3">
+                    <div class="flex flex-col justify-center py-3" v-for="producto in topProducts" :key="producto.producto_id">
                         <div class="flex justify-between">
                             <section class="flex gap-3">
                                 <img src="#" alt="" width="50px" height="50px" class="rounded-md border">
                                 <div>
-                                    <p>Nombre del producto</p>
-                                    <p class="text-sm text-green-400">% subida verde</p>
+                                    <p>{{ producto.nombre }}</p>
                                 </div>
                             </section>
-                            <p class="font-bold">Precio €</p>
-                        </div>
-                    </div>
-                    <div class="flex flex-col justify-center py-3">
-                        <div class="flex justify-between">
-                            <section class="flex gap-3">
-                                <img src="#" alt="" width="50px" height="50px" class="rounded-md border">
-                                <div>
-                                    <p>Nombre del producto</p>
-                                    <p class="text-sm text-green-400">% subida verde</p>
-                                </div>
-                            </section>
-                            <p class="font-bold">Precio €</p>
-                        </div>
-                    </div>
-                    <div class="flex flex-col justify-center py-3">
-                        <div class="flex justify-between">
-                            <section class="flex gap-3">
-                                <img src="#" alt="" width="50px" height="50px" class="rounded-md border">
-                                <div>
-                                    <p>Nombre del producto</p>
-                                    <p class="text-sm text-green-400">% subida verde</p>
-                                </div>
-                            </section>
-                            <p class="font-bold">Precio €</p>
-                        </div>
-                    </div>
-                    <div class="flex flex-col justify-center py-3">
-                        <div class="flex justify-between">
-                            <section class="flex gap-3">
-                                <img src="#" alt="" width="50px" height="50px" class="rounded-md border">
-                                <div>
-                                    <p>Nombre del producto</p>
-                                    <p class="text-sm text-green-400">% subida verde</p>
-                                </div>
-                            </section>
-                            <p class="font-bold">Precio €</p>
+                            <p class="font-bold">{{ producto.total.toFixed(2) }} €</p>
                         </div>
                     </div>
                 </div>
@@ -204,6 +167,8 @@ const periodLabels = {
 
 const selectedPeriod = ref('week');
 const stats = ref({ labels: [], data: [], average: 0 });
+const topClients = ref(null);
+const topProducts = ref(null);
 const loading = ref(false);
 
 const totalSales = computed(() => stats.value.data.reduce((a, b) => a + b, 0));
@@ -306,11 +271,23 @@ const fetchStats = async () => {
 
 watch(selectedPeriod, fetchStats, { immediate: true });
 
+async function topStats () {
+    try {
+        const data = await $communicationManager.getTopStats();
+
+        topClients.value = data.topClients;
+        topProducts.value = data.topProducts;
+    } catch (error) {
+        console.error(error);
+    }
+}
+
 // Ciclo de vida mejorado
 onMounted(async () => {
     if (!authStore.isAuthenticated || !authStore.comercio) {
         navigateTo('/login');
     }
+    topStats();
 });
 onBeforeUnmount
 </script>

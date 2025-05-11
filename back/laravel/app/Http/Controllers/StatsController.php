@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Validator;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+use Log;
 
 class StatsController extends Controller
 {
@@ -121,19 +122,34 @@ class StatsController extends Controller
                 ->where('comercio_id', $comercio->id)
                 ->get();
 
+            $products = ProductoOrder::with('producto:id,nombre,imagen')->get();
+
+            $topProducts = $products->groupBy('producto.id')
+                ->map(function ($group) {
+                    Log::info($group);
+                    $total = $group->sum(fn($grupo) => $grupo->precio);
+                    return [
+                        'producto_id' => $group->first()->producto_id,
+                        'nombre' => $group->first()->producto->nombre,
+                        'total' => $total,
+                        'imagen' => $group->first()->producto->imagen,
+                    ];
+                })
+                ->sortByDesc(fn($item) => $item['total'])
+                ->take(4)
+                ->values()->all();
+
             $topClients = $orders->groupBy('order.cliente_id')
                 ->map(fn($group) => $group->sum('subtotal'))
                 ->sortDesc()
-                ->take(5)
+                ->take(4)
                 ->toArray();
-
-            // $topProducst => 
 
             if (!$orders) {
                 return response()->json(['message' => 'No tiene ninguna orden'], 404);
             }
 
-            return response()->json(['topClients' => $topClients, 'orders' => $orders], 200);
+            return response()->json(['topProducts' => $topProducts, 'topClients' => $topClients], 200);
         } catch (\Exception $e) {
             return response()->json(['error' => 'Ocurrió un error al obtener los detalles de la compra: ' . $e->getMessage()], 500);
         }

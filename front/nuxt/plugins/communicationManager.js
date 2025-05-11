@@ -650,6 +650,25 @@ export default defineNuxtPlugin((nuxtApp) => {
       }
     },
 
+    async getTopStats() {
+      try {
+        const response = await fetch(`${Host}/stats/top-products-clients`, {
+          method: 'GET',
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+            'Authorization': this.authStore.token ? `Bearer ${this.authStore.token}` : ''
+          }
+        });
+
+        const jsonResponse = await response.json();
+        return jsonResponse;
+      } catch (error) {
+        console.error('Error al realizar la petición:', error);
+        return null;
+      }
+    },
+
     ///////////////////////////// POST //////////////////////////////////
     async register(json) {
       try {
