@@ -120,9 +120,9 @@
                         <div class="flex flex-col items-center">
                             <h3 class="mb-2 text-base font-normal text-gray-500 dark:text-gray-400">Valoracions</h3>
                             <span class="text-2xl font-bold leading-none text-gray-900 sm:text-3xl dark:text-white">
-                                3,3
+                                {{ rating }}
                             </span>
-                            <PuntuacionComp :rating="3.5" />
+                            <PuntuacionComp :rating="rating" />
                         </div>
                         <div class="flex-grow">
                             <div class="flex items-center mb-2">
@@ -188,6 +188,7 @@ const topClients = ref(null);
 const topProducts = ref(null);
 const uniqueClients = ref(0);
 const topCurrentSelected = ref(1);
+const rating = ref(0)
 const loading = ref(false);
 
 function currentSelected(value) {
@@ -307,12 +308,23 @@ async function topStats() {
     }
 }
 
+async function ratingStats() {
+    try {
+        const data = await $communicationManager.getRating();
+
+        rating.value = data.rating;
+    } catch (error) {
+        console.error(error);
+    }
+}
+
 // Ciclo de vida mejorado
 onMounted(async () => {
     if (!authStore.isAuthenticated || !authStore.comercio) {
         navigateTo('/login');
     }
     topStats();
+    ratingStats();
 });
 onBeforeUnmount
 </script>

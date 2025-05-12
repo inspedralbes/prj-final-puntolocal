@@ -109,7 +109,7 @@ class StatsController extends Controller
     {
         $products = ProductoOrder::with('producto:id,nombre,imagen', 'orderComercio:id,created_at')
             ->whereHas('orderComercio', function ($query) {
-            $query->whereMonth('created_at', Carbon::now()->month);
+                $query->whereMonth('created_at', Carbon::now()->month);
             })
             ->get();
 
@@ -179,6 +179,26 @@ class StatsController extends Controller
 
 
             return response()->json(['topProducts' => $topProducts, 'topClients' => $topClients, 'uniqueClients' => $uniqueClients], 200);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Ocurrió un error al obtener los detalles de la compra: ' . $e->getMessage()], 500);
+        }
+    }
+
+    public function getRating()
+    {
+        try {
+            $user = Auth::user();
+
+            if (!$user)
+                return response()->json(['error' => 'Usuario no encontrado'], 404);
+
+            $comercio = Comercio::where('idUser', $user->id)->first();
+
+            if (!$comercio)
+                return response()->json(['error' => 'Comercio no encontrado'], 404);
+
+            return response()->json(['rating' => $comercio->puntaje_medio], 200);
+
         } catch (\Exception $e) {
             return response()->json(['error' => 'Ocurrió un error al obtener los detalles de la compra: ' . $e->getMessage()], 500);
         }
