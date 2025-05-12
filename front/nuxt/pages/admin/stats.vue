@@ -58,58 +58,39 @@
 
                 <div class="w-full bg-gray-50 h-[50px] border-b mb-3 rounded-md">
                     <div class="w-full flex divide-x h-full items-center text-gray-700 text-sm">
-                        <div class="w-full flex justify-center"><button>Top productes</button></div>
-                        <div class="w-full flex justify-center"><button>Top clients</button></div>
+                        <div class="w-full flex justify-center"
+                            :class="topCurrentSelected === 1 ? 'text-blue-600' : ''"><button
+                                @click="currentSelected(1)">Top productes</button></div>
+                        <div class="w-full flex justify-center"
+                            :class="topCurrentSelected === 2 ? 'text-blue-600' : ''"><button
+                                @click="currentSelected(2)">Top clients</button></div>
                     </div>
                 </div>
 
-                <div class="w-full divide-y">
-                    <div class="flex flex-col justify-center py-3">
+                <div v-if="topCurrentSelected === 1" class="w-full divide-y">
+                    <div class="flex flex-col justify-center py-3" v-for="producto in topProducts" :key="producto.producto_id">
                         <div class="flex justify-between">
                             <section class="flex gap-3">
-                                <img src="#" alt="" width="50px" height="50px" class="rounded-md border">
+                                <img :src="producto.image || '#'" alt="" width="50px" height="50px" class="rounded-md border">
                                 <div>
-                                    <p>Nombre del producto</p>
-                                    <p class="text-sm text-green-400">% subida verde</p>
+                                    <p>{{ producto.nombre }}</p>
                                 </div>
                             </section>
-                            <p class="font-bold">Precio €</p>
+                            <p class="font-bold">{{ producto.total.toFixed(2) }} €</p>
                         </div>
                     </div>
-                    <div class="flex flex-col justify-center py-3">
-                        <div class="flex justify-between">
-                            <section class="flex gap-3">
-                                <img src="#" alt="" width="50px" height="50px" class="rounded-md border">
-                                <div>
-                                    <p>Nombre del producto</p>
-                                    <p class="text-sm text-green-400">% subida verde</p>
-                                </div>
-                            </section>
-                            <p class="font-bold">Precio €</p>
-                        </div>
-                    </div>
-                    <div class="flex flex-col justify-center py-3">
-                        <div class="flex justify-between">
-                            <section class="flex gap-3">
-                                <img src="#" alt="" width="50px" height="50px" class="rounded-md border">
-                                <div>
-                                    <p>Nombre del producto</p>
-                                    <p class="text-sm text-green-400">% subida verde</p>
-                                </div>
-                            </section>
-                            <p class="font-bold">Precio €</p>
-                        </div>
-                    </div>
-                    <div class="flex flex-col justify-center py-3">
-                        <div class="flex justify-between">
-                            <section class="flex gap-3">
-                                <img src="#" alt="" width="50px" height="50px" class="rounded-md border">
-                                <div>
-                                    <p>Nombre del producto</p>
-                                    <p class="text-sm text-green-400">% subida verde</p>
-                                </div>
-                            </section>
-                            <p class="font-bold">Precio €</p>
+                </div>
+                <div v-else>
+                    <div v-if="topClients" class="w-full divide-y">
+                        <div class="flex flex-col justify-center py-3" v-for="client in topClients" :key="client.client_id">
+                            <div class="flex justify-between">
+                                <section class="flex gap-3">
+                                    <div>
+                                        <p>{{ client.nombre }}</p>
+                                    </div>
+                                </section>
+                                <p class="font-bold">{{ client?.subtotal?.toFixed(2) }} €</p>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -127,22 +108,21 @@
                     </h3>
                 </header>
                 <section>
-                    <p class="text-gray-700 text-xl"><span class="text-green-400 text-md">% subida</span> 228 clients
+                    <p class="text-gray-700 text-xl"> {{uniqueClients}} clients
                         totals aquest últim mes</p>
                 </section>
             </div>
         </section>
         <section class="col-span-3">
-            <div
-                class="bg-white border border-gray-200 rounded-lg p-6 h-[180px]">
+            <div class="bg-white border border-gray-200 rounded-lg p-6 h-[180px]">
                 <div class="w-full">
                     <div class="flex items-center gap-8">
                         <div class="flex flex-col items-center">
                             <h3 class="mb-2 text-base font-normal text-gray-500 dark:text-gray-400">Valoracions</h3>
                             <span class="text-2xl font-bold leading-none text-gray-900 sm:text-3xl dark:text-white">
-                                3,3
+                                {{ rating }}
                             </span>
-                            <PuntuacionComp :rating="3.5" />
+                            <PuntuacionComp :rating="rating" />
                         </div>
                         <div class="flex-grow">
                             <div class="flex items-center mb-2">
@@ -204,7 +184,16 @@ const periodLabels = {
 
 const selectedPeriod = ref('week');
 const stats = ref({ labels: [], data: [], average: 0 });
+const topClients = ref(null);
+const topProducts = ref(null);
+const uniqueClients = ref(0);
+const topCurrentSelected = ref(1);
+const rating = ref(0)
 const loading = ref(false);
+
+function currentSelected(value) {
+    topCurrentSelected.value = value;
+}
 
 const totalSales = computed(() => stats.value.data.reduce((a, b) => a + b, 0));
 
@@ -306,11 +295,36 @@ const fetchStats = async () => {
 
 watch(selectedPeriod, fetchStats, { immediate: true });
 
+async function topStats() {
+    try {
+        const data = await $communicationManager.getTopStats();
+
+        topClients.value = data.topClients;
+        topProducts.value = data.topProducts;
+        uniqueClients.value = data.uniqueClients;
+        console.log(data)
+    } catch (error) {
+        console.error(error);
+    }
+}
+
+async function ratingStats() {
+    try {
+        const data = await $communicationManager.getRating();
+
+        rating.value = data.rating;
+    } catch (error) {
+        console.error(error);
+    }
+}
+
 // Ciclo de vida mejorado
 onMounted(async () => {
     if (!authStore.isAuthenticated || !authStore.comercio) {
         navigateTo('/login');
     }
+    topStats();
+    ratingStats();
 });
 onBeforeUnmount
 </script>
