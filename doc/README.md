@@ -34,8 +34,8 @@ A continuació es detallen els punts mínims que cal cobrir en aquest document o
 
 - `nuxt` ^3.15.2  
 - `vue` latest  
-- `vue-router` latest  
-- `@nuxt/devtools` ^2.0.0  
+- `vue-router` latest
+- `@nuxt/devtools` ^2.0.0
 - `@nuxtjs/tailwindcss` ^6.13.1  
 - `@pinia/nuxt` ^0.9.0  
 - `pinia` ^2.3.1  
