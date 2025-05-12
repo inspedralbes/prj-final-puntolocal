@@ -58,21 +58,39 @@
 
                 <div class="w-full bg-gray-50 h-[50px] border-b mb-3 rounded-md">
                     <div class="w-full flex divide-x h-full items-center text-gray-700 text-sm">
-                        <div class="w-full flex justify-center"><button>Top productes</button></div>
-                        <div class="w-full flex justify-center"><button>Top clients</button></div>
+                        <div class="w-full flex justify-center"
+                            :class="topCurrentSelected === 1 ? 'text-blue-600' : ''"><button
+                                @click="currentSelected(1)">Top productes</button></div>
+                        <div class="w-full flex justify-center"
+                            :class="topCurrentSelected === 2 ? 'text-blue-600' : ''"><button
+                                @click="currentSelected(2)">Top clients</button></div>
                     </div>
                 </div>
 
-                <div class="w-full divide-y">
+                <div v-if="topCurrentSelected === 1" class="w-full divide-y">
                     <div class="flex flex-col justify-center py-3" v-for="producto in topProducts" :key="producto.producto_id">
                         <div class="flex justify-between">
                             <section class="flex gap-3">
-                                <img src="#" alt="" width="50px" height="50px" class="rounded-md border">
+                                <img :src="producto.image || '#'" alt="" width="50px" height="50px" class="rounded-md border">
                                 <div>
                                     <p>{{ producto.nombre }}</p>
                                 </div>
                             </section>
                             <p class="font-bold">{{ producto.total.toFixed(2) }} €</p>
+                        </div>
+                    </div>
+                </div>
+                <div v-else>
+                    <div v-if="topClients" class="w-full divide-y">
+                        <div class="flex flex-col justify-center py-3" v-for="client in topClients" :key="client.client_id">
+                            <div class="flex justify-between">
+                                <section class="flex gap-3">
+                                    <div>
+                                        <p>{{ client.nombre }}</p>
+                                    </div>
+                                </section>
+                                <p class="font-bold">{{ client?.subtotal?.toFixed(2) }} €</p>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -96,8 +114,7 @@
             </div>
         </section>
         <section class="col-span-3">
-            <div
-                class="bg-white border border-gray-200 rounded-lg p-6 h-[180px]">
+            <div class="bg-white border border-gray-200 rounded-lg p-6 h-[180px]">
                 <div class="w-full">
                     <div class="flex items-center gap-8">
                         <div class="flex flex-col items-center">
@@ -169,7 +186,12 @@ const selectedPeriod = ref('week');
 const stats = ref({ labels: [], data: [], average: 0 });
 const topClients = ref(null);
 const topProducts = ref(null);
+const topCurrentSelected = ref(1);
 const loading = ref(false);
+
+function currentSelected(value) {
+    topCurrentSelected.value = value;
+}
 
 const totalSales = computed(() => stats.value.data.reduce((a, b) => a + b, 0));
 
@@ -271,7 +293,7 @@ const fetchStats = async () => {
 
 watch(selectedPeriod, fetchStats, { immediate: true });
 
-async function topStats () {
+async function topStats() {
     try {
         const data = await $communicationManager.getTopStats();
 

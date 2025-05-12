@@ -118,15 +118,15 @@ class StatsController extends Controller
             if (!$comercio)
                 return response()->json(['error' => 'Comercio no encontrado'], 404);
 
-            $orders = OrderComercio::with('order:id,cliente_id')
+            $orders = OrderComercio::with('order:id,cliente_id', 'order.cliente:id,name,apellidos')
                 ->where('comercio_id', $comercio->id)
+                ->whereMonth('created_at', Carbon::now()->month)
                 ->get();
 
             $products = ProductoOrder::with('producto:id,nombre,imagen')->get();
 
             $topProducts = $products->groupBy('producto.id')
                 ->map(function ($group) {
-                    Log::info($group);
                     $total = $group->sum(fn($grupo) => $grupo->precio);
                     return [
                         'producto_id' => $group->first()->producto_id,
@@ -140,16 +140,25 @@ class StatsController extends Controller
                 ->values()->all();
 
             $topClients = $orders->groupBy('order.cliente_id')
-                ->map(fn($group) => $group->sum('subtotal'))
-                ->sortDesc()
+                ->map(function ($group) {
+                    $nombreCliente = $group->first()->order->cliente->name . ' ' . substr($group->first()->order->cliente->apellidos, 0, 1) . '.';
+                    return [
+                        'cliente_id' => $group->first()->order->cliente_id,
+                        'nombre' => $nombreCliente,
+                        'subtotal' => $group->sum('subtotal'),
+                    ];
+                })
+                ->sortByDesc(fn($item) => $item['subtotal'])
                 ->take(4)
-                ->toArray();
+                ->values()->all();
+
+            $uniqueClients = $orders->pluck('order.cliente_id')->unique()->count();
 
             if (!$orders) {
                 return response()->json(['message' => 'No tiene ninguna orden'], 404);
             }
 
-            return response()->json(['topProducts' => $topProducts, 'topClients' => $topClients], 200);
+            return response()->json(['topProducts' => $topProducts, 'topClients' => $topClients, 'UniqueClients' => $uniqueClients], 200);
         } catch (\Exception $e) {
             return response()->json(['error' => 'Ocurrió un error al obtener los detalles de la compra: ' . $e->getMessage()], 500);
         }
