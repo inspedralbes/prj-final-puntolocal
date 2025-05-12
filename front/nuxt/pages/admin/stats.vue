@@ -108,7 +108,7 @@
                     </h3>
                 </header>
                 <section>
-                    <p class="text-gray-700 text-xl"><span class="text-green-400 text-md">% subida</span> 228 clients
+                    <p class="text-gray-700 text-xl"> {{uniqueClients}} clients
                         totals aquest últim mes</p>
                 </section>
             </div>
@@ -186,6 +186,7 @@ const selectedPeriod = ref('week');
 const stats = ref({ labels: [], data: [], average: 0 });
 const topClients = ref(null);
 const topProducts = ref(null);
+const uniqueClients = ref(0);
 const topCurrentSelected = ref(1);
 const loading = ref(false);
 
@@ -299,6 +300,8 @@ async function topStats() {
 
         topClients.value = data.topClients;
         topProducts.value = data.topProducts;
+        uniqueClients.value = data.uniqueClients;
+        console.log(data)
     } catch (error) {
         console.error(error);
     }

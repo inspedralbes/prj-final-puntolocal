@@ -105,6 +105,50 @@ class StatsController extends Controller
         return Carbon::create()->month($monthNumber)->locale('ca_ES')->monthName;
     }
 
+    private function getTopProducts()
+    {
+        $products = ProductoOrder::with('producto:id,nombre,imagen', 'orderComercio:id,created_at')
+            ->whereHas('orderComercio', function ($query) {
+            $query->whereMonth('created_at', Carbon::now()->month);
+            })
+            ->get();
+
+        $topProducts = $products->groupBy('producto.id')
+            ->map(function ($group) {
+                $total = $group->sum(fn($grupo) => $grupo->precio);
+                return [
+                    'producto_id' => $group->first()->producto_id,
+                    'nombre' => $group->first()->producto->nombre,
+                    'total' => $total,
+                    'imagen' => $group->first()->producto->imagen,
+                    'fecha' => $group->first()->orderComercio->created_at
+                ];
+            })
+            ->sortByDesc(fn($item) => $item['total'])
+            ->take(4)
+            ->values()->all();
+
+        return $topProducts;
+    }
+
+    private function getTopClients($orders)
+    {
+        $topClients = $orders->groupBy('order.cliente_id')
+            ->map(function ($group) {
+                $nombreCliente = $group->first()->order->cliente->name . ' ' . substr($group->first()->order->cliente->apellidos, 0, 1) . '.';
+                return [
+                    'cliente_id' => $group->first()->order->cliente_id,
+                    'nombre' => $nombreCliente,
+                    'subtotal' => $group->sum('subtotal'),
+                ];
+            })
+            ->sortByDesc(fn($item) => $item['subtotal'])
+            ->take(4)
+            ->values()->all();
+
+        return $topClients;
+    }
+
     public function getTopProductsClients()
     {
         try {
@@ -123,42 +167,18 @@ class StatsController extends Controller
                 ->whereMonth('created_at', Carbon::now()->month)
                 ->get();
 
-            $products = ProductoOrder::with('producto:id,nombre,imagen')->get();
-
-            $topProducts = $products->groupBy('producto.id')
-                ->map(function ($group) {
-                    $total = $group->sum(fn($grupo) => $grupo->precio);
-                    return [
-                        'producto_id' => $group->first()->producto_id,
-                        'nombre' => $group->first()->producto->nombre,
-                        'total' => $total,
-                        'imagen' => $group->first()->producto->imagen,
-                    ];
-                })
-                ->sortByDesc(fn($item) => $item['total'])
-                ->take(4)
-                ->values()->all();
-
-            $topClients = $orders->groupBy('order.cliente_id')
-                ->map(function ($group) {
-                    $nombreCliente = $group->first()->order->cliente->name . ' ' . substr($group->first()->order->cliente->apellidos, 0, 1) . '.';
-                    return [
-                        'cliente_id' => $group->first()->order->cliente_id,
-                        'nombre' => $nombreCliente,
-                        'subtotal' => $group->sum('subtotal'),
-                    ];
-                })
-                ->sortByDesc(fn($item) => $item['subtotal'])
-                ->take(4)
-                ->values()->all();
-
-            $uniqueClients = $orders->pluck('order.cliente_id')->unique()->count();
-
             if (!$orders) {
                 return response()->json(['message' => 'No tiene ninguna orden'], 404);
             }
 
-            return response()->json(['topProducts' => $topProducts, 'topClients' => $topClients, 'UniqueClients' => $uniqueClients], 200);
+            $topClients = $this->getTopClients($orders);
+
+            $topProducts = $this->getTopProducts();
+
+            $uniqueClients = $orders->pluck('order.cliente_id')->unique()->count();
+
+
+            return response()->json(['topProducts' => $topProducts, 'topClients' => $topClients, 'uniqueClients' => $uniqueClients], 200);
         } catch (\Exception $e) {
             return response()->json(['error' => 'Ocurrió un error al obtener los detalles de la compra: ' . $e->getMessage()], 500);
         }
