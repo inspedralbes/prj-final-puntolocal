@@ -9,7 +9,7 @@
         <div class="bg-white p-6 rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300">
             <div class="mb-4">
                 <p class="text-xl font-semibold text-gray-800">
-                    <strong>Data de Compra:</strong> {{ compras.created_at }}
+                    <strong>Data de Compra:</strong> {{ formatDate(compras.created_at) }}
                 </p>
                 <div class="flex items-center">
                     <div :style="{ backgroundColor: compras.estat_compra?.color }" class="w-4 h-4 rounded-full mr-2">
@@ -23,7 +23,7 @@
             <div v-for="order in compras.order_comercios" :key="order.id" class="border-t pt-4 mt-4">
                 <div class="flex justify-between items-center mb-4">
                     <h2 class="text-xl font-bold text-gray-800">{{ order.comercio.nombre }}</h2>
-                    
+
                     <button v-if="order.can_rate" @click="navigateToRating('comercio', order.comercio.id)"
                         class="px-2 py-1 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors">
                         Valorar
@@ -34,7 +34,8 @@
                     <p class="text-gray-700">
                     <div class="flex justify-between items-start">
                         <strong class="text-lg font-bold">{{ producto.producto.nombre }} </strong> <br>
-                        <button v-if="producto.producto.can_rate" @click="navigateToRating('producto', producto.producto.id)"
+                        <button v-if="producto.producto.can_rate"
+                            @click="navigateToRating('producto', producto.producto.id)"
                             class="px-2 py-1 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors">
                             Valorar
                         </button>
@@ -111,10 +112,17 @@ const navigateToRating = (type, id) => {
         query: {
             type,
             id,
-            order_id: route.params.id 
+            order_id: route.params.id
         }
     });
 };
+
+function formatDate(dateStr) {
+    if (!dateStr) return '';
+    const date = new Date(dateStr);
+    const options = { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' };
+    return date.toLocaleString('es-ES', options);
+}
 
 onMounted(fetchCompraDetalles);
 </script>

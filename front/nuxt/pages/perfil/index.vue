@@ -19,12 +19,8 @@
 
             <div class="py-6 px-4 w-full max-w-md text-center">
                 <div class="space-y-4">
-                    <button class="w-full bg-[#447EF2] text-white py-2 rounded-md" @click="goToInfo">
-                        Información personal
-                    </button>
-
                     <button class="w-full bg-[#447EF2] text-white py-2 rounded-md" @click="goToEdit">
-                        Editar informació
+                        Informació personal
                     </button>
 
                     <button class="w-full bg-[#447EF2] text-white py-2 rounded-md"
@@ -35,6 +31,11 @@
                     <button class="w-full bg-[#447EF2] text-white py-2 rounded-md"
                         @click="goToComercio">
                         {{ hasComercio ? 'Panel de Control del Comercio' : 'Crear Comercio' }}
+                    </button>
+
+                    <button class="w-full bg-[#447EF2] text-white py-2 rounded-md"
+                        @click="">
+                        Sobre nosaltres
                     </button>
 
                     <button class="w-full border border-red-500 text-red-500 py-2 rounded-md hover:bg-gray-50" @click="goToLogout">
@@ -70,7 +71,6 @@ onMounted(async () => {
     loading.value = false;
 });
 
-function goToInfo() { navigateTo('/perfil/info'); }
 function goToEdit() { navigateTo('/perfil/perfilCliente'); }
 function goToCompras() { navigateTo('/perfil/compras'); }
 async function checkComercio() {

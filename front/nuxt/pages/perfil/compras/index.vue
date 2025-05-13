@@ -12,7 +12,7 @@
 
                 <div class="flex items-center justify-between mb-4">
                     <p class="text-xl font-semibold text-gray-800">
-                        <strong>Data:</strong> {{ compra.created_at }}
+                        <strong>Data:</strong> {{ formatDate(compra.created_at) }}
                     </p>
                 </div>
 
@@ -85,6 +85,13 @@
 
     function verDetalles(compraId) {
         router.push(`/perfil/compras/${compraId}`);
+    }
+
+    function formatDate(dateStr) {
+        if (!dateStr) return '';
+        const date = new Date(dateStr);
+        const options = { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' };
+        return date.toLocaleString('es-ES', options);
     }
 
     onMounted(fetchCompras);
