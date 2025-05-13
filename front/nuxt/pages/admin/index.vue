@@ -48,11 +48,7 @@
 
         <!-- Estadístiques mes actual -->
         <section class="col-span-2">
-            <div v-if="loading" class="text-center py-8">
-                <Loading size="xl" color="#4F46E5" />
-            </div>
-
-            <div v-else class="bg-white p-4 rounded-xl border border-gray-200 h-[450px]">
+            <div class="bg-white p-4 rounded-xl border border-gray-200 h-[450px]">
                 <header class="flex flex-col md:flex-row justify-between items-start mb-6">
                     <h2 class="text-xl font-bold text-gray-800 mb-4 md:mb-0">
                         Estadístiques mes actual
@@ -105,11 +101,7 @@
 
         <!-- Clients -->
         <section class="col-span-3">
-            <div v-if="loading" class="text-center py-8">
-                <Loading size="xl" color="#4F46E5" />
-            </div>
-
-            <div v-else class="bg-white p-6 rounded-xl border border-gray-200 h-[180px] flex flex-col justify-center">
+            <div class="bg-white p-6 rounded-xl border border-gray-200 h-[180px] flex flex-col justify-center">
                 <header class="flex flex-col md:flex-row justify-between items-start mb-2">
                     <h3 class="text-xl font-bold text-gray-800 mb-2 md:mb-0">
                         Clients
@@ -171,7 +163,7 @@
                                 <header class="flex justify-between">
                                     <div class="flex gap-2 items-center">
                                         <p>{{ review.name }}</p>
-                                        <PuntuacionComp :rating="review.stars" :customClass="'relative w-4 h-4'"/>
+                                        <PuntuacionComp :rating="review.stars" :customClass="'relative w-4 h-4'" />
                                     </div>
                                     <p class="text-gray-600 font-light text-sm">{{ formatData(review.created_at) }}</p>
                                 </header>
@@ -204,7 +196,7 @@
                                 <header class="flex justify-between">
                                     <div class="flex gap-2 items-center">
                                         <p class="text-md">{{ review.name }}</p>
-                                        <PuntuacionComp :rating="review.stars" :customClass="'relative w-4 h-4'"/>
+                                        <PuntuacionComp :rating="review.stars" :customClass="'relative w-4 h-4'" />
                                     </div>
                                     <p class="text-gray-600 font-light text-sm">{{ formatData(review.created_at) }}</p>
                                 </header>
@@ -410,7 +402,7 @@ async function getReviews() {
         const productos = await $communicationManager.getReviewsProducto();
         reviewsComercio.value = comercios.reviews;
         reviewsProducto.value = productos.reviews;
-        console.log({"comercios": reviewsComercio.value, "productos": reviewsProducto.value});
+        console.log({ "comercios": reviewsComercio.value, "productos": reviewsProducto.value });
     } catch (error) {
         console.error(error);
     }
