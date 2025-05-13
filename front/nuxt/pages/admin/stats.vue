@@ -123,6 +123,7 @@
                                 {{ rating }}
                             </span>
                             <PuntuacionComp :rating="rating" />
+                            <span class="text-sm text-gray-600 font-light">(420)</span>
                         </div>
                         <div class="flex-grow">
                             <div class="flex items-center mb-2">

@@ -6,6 +6,7 @@ use App\Models\Comercio;
 use App\Models\Order;
 use App\Models\OrderComercio;
 use App\Models\ProductoOrder;
+use App\Models\Rating;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Carbon\Carbon;
@@ -199,6 +200,36 @@ class StatsController extends Controller
 
             return response()->json(['rating' => $comercio->puntaje_medio], 200);
 
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Ocurrió un error al obtener los detalles de la compra: ' . $e->getMessage()], 500);
+        }
+    }
+
+    public function getRatingData()
+    {
+        try {
+            $user = Auth::user();
+
+            if (!$user)
+                return response()->json(['error' => 'Usuario no encontrado'], 404);
+
+            $comercio = Comercio::where('idUser', $user->id)->first();
+
+            if (!$comercio)
+                return response()->json(['error' => 'Comercio no encontrado'], 404);
+
+            $ratings = Rating::where('rateable_type', 'App\Models\Comercio')
+                ->where('rateable_id', $comercio->id)
+                ->get();
+
+            $ratings = $ratings->groupBy('rating')->map(function($ratingGroup){
+                return [
+                    'count' => $ratingGroup->count(),
+                    'puntuacion' => $ratingGroup->first()->rating
+                ];
+            })->values()->all();
+
+            return response()->json(['rating' => $ratings], 200);
         } catch (\Exception $e) {
             return response()->json(['error' => 'Ocurrió un error al obtener los detalles de la compra: ' . $e->getMessage()], 500);
         }
