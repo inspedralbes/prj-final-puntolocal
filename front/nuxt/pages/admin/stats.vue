@@ -27,7 +27,7 @@
                         <div v-if="!hasEnoughData" class="text-center p-4">
                             <i class="bi bi-bar-chart-line text-4xl text-gray-400 mb-2"></i>
                             <p class="text-gray-500">No hi ha suficients dades per mostrar el gràfic</p>
-                            <p class="text-sm text-gray-400">Es necessiten múltiples punts de dades per generar una
+                            <p class="text-sm text-gray-500">Es necessiten múltiples punts de dades per generar una
                                 representació gràfica</p>
                         </div>
                         <canvas v-else ref="chartCanvas" :key="`chart-${selectedPeriod}`"
@@ -162,12 +162,12 @@
                 </div>
                 <div>
                     <div class="flex justify-center">
-                        <div v-if="reviews.length == 0" class="text-center p-4">
+                        <div v-if="reviewsComercio.length == 0" class="text-center p-4">
                             <i class="bi bi-bar-chart-line text-4xl text-gray-400 mb-2"></i>
                             <p class="text-gray-500">No existeix cap ressenya</p>
                         </div>
                         <div v-else class="w-full divide-y">
-                            <div v-for="review in reviews.slice(0, 5)" class="py-5">
+                            <div v-for="review in reviewsComercio.slice(0, 5)" class="py-5">
                                 <header class="flex justify-between">
                                     <div class="flex gap-2 items-center">
                                         <p>{{ review.name }}</p>
@@ -195,20 +195,21 @@
                 </div>
                 <div>
                     <div class="flex justify-center">
-                        <div v-if="reviews.length == 0" class="text-center p-4">
+                        <div v-if="reviewsProducto.length == 0" class="text-center p-4">
                             <i class="bi bi-bar-chart-line text-4xl text-gray-400 mb-2"></i>
                             <p class="text-gray-500">No existeix cap ressenya</p>
                         </div>
                         <div v-else class="w-full divide-y">
-                            <div v-for="review in reviews.slice(0, 5)" class="py-5">
+                            <div v-for="review in reviewsProducto.slice(0, 5)" class="py-5">
                                 <header class="flex justify-between">
                                     <div class="flex gap-2 items-center">
-                                        <p>{{ review.name }}</p>
+                                        <p class="text-md">{{ review.name }}</p>
                                         <PuntuacionComp :rating="review.stars" :customClass="'relative w-4 h-4'"/>
                                     </div>
                                     <p class="text-gray-600 font-light text-sm">{{ formatData(review.created_at) }}</p>
                                 </header>
                                 <section>
+                                    <p class="text-lg text-gray-800">{{ review.producto.nombre }}</p>
                                     <p class="text-gray-800 font-light">{{ review.comment }}</p>
                                 </section>
                             </div>
@@ -252,7 +253,8 @@ const uniqueClients = ref(0);
 const topCurrentSelected = ref(1);
 const rating = ref(0);
 const ratingBars = ref([]);
-const reviews = ref([]);
+const reviewsComercio = ref([]);
+const reviewsProducto = ref([]);
 const loading = ref(false);
 
 function currentSelected(value) {
@@ -403,9 +405,11 @@ function calcularPorcentaje(star) {
 
 async function getReviews() {
     try {
-        const data = await $communicationManager.getReviewsComercio();
-        console.log(data);
-        reviews.value = data.reviews;
+        const comercios = await $communicationManager.getReviewsComercio();
+        const productos = await $communicationManager.getReviewsProducto();
+        reviewsComercio.value = comercios.reviews;
+        reviewsProducto.value = productos.reviews;
+        console.log({"comercios": reviewsComercio.value, "productos": reviewsProducto.value});
     } catch (error) {
         console.error(error);
     }
