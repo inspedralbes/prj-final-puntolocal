@@ -34,7 +34,7 @@
                     </button>
 
                     <button class="w-full bg-[#447EF2] text-white py-2 rounded-md"
-                        @click="">
+                        @click="navigateTo('/perfil/aboutUs')">
                         Sobre nosaltres
                     </button>
 

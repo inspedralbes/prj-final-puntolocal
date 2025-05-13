@@ -70,6 +70,9 @@
 </template>
 
 <script setup>
+definePageMeta({
+    layout: 'footer-only',
+});
 </script>
 
 <style scoped>
