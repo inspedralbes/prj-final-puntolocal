@@ -25,5 +25,8 @@
             $this->call(OrdersTableSeeder::class);
             $this->call(OrderComerciosTableSeeder::class);
             $this->call(ProductosCompraTableSeeder::class);
+
+            // RATINGS
+            $this->call(RatingsTableSeeder::class);
         }
     }

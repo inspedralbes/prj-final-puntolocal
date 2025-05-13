@@ -222,14 +222,15 @@ class StatsController extends Controller
                 ->where('rateable_id', $comercio->id)
                 ->get();
 
+            $totalRatings = $ratings->count();
+
             $ratings = $ratings->groupBy('rating')->map(function($ratingGroup){
                 return [
                     'count' => $ratingGroup->count(),
-                    'puntuacion' => $ratingGroup->first()->rating
                 ];
-            })->values()->all();
+            })->toArray();
 
-            return response()->json(['rating' => $ratings], 200);
+            return response()->json(['rating' => $ratings, 'totalRatings' => $totalRatings], 200);
         } catch (\Exception $e) {
             return response()->json(['error' => 'Ocurrió un error al obtener los detalles de la compra: ' . $e->getMessage()], 500);
         }

@@ -31,8 +31,7 @@
                 </div>
 
                 <div v-for="producto in order.productos_compra" :key="producto.id" class="mb-4">
-                    <p class="text-gray-700">
-                    <div class="flex justify-between items-start">
+                    <div class="flex justify-between items-start text-gray-700">
                         <strong class="text-lg font-bold">{{ producto.producto.nombre }} </strong> <br>
                         <button v-if="producto.producto.can_rate" @click="navigateToRating('producto', producto.producto.id)"
                             class="px-2 py-1 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors">
@@ -41,7 +40,6 @@
                     </div>
                     <strong>Quantitat:</strong> {{ producto.cantidad }} <br>
                     <strong>Preu per unitat:</strong> {{ producto.precio }} € <br>
-                    </p>
                     <div class="flex items-center">
                         <div :style="{ backgroundColor: order.estat_compra?.color }" class="w-4 h-4 rounded-full mr-2">
                         </div>

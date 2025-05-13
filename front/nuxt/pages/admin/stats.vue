@@ -1,11 +1,12 @@
 <template>
-    <div class="bg-gray-50 p-6 md:mt-16 grid grid-cols-6 gap-5">
-        <section class="col-span-4">
+    <div class="bg-gray-50 p-6 md:mt-16 md:grid md:grid-cols-6 flex flex-col gap-5 mt-12 md:mt-0">
+        <!-- Vendes -->
+        <section class="md:col-span-4">
             <div v-if="loading" class="text-center py-8">
                 <Loading size="xl" color="#4F46E5" />
             </div>
 
-            <div v-else class="bg-white p-4 rounded-xl border border-gray-200 h-[450px]">
+            <div v-else class="bg-white p-4 rounded-xl border border-gray-200 md:h-[450px]">
                 <div class="flex flex-col md:flex-row justify-between items-start mb-6">
                     <h2 class="text-xl font-bold text-gray-800 mb-4 md:mb-0">
                         Vendes
@@ -44,6 +45,8 @@
                 </div>
             </div>
         </section>
+
+        <!-- Estadístiques mes actual -->
         <section class="col-span-2">
             <div v-if="loading" class="text-center py-8">
                 <Loading size="xl" color="#4F46E5" />
@@ -68,10 +71,12 @@
                 </div>
 
                 <div v-if="topCurrentSelected === 1" class="w-full divide-y">
-                    <div class="flex flex-col justify-center py-3" v-for="producto in topProducts" :key="producto.producto_id">
+                    <div class="flex flex-col justify-center py-3" v-for="producto in topProducts"
+                        :key="producto.producto_id">
                         <div class="flex justify-between">
                             <section class="flex gap-3">
-                                <img :src="producto.image || '#'" alt="" width="50px" height="50px" class="rounded-md border">
+                                <img :src="producto.image || '#'" alt="" width="50px" height="50px"
+                                    class="rounded-md border">
                                 <div>
                                     <p>{{ producto.nombre }}</p>
                                 </div>
@@ -82,7 +87,8 @@
                 </div>
                 <div v-else>
                     <div v-if="topClients" class="w-full divide-y">
-                        <div class="flex flex-col justify-center py-3" v-for="client in topClients" :key="client.client_id">
+                        <div class="flex flex-col justify-center py-3" v-for="client in topClients"
+                            :key="client.client_id">
                             <div class="flex justify-between">
                                 <section class="flex gap-3">
                                     <div>
@@ -96,6 +102,8 @@
                 </div>
             </div>
         </section>
+
+        <!-- Clients -->
         <section class="col-span-3">
             <div v-if="loading" class="text-center py-8">
                 <Loading size="xl" color="#4F46E5" />
@@ -108,11 +116,13 @@
                     </h3>
                 </header>
                 <section>
-                    <p class="text-gray-700 text-xl"> {{uniqueClients}} clients
+                    <p class="text-gray-700 text-xl"> {{ uniqueClients }} clients
                         totals aquest últim mes</p>
                 </section>
             </div>
         </section>
+
+        <!-- Valoracions -->
         <section class="col-span-3">
             <div class="bg-white border border-gray-200 rounded-lg p-6 h-[180px]">
                 <div class="w-full">
@@ -123,32 +133,14 @@
                                 {{ rating }}
                             </span>
                             <PuntuacionComp :rating="rating" />
-                            <span class="text-sm text-gray-600 font-light">(420)</span>
+                            <span class="text-sm text-gray-600 font-light">({{ ratingBars?.totalRatings ?
+                                ratingBars?.totalRatings : 0 }})</span>
                         </div>
                         <div class="flex-grow">
-                            <div class="flex items-center mb-2">
-                                <div class="mr-5 text-sm font-medium dark:text-white">5</div>
-                                <div class="w-full bg-gray-200 rounded-full h-2.5 dark:bg-gray-700">
-                                </div>
-                            </div>
-                            <div class="flex items-center mb-2">
-                                <div class="mr-5 text-sm font-medium dark:text-white">4</div>
-                                <div class="w-full bg-gray-200 rounded-full h-2.5 dark:bg-gray-700">
-                                </div>
-                            </div>
-                            <div class="flex items-center mb-2">
-                                <div class="mr-5 text-sm font-medium dark:text-white">3</div>
-                                <div class="w-full bg-gray-200 rounded-full h-2.5 dark:bg-gray-700">
-                                </div>
-                            </div>
-                            <div class="flex items-center mb-2">
-                                <div class="mr-5 text-sm font-medium dark:text-white">2</div>
-                                <div class="w-full bg-gray-200 rounded-full h-2.5 dark:bg-gray-700">
-                                </div>
-                            </div>
-                            <div class="flex items-center mb-2">
-                                <div class="mr-5 text-sm font-medium dark:text-white">1</div>
-                                <div class="w-full bg-gray-200 rounded-full h-2.5 dark:bg-gray-700">
+                            <div v-for="star in [5, 4, 3, 2, 1]" class="flex items-center mb-2" :key="star">
+                                <p class="mr-5 text-sm font-medium dark:text-white">{{ star }}</p>
+                                <div class="w-full bg-gray-200 rounded-full h-2.5 dark:bg-gray-700 relative overflow-hidden">
+                                    <div class="absolute bg-yellow-400 left-0 z-50 h-2.5" :style="{ width: calcularPorcentaje(star) + '%' }"></div>
                                 </div>
                             </div>
                         </div>
@@ -190,6 +182,7 @@ const topProducts = ref(null);
 const uniqueClients = ref(0);
 const topCurrentSelected = ref(1);
 const rating = ref(0)
+const ratingBars = ref([])
 const loading = ref(false);
 
 function currentSelected(value) {
@@ -311,11 +304,23 @@ async function topStats() {
 
 async function ratingStats() {
     try {
-        const data = await $communicationManager.getRating();
-
-        rating.value = data.rating;
+        const totalRating = await $communicationManager.getRating();
+        const barsRatingFetch = await $communicationManager.getRatingData();
+        console.log(barsRatingFetch);
+        ratingBars.value = barsRatingFetch;
+        rating.value = totalRating.rating;
     } catch (error) {
         console.error(error);
+    }
+}
+
+function calcularPorcentaje(star){
+    if(ratingBars.value?.rating){
+        const count = ratingBars.value.rating[star]?.count || 0;
+        const total = ratingBars.value.totalRatings || 0;
+        
+        const porcentaje = total > 0? ((count / total) * 100).toFixed(2) : 0;
+        return porcentaje;
     }
 }
 
@@ -326,6 +331,7 @@ onMounted(async () => {
     }
     topStats();
     ratingStats();
+    calcularPorcentaje(2)
 });
 onBeforeUnmount
 </script>

@@ -711,9 +711,9 @@ export default defineNuxtPlugin((nuxtApp) => {
       }
     },
 
-    async getRating() {
+    async getRatingData() {
       try {
-        const response = await fetch(`${Host}/stats/get-comercio-rating`, {
+        const response = await fetch(`${Host}/stats/get-ratings`, {
           method: 'GET',
           headers: {
             'Accept': 'application/json',
