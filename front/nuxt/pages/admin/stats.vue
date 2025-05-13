@@ -139,14 +139,36 @@
                         <div class="flex-grow">
                             <div v-for="star in [5, 4, 3, 2, 1]" class="flex items-center mb-2" :key="star">
                                 <p class="mr-5 text-sm font-medium dark:text-white">{{ star }}</p>
-                                <div class="w-full bg-gray-200 rounded-full h-2.5 dark:bg-gray-700 relative overflow-hidden">
-                                    <div class="absolute bg-yellow-400 left-0 z-50 h-2.5" :style="{ width: calcularPorcentaje(star) + '%' }"></div>
+                                <div
+                                    class="w-full bg-gray-200 rounded-full h-2.5 dark:bg-gray-700 relative overflow-hidden">
+                                    <div class="absolute bg-yellow-400 left-0 z-50 h-2.5"
+                                        :style="{ width: calcularPorcentaje(star) + '%' }"></div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
                 <div id="traffic-channels-chart" class="w-full"></div>
+            </div>
+        </section>
+
+        <!-- Comentarios comercio -->
+        <section class="md:col-span-4">
+            <div class="bg-white p-4 rounded-xl border border-gray-200">
+                <div class="flex flex-col md:flex-row justify-between items-start mb-6">
+                    <h2 class="text-xl font-bold text-gray-800 mb-4 md:mb-0">
+                        Ressenyes de comerç
+                    </h2>
+                </div>
+                <div>
+                    <div class="flex items-center justify-center h-64">
+                        <div v-if="!hasEnoughData" class="text-center p-4">
+                            <i class="bi bi-bar-chart-line text-4xl text-gray-400 mb-2"></i>
+                            <p class="text-gray-500">No existeix cap ressenya</p>
+                        </div>
+
+                    </div>
+                </div>
             </div>
         </section>
     </div>
@@ -314,12 +336,12 @@ async function ratingStats() {
     }
 }
 
-function calcularPorcentaje(star){
-    if(ratingBars.value?.rating){
+function calcularPorcentaje(star) {
+    if (ratingBars.value?.rating) {
         const count = ratingBars.value.rating[star]?.count || 0;
         const total = ratingBars.value.totalRatings || 0;
-        
-        const porcentaje = total > 0? ((count / total) * 100).toFixed(2) : 0;
+
+        const porcentaje = total > 0 ? ((count / total) * 100).toFixed(2) : 0;
         return porcentaje;
     }
 }
