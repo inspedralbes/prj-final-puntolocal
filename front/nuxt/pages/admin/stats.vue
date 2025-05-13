@@ -153,20 +153,66 @@
         </section>
 
         <!-- Comentarios comercio -->
-        <section class="md:col-span-4">
+        <section class="md:col-span-3">
             <div class="bg-white p-4 rounded-xl border border-gray-200">
-                <div class="flex flex-col md:flex-row justify-between items-start mb-6">
+                <div class="flex flex-col md:flex-row justify-between items-start">
                     <h2 class="text-xl font-bold text-gray-800 mb-4 md:mb-0">
                         Ressenyes de comerç
                     </h2>
                 </div>
                 <div>
-                    <div class="flex items-center justify-center h-64">
-                        <div v-if="!hasEnoughData" class="text-center p-4">
+                    <div class="flex justify-center">
+                        <div v-if="reviews.length == 0" class="text-center p-4">
                             <i class="bi bi-bar-chart-line text-4xl text-gray-400 mb-2"></i>
                             <p class="text-gray-500">No existeix cap ressenya</p>
                         </div>
+                        <div v-else class="w-full divide-y">
+                            <div v-for="review in reviews.slice(0, 5)" class="py-5">
+                                <header class="flex justify-between">
+                                    <div class="flex gap-2 items-center">
+                                        <p>{{ review.name }}</p>
+                                        <PuntuacionComp :rating="review.stars" :customClass="'relative w-4 h-4'"/>
+                                    </div>
+                                    <p class="text-gray-600 font-light text-sm">{{ formatData(review.created_at) }}</p>
+                                </header>
+                                <section>
+                                    <p class="text-gray-800 font-light">{{ review.comment }}</p>
+                                </section>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
 
+        <!-- Comentarios productos -->
+        <section class="md:col-span-3">
+            <div class="bg-white p-4 rounded-xl border border-gray-200">
+                <div class="flex flex-col md:flex-row justify-between items-start">
+                    <h2 class="text-xl font-bold text-gray-800 mb-4 md:mb-0">
+                        Ressenyes de productes
+                    </h2>
+                </div>
+                <div>
+                    <div class="flex justify-center">
+                        <div v-if="reviews.length == 0" class="text-center p-4">
+                            <i class="bi bi-bar-chart-line text-4xl text-gray-400 mb-2"></i>
+                            <p class="text-gray-500">No existeix cap ressenya</p>
+                        </div>
+                        <div v-else class="w-full divide-y">
+                            <div v-for="review in reviews.slice(0, 5)" class="py-5">
+                                <header class="flex justify-between">
+                                    <div class="flex gap-2 items-center">
+                                        <p>{{ review.name }}</p>
+                                        <PuntuacionComp :rating="review.stars" :customClass="'relative w-4 h-4'"/>
+                                    </div>
+                                    <p class="text-gray-600 font-light text-sm">{{ formatData(review.created_at) }}</p>
+                                </header>
+                                <section>
+                                    <p class="text-gray-800 font-light">{{ review.comment }}</p>
+                                </section>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -179,6 +225,7 @@ import { ref, watch, computed, nextTick } from 'vue';
 import { Chart } from 'chart.js/auto';
 import { useAuthStore } from '@/stores/authStore';
 import Loading from '@/components/loading.vue';
+import PuntuacionComp from '~/components/PuntuacionComp.vue';
 definePageMeta({
     layout: 'admin',
 });
@@ -203,12 +250,20 @@ const topClients = ref(null);
 const topProducts = ref(null);
 const uniqueClients = ref(0);
 const topCurrentSelected = ref(1);
-const rating = ref(0)
-const ratingBars = ref([])
+const rating = ref(0);
+const ratingBars = ref([]);
+const reviews = ref([]);
 const loading = ref(false);
 
 function currentSelected(value) {
     topCurrentSelected.value = value;
+}
+
+function formatData(dateStr) {
+    if (!dateStr) return '';
+    const date = new Date(dateStr);
+    const options = { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' };
+    return date.toLocaleString('es-ES', options);
 }
 
 const totalSales = computed(() => stats.value.data.reduce((a, b) => a + b, 0));
@@ -346,6 +401,16 @@ function calcularPorcentaje(star) {
     }
 }
 
+async function getReviews() {
+    try {
+        const data = await $communicationManager.getReviewsComercio();
+        console.log(data);
+        reviews.value = data.reviews;
+    } catch (error) {
+        console.error(error);
+    }
+}
+
 // Ciclo de vida mejorado
 onMounted(async () => {
     if (!authStore.isAuthenticated || !authStore.comercio) {
@@ -353,7 +418,7 @@ onMounted(async () => {
     }
     topStats();
     ratingStats();
-    calcularPorcentaje(2)
+    getReviews();
 });
 onBeforeUnmount
 </script>

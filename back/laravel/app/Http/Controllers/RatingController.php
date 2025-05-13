@@ -69,7 +69,7 @@ class RatingController extends Controller
             ->avg('rating');
 
         Comercio::where('id', $comercioId)->update([
-            'puntaje_medio' => round($promedio, 2) 
+            'puntaje_medio' => round($promedio, 2)
         ]);
     }
 
@@ -126,5 +126,76 @@ class RatingController extends Controller
         }
 
         return $avg;
+    }
+
+    public function getComercioReviews()
+    {
+        try {
+            $user = Auth::user();
+            if (!$user)
+                return response()->json(['error' => 'Usuario no autenticado'], 404);
+
+            $comercio = Comercio::where('idUser', $user->id)->first();
+            if (!$comercio)
+                return response()->json(['error' => 'Comerç no trobat'], 404);
+
+            $reviews = Rating::with('cliente:id,name,apellidos')
+                ->where('rateable_type', 'App\Models\Comercio')
+                ->where('rateable_id', $comercio->id)
+                ->where('comment', '!=', null)
+                ->get();
+
+            $reviews = $reviews->map(function ($group) {
+                return [
+                    'name' => $group->cliente->name . ' ' . substr($group->cliente->apellidos, 0, 1) . '.',
+                    'stars' => $group->rating,
+                    'comment' => $group->comment,
+                    'created_at' => $group->created_at
+                ];
+            });
+
+            return response()->json(['reviews' => $reviews], 200);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
+    }
+
+    public function getProductoReviews()
+    {
+        try {
+            $user = Auth::user();
+            if (!$user)
+                return response()->json(['error' => 'Usuario no autenticado'], 404);
+
+            $comercio = Comercio::where('idUser', $user->id)->first();
+            if (!$comercio)
+                return response()->json(['error' => 'Comerç no trobat'], 404);
+
+            $reviews = Rating::with([
+                'cliente:id,name,apellidos',
+                'rateable' => function ($query) {
+                    $query->select('id', 'nombre', 'comercio_id');
+                }
+            ])
+                ->where('rateable_type', 'App\Models\Producto')
+                ->whereHasMorph('rateable', [Producto::class], function ($query) use ($comercio) {
+                    $query->where('comercio_id', $comercio->id);
+                })->whereNotNull('comment')
+                ->get();
+
+            $reviews = $reviews->map(function ($group) {
+                return [
+                    'name' => $group->cliente->name . ' ' . substr($group->cliente->apellidos, 0, 1) . '.',
+                    'stars' => $group->rating,
+                    'comment' => $group->comment,
+                    'producto' => $group->rateable,
+                    'created_at' => $group->created_at
+                ];
+            });
+
+            return response()->json(['reviews' => $reviews], 200);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
     }
 }

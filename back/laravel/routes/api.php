@@ -233,4 +233,6 @@ Route::middleware('auth:sanctum')->prefix('stats')->group(function () {
     Route::get('top-products-clients', [StatsController::class, 'getTopProductsClients']);
     Route::get('get-comercio-rating', [StatsController::class, 'getRating']);
     Route::get('get-ratings', [StatsController::class, 'getRatingData']);
+    Route::get('/reviewsComercio', [RatingController::class, 'getComercioReviews']);
+    Route::get('/reviewsProducto', [RatingController::class, 'getProductoReviews']);
 });
