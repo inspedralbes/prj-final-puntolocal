@@ -1319,6 +1319,8 @@ export default defineNuxtPlugin((nuxtApp) => {
       }
     },
 
+    
+
     ///////////////////////////// PUT //////////////////////////////////
 
     async updateDatosPersonales(json, id) {
@@ -1379,6 +1381,32 @@ export default defineNuxtPlugin((nuxtApp) => {
             'Accept': 'application/json',
             'Content-Type': 'application/json',
             'Authorization': this.authStore.token ? `Bearer ${this.authStore.token}` : ''
+          },
+          body: JSON.stringify(json)
+        });
+
+        if (!response.ok) {
+          console.error(`Error en la petición: ${response.status} ${response.statusText}`);
+          return null;
+        }
+
+        const jsonResponse = await response.json();
+        return jsonResponse;
+      } catch (error) {
+        console.error('Error al realizar la petición:', error);
+        return null;
+      }
+    },
+
+    async updateHorario(json, id) {
+      try {
+        console.log('JSON:', json); // Imprime el JSON para depuración
+        const response = await fetch(Host + '/admin/horari/' + id, {
+          method: 'PUT',
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${this.authStore.token}`
           },
           body: JSON.stringify(json)
         });

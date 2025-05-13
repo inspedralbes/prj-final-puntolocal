@@ -18,6 +18,7 @@ use App\Http\Controllers\Auth\VerificationController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\StatsController;
 use App\Http\Controllers\RatingController;
+use App\Http\Controllers\HorarioController;
 
 Route::get('/user', function (Request $request) {
     return $request->user();
@@ -119,6 +120,13 @@ Route::middleware('auth:sanctum')->prefix('admin/comandes')->group(function () {
     Route::post('/{id}', [OrderComercioController::class, 'update']);
 });
 
+Route::middleware('auth:sanctum')->prefix('admin/horari')->group(function () {
+    // Guardar horario de un comercio
+    Route::post('/', [HorarioController::class, 'store']);
+
+    // Actualizar horario de un comercio
+    Route::put('/{comercioId}', [HorarioController::class, 'update']);
+});
 
 // ==== ESTATS ===================
 Route::prefix('admin/estats')->group(function () {

@@ -515,26 +515,10 @@
                                     </NuxtLink>
                                 </li>
                                 <li>
-                                    <NuxtLink to="" disabled
-                                        class="flex justify-between items-center p-2 text-base text-gray-500 bg-gray-50 rounded-lg pl-11 group cursor-not-allowed dark:text-gray-200 dark:hover:bg-gray-700">
-                                        Horarios
-                                        <svg fill="#c1c1c1" width="1em" height="1em" version="1.1" id="Layer_1"
-                                            xmlns="http://www.w3.org/2000/svg"
-                                            xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 491.52 491.52"
-                                            xml:space="preserve">
-                                            <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
-                                            <g id="SVGRepo_tracerCarrier" stroke-linecap="round"
-                                                stroke-linejoin="round"></g>
-                                            <g id="SVGRepo_iconCarrier">
-                                                <g>
-                                                    <g>
-                                                        <path
-                                                            d="M399.4,203.578h-19.801h-0.005v-69.744C379.593,60.039,319.556,0,245.759,0c-73.793,0-133.832,60.039-133.832,133.835 v69.744H92.122c-15.656,0-28.35,12.692-28.35,28.349v17.246v196.751v17.245c0,15.658,12.693,28.35,28.35,28.35H245.76H399.4 c15.656,0,28.348-12.692,28.348-28.35v-17.245V249.174v-17.246C427.748,216.27,415.056,203.578,399.4,203.578z M275.935,406.648 h-60.349l10.801-51.467c-10.101-6.428-16.848-17.652-16.848-30.512c0-20.003,16.218-36.219,36.221-36.219 c20.004,0,36.219,16.216,36.219,36.219c0,12.86-6.745,24.084-16.845,30.51L275.935,406.648z M331.84,203.578h-86.08h-86.075 h-0.005v-69.744c0-47.469,38.613-86.081,86.08-86.081c47.469,0,86.08,38.613,86.08,86.081V203.578z">
-                                                        </path>
-                                                    </g>
-                                                </g>
-                                            </g>
-                                        </svg>
+                                    <NuxtLink to="/admin/horari"
+                                        class="text-base text-[#276BF2] rounded-lg flex items-center p-2 group hover:bg-gray-100 pl-11 dark:text-gray-200 dark:hover:bg-gray-700"
+                                        :class="{ 'text-gray-900': route.path !== ('/admin/horari') }">
+                                        Horari
                                     </NuxtLink>
                                 </li>
                                 <li>
