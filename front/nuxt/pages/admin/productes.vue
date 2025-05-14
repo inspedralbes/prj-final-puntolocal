@@ -10,10 +10,33 @@
                     <div class="flex items-center mb-4 sm:mb-0">
                         <form class="sm:pr-3" action="#" method="GET">
                             <label for="products-search" class="sr-only">Search</label>
-                            <div class="relative w-48 mt-1 sm:w-64 xl:w-96">
-                                <input type="text" name="email" id="products-search"
-                                    class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5      "
-                                    placeholder="Buscar productes...">
+                            <div class="flex items-center relative w-48 mt-1 sm:w-64 xl:w-96">
+                                <div
+                                    class="relative w-full flex items-center shadow-sm rounded-lg overflow-hidden border border-gray-200 focus-within:ring-2 focus-within:ring-blue-400 focus-within:border-blue-400 transition duration-150">
+                                    <!-- Icono de búsqueda -->
+                                    <div class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none"
+                                            viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                                        </svg>
+                                    </div>
+                                    <!-- Input -->
+                                    <input v-model="searchTerm" @keyup.enter="" type="text" name="email"
+                                        id="products-search"
+                                        class="w-full py-3 pl-10 pr-10 text-gray-700 bg-white focus:outline-none placeholder-gray-400"
+                                        placeholder="Buscar comandes...">
+                                    <!-- Botón de limpiar -->
+                                    <button v-if="searchTerm" @click="clearSearch"
+                                        class="absolute right-0 h-full px-3 flex items-center justify-center text-red-500 hover:text-red-700 focus:outline-none transition duration-150">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" viewBox="0 0 20 20"
+                                            fill="currentColor">
+                                            <path fill-rule="evenodd"
+                                                d="M10 18a8 8 0 100-16 8 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+                                                clip-rule="evenodd" />
+                                        </svg>
+                                    </button>
+                                </div>
                             </div>
                         </form>
                         <div class="flex items-center w-full sm:justify-end">
@@ -23,35 +46,8 @@
                                     <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20"
                                         xmlns="http://www.w3.org/2000/svg">
                                         <path fill-rule="evenodd"
-                                            d="M11.49 3.17c-.38-1.56-2.6-1.56-2.98 0a1.532 1.532 0 01-2.286.948c-1.372-.836-2.942.734-2.106 2.106.54.886.061 2.042-.947 2.287-1.561.379-1.561 2.6 0 2.978a1.532 1.532 0 01.947 2.287c-.836 1.372.734 2.942 2.106 2.106a1.532 1.532 0 012.287.947c.379 1.561 2.6 1.561 2.978 0a1.533 1.533 0 012.287-.947c1.372.836 2.942-.734 2.106-2.106a1.533 1.533 0 01.947-2.287c1.561-.379 1.561-2.6 0-2.978a1.532 1.532 0 01-.947-2.287c.836-1.372-.734-2.942-2.106-2.106a1.532 1.532 0 01-2.287-.947zM10 13a3 3 0 100-6 3 3 0 000 6z"
-                                            clip-rule="evenodd"></path>
-                                    </svg>
-                                </a>
-                                <a href="#"
-                                    class="inline-flex justify-center p-1 text-gray-500 rounded cursor-pointer hover:text-gray-900 hover:bg-gray-100   ">
-                                    <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20"
-                                        xmlns="http://www.w3.org/2000/svg">
-                                        <path fill-rule="evenodd"
                                             d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z"
                                             clip-rule="evenodd"></path>
-                                    </svg>
-                                </a>
-                                <a href="#"
-                                    class="inline-flex justify-center p-1 text-gray-500 rounded cursor-pointer hover:text-gray-900 hover:bg-gray-100   ">
-                                    <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20"
-                                        xmlns="http://www.w3.org/2000/svg">
-                                        <path fill-rule="evenodd"
-                                            d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
-                                            clip-rule="evenodd"></path>
-                                    </svg>
-                                </a>
-                                <a href="#"
-                                    class="inline-flex justify-center p-1 text-gray-500 rounded cursor-pointer hover:text-gray-900 hover:bg-gray-100   ">
-                                    <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20"
-                                        xmlns="http://www.w3.org/2000/svg">
-                                        <path
-                                            d="M10 6a2 2 0 110-4 2 2 0 010 4zM10 12a2 2 0 110-4 2 2 0 010 4zM10 18a2 2 0 110-4 2 2 0 010 4z">
-                                        </path>
                                     </svg>
                                 </a>
                             </div>
@@ -136,7 +132,7 @@
                                 </tr>
                             </thead>
                             <tbody class="bg-white divide-y divide-gray-200  ">
-                                <tr v-for="producto in productos" class="hover:bg-gray-100 ">
+                                <tr v-for="producto in filteredProducts" class="hover:bg-gray-100 ">
                                     <td class="w-4 p-4">
                                         <div class="flex items-center">
                                             <input id="checkbox-633293" aria-describedby="checkbox-1" type="checkbox"
@@ -467,7 +463,7 @@ const { $communicationManager } = useNuxtApp();
 import Swal from 'sweetalert2';
 import { useAuthStore } from '../../stores/authStore';
 
-
+const searchTerm = ref('');
 const authStore = useAuthStore();
 const token = computed(() => authStore.token);
 const user = ref(authStore.user);
@@ -806,6 +802,23 @@ function parseCSVLine(line) {
     result.push(current.trim());
     return result;
 }
+
+const clearSearch = () => {
+    searchTerm.value = '';
+};
+
+function removeAccents(str) {
+    return str.normalize("NFD").replace(/[\u0300-\u036f]/g, '');
+}
+
+const filteredProducts = computed(() => {
+    if (!searchTerm.value) return productos;
+    const st = removeAccents(searchTerm.value.toLowerCase());
+    return productos.filter(product => {
+        const clienteName = removeAccents(product?.nombre?.toLowerCase() || '');
+        return clienteName.includes(st);
+    });
+});
 
 // ======================================================================
 

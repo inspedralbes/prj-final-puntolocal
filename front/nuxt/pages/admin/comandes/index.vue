@@ -12,7 +12,7 @@
                     <div class="flex items-center mb-4 sm:mb-0">
                         <form class="sm:pr-3" action="#" method="GET">
                             <label for="products-search" class="sr-only">Buscar</label>
-                            <div class="flex items-center mb-4 relative w-48 mt-1 sm:w-64 xl:w-96">
+                            <div class="flex items-center relative w-48 mt-1 sm:w-64 xl:w-96">
                                 <div
                                     class="relative w-full flex items-center shadow-sm rounded-lg overflow-hidden border border-gray-200 focus-within:ring-2 focus-within:ring-blue-400 focus-within:border-blue-400 transition duration-150">
                                     <!-- Icono de búsqueda -->
@@ -24,7 +24,7 @@
                                         </svg>
                                     </div>
                                     <!-- Input -->
-                                    <input v-model="searchTerm" @keyup.enter="" type="text" name="email" id="products-search"
+                                    <input v-model="searchTerm" @keyup.enter="" type="text" name="search" id="order-search"
                                         class="w-full py-3 pl-10 pr-10 text-gray-700 bg-white focus:outline-none placeholder-gray-400"
                                         placeholder="Buscar comandes...">
                                     <!-- Botón de limpiar -->
