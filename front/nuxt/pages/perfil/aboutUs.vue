@@ -2,7 +2,7 @@
     <section class="bg-gray-50 py-16 px-4">
         <div class="max-w-5xl mx-auto">
             <!-- Header -->
-            <div class="flex flex-col !mx-8">
+            <div class="flex flex-col !mx-4">
 
                 <div class="text-center mb-12">
                     <h1 class="text-4xl font-bold text-gray-800">Sobre Nosaltres</h1>
