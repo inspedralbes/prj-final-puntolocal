@@ -180,6 +180,8 @@ Route::prefix('producto')->group(function () {
     Route::post('crear_excel', [ProductoController::class, 'createExcel']);
 
     Route::get('/{id}/ratings', [RatingController::class, 'getProductoRatings']);
+
+    Route::get('/search/comercio/{comercioId}/{searchTerm}', [ProductoController::class, 'searchInComercio']);
 });
 
 Route::prefix('cercanos')->group(function () {

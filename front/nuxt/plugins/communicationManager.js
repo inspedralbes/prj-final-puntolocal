@@ -673,6 +673,25 @@ export default defineNuxtPlugin((nuxtApp) => {
       }
     },
 
+    async busquedaProductosDeComercio(comercioId, searchTerm) {
+      try {
+        const response = await fetch(`${Host}/producto/search/comercio/${comercioId}/${searchTerm}`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
+        if (!response.ok) {
+          console.error(`Error en la búsqueda de productos del comercio: ${response.status} ${response.statusText}`);
+          return null;
+        }
+        return await response.json();
+      } catch (error) {
+        console.error('Error en la búsqueda de productos del comercio:', error);
+        return null;
+      }
+    },
+
     ///////////////////////////// POST //////////////////////////////////
     async register(json) {
       try {
