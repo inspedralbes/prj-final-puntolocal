@@ -59,9 +59,6 @@ class ProductoController extends Controller
         return response()->json($productos);
     }
 
-
-
-
     public function createExcel(Request $request)
     {
         // Validate that the input is an array
@@ -95,10 +92,6 @@ class ProductoController extends Controller
             'productes' => $createdProducts,
         ], 201);
     }
-
-
-
-
 
     public function store(Request $request)
     {
@@ -402,5 +395,51 @@ class ProductoController extends Controller
         }
 
         return response()->json(['data' => $productosMapeados], 200);
+    }
+
+    public function searchInComercio(Request $request, $comercioId, $searchTerm)
+    {
+        if (empty($searchTerm)) {
+            return response()->json(['message' => 'El término de búsqueda no puede estar vacío'], 400);
+        }
+
+        // Buscar productos de un comercio por nombre
+        $productosPorNombre = Producto::with('subcategoria', 'comercio')
+            ->where('comercio_id', $comercioId)
+            ->where('nombre', 'like', '%' . $searchTerm . '%')
+            ->where('visible', 1)
+            ->get();
+
+        // IDs encontrados
+        $idsProductosPorNombre = $productosPorNombre->pluck('id')->toArray();
+
+        // Buscar productos de un comercio por descripción, excluyendo los encontrados por nombre
+        $productosPorDescripcion = Producto::with('subcategoria', 'comercio')
+            ->where('comercio_id', $comercioId)
+            ->where('descripcion', 'like', '%' . $searchTerm . '%')
+            ->where('visible', 1)
+            ->whereNotIn('id', $idsProductosPorNombre)
+            ->get();
+
+        // Combinar
+        $productos = $productosPorNombre->concat($productosPorDescripcion);
+
+        $productosMapeados = $productos->map(function ($producto) {
+            return [
+                'id' => $producto->id,
+                'nombre' => $producto->nombre,
+                'descripcion' => $producto->descripcion,
+                'subcategoria_id' => $producto->subcategoria_id,
+                'subcategoria' => optional($producto->subcategoria)->name,
+                'comercio_id' => $producto->comercio_id,
+                'comercio' => $producto->comercio->nombre,
+                'precio' => $producto->precio,
+                'stock' => $producto->stock,
+                'visible' => $producto->visible,
+                'imagen' => $producto->imagen,
+            ];
+        });
+
+        return response()->json($productosMapeados);
     }
 }
