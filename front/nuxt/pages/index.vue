@@ -24,7 +24,7 @@
                     class="bg-white w-full flex flex-col py-4 border rounded-xl mb-2 scrollbar-none">
                     <div class="flex justify-between mx-4 mb-3">
                         <h2 class="font-semibold text-lg">Categories</h2>
-                        <p class="text-gray-500 flex items-center">
+                        <p class="text-gray-500 flex items-center" @click="router.push(`/categorias`);">
                             Veure totes
                             <svg width="1.5em" height="1.5em" viewBox="0 0 24 24" fill="none"
                                 xmlns="http://www.w3.org/2000/svg">
@@ -55,20 +55,7 @@
 
                 <div id="contain-productos" class="py-4 bg-white border-t rounded-t-xl">
                     <div class="flex justify-between mx-4 mb-4">
-                        <h1 class="text-xl font-semibold text-gray-900">Últimes tendències</h1>
-                        <p class="text-gray-500 flex items-ceeminter">
-                            Veure totes
-                            <svg width="1.5em" height="1.5em" viewBox="0 0 24 24" fill="none"
-                                xmlns="http://www.w3.org/2000/svg">
-                                <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
-                                <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
-                                <g id="SVGRepo_iconCarrier">
-                                    <path
-                                        d="M9.71069 18.2929C10.1012 18.6834 10.7344 18.6834 11.1249 18.2929L16.0123 13.4006C16.7927 12.6195 16.7924 11.3537 16.0117 10.5729L11.1213 5.68254C10.7308 5.29202 10.0976 5.29202 9.70708 5.68254C9.31655 6.07307 9.31655 6.70623 9.70708 7.09676L13.8927 11.2824C14.2833 11.6729 14.2833 12.3061 13.8927 12.6966L9.71069 16.8787C9.32016 17.2692 9.32016 17.9023 9.71069 18.2929Z"
-                                        fill="#6B7280"></path>
-                                </g>
-                            </svg>
-                        </p>
+                        <p class="text-xl font-semibold text-gray-900">Últimes tendències</p>
                     </div>
                     <div class="flex space-x-1 pl-4 items-center overflow-x-auto scrollbar-none">
                         <productoComp v-for="(producto, index) in productos2" :key="index" :id="producto.id.toString()"
@@ -123,6 +110,7 @@ onMounted(async () => {
     getLocation();
     fetchProductos2();
     fetchCategorias();
+    fetchComerciosCercanos(41.387216, 2.106925);
     await checkLocationPermission();
 
     setInterval(() => {
