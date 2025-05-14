@@ -347,41 +347,73 @@ const agregarMarcador = (lon, lat, name) => {
     vectorSource.value.addFeature(marker);
 };
 
-const getLocation = () => {
-    if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(
-            (position) => {
-                const lat = position.coords.latitude;
-                const lon = position.coords.longitude;
-                location.value = `Lat: ${lat}, Lng: ${lon}`;
+// const getLocation = () => {
+//     if (navigator.geolocation) {
+//         navigator.geolocation.getCurrentPosition(
+//             (position) => {
+//                 const lat = position.coords.latitude;
+//                 const lon = position.coords.longitude;
+//                 location.value = `Lat: ${lat}, Lng: ${lon}`;
 
-                const lonLat = fromLonLat([lon, lat]);
+//                 const lonLat = fromLonLat([lon, lat]);
 
-                map.value.getView().animate({
-                    center: lonLat,
-                    zoom: 16,
-                    duration: 1000
-                });
+//                 map.value.getView().animate({
+//                     center: lonLat,
+//                     zoom: 16,
+//                     duration: 1000
+//                 });
 
-                vectorSource.value.getFeatures().forEach(feature => {
-                    if (feature.get('userLocation')) {
-                        vectorSource.value.removeFeature(feature);
-                    }
-                });
-            },
-            (error) => {
-                location.value = `Error: ${error.message}`;
-            },
-            {
-                enableHighAccuracy: true,
-                timeout: 10000,
-                maximumAge: 0
-            }
-        );
-    } else {
-        location.value = 'La geolocalización no es compatible con este navegador.';
+//                 vectorSource.value.getFeatures().forEach(feature => {
+//                     if (feature.get('userLocation')) {
+//                         vectorSource.value.removeFeature(feature);
+//                     }
+//                 });
+//             },
+//             (error) => {
+//                 location.value = `Error: ${error.message}`;
+//             },
+//             {
+//                 enableHighAccuracy: true,
+//                 timeout: 10000,
+//                 maximumAge: 0
+//             }
+//         );
+//     } else {
+//         location.value = 'La geolocalización no es compatible con este navegador.';
+//     }
+// };
+
+const getLocation = async () => {
+    try {
+      const pos = await Geolocation.getCurrentPosition({
+        enableHighAccuracy: true,
+        timeout: 10000,
+      })
+
+      const { latitude: lat, longitude: lon } = pos.coords
+      location.value = `Lat: ${lat}, Lng: ${lon}`
+
+      const lonLat = fromLonLat([lon, lat])
+      map.value.getView().animate({
+        center: lonLat,
+        zoom: 16,
+        duration: 1000,
+      })
+
+      // Limpia marcadores anteriores
+      vectorSource.value.getFeatures().forEach((feature) => {
+        if (feature.get('userLocation')) {
+          vectorSource.value.removeFeature(feature)
+        }
+      })
+      
+      // Aquí podrías añadir un nuevo feature con userLocation = true
+      // ...
+
+    } catch (e) {
+      location.value = `Error: ${e.message}`
     }
-};
+  }
 
 const cerrarPopup = () => {
     showPopup.value = false;
