@@ -1216,7 +1216,7 @@ export default defineNuxtPlugin((nuxtApp) => {
           method: 'GET',
           headers: {
             'Accept': 'application/json',
-            'Authorization': `Bearer ${this.authStore.token}`,
+            'Authorization': this.authStore.token ? `Bearer ${this.authStore.token}` : ''
           },
         });
 

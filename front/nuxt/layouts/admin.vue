@@ -255,14 +255,14 @@
                                 <li>
                                     <NuxtLink to="/admin/comandes"
                                         class="text-base text-[#276BF2] rounded-lg flex items-center p-2 group hover:bg-gray-100 pl-11 dark:text-gray-200 dark:hover:bg-gray-700 "
-                                        :class="{ 'text-gray-900': route.path !== '/admin/comandes' && route.path !== '/admin/comandes/' }">
+                                        :class="{ 'text-gray-900': route.path !== '/admin/comandes' }">
                                         Comandes
                                     </NuxtLink>
                                 </li>
                                 <li>
                                     <NuxtLink to="/admin/comandes/historial"
                                         class="text-base text-[#276BF2] rounded-lg flex items-center p-2 group hover:bg-gray-100 pl-11 dark:text-gray-200 dark:hover:bg-gray-700 "
-                                        :class="{ 'text-gray-900': route.path !== '/admin/comandes/historial' && route.path !== '/admin/comandes/historial/' }">
+                                        :class="{ 'text-gray-900': route.path !== '/admin/comandes/historial'}">
                                         Historial
                                     </NuxtLink>
                                 </li>
