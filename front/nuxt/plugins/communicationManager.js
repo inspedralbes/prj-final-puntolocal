@@ -1215,6 +1215,7 @@ export default defineNuxtPlugin((nuxtApp) => {
         const response = await fetch(`${Host}/admin/comandes/`, {
           method: 'GET',
           headers: {
+            'Accept': 'application/json',
             'Authorization': `Bearer ${this.authStore.token}`,
           },
         });

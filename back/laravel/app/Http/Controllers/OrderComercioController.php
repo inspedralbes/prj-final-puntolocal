@@ -22,7 +22,6 @@ class OrderComercioController extends Controller
     {
         try {
             $user = Auth::user();
-            dd($user);
 
             $comercio = Comercio::where('idUser', $user->id)->first();
 
