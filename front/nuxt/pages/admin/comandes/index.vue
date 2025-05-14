@@ -231,8 +231,9 @@
 </style>
 
 <script setup>
-const { $communicationManager } = useNuxtApp();
 import socket from '~/socket';
+
+const { $communicationManager } = useNuxtApp();
 const auth = useAuthStore();
 
 definePageMeta({

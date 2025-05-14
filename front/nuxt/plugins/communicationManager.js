@@ -649,6 +649,124 @@ export default defineNuxtPlugin((nuxtApp) => {
         return null;
       }
     },
+    
+    async getProductoRatings(productoID, perPage) {
+      try {
+        const response = await fetch(`${Host}/producto/${productoID}/ratings?per_page=${perPage}`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': this.authStore.token ? `Bearer ${this.authStore.token}` : '',
+          },
+        });
+
+        if (!response.ok) {
+          console.error(`Error en la petición: ${response.status} ${response.statusText}`);
+          return null;
+        }
+
+        const jsonResponse = await response.json();
+        return jsonResponse;
+      } catch (error) {
+        console.error('Error al realizar la petición:', error);
+        return null;
+      }
+    },
+
+    async getTopStats() {
+      try {
+        const response = await fetch(`${Host}/stats/top-products-clients`, {
+          method: 'GET',
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+            'Authorization': this.authStore.token ? `Bearer ${this.authStore.token}` : ''
+          }
+        });
+
+        const jsonResponse = await response.json();
+        return jsonResponse;
+      } catch (error) {
+        console.error('Error al realizar la petición:', error);
+        return null;
+      }
+    },
+
+    async getRating() {
+      try {
+        const response = await fetch(`${Host}/stats/get-comercio-rating`, {
+          method: 'GET',
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+            'Authorization': this.authStore.token ? `Bearer ${this.authStore.token}` : ''
+          }
+        });
+
+        const jsonResponse = await response.json();
+        return jsonResponse;
+      } catch (error) {
+        console.error('Error al realizar la petición:', error);
+        return null;
+      }
+    },
+
+    async getRatingData() {
+      try {
+        const response = await fetch(`${Host}/stats/get-ratings`, {
+          method: 'GET',
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+            'Authorization': this.authStore.token ? `Bearer ${this.authStore.token}` : ''
+          }
+        });
+
+        const jsonResponse = await response.json();
+        return jsonResponse;
+      } catch (error) {
+        console.error('Error al realizar la petición:', error);
+        return null;
+      }
+    },
+
+    async getReviewsComercio() {
+      try {
+        const response = await fetch(`${Host}/stats/reviewsComercio`, {
+          method: 'GET',
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+            'Authorization': this.authStore.token ? `Bearer ${this.authStore.token}` : ''
+          }
+        });
+
+        const jsonResponse = await response.json();
+        return jsonResponse;
+      } catch (error) {
+        console.error('Error al realizar la petición:', error);
+        return null;
+      }
+    },
+
+    async getReviewsProducto() {
+      try {
+        const response = await fetch(`${Host}/stats/reviewsProducto`, {
+          method: 'GET',
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+            'Authorization': this.authStore.token ? `Bearer ${this.authStore.token}` : ''
+          }
+        });
+
+        const jsonResponse = await response.json();
+        return jsonResponse;
+      } catch (error) {
+        console.error('Error al realizar la petición:', error);
+        return null;
+      }
+    },
 
     ///////////////////////////// POST //////////////////////////////////
     async register(json) {
@@ -919,6 +1037,32 @@ export default defineNuxtPlugin((nuxtApp) => {
       }
     },
 
+    async storeRating(formData) {
+      try {
+        console.log('FormData:', formData); // Imprime el FormData para depuración
+        const response = await fetch(`${Host}/ratings`, {
+          method: 'POST',
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+            'Authorization': this.authStore.token ? `Bearer ${this.authStore.token}` : ''
+          },
+          body: JSON.stringify(formData)
+        });
+
+        if (!response.ok) {
+          const errorData = await response.json();
+          console.error(`Error en la petición: ${response.status} ${response.statusText}`, errorData);
+          return null;
+        }
+
+        return await response.json();
+      } catch (error) {
+        console.error('Error al realizar la petición:', error);
+        return null;
+      }
+    },
+
     async getByComercio() {
       try {
         const response = await fetch(`${Host}/producto/comercio/${comercio.id}`);
@@ -1071,7 +1215,8 @@ export default defineNuxtPlugin((nuxtApp) => {
         const response = await fetch(`${Host}/admin/comandes/`, {
           method: 'GET',
           headers: {
-            'Authorization': `Bearer ${this.authStore.token}`,
+            'Accept': 'application/json',
+            'Authorization': this.authStore.token ? `Bearer ${this.authStore.token}` : ''
           },
         });
 

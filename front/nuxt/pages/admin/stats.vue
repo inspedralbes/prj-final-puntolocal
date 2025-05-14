@@ -1,11 +1,12 @@
 <template>
-    <div class="bg-gray-50 p-6 md:mt-16 grid grid-cols-6 gap-5">
-        <section class="col-span-4">
+    <div class="bg-gray-50 p-6 md:mt-16 md:grid md:grid-cols-6 flex flex-col gap-5 mt-12 md:mt-0">
+        <!-- Vendes -->
+        <section class="md:col-span-4">
             <div v-if="loading" class="text-center py-8">
                 <Loading size="xl" color="#4F46E5" />
             </div>
 
-            <div v-else class="bg-white p-4 rounded-xl border border-gray-200 h-[450px]">
+            <div v-else class="bg-white p-4 rounded-xl border border-gray-200 md:h-[450px]">
                 <div class="flex flex-col md:flex-row justify-between items-start mb-6">
                     <h2 class="text-xl font-bold text-gray-800 mb-4 md:mb-0">
                         Vendes
@@ -26,7 +27,7 @@
                         <div v-if="!hasEnoughData" class="text-center p-4">
                             <i class="bi bi-bar-chart-line text-4xl text-gray-400 mb-2"></i>
                             <p class="text-gray-500">No hi ha suficients dades per mostrar el gràfic</p>
-                            <p class="text-sm text-gray-400">Es necessiten múltiples punts de dades per generar una
+                            <p class="text-sm text-gray-500">Es necessiten múltiples punts de dades per generar una
                                 representació gràfica</p>
                         </div>
                         <canvas v-else ref="chartCanvas" :key="`chart-${selectedPeriod}`"
@@ -44,6 +45,8 @@
                 </div>
             </div>
         </section>
+
+        <!-- Estadístiques mes actual -->
         <section class="col-span-2">
             <div v-if="loading" class="text-center py-8">
                 <Loading size="xl" color="#4F46E5" />
@@ -58,63 +61,49 @@
 
                 <div class="w-full bg-gray-50 h-[50px] border-b mb-3 rounded-md">
                     <div class="w-full flex divide-x h-full items-center text-gray-700 text-sm">
-                        <div class="w-full flex justify-center"><button>Top productes</button></div>
-                        <div class="w-full flex justify-center"><button>Top clients</button></div>
+                        <div class="w-full flex justify-center"
+                            :class="topCurrentSelected === 1 ? 'text-blue-600' : ''"><button
+                                @click="currentSelected(1)">Top productes</button></div>
+                        <div class="w-full flex justify-center"
+                            :class="topCurrentSelected === 2 ? 'text-blue-600' : ''"><button
+                                @click="currentSelected(2)">Top clients</button></div>
                     </div>
                 </div>
 
-                <div class="w-full divide-y">
-                    <div class="flex flex-col justify-center py-3">
+                <div v-if="topCurrentSelected === 1" class="w-full divide-y">
+                    <div class="flex flex-col justify-center py-3" v-for="producto in topProducts"
+                        :key="producto.producto_id">
                         <div class="flex justify-between">
                             <section class="flex gap-3">
-                                <img src="#" alt="" width="50px" height="50px" class="rounded-md border">
+                                <img :src="producto.image || '#'" alt="" width="50px" height="50px"
+                                    class="rounded-md border">
                                 <div>
-                                    <p>Nombre del producto</p>
-                                    <p class="text-sm text-green-400">% subida verde</p>
+                                    <p>{{ producto.nombre }}</p>
                                 </div>
                             </section>
-                            <p class="font-bold">Precio €</p>
+                            <p class="font-bold">{{ producto.total.toFixed(2) }} €</p>
                         </div>
                     </div>
-                    <div class="flex flex-col justify-center py-3">
-                        <div class="flex justify-between">
-                            <section class="flex gap-3">
-                                <img src="#" alt="" width="50px" height="50px" class="rounded-md border">
-                                <div>
-                                    <p>Nombre del producto</p>
-                                    <p class="text-sm text-green-400">% subida verde</p>
-                                </div>
-                            </section>
-                            <p class="font-bold">Precio €</p>
-                        </div>
-                    </div>
-                    <div class="flex flex-col justify-center py-3">
-                        <div class="flex justify-between">
-                            <section class="flex gap-3">
-                                <img src="#" alt="" width="50px" height="50px" class="rounded-md border">
-                                <div>
-                                    <p>Nombre del producto</p>
-                                    <p class="text-sm text-green-400">% subida verde</p>
-                                </div>
-                            </section>
-                            <p class="font-bold">Precio €</p>
-                        </div>
-                    </div>
-                    <div class="flex flex-col justify-center py-3">
-                        <div class="flex justify-between">
-                            <section class="flex gap-3">
-                                <img src="#" alt="" width="50px" height="50px" class="rounded-md border">
-                                <div>
-                                    <p>Nombre del producto</p>
-                                    <p class="text-sm text-green-400">% subida verde</p>
-                                </div>
-                            </section>
-                            <p class="font-bold">Precio €</p>
+                </div>
+                <div v-else>
+                    <div v-if="topClients" class="w-full divide-y">
+                        <div class="flex flex-col justify-center py-3" v-for="client in topClients"
+                            :key="client.client_id">
+                            <div class="flex justify-between">
+                                <section class="flex gap-3">
+                                    <div>
+                                        <p>{{ client.nombre }}</p>
+                                    </div>
+                                </section>
+                                <p class="font-bold">{{ client?.subtotal?.toFixed(2) }} €</p>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </section>
+
+        <!-- Clients -->
         <section class="col-span-3">
             <div v-if="loading" class="text-center py-8">
                 <Loading size="xl" color="#4F46E5" />
@@ -127,53 +116,106 @@
                     </h3>
                 </header>
                 <section>
-                    <p class="text-gray-700 text-xl"><span class="text-green-400 text-md">% subida</span> 228 clients
+                    <p class="text-gray-700 text-xl"> {{ uniqueClients }} clients
                         totals aquest últim mes</p>
                 </section>
             </div>
         </section>
+
+        <!-- Valoracions -->
         <section class="col-span-3">
-            <div
-                class="bg-white border border-gray-200 rounded-lg p-6 h-[180px]">
+            <div class="bg-white border border-gray-200 rounded-lg p-6 h-[180px]">
                 <div class="w-full">
                     <div class="flex items-center gap-8">
                         <div class="flex flex-col items-center">
                             <h3 class="mb-2 text-base font-normal text-gray-500 dark:text-gray-400">Valoracions</h3>
                             <span class="text-2xl font-bold leading-none text-gray-900 sm:text-3xl dark:text-white">
-                                3,3
+                                {{ rating }}
                             </span>
-                            <PuntuacionComp :rating="3.5" />
+                            <PuntuacionComp :rating="rating" />
+                            <span class="text-sm text-gray-600 font-light">({{ ratingBars?.totalRatings ?
+                                ratingBars?.totalRatings : 0 }})</span>
                         </div>
                         <div class="flex-grow">
-                            <div class="flex items-center mb-2">
-                                <div class="mr-5 text-sm font-medium dark:text-white">5</div>
-                                <div class="w-full bg-gray-200 rounded-full h-2.5 dark:bg-gray-700">
-                                </div>
-                            </div>
-                            <div class="flex items-center mb-2">
-                                <div class="mr-5 text-sm font-medium dark:text-white">4</div>
-                                <div class="w-full bg-gray-200 rounded-full h-2.5 dark:bg-gray-700">
-                                </div>
-                            </div>
-                            <div class="flex items-center mb-2">
-                                <div class="mr-5 text-sm font-medium dark:text-white">3</div>
-                                <div class="w-full bg-gray-200 rounded-full h-2.5 dark:bg-gray-700">
-                                </div>
-                            </div>
-                            <div class="flex items-center mb-2">
-                                <div class="mr-5 text-sm font-medium dark:text-white">2</div>
-                                <div class="w-full bg-gray-200 rounded-full h-2.5 dark:bg-gray-700">
-                                </div>
-                            </div>
-                            <div class="flex items-center mb-2">
-                                <div class="mr-5 text-sm font-medium dark:text-white">1</div>
-                                <div class="w-full bg-gray-200 rounded-full h-2.5 dark:bg-gray-700">
+                            <div v-for="star in [5, 4, 3, 2, 1]" class="flex items-center mb-2" :key="star">
+                                <p class="mr-5 text-sm font-medium dark:text-white">{{ star }}</p>
+                                <div
+                                    class="w-full bg-gray-200 rounded-full h-2.5 dark:bg-gray-700 relative overflow-hidden">
+                                    <div class="absolute bg-yellow-400 left-0 z-50 h-2.5"
+                                        :style="{ width: calcularPorcentaje(star) + '%' }"></div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
                 <div id="traffic-channels-chart" class="w-full"></div>
+            </div>
+        </section>
+
+        <!-- Comentarios comercio -->
+        <section class="md:col-span-3">
+            <div class="bg-white p-4 rounded-xl border border-gray-200">
+                <div class="flex flex-col md:flex-row justify-between items-start">
+                    <h2 class="text-xl font-bold text-gray-800 mb-4 md:mb-0">
+                        Ressenyes de comerç
+                    </h2>
+                </div>
+                <div>
+                    <div class="flex justify-center">
+                        <div v-if="reviewsComercio.length == 0" class="text-center p-4">
+                            <i class="bi bi-bar-chart-line text-4xl text-gray-400 mb-2"></i>
+                            <p class="text-gray-500">No existeix cap ressenya</p>
+                        </div>
+                        <div v-else class="w-full divide-y">
+                            <div v-for="review in reviewsComercio.slice(0, 5)" class="py-5">
+                                <header class="flex justify-between">
+                                    <div class="flex gap-2 items-center">
+                                        <p>{{ review.name }}</p>
+                                        <PuntuacionComp :rating="review.stars" :customClass="'relative w-4 h-4'"/>
+                                    </div>
+                                    <p class="text-gray-600 font-light text-sm">{{ formatData(review.created_at) }}</p>
+                                </header>
+                                <section>
+                                    <p class="text-gray-800 font-light">{{ review.comment }}</p>
+                                </section>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Comentarios productos -->
+        <section class="md:col-span-3">
+            <div class="bg-white p-4 rounded-xl border border-gray-200">
+                <div class="flex flex-col md:flex-row justify-between items-start">
+                    <h2 class="text-xl font-bold text-gray-800 mb-4 md:mb-0">
+                        Ressenyes de productes
+                    </h2>
+                </div>
+                <div>
+                    <div class="flex justify-center">
+                        <div v-if="reviewsProducto.length == 0" class="text-center p-4">
+                            <i class="bi bi-bar-chart-line text-4xl text-gray-400 mb-2"></i>
+                            <p class="text-gray-500">No existeix cap ressenya</p>
+                        </div>
+                        <div v-else class="w-full divide-y">
+                            <div v-for="review in reviewsProducto.slice(0, 5)" class="py-5">
+                                <header class="flex justify-between">
+                                    <div class="flex gap-2 items-center">
+                                        <p class="text-md">{{ review.name }}</p>
+                                        <PuntuacionComp :rating="review.stars" :customClass="'relative w-4 h-4'"/>
+                                    </div>
+                                    <p class="text-gray-600 font-light text-sm">{{ formatData(review.created_at) }}</p>
+                                </header>
+                                <section>
+                                    <p class="text-lg text-gray-800">{{ review.producto.nombre }}</p>
+                                    <p class="text-gray-800 font-light">{{ review.comment }}</p>
+                                </section>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </section>
     </div>
@@ -184,6 +226,7 @@ import { ref, watch, computed, nextTick } from 'vue';
 import { Chart } from 'chart.js/auto';
 import { useAuthStore } from '@/stores/authStore';
 import Loading from '@/components/loading.vue';
+import PuntuacionComp from '~/components/PuntuacionComp.vue';
 definePageMeta({
     layout: 'admin',
 });
@@ -204,7 +247,26 @@ const periodLabels = {
 
 const selectedPeriod = ref('week');
 const stats = ref({ labels: [], data: [], average: 0 });
+const topClients = ref(null);
+const topProducts = ref(null);
+const uniqueClients = ref(0);
+const topCurrentSelected = ref(1);
+const rating = ref(0);
+const ratingBars = ref([]);
+const reviewsComercio = ref([]);
+const reviewsProducto = ref([]);
 const loading = ref(false);
+
+function currentSelected(value) {
+    topCurrentSelected.value = value;
+}
+
+function formatData(dateStr) {
+    if (!dateStr) return '';
+    const date = new Date(dateStr);
+    const options = { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' };
+    return date.toLocaleString('es-ES', options);
+}
 
 const totalSales = computed(() => stats.value.data.reduce((a, b) => a + b, 0));
 
@@ -306,11 +368,61 @@ const fetchStats = async () => {
 
 watch(selectedPeriod, fetchStats, { immediate: true });
 
+async function topStats() {
+    try {
+        const data = await $communicationManager.getTopStats();
+
+        topClients.value = data.topClients;
+        topProducts.value = data.topProducts;
+        uniqueClients.value = data.uniqueClients;
+        console.log(data)
+    } catch (error) {
+        console.error(error);
+    }
+}
+
+async function ratingStats() {
+    try {
+        const totalRating = await $communicationManager.getRating();
+        const barsRatingFetch = await $communicationManager.getRatingData();
+        console.log(barsRatingFetch);
+        ratingBars.value = barsRatingFetch;
+        rating.value = totalRating.rating;
+    } catch (error) {
+        console.error(error);
+    }
+}
+
+function calcularPorcentaje(star) {
+    if (ratingBars.value?.rating) {
+        const count = ratingBars.value.rating[star]?.count || 0;
+        const total = ratingBars.value.totalRatings || 0;
+
+        const porcentaje = total > 0 ? ((count / total) * 100).toFixed(2) : 0;
+        return porcentaje;
+    }
+}
+
+async function getReviews() {
+    try {
+        const comercios = await $communicationManager.getReviewsComercio();
+        const productos = await $communicationManager.getReviewsProducto();
+        reviewsComercio.value = comercios.reviews;
+        reviewsProducto.value = productos.reviews;
+        console.log({"comercios": reviewsComercio.value, "productos": reviewsProducto.value});
+    } catch (error) {
+        console.error(error);
+    }
+}
+
 // Ciclo de vida mejorado
 onMounted(async () => {
     if (!authStore.isAuthenticated || !authStore.comercio) {
         navigateTo('/login');
     }
+    topStats();
+    ratingStats();
+    getReviews();
 });
 onBeforeUnmount
 </script>

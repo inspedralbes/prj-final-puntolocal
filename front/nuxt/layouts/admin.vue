@@ -179,11 +179,10 @@
                     class="flex-1 px-3 space-y-1 bg-white divide-y divide-gray-200 dark:bg-gray-800 dark:divide-gray-700">
                     <ul class="pb-2 space-y-2">
                         <li>
-                            <NuxtLink to="/admin/stats"
+                            <NuxtLink to="/admin"
                                 class="flex items-center p-2 text-base rounded-lg hover:bg-gray-100 group dark:text-gray-200 dark:hover:bg-gray-700 text-[#276BF2]"
-                                :class="{ 'text-gray-900': route.path !== '/admin/stats' && route.path !== '/admin/stats' }">
-                                <svg class="w-6 h-6 text-[#276BF2]"
-                                    :class="{ 'text-gray-500': route.path !== '/admin/stats' && route.path !== '/admin/stats' }"
+                                :class="{ 'text-gray-900': route.path !== '/admin' }">
+                                <svg class="w-6 h-6 text-[#276BF2]" :class="{ 'text-gray-500': route.path !== '/admin' }"
                                     fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
                                     <path d="M2 10a8 8 0 018-8v8h8a8 8 0 11-16 0z"></path>
                                     <path d="M12 2.252A8.014 8.014 0 0117.748 8H12V2.252z"></path>
@@ -226,80 +225,8 @@
                                         Llistat
                                     </NuxtLink>
                                 </li>
-                                <li>
-                                    <NuxtLink to="" disabled
-                                        class="flex justify-between items-center p-2 text-base text-gray-500 bg-gray-50 rounded-lg pl-11 group cursor-not-allowed dark:text-gray-200 dark:hover:bg-gray-700">
-                                        <p>Inventaris</p>
-                                        <svg fill="#c1c1c1" width="1em" height="1em" version="1.1" id="Layer_1"
-                                            xmlns="http://www.w3.org/2000/svg"
-                                            xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 491.52 491.52"
-                                            xml:space="preserve">
-                                            <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
-                                            <g id="SVGRepo_tracerCarrier" stroke-linecap="round"
-                                                stroke-linejoin="round"></g>
-                                            <g id="SVGRepo_iconCarrier">
-                                                <g>
-                                                    <g>
-                                                        <path
-                                                            d="M399.4,203.578h-19.801h-0.005v-69.744C379.593,60.039,319.556,0,245.759,0c-73.793,0-133.832,60.039-133.832,133.835 v69.744H92.122c-15.656,0-28.35,12.692-28.35,28.349v17.246v196.751v17.245c0,15.658,12.693,28.35,28.35,28.35H245.76H399.4 c15.656,0,28.348-12.692,28.348-28.35v-17.245V249.174v-17.246C427.748,216.27,415.056,203.578,399.4,203.578z M275.935,406.648 h-60.349l10.801-51.467c-10.101-6.428-16.848-17.652-16.848-30.512c0-20.003,16.218-36.219,36.221-36.219 c20.004,0,36.219,16.216,36.219,36.219c0,12.86-6.745,24.084-16.845,30.51L275.935,406.648z M331.84,203.578h-86.08h-86.075 h-0.005v-69.744c0-47.469,38.613-86.081,86.08-86.081c47.469,0,86.08,38.613,86.08,86.081V203.578z">
-                                                        </path>
-                                                    </g>
-                                                </g>
-                                            </g>
-                                        </svg>
-                                    </NuxtLink>
-                                </li>
                             </ul>
                         </li>
-                        <!--  ======= CATEGORIES ================================  -->
-                        <li>
-                            <button type="button"
-                                class="flex items-center w-full p-2 text-base text-gray-900 rounded-lg group hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-700"
-                                aria-controls="dropdown-categories" data-collapse-toggle="dropdown-categories"
-                                @click="toggleHidden('categories')">
-                                <svg class="flex-shrink-0 w-6 h-6 text-gray-500" fill="currentColor" viewBox="0 0 20 20"
-                                    xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                                    <path
-                                        d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zM3 10a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H4a1 1 0 01-1-1v-6zM14 9a1 1 0 00-1 1v6a1 1 0 001 1h2a1 1 0 001-1v-6a1 1 0 00-1-1h-2z">
-                                    </path>
-                                </svg>
-                                <span class="flex-1 ml-3 text-left whitespace-nowrap" sidebar-toggle-item="">Categories
-                                </span>
-                                <svg sidebar-toggle-item="" :class="{ rotate: !isHidden['categories'] }" class="w-6 h-6"
-                                    fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                                    <path fill-rule="evenodd"
-                                        d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                                        clip-rule="evenodd"></path>
-                                </svg>
-                            </button>
-                            <ul id="dropdown-categories" :class="{ hidden: isHidden['categories'] }"
-                                class="py-2 space-y-2">
-                                <li>
-                                    <NuxtLink to="" disabled
-                                        class="flex justify-between items-center p-2 text-base text-gray-500 bg-gray-50 rounded-lg pl-11 group cursor-not-allowed dark:text-gray-200 dark:hover:bg-gray-700">
-                                        Afegir categoria
-                                        <svg fill="#c1c1c1" width="1em" height="1em" version="1.1" id="Layer_1"
-                                            xmlns="http://www.w3.org/2000/svg"
-                                            xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 491.52 491.52"
-                                            xml:space="preserve">
-                                            <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
-                                            <g id="SVGRepo_tracerCarrier" stroke-linecap="round"
-                                                stroke-linejoin="round"></g>
-                                            <g id="SVGRepo_iconCarrier">
-                                                <g>
-                                                    <g>
-                                                        <path
-                                                            d="M399.4,203.578h-19.801h-0.005v-69.744C379.593,60.039,319.556,0,245.759,0c-73.793,0-133.832,60.039-133.832,133.835 v69.744H92.122c-15.656,0-28.35,12.692-28.35,28.349v17.246v196.751v17.245c0,15.658,12.693,28.35,28.35,28.35H245.76H399.4 c15.656,0,28.348-12.692,28.348-28.35v-17.245V249.174v-17.246C427.748,216.27,415.056,203.578,399.4,203.578z M275.935,406.648 h-60.349l10.801-51.467c-10.101-6.428-16.848-17.652-16.848-30.512c0-20.003,16.218-36.219,36.221-36.219 c20.004,0,36.219,16.216,36.219,36.219c0,12.86-6.745,24.084-16.845,30.51L275.935,406.648z M331.84,203.578h-86.08h-86.075 h-0.005v-69.744c0-47.469,38.613-86.081,86.08-86.081c47.469,0,86.08,38.613,86.08,86.081V203.578z">
-                                                        </path>
-                                                    </g>
-                                                </g>
-                                            </g>
-                                        </svg>
-                                    </NuxtLink>
-                                </li>
-                            </ul>
-                        </li>
-
                         <!--  ======= VENTAS ================================  -->
                         <li>
                             <button type="button"
@@ -328,155 +255,15 @@
                                 <li>
                                     <NuxtLink to="/admin/comandes"
                                         class="text-base text-[#276BF2] rounded-lg flex items-center p-2 group hover:bg-gray-100 pl-11 dark:text-gray-200 dark:hover:bg-gray-700 "
-                                        :class="{ 'text-gray-900': route.path !== '/admin/comandes' && route.path !== '/admin/comandes/' }">
+                                        :class="{ 'text-gray-900': route.path !== '/admin/comandes' }">
                                         Comandes
                                     </NuxtLink>
                                 </li>
                                 <li>
                                     <NuxtLink to="/admin/comandes/historial"
                                         class="text-base text-[#276BF2] rounded-lg flex items-center p-2 group hover:bg-gray-100 pl-11 dark:text-gray-200 dark:hover:bg-gray-700 "
-                                        :class="{ 'text-gray-900': route.path !== '/admin/comandes/historial' && route.path !== '/admin/comandes/historial/' }">
+                                        :class="{ 'text-gray-900': route.path !== '/admin/comandes/historial'}">
                                         Historial
-                                    </NuxtLink>
-                                </li>
-                            </ul>
-                        </li>
-
-                        <!--  ======= CLIENTES ================================  -->
-                        <li>
-                            <button type="button"
-                                class="flex items-center w-full p-2 text-base text-gray-900 rounded-lg group hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-700"
-                                aria-controls="dropdown-pages" data-collapse-toggle="dropdown-pages"
-                                @click="toggleHidden('clientes')">
-                                <svg class="flex-shrink-0 w-6 h-6 text-gray-500" fill="currentColor" viewBox="0 0 20 20"
-                                    xmlns="http://www.w3.org/2000/svg">
-                                    <path fill-rule="evenodd"
-                                        d="M6 2a2 2 0 00-2 2v12a2 2 0 002 2h8a2 2 0 002-2V7.414A2 2 0 0015.414 6L12 2.586A2 2 0 0010.586 2H6zm2 10a1 1 0 10-2 0v3a1 1 0 102 0v-3zm2-3a1 1 0 011 1v5a1 1 0 11-2 0v-5a1 1 0 011-1zm4-1a1 1 0 10-2 0v7a1 1 0 102 0V8z"
-                                        clip-rule="evenodd"></path>
-                                </svg>
-                                <span class="flex-1 ml-3 text-left whitespace-nowrap"
-                                    sidebar-toggle-item="">Clientes</span>
-                                <svg sidebar-toggle-item="" :class="{ rotate: !isHidden['clientes'] }" class="w-6 h-6"
-                                    fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                                    <path fill-rule="evenodd"
-                                        d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                                        clip-rule="evenodd"></path>
-                                </svg>
-                            </button>
-                            <ul id="dropdown-pages" :class="{ hidden: isHidden['clientes'] }" class="py-2 space-y-2">
-                                <li>
-                                    <NuxtLink to="" disabled
-                                        class="flex justify-between items-center p-2 text-base text-gray-500 bg-gray-50 rounded-lg pl-11 group cursor-not-allowed dark:text-gray-200 dark:hover:bg-gray-700">
-                                        Lista
-                                        <svg fill="#c1c1c1" width="1em" height="1em" version="1.1" id="Layer_1"
-                                            xmlns="http://www.w3.org/2000/svg"
-                                            xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 491.52 491.52"
-                                            xml:space="preserve">
-                                            <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
-                                            <g id="SVGRepo_tracerCarrier" stroke-linecap="round"
-                                                stroke-linejoin="round"></g>
-                                            <g id="SVGRepo_iconCarrier">
-                                                <g>
-                                                    <g>
-                                                        <path
-                                                            d="M399.4,203.578h-19.801h-0.005v-69.744C379.593,60.039,319.556,0,245.759,0c-73.793,0-133.832,60.039-133.832,133.835 v69.744H92.122c-15.656,0-28.35,12.692-28.35,28.349v17.246v196.751v17.245c0,15.658,12.693,28.35,28.35,28.35H245.76H399.4 c15.656,0,28.348-12.692,28.348-28.35v-17.245V249.174v-17.246C427.748,216.27,415.056,203.578,399.4,203.578z M275.935,406.648 h-60.349l10.801-51.467c-10.101-6.428-16.848-17.652-16.848-30.512c0-20.003,16.218-36.219,36.221-36.219 c20.004,0,36.219,16.216,36.219,36.219c0,12.86-6.745,24.084-16.845,30.51L275.935,406.648z M331.84,203.578h-86.08h-86.075 h-0.005v-69.744c0-47.469,38.613-86.081,86.08-86.081c47.469,0,86.08,38.613,86.08,86.081V203.578z">
-                                                        </path>
-                                                    </g>
-                                                </g>
-                                            </g>
-                                        </svg>
-                                    </NuxtLink>
-                                </li>
-                                <li>
-                                    <NuxtLink to="" disabled
-                                        class="flex justify-between items-center p-2 text-base text-gray-500 bg-gray-50 rounded-lg pl-11 group cursor-not-allowed dark:text-gray-200 dark:hover:bg-gray-700">
-                                        Reseñas
-                                        <svg fill="#c1c1c1" width="1em" height="1em" version="1.1" id="Layer_1"
-                                            xmlns="http://www.w3.org/2000/svg"
-                                            xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 491.52 491.52"
-                                            xml:space="preserve">
-                                            <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
-                                            <g id="SVGRepo_tracerCarrier" stroke-linecap="round"
-                                                stroke-linejoin="round"></g>
-                                            <g id="SVGRepo_iconCarrier">
-                                                <g>
-                                                    <g>
-                                                        <path
-                                                            d="M399.4,203.578h-19.801h-0.005v-69.744C379.593,60.039,319.556,0,245.759,0c-73.793,0-133.832,60.039-133.832,133.835 v69.744H92.122c-15.656,0-28.35,12.692-28.35,28.349v17.246v196.751v17.245c0,15.658,12.693,28.35,28.35,28.35H245.76H399.4 c15.656,0,28.348-12.692,28.348-28.35v-17.245V249.174v-17.246C427.748,216.27,415.056,203.578,399.4,203.578z M275.935,406.648 h-60.349l10.801-51.467c-10.101-6.428-16.848-17.652-16.848-30.512c0-20.003,16.218-36.219,36.221-36.219 c20.004,0,36.219,16.216,36.219,36.219c0,12.86-6.745,24.084-16.845,30.51L275.935,406.648z M331.84,203.578h-86.08h-86.075 h-0.005v-69.744c0-47.469,38.613-86.081,86.08-86.081c47.469,0,86.08,38.613,86.08,86.081V203.578z">
-                                                        </path>
-                                                    </g>
-                                                </g>
-                                            </g>
-                                        </svg>
-                                    </NuxtLink>
-                                </li>
-                            </ul>
-                        </li>
-                        <li>
-                            <button type="button"
-                                class="flex items-center w-full p-2 text-base text-gray-900 rounded-lg group hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-700"
-                                aria-controls="dropdown-auth" data-collapse-toggle="dropdown-auth"
-                                @click="toggleHidden('marketing')">
-                                <svg class="flex-shrink-0 w-6 h-6 text-gray-500" fill="currentColor" viewBox="0 0 20 20"
-                                    xmlns="http://www.w3.org/2000/svg">
-                                    <path fill-rule="evenodd"
-                                        d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z"
-                                        clip-rule="evenodd"></path>
-                                </svg>
-                                <span class="flex-1 ml-3 text-left whitespace-nowrap"
-                                    sidebar-toggle-item="">Marketing</span>
-                                <svg sidebar-toggle-item="" :class="{ rotate: !isHidden['marketing'] }" class="w-6 h-6"
-                                    fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                                    <path fill-rule="evenodd"
-                                        d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                                        clip-rule="evenodd"></path>
-                                </svg>
-                            </button>
-                            <ul id="dropdown-auth" :class="{ hidden: isHidden['marketing'] }" class="py-2 space-y-2">
-                                <li>
-                                    <NuxtLink to="" disabled
-                                        class="flex justify-between items-center p-2 text-base text-gray-500 bg-gray-50 rounded-lg pl-11 group cursor-not-allowed dark:text-gray-200 dark:hover:bg-gray-700">
-                                        Promociones
-                                        <svg fill="#c1c1c1" width="1em" height="1em" version="1.1" id="Layer_1"
-                                            xmlns="http://www.w3.org/2000/svg"
-                                            xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 491.52 491.52"
-                                            xml:space="preserve">
-                                            <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
-                                            <g id="SVGRepo_tracerCarrier" stroke-linecap="round"
-                                                stroke-linejoin="round"></g>
-                                            <g id="SVGRepo_iconCarrier">
-                                                <g>
-                                                    <g>
-                                                        <path
-                                                            d="M399.4,203.578h-19.801h-0.005v-69.744C379.593,60.039,319.556,0,245.759,0c-73.793,0-133.832,60.039-133.832,133.835 v69.744H92.122c-15.656,0-28.35,12.692-28.35,28.349v17.246v196.751v17.245c0,15.658,12.693,28.35,28.35,28.35H245.76H399.4 c15.656,0,28.348-12.692,28.348-28.35v-17.245V249.174v-17.246C427.748,216.27,415.056,203.578,399.4,203.578z M275.935,406.648 h-60.349l10.801-51.467c-10.101-6.428-16.848-17.652-16.848-30.512c0-20.003,16.218-36.219,36.221-36.219 c20.004,0,36.219,16.216,36.219,36.219c0,12.86-6.745,24.084-16.845,30.51L275.935,406.648z M331.84,203.578h-86.08h-86.075 h-0.005v-69.744c0-47.469,38.613-86.081,86.08-86.081c47.469,0,86.08,38.613,86.08,86.081V203.578z">
-                                                        </path>
-                                                    </g>
-                                                </g>
-                                            </g>
-                                        </svg>
-                                    </NuxtLink>
-                                </li>
-                                <li>
-                                    <NuxtLink to="" disabled
-                                        class="flex justify-between items-center p-2 text-base text-gray-500 bg-gray-50 rounded-lg pl-11 group cursor-not-allowed dark:text-gray-200 dark:hover:bg-gray-700">
-                                        Campañas
-                                        <svg fill="#c1c1c1" width="1em" height="1em" version="1.1" id="Layer_1"
-                                            xmlns="http://www.w3.org/2000/svg"
-                                            xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 491.52 491.52"
-                                            xml:space="preserve">
-                                            <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
-                                            <g id="SVGRepo_tracerCarrier" stroke-linecap="round"
-                                                stroke-linejoin="round"></g>
-                                            <g id="SVGRepo_iconCarrier">
-                                                <g>
-                                                    <g>
-                                                        <path
-                                                            d="M399.4,203.578h-19.801h-0.005v-69.744C379.593,60.039,319.556,0,245.759,0c-73.793,0-133.832,60.039-133.832,133.835 v69.744H92.122c-15.656,0-28.35,12.692-28.35,28.349v17.246v196.751v17.245c0,15.658,12.693,28.35,28.35,28.35H245.76H399.4 c15.656,0,28.348-12.692,28.348-28.35v-17.245V249.174v-17.246C427.748,216.27,415.056,203.578,399.4,203.578z M275.935,406.648 h-60.349l10.801-51.467c-10.101-6.428-16.848-17.652-16.848-30.512c0-20.003,16.218-36.219,36.221-36.219 c20.004,0,36.219,16.216,36.219,36.219c0,12.86-6.745,24.084-16.845,30.51L275.935,406.648z M331.84,203.578h-86.08h-86.075 h-0.005v-69.744c0-47.469,38.613-86.081,86.08-86.081c47.469,0,86.08,38.613,86.08,86.081V203.578z">
-                                                        </path>
-                                                    </g>
-                                                </g>
-                                            </g>
-                                        </svg>
                                     </NuxtLink>
                                 </li>
                             </ul>
@@ -518,29 +305,6 @@
                                     <NuxtLink to="" disabled
                                         class="flex justify-between items-center p-2 text-base text-gray-500 bg-gray-50 rounded-lg pl-11 group cursor-not-allowed dark:text-gray-200 dark:hover:bg-gray-700">
                                         Horarios
-                                        <svg fill="#c1c1c1" width="1em" height="1em" version="1.1" id="Layer_1"
-                                            xmlns="http://www.w3.org/2000/svg"
-                                            xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 491.52 491.52"
-                                            xml:space="preserve">
-                                            <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
-                                            <g id="SVGRepo_tracerCarrier" stroke-linecap="round"
-                                                stroke-linejoin="round"></g>
-                                            <g id="SVGRepo_iconCarrier">
-                                                <g>
-                                                    <g>
-                                                        <path
-                                                            d="M399.4,203.578h-19.801h-0.005v-69.744C379.593,60.039,319.556,0,245.759,0c-73.793,0-133.832,60.039-133.832,133.835 v69.744H92.122c-15.656,0-28.35,12.692-28.35,28.349v17.246v196.751v17.245c0,15.658,12.693,28.35,28.35,28.35H245.76H399.4 c15.656,0,28.348-12.692,28.348-28.35v-17.245V249.174v-17.246C427.748,216.27,415.056,203.578,399.4,203.578z M275.935,406.648 h-60.349l10.801-51.467c-10.101-6.428-16.848-17.652-16.848-30.512c0-20.003,16.218-36.219,36.221-36.219 c20.004,0,36.219,16.216,36.219,36.219c0,12.86-6.745,24.084-16.845,30.51L275.935,406.648z M331.84,203.578h-86.08h-86.075 h-0.005v-69.744c0-47.469,38.613-86.081,86.08-86.081c47.469,0,86.08,38.613,86.08,86.081V203.578z">
-                                                        </path>
-                                                    </g>
-                                                </g>
-                                            </g>
-                                        </svg>
-                                    </NuxtLink>
-                                </li>
-                                <li>
-                                    <NuxtLink to="" disabled
-                                        class="flex justify-between items-center p-2 text-base text-gray-500 bg-gray-50 rounded-lg pl-11 group cursor-not-allowed dark:text-gray-200 dark:hover:bg-gray-700">
-                                        Perfil del negocio
                                         <svg fill="#c1c1c1" width="1em" height="1em" version="1.1" id="Layer_1"
                                             xmlns="http://www.w3.org/2000/svg"
                                             xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 491.52 491.52"
