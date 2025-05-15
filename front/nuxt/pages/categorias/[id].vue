@@ -1,7 +1,7 @@
 <template>
     <div class="p-6">
         <p @click="todasLasCategorias()" class="text-blue-500 cursor-pointer hover:underline mb-4">
-            Ver todas las categorías
+            Veure totes les categories
         </p>
 
         <div v-if="isLoading" class="flex justify-center items-center py-10">

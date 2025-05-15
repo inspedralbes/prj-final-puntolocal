@@ -34,14 +34,13 @@ const paymentCardID = ref(null);
 const auth = useAuthStore();
 const groups = reactive([]);
 const storesClosed = ref([]);
-const shipOption = ref(null);
 const comerciosInfo = ref([]);
 const paymentView = ref(false);
 const cistellaView = ref(true);
 const isOk = ref(false);
 const order_id = ref();
 const chooseShipping = ref(false);
-const isLoggued = computed(() => {
+const isLogged = computed(() => {
     return auth?.user !== null;
 });
 const loginVisible = ref(false);
@@ -76,7 +75,7 @@ function proximaApertura(horarios) {
     return null;
 }
 
-async function checkClosedStores() {
+function checkClosedStores() {
     let arrayClosed = [];
     for (const data of comerciosInfo.value) {
         const horarios = JSON.parse(data.comercio.horario);
@@ -102,7 +101,7 @@ onMounted(async () => {
                 comerciosInfo.value.push(comercioData);
             }
         }));
-        storesClosed.value = await checkClosedStores();
+        storesClosed.value = checkClosedStores();
         console.log("Comercios cerrados:", storesClosed.value);
         dataLoaded.value = true;
     } catch (error) {
@@ -110,8 +109,8 @@ onMounted(async () => {
     }
 });
 
-const closedStoresComputed = computed(async () => {
-    return await checkClosedStores();
+const closedStoresComputed = computed(() => {
+    return checkClosedStores();
 });
 
 // Agrupos los productos por el nombre del comercio
@@ -131,19 +130,17 @@ const storeTotal = (storeName) => {
 };
 
 function toggleCheckout() {
-    if (!isLoggued.value) {
+    if (!isLogged.value) {
         loginVisible.value = !loginVisible.value;
     } else {
-        chooseShipping.value = true;
-        paymentView.value = false;
-        shipOption.value = null;
-        choosed.value = false;
+        console.log("Cerrados: ",storesClosed.value)
+        if (storesClosed.value.length > 0) {
+            chooseShipping.value = true;
+            paymentView.value = false;
+        }else{
+            paymentView.value = true;
+        }
     }
-}
-
-function chooseShip(event) {
-    shipOption.value = event.currentTarget.value;
-    choosed.value = shipOption.value !== null;
 }
 
 function chooseMethodPayment(option) {
@@ -289,9 +286,8 @@ const veureOrdre = () => {
                     </div>
 
                     <button @click="toPay"
-                        class="mt-3 w-full h-[60px] justify-center text-white rounded-md border border-transparent px-4 py-2 text-xl font-semibold bg-[#6393F2]">
-                        <h3 v-if="storesClosed.length == 0">Continuar</h3>
-                        <h3 v-else>Continuar Igualment</h3>
+                        class="mt-3 w-full h-[60px] justify-center text-white rounded-md border border-transparent px-4 py-2 text-xl font-semibold bg-[#276BF2]">
+                        <p v-if="storesClosed.length > 0">Continuar Igualment</p>
                     </button>
                 </div>
             </div>
