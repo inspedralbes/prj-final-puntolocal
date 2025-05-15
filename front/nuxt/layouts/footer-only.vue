@@ -4,7 +4,7 @@
             <slot />
         </main>
 
-        <footer class="sticky bottom-0 left-0 w-full bg-white py-2 border-t">
+        <footer class="sticky bottom-0 left-0 w-full h-[60px] bg-white py-2 border-t">
             <nav class="flex justify-around">
                 <NuxtLink to="/" class="flex flex-col items-center">
                     <svg width="1.5em" height="1.5em" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
