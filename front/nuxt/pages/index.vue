@@ -149,7 +149,6 @@ async function fetchComerciosCercanos(lat, lon) {
     try {
         const response = await $communicationManager.getComerciosCercanos(lat, lon);
         comercios.value = response;
-        console.log("COMERCIOS CERCANOS: ", comercios.value)
 
         const idsComercios = response.comercios.map(comercio => comercio.id);
         const idsComerciosString = idsComercios.join(',');
