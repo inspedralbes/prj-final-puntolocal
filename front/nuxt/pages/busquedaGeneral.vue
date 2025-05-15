@@ -28,12 +28,7 @@
                         <div class="flex flex-col p-2">
                             <p class="text-[15px]">{{ product.comercio }}</p>
                             <p class="text-[20px] mb-2 line-clamp-2 break-all">{{ product.nombre }}</p>
-                            <div class="flex items-center">
-                                <p class="text-sm font-medium">3.5</p>
-                                <PuntuacionComp :rating="3.5" class="mx-1" :customClass="'relative w-4 h-4'" />
-                                <p class="text-sm font-medium">(132)</p>
-                            </div>
-                            <p class="mt-3 text-xl flex">{{ product.precio }} <span class="text-base">€</span></p>
+                            <p class="mt-1 text-xl flex">{{ product.precio }} <span class="text-base">€</span></p>
                             <!-- <button @click="addToBasket(product)"
                                 class="pt-1 pb-1 pl-2 pr-2 mt-4 w-fit bg-[#276BF2] rounded-lg text-white">Afegir a la
                                 cistella</button> -->
