@@ -24,7 +24,7 @@ class OrderComerciosTableSeeder extends Seeder
                 'comercio_id' => $faker->numberBetween(11,20),
                 'subtotal' => $faker->randomFloat(2, 5, 1000),
                 'estat' => $faker->numberBetween(1,5),
-                'created_at' => $faker->dateTimeBetween('-1 month', 'now'),
+                'created_at' => $faker->dateTimeBetween('-10 days', 'now'),
             ]);
         }
     }
