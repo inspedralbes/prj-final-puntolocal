@@ -1,7 +1,7 @@
 <template>
     <div class="mt-4 md:mt-16">
         <div class="my-20 mx-10 md:my-40 md:mx-40 border-2 p-6 rounded-lg shadow-lg">
-            <h1 class="text-xl font-bold mb-4">Gestió d'Horaris</h1>
+            <h1 class="text-xl font-bold mb-4">Gestió d'horaris</h1>
             <form @submit.prevent="saveSchedule" class="space-y-4">
                 <div class="grid grid-cols-1 md:grid-cols-2 2xl:grid-cols-3 gap-6">
                     <div v-for="day in days" :key="day" class="flex flex-col">

@@ -70,7 +70,7 @@
                 </div>
             </div>
             <div v-else>
-                <p class="text-center text-lg mt-4">No hay coincidencias</p>
+                <p class="text-center text-lg mt-4">No hi ha coincidències</p>
             </div>
         </div>
     </div>

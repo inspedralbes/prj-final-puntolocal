@@ -4,7 +4,7 @@
     </div>
 
     <div v-else class="space-y-6 p-6">
-        <h1 class="text-2xl font-bold text-center text-gray-800 mb-6">Compras Realitzades</h1>
+        <h1 class="text-2xl font-bold text-center text-gray-800 mb-6">Compras realitzades</h1>
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div v-for="compra in compras" :key="compra.id"
@@ -26,7 +26,7 @@
 
                 <div class="mb-4">
                     <p class="text-lg text-gray-700">
-                        <strong>Preu Total:</strong> <span class="font-bold">{{ compra.total }} €</span>
+                        <strong>Preu total:</strong> <span class="font-bold">{{ compra.total }} €</span>
                     </p>
                 </div>
 

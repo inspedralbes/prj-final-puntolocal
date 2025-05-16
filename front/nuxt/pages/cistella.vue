@@ -287,7 +287,7 @@ const veureOrdre = () => {
 
                     <button @click="toPay"
                         class="mt-3 w-full h-[60px] justify-center text-white rounded-md border border-transparent px-4 py-2 text-xl font-semibold bg-[#276BF2]">
-                        <p v-if="storesClosed.length > 0">Continuar Igualment</p>
+                        <p v-if="storesClosed.length > 0">Continuar igualment</p>
                     </button>
                 </div>
             </div>
@@ -344,7 +344,7 @@ const veureOrdre = () => {
 
             <div class="footer flex items-center justify-between mt-auto border-t border-gray-300 mb-[60px]">
                 <div id="precio" class="font-semibold text-gray-800">
-                    <p class="text-gray-600 font-light text-sm">Precio total:</p>
+                    <p class="text-gray-600 font-light text-sm">Preu total:</p>
                     <h3 class="text-2xl">
                         <p>{{ comercioStore.totalPrice.toFixed(2) }} €</p>
                     </h3>

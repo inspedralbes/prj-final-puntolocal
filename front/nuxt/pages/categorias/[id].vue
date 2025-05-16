@@ -9,16 +9,16 @@
         </div>
 
         <div v-else-if="comercios.length" class="space-y-4">
-            <h2 class="text-xl font-bold">Lista de Comercios</h2>
+            <h2 class="text-xl font-bold">Llista de comerços</h2>
             <div class="overflow-x-auto whitespace-nowrap">
                 <ul class="flex space-x-4">
                     <li v-for="comercio in comercios" :key="comercio.id"
                         class="min-w-[300px] bg-white shadow-lg p-4 border border-gray-200 flex-shrink-0">
                         <h3 class="text-lg font-semibold text-gray-800">{{ comercio.nombre }}</h3>
-                        <p class="text-sm"><strong>Dirección:</strong> 
+                        <p class="text-sm"><strong>Adreça:</strong> 
                             {{ comercio.calle_num }}, {{ comercio.ciudad }}
                         </p>
-                        <p class="text-sm"><strong>Puntaje Medio:</strong> ⭐ {{ comercio.puntaje_medio }}</p>
+                        <p class="text-sm"><strong>Puntuació mitjana:</strong> ⭐ {{ comercio.puntaje_medio }}</p>
                     </li>
                 </ul>
             </div>

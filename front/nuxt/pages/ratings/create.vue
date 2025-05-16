@@ -16,7 +16,7 @@
             </div>
 
             <button type="submit" class="w-full bg-indigo-600 text-white py-2 rounded-lg hover:bg-indigo-700">
-                Enviar Valoració
+                Enviar valoració
             </button>
         </form>
     </div>

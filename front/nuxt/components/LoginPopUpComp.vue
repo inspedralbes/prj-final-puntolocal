@@ -24,8 +24,8 @@ async function login() {
 
     // Verificar que la contraseña tenga al menos 8 caracteres
     if (formData.password.length < 8) {
-        console.error('La contrasenya es incorrecta');
-        errorMessage.value = 'La contrasenya es incorrecta';
+        console.error('La contrasenya és incorrecta');
+        errorMessage.value = 'La contrasenya és incorrecta';
         return;
     }
     // Llamar al plugin communicationManager para registrar

@@ -4,12 +4,12 @@
     </div>
 
     <div v-else class="space-y-6 p-6">
-        <h1 class="text-2xl font-bold text-center text-gray-800 mb-6">Detalls de la Compra</h1>
+        <h1 class="text-2xl font-bold text-center text-gray-800 mb-6">Detalls de la compra</h1>
 
         <div class="bg-white p-6 rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300">
             <div class="mb-4">
                 <p class="text-xl font-semibold text-gray-800">
-                    <strong>Data de Compra:</strong> {{ formatDate(compras.created_at) }}
+                    <strong>Data de compra:</strong> {{ formatDate(compras.created_at) }}
                 </p>
                 <div class="flex items-center">
                     <div :style="{ backgroundColor: compras.estat_compra?.color }" class="w-4 h-4 rounded-full mr-2">
@@ -56,12 +56,11 @@
             </div>
 
             <div class="mt-6 text-xl font-semibold text-gray-800">
-                <strong>Total de la Compra:</strong> {{ compras.total }} €
+                <strong>Total de la compra:</strong> {{ compras.total }} €
             </div>
         </div>
     </div>
 </template>
-
 
 <script setup>
 definePageMeta({

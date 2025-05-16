@@ -185,7 +185,7 @@ onMounted(() => {
                     'w-full md:w-auto px-4 py-2 text-md font-medium rounded-lg transition-colors duration-200',
                     currentSection === 'personal' ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-600 hover:bg-blue-600 hover:text-white'
                 ]">
-                    Dades Personals
+                    Dades personals
                 </button>
                 <button @click="showSection('password')" :class="[
                     'w-full md:w-auto px-4 py-2 text-md font-medium rounded-lg transition-colors duration-200',
@@ -197,7 +197,7 @@ onMounted(() => {
                     'w-full md:w-auto px-4 py-2 text-md font-medium rounded-lg transition-colors duration-200',
                     currentSection === 'address' ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-600 hover:bg-blue-600 hover:text-white'
                 ]">
-                    Direcció
+                    Adreça
                 </button>
             </div>
 
@@ -338,7 +338,7 @@ onMounted(() => {
                 <div v-else-if="currentSection === 'address'" class="mx-3">
                     <!-- Contenido de Dirección -->
                     <div class="space-y-4">
-                        <div class="w-full"><label class="block text-md font-medium text-gray-700 mb-1">Direcció</label>
+                        <div class="w-full"><label class="block text-md font-medium text-gray-700 mb-1">Adreça</label>
                             <div class="relative">
                                 <div class="absolute inset-y-0 left-0 pl-3 flex items-center"><svg
                                         xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
@@ -409,7 +409,7 @@ onMounted(() => {
                             </div>
                             <div class="grid grid-cols-2 gap-4">
                                 <div class="w-full"><label class="block text-md font-medium text-gray-700 mb-1">Nº
-                                        Planta</label>
+                                        Pis</label>
                                     <div class="relative">
                                         <div class="absolute inset-y-0 left-0 pl-3 flex items-center"><svg
                                                 xmlns="http://www.w3.org/2000/svg" width="24" height="24"
