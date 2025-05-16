@@ -1,5 +1,20 @@
 <template>
-    <div class="bg-gray-100">
+    <div v-if="loading" class="min-h-screen bg-gray-100 p-4 space-y-4">
+        <div class="h-44 bg-gray-300 rounded-xl shadow-sm animate-pulse"></div>
+        <div class="h-8 w-1/3 bg-gray-300 rounded-lg animate-pulse mx-2"></div>
+        <div class="flex space-x-2 overflow-auto gap-1 px-2">
+            <div v-for="n in 4" :key="n" class="w-24 h-[82px] bg-gray-300 rounded-xl shadow-sm animate-pulse"></div>
+        </div>
+        <div class="h-8 w-1/3 bg-gray-300 rounded-lg animate-pulse mx-2"></div>
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 px-4">
+            <div v-for="n in 2" :key="n" class="w-full h-40 bg-gray-300 rounded-xl shadow-sm animate-pulse"></div>
+        </div>
+        <div class="h-8 w-1/3 bg-gray-300 rounded-lg animate-pulse mx-2"></div>
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 px-4">
+            <div v-for="n in 8" :key="n" class="w-full h-40 bg-gray-300 rounded-xl shadow-sm animate-pulse"></div>
+        </div>
+    </div>
+    <div v-else class="bg-gray-100">
         <div>
             <div class="min-h-screen transition-colors duration-300">
                 <StoreCarousel :comercios="comercios?.comercios?.slice(0, 5)" v-if="comercios?.comercios?.length" />
@@ -118,18 +133,19 @@ const authStore = useAuthStore();
 const { $communicationManager } = useNuxtApp();
 // const isDarkMode = ref(window.matchMedia("(prefers-color-scheme: dark)").matches);
 const isDarkMode = false;
+const loading = ref(true);
 
 onMounted(async () => {
-    getLocation();
-    fetchProductos2();
-    fetchCategorias();
+    loading.value = true;
     await checkLocationPermission();
-
+    await fetchProductos2();
+    await fetchCategorias();
     setInterval(() => {
         if (comercios.value.length > 0) {
             currentIndex.value = (currentIndex.value + 1) % comercios.value.length;
         }
     }, 5000);
+    loading.value = false;
 });
 
 async function checkLocationPermission() {

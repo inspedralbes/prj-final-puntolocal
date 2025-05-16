@@ -4,25 +4,33 @@
     </header>
     <hr class="mb-2">
     <div v-if="authStore.isAuthenticated">
-        <div class="flex justify-center my-4">
-            <button
-                @click="mostrarProductos = true"
-                :class="{'bg-[#447EF2] text-white': mostrarProductos, 'bg-gray-200 text-gray-700': !mostrarProductos}"
-                class="px-4 py-2 rounded-l-lg focus:outline-none transition-colors duration-200">
-                Productes
-            </button>
-            <button
-                @click="mostrarProductos = false"
-                :class="{'bg-[#447EF2] text-white': !mostrarProductos, 'bg-gray-200 text-gray-700': mostrarProductos}"
-                class="px-4 py-2 rounded-r-lg focus:outline-none transition-colors duration-200">
-                Comerços
-            </button>
-        </div>
-
-        <div v-if="loading" class="flex justify-center items-center">
-            <Loading />
+        <div v-if="loading" class="bg-white p-4">
+            <div class="animate-pulse">
+                <div class="flex justify-center mb-4 space-x-1">
+                    <div class="w-24 h-10 bg-gray-200 rounded-lg"></div>
+                    <div class="w-24 h-10 bg-gray-200 rounded-lg"></div>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 m-3">
+                    <div v-for="n in 6" :key="n" class="h-44 bg-gray-300 rounded-lg shadow-md"></div>
+                </div>
+            </div>
         </div>
         <div v-else>
+            <div class="flex justify-center my-4">
+                <button
+                    @click="mostrarProductos = true"
+                    :class="{'bg-[#447EF2] text-white': mostrarProductos, 'bg-gray-200 text-gray-700': !mostrarProductos}"
+                    class="px-4 py-2 rounded-l-lg focus:outline-none transition-colors duration-200">
+                    Productes
+                </button>
+                <button
+                    @click="mostrarProductos = false"
+                    :class="{'bg-[#447EF2] text-white': !mostrarProductos, 'bg-gray-200 text-gray-700': mostrarProductos}"
+                    class="px-4 py-2 rounded-r-lg focus:outline-none transition-colors duration-200">
+                    Comerços
+                </button>
+            </div>
+
             <!-- Productos Favoritos -->
             <div v-if="mostrarProductos" class="grid grid-cols-1 md:grid-cols-2 m-3 gap-2">
                 <div v-for="(producto, index) in favoritos" :key="producto.id"
@@ -180,10 +188,10 @@ async function getFavoritos() {
 
 }
 
-onMounted(() => {
+onMounted(async () => {
     loading.value = true;
-    getFavoritos();
-    getComerciosFavoritos();
+    await getFavoritos();
+    await getComerciosFavoritos();
     loading.value = false;
 });
 </script>

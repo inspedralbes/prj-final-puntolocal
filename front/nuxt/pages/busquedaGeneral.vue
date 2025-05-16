@@ -1,6 +1,17 @@
 <template>
-    <div v-if="loading" class="flex justify-center items-center">
-        <Loading />
+    <div v-if="loading" class="p-5">
+        <div class="grid grid-cols-2 gap-4">
+            <div v-for="i in 6" :key="i" class="border rounded-xl overflow-hidden animate-pulse">
+                <div class="flex flex-col">
+                    <div class="h-[180px] w-full bg-gray-200"></div>
+                    <div class="flex flex-col p-2">
+                        <div class="h-4 bg-gray-200 w-3/4 mb-2"></div>
+                        <div class="h-3 bg-gray-200 w-2/3 mb-2"></div>
+                        <div class="h-3 bg-gray-200 w-1/2"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
     <div v-else>
         <nav class="sticky top-[76px] z-50 flex justify-center w-full bg-white text-lg border-b border-gray-300">
@@ -21,8 +32,7 @@
         <div v-if="currentSection === 'productos'" class="p-5">
             <div v-if="Object.values(productos).length > 0" class="grid grid-cols-2 gap-4">
                 <div v-for="(product, index) in Object.values(productos)" :key="index"
-                    class="border rounded-xl overflow-hidden"
-                    @click="mostrarIdProducto(product.id)">
+                    class="border rounded-xl overflow-hidden" @click="mostrarIdProducto(product.id)">
                     <div class="flex flex-col">
                         <img :src="`${baseUrl}/storage/${product.imagen}`" class="h-[180px] w-full" />
                         <div class="flex flex-col p-2">
@@ -168,26 +178,26 @@ function getOpenState(horario) {
     return currentMinutes >= startMinutes && currentMinutes <= endMinutes ? 'Abierto' : 'Cerrado';
 }
 
-onMounted(() => {
+onMounted(async () => {
     loading.value = true;
     if (currentSection.value === 'productos') {
-        getProductsBySearch();
+        await getProductsBySearch();
     } else if (currentSection.value === 'comercios') {
-        getCategorias();
-        getComerciosBySearch();
+        await getCategorias();
+        await getComerciosBySearch();
     }
     loading.value = false;
 });
 
 // Observa cambios en `route.query.search`
-watch(() => route.query.search, (newSearch) => {
+watch(() => route.query.search, async (newSearch) => {
     loading.value = true;
     searchQuery = newSearch || '';
     if (currentSection.value === 'productos') {
-        getProductsBySearch();
+        await getProductsBySearch();
     } else if (currentSection.value === 'comercios') {
-        getCategorias();
-        getComerciosBySearch();
+        await getCategorias();
+        await getComerciosBySearch();
     }
     loading.value = false;
 });
