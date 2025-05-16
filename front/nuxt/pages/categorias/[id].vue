@@ -15,7 +15,7 @@
                     <li v-for="comercio in comercios" :key="comercio.id"
                         class="min-w-[300px] bg-white shadow-lg p-4 border border-gray-200 flex-shrink-0">
                         <h3 class="text-lg font-semibold text-gray-800">{{ comercio.nombre }}</h3>
-                        <p class="text-sm"><strong>Adreça:</strong> 
+                        <p class="text-sm"><strong>Adreça:</strong>
                             {{ comercio.calle_num }}, {{ comercio.ciudad }}
                         </p>
                         <p class="text-sm"><strong>Puntuació mitjana:</strong> ⭐ {{ comercio.puntaje_medio }}</p>
@@ -29,64 +29,69 @@
             <div class="grid grid-cols-2 gap-4">
                 <producto-comp v-for="producto in productos" :key="producto.id"
                     :img="producto.imagen ? `${baseUrl}/storage/${producto.imagen}` : `${baseUrl}/storage/productos/default-image.webp`"
-                    :title="producto.nombre" :price="producto.precio" :comercio="producto.comercio_nombre" />
+                    :title="producto.nombre" :price="producto.precio" :comercio="producto.comercio_nombre"
+                    @click="mostrarIdProducto(producto.id)" />
             </div>
         </div>
     </div>
 </template>
 
 <script setup>
-    import { useRouter, useRoute } from 'vue-router';
-    import { ref, onMounted } from 'vue';
-    import loading from '../../components/loading.vue';
-    import { useAuthStore } from '../../stores/authStore';
-    import productoComp from '../../components/productoComp.vue';
-    
-    import { useRuntimeConfig } from "#imports";
-    const config = useRuntimeConfig();
-    const baseUrl = config.public.apiBaseUrl;
-    
-    const route = useRoute();
-    const router = useRouter();
-    const comercios = ref([]);
-    const productos = ref([]);
-    const isLoading = ref(true);
-    const authStrore = useAuthStore();
-    const { $communicationManager } = useNuxtApp();
+import { useRouter, useRoute } from 'vue-router';
+import { ref, onMounted } from 'vue';
+import loading from '../../components/loading.vue';
+import { useAuthStore } from '../../stores/authStore';
+import productoComp from '../../components/productoComp.vue';
 
-    console.log(authStrore.user.codigo_postal);
+import { useRuntimeConfig } from "#imports";
+const config = useRuntimeConfig();
+const baseUrl = config.public.apiBaseUrl;
 
-    async function getComerciosCategoria() {
-        try {
-            const categoriaId = route.params.id;
-            const response = await $communicationManager.getComerciosDeCategorias(categoriaId);
-            const responseProductos = await $communicationManager.getProductosDeCategorias(categoriaId);
+const route = useRoute();
+const router = useRouter();
+const comercios = ref([]);
+const productos = ref([]);
+const isLoading = ref(true);
+const authStrore = useAuthStore();
+const { $communicationManager } = useNuxtApp();
 
-            console.log(responseProductos);
+console.log(authStrore.user.codigo_postal);
 
-            if (Array.isArray(response)) {
-                comercios.value = response;
-            } else {
-                console.error("La respuesta de comercios no es un array");
-            }
+async function getComerciosCategoria() {
+    try {
+        const categoriaId = route.params.id;
+        const response = await $communicationManager.getComerciosDeCategorias(categoriaId);
+        const responseProductos = await $communicationManager.getProductosDeCategorias(categoriaId);
 
-            if (Array.isArray(responseProductos)) {
-                productos.value = responseProductos;
-            } else {
-                console.error("La respuesta de productos no es un array");
-            }
-        } catch (error) {
-            console.error("Error obteniendo datos:", error);
-        } finally {
-            isLoading.value = false;
+        console.log(responseProductos);
+
+        if (Array.isArray(response)) {
+            comercios.value = response;
+        } else {
+            console.error("La respuesta de comercios no es un array");
         }
-    }
 
-    function todasLasCategorias() {
-        router.push(`/categorias`);
+        if (Array.isArray(responseProductos)) {
+            productos.value = responseProductos;
+        } else {
+            console.error("La respuesta de productos no es un array");
+        }
+    } catch (error) {
+        console.error("Error obteniendo datos:", error);
+    } finally {
+        isLoading.value = false;
     }
+}
 
-    onMounted(() => {
-        getComerciosCategoria();
-    });
+function todasLasCategorias() {
+    router.push(`/categorias`);
+}
+
+function mostrarIdProducto(id) {
+    router.push(`/producto/${id}`);
+}
+
+onMounted(() => {
+    getComerciosCategoria();
+});
 </script>
