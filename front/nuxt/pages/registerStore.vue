@@ -46,12 +46,12 @@ async function obtenerCoordenadas() {
             errorMensaje.value = '';
             return { lat: data[0].lat, lon: data[0].lon };
         } else {
-            errorMensaje.value = "No se encontraron coordenadas.";
+            errorMensaje.value = "No es van trobar coordenades.";
             console.error(errorMensaje.value);
             return null;
         }
     } catch (error) {
-        errorMensaje.value = "Error al obtener las coordenadas.";
+        errorMensaje.value = "Error en obtenir les coordenades.";
         console.error(errorMensaje.value, error);
         return null;
     }
@@ -87,13 +87,13 @@ async function realizarRegistro() {
     formData.gestion_stock = parseInt(formData.gestion_stock);
 
     if (!formData.idUser) {
-        console.error("Error: idUser no está definido.");
+        console.error("Error: idUser no està definit.");
         return;
     }
 
     for (const key in formData) {
         if (formData[key] === null || formData[key] === undefined || formData[key] === '') {
-            console.error(`Campo obligatorio faltante: ${key}`);
+            console.error(`Camp obligatori que manca: ${key}`);
             return;
         }
     }
@@ -115,10 +115,10 @@ async function realizarRegistro() {
         if (response) {
             navigateTo('/perfil');
         } else {
-            console.error("Error al registrar el comercio.");
+            console.error("Error en registrar el comerç.");
         }
     } catch (error) {
-        console.error("Error en el proceso de registro:", error);
+        console.error("Error en el procés de registre:", error);
     }
 }
 
@@ -129,7 +129,7 @@ async function register() {
         formData.longitude = coordenadas.lon;
         await realizarRegistro();
     } else {
-        console.error("No se obtuvieron coordenadas. Registro cancelado.");
+        console.error("No es van obtenir coordenades. Registre cancel·lat.");
     }
 }
 
@@ -227,7 +227,7 @@ onMounted(async () => {
                                 <div class="mt-1">
                                     <select id="provincia" v-model="formData.provincia" required
                                         class="block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 bg-white shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm">
-                                        <option value="" disabled class="text-gray-400">Seleccione una provincia
+                                        <option value="" disabled class="text-gray-400">Seleccioni una província
                                         </option>
                                         <option v-for="provincia in listaProvincias" :key="provincia.code"
                                             :value="provincia.label">
@@ -238,11 +238,11 @@ onMounted(async () => {
                             </div>
 
                             <div>
-                                <label for="ciudad" class="block text-sm font-medium text-gray-700">Ciudad</label>
+                                <label for="ciudad" class="block text-sm font-medium text-gray-700">Ciutat</label>
                                 <div class="mt-1">
                                     <select id="ciudad" v-model="formData.ciudad" required
                                         class="block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 bg-white shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm">
-                                        <option value="" disabled>Seleccione una ciudad</option>
+                                        <option value="" disabled>Seleccioni una ciutat</option>
                                         <option v-for="ciudad in listaCiudades" :key="ciudad.code"
                                             :value="ciudad.label">
                                             {{ ciudad.label }}
@@ -257,7 +257,7 @@ onMounted(async () => {
 
                             <div>
                                 <label for="codigo_postal" class="block text-sm font-medium text-gray-700">Codi
-                                    Postal</label>
+                                    postal</label>
                                 <div class="mt-1">
                                     <input id="codigo_postal" name="codigo_postal" v-model="formData.codigo_postal"
                                         type="text" data-testid="codigo_postal" required="" placeholder="07436"
@@ -265,8 +265,8 @@ onMounted(async () => {
                                 </div>
                             </div>
                             <div>
-                                <label for="numero_planta" class="block text-sm font-medium text-gray-700">Número
-                                    Planta</label>
+                                <label for="numero_planta" class="block text-sm font-medium text-gray-700">Nº
+                                    Pis</label>
                                 <div class="mt-1">
                                     <input id="numero_planta" name="numero_planta" v-model="formData.num_planta"
                                         type="number" data-testid="numero_planta" required="" placeholder="9"
@@ -274,7 +274,7 @@ onMounted(async () => {
                                 </div>
                             </div>
                             <div>
-                                <label for="numero_puerta" class="block text-sm font-medium text-gray-700">Número
+                                <label for="numero_puerta" class="block text-sm font-medium text-gray-700">Nº
                                     Porta</label>
                                 <div class="mt-1">
                                     <input id="numero_puerta" name="numero_puerta" v-model="formData.num_puerta"
@@ -284,7 +284,7 @@ onMounted(async () => {
                             </div>
                             <div>
                                 <label for="gestion_stock" class="block text-sm font-medium text-gray-700">Gestionar
-                                    Stock</label>
+                                    estoc</label>
                                 <div class="mt-1">
                                     <select id="gestion_stock" v-model="formData.gestion_stock"
                                         data-testid="gestion_stock" required=""
@@ -310,8 +310,7 @@ onMounted(async () => {
                         <div class="col-span-2">
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <div>
-                                    <label for="logo" class="block text-sm font-medium text-gray-700">Logo del
-                                        Comercio</label>
+                                    <label for="logo" class="block text-sm font-medium text-gray-700">Logo del comerç</label>
                                     <div class="mt-1">
                                         <input id="logo" type="file" @change="handleLogoUpload" accept="image/*"
                                             class="block w-full text-sm text-gray-900 border border-gray-300 rounded-md cursor-pointer bg-white shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
@@ -319,8 +318,7 @@ onMounted(async () => {
                                 </div>
 
                                 <div>
-                                    <label for="imagen_local" class="block text-sm font-medium text-gray-700">Imagen del
-                                        Local</label>
+                                    <label for="imagen_local" class="block text-sm font-medium text-gray-700">Imatge del comerç</label>
                                     <div class="mt-1">
                                         <input id="imagen_local" type="file" @change="handleLocalImageUpload"
                                             accept="image/*"

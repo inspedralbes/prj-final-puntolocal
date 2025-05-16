@@ -247,12 +247,11 @@ onMounted(() => {
                 </div>
                 <div>
                     <div class="bg-white p-6 rounded-lg shadow-sm ">
-                        <h3 class="text-lg font-semibold text-gray-800 mb-4 ">Información Básica</h3>
+                        <h3 class="text-lg font-semibold text-gray-800 mb-4 ">Informació bàsica</h3>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div>
                                 <label
-                                    class="block text-sm font-medium text-gray-600 mb-1 sm:text-xl ">Nombre
-                                    del Comercio</label><input type="text" name="nombre"
+                                    class="block text-sm font-medium text-gray-600 mb-1 sm:text-xl ">Nom del comerç</label><input type="text" name="nombre"
                                     class="w-full px-3 py-2 border border-black rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500  "
                                     v-model="formComercio.nombre">
                             </div>
@@ -262,34 +261,30 @@ onMounted(() => {
                                     class="w-full px-3 py-2 border border-black rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500  "
                                     v-model="formComercio.email"></div>
                             <div><label
-                                    class="block text-sm font-medium text-gray-600 mb-1 sm:text-xl ">Teléfono</label><input
+                                    class="block text-sm font-medium text-gray-600 mb-1 sm:text-xl ">Telèfon</label><input
                                     type="tel" name="phone" id="telefono"
                                     class="w-full px-3 py-2 border border-black rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500  "
                                     v-model="formComercio.phone"></div>
                             <div><label
-                                    class="block text-sm font-medium text-gray-600 mb-1 sm:text-xl ">Gestión
-                                    de Stock</label>
+                                    class="block text-sm font-medium text-gray-600 mb-1 sm:text-xl ">Gestió d'estoc</label>
                                 <div class="flex items-center mt-4"><input type="checkbox"
                                         v-model="formComercio.gestion_stock" name="gestion_stock"
                                         class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
                                         :true-value="1" :false-value="0"><span
-                                        class="ml-2 text-sm text-gray-600 sm:text-xl ">Activar
-                                        gestión de stock</span>
+                                        class="ml-2 text-sm text-gray-600 sm:text-xl ">Activar gestió d'estoc</span>
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div class="bg-white p-6 rounded-lg shadow-sm lg:mt-1.5 ">
-                        <h3 class="text-lg font-semibold text-gray-800 mb-4 ">Dirección</h3>
+                        <h3 class="text-lg font-semibold text-gray-800 mb-4 ">Adreça</h3>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div><label
-                                    class="block text-sm font-medium text-gray-600 mb-1 sm:text-xl ">Calle
-                                    y
-                                    Número</label><input type="text" name="calle_num"
+                                    class="block text-sm font-medium text-gray-600 mb-1 sm:text-xl ">Carrer i nombre</label><input type="text" name="calle_num"
                                     class="w-full px-3 py-2 border border-black rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500  "
                                     v-model="formComercio.calle_num"></div>
                             <div><label
-                                    class="block text-sm font-medium text-gray-600 mb-1 sm:text-xl ">Ciudad</label><input
+                                    class="block text-sm font-medium text-gray-600 mb-1 sm:text-xl ">Ciutat</label><input
                                     type="text" name="ciudad"
                                     class="w-full px-3 py-2 border border-black rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500  "
                                     v-model="formComercio.ciudad"></div>
@@ -299,27 +294,27 @@ onMounted(() => {
                                     class="w-full px-3 py-2 border border-black rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500  "
                                     v-model="formComercio.provincia"></div>
                             <div><label
-                                    class="block text-sm font-medium text-gray-600 mb-1 sm:text-xl ">Código
-                                    Postal</label><input type="text" name="codigo_postal"
+                                    class="block text-sm font-medium text-gray-600 mb-1 sm:text-xl ">Codi
+                                    postal</label><input type="text" name="codigo_postal"
                                     class="w-full px-3 py-2 border border-black rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500  "
                                     v-model="formComercio.codigo_postal"></div>
                             <div><label
-                                    class="block text-sm font-medium text-gray-600 mb-1 sm:text-xl ">Planta</label><input
+                                    class="block text-sm font-medium text-gray-600 mb-1 sm:text-xl ">Pis</label><input
                                     type="number" name="num_planta"
                                     class="w-full px-3 py-2 border border-black rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500  "
                                     v-model="formComercio.num_planta"></div>
                             <div><label
-                                    class="block text-sm font-medium text-gray-600 mb-1 sm:text-xl ">Puerta</label><input
+                                    class="block text-sm font-medium text-gray-600 mb-1 sm:text-xl ">Porta</label><input
                                     type="number" name="num_puerta"
                                     class="w-full px-3 py-2 border border-black rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500  "
                                     v-model="formComercio.num_puerta"></div>
                         </div>
                     </div>
                     <div class="bg-white p-6 rounded-lg shadow-sm lg:mt-1.5 ">
-                        <h3 class="text-lg font-semibold text-gray-800 mb-4 ">Información Adicional</h3>
+                        <h3 class="text-lg font-semibold text-gray-800 mb-4 ">Informació addicional</h3>
                         <div class="space-y-6">
                             <div><label
-                                    class="block text-sm font-medium text-gray-600 mb-1 sm:text-xl ">Descripción</label><textarea
+                                    class="block text-sm font-medium text-gray-600 mb-1 sm:text-xl ">Descripció</label><textarea
                                     name="descripcion" rows="4" v-model="formComercio.descripcion"
                                     class="w-full px-3 py-2 border border-black rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500  "></textarea>
                             </div>
@@ -339,12 +334,12 @@ onMounted(() => {
                                 </div>
                             </div>
                             <div>
-                                <h3 class="text-lg font-semibold text-gray-800 mb-6">Imágenes del Comercio</h3>
+                                <h3 class="text-lg font-semibold text-gray-800 mb-6">Imatges del comerç</h3>
                                 
                                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                                     <!-- Logo del comercio -->
                                     <div class="mb-6">
-                                        <label class="block text-sm font-medium text-gray-600 mb-2 sm:text-xl">Logo del Comercio</label>
+                                        <label class="block text-sm font-medium text-gray-600 mb-2 sm:text-xl">Logo del comerç</label>
                                         
                                         <div v-if="formComercio.logoImage" class="relative group w-48 h-48 mb-4">
                                             <img :src="formComercio.logoImage" alt="Logo del comercio"
@@ -382,7 +377,7 @@ onMounted(() => {
                                     
                                     <!-- Imagen del local -->
                                     <div class="mb-6">
-                                        <label class="block text-sm font-medium text-gray-600 mb-2 sm:text-xl">Imagen del Local</label>
+                                        <label class="block text-sm font-medium text-gray-600 mb-2 sm:text-xl">Imatge del comerç</label>
                                         
                                         <div v-if="formComercio.localImage" class="relative group w-48 h-48 mb-4">
                                             <img :src="formComercio.localImage" alt="Logo del comercio"

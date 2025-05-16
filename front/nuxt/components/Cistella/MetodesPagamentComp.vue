@@ -185,7 +185,7 @@ const selectPaymentMethod = async (card) => {
                 <div v-if="savedPaymentCards.length > 0 && !newPaymentMethodShow"
                     class="flex flex-col w-full justify-center items-center">
                     <button @click="agregarTarjeta" class="my-2 bg-[#276BF2] text-white p-3 rounded-md">
-                        Añadir nuevo método de pago
+                        Afegir nou mètode de pagament
                     </button>
                     <div v-for="(creditCard, index) in savedPaymentCards" :key="index"
                         @click="selectPaymentMethod(creditCard)"
@@ -216,11 +216,11 @@ const selectPaymentMethod = async (card) => {
                         <div class="w-full max-w-md">
                             <div class="rounded-lg shadow-sm border border-gray-200 bg-white">
                                 <div class="p-6">
-                                    <h4 class="text-xl font-semibold mb-4">Añadir método de pago</h4>
+                                    <h4 class="text-xl font-semibold mb-4">Afegir mètode de pagament</h4>
                                     <form>
                                         <div class="mb-4">
                                             <label class="block text-sm font-medium text-gray-700 mb-1"
-                                                for="card-holder-name">Titular de la tarjeta</label>
+                                                for="card-holder-name">Titular de la targeta</label>
                                             <div class="relative">
                                                 <input
                                                     class="peer block w-full rounded-md border border-gray-300 py-2 px-3 placeholder-transparent focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
@@ -228,14 +228,13 @@ const selectPaymentMethod = async (card) => {
                                                     type="text" v-model="cardHolderName" />
                                                 <label for="card-holder-name"
                                                     class="absolute left-3 -top-2.5 text-sm text-gray-500 bg-white px-1 transition-all peer-placeholder-shown:top-2 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 peer-focus:-top-2.5 peer-focus:text-sm peer-focus:text-gray-500">
-                                                    Nombre del titular
+                                                    Nom del titular
                                                 </label>
                                             </div>
                                         </div>
 
                                         <div class="mb-6">
-                                            <label class="block text-sm font-medium text-gray-700 mb-2">Información
-                                                de la tarjeta</label>
+                                            <label class="block text-sm font-medium text-gray-700 mb-2">Informació de la targeta</label>
                                             <div id="card-element"
                                                 class="border border-gray-300 rounded-md px-3 py-3 bg-white">
                                             </div>
@@ -243,7 +242,7 @@ const selectPaymentMethod = async (card) => {
 
                                         <button @click="updatePaymentMethod" type="button"
                                             class="w-full bg-blue-600 text-white font-medium py-2 rounded-md hover:bg-blue-700 transition">
-                                            Añadir método de pago
+                                            Afegir mètode de pagament
                                         </button>
                                         <button v-if="savedPaymentCards.length > 0"
                                             @click="newPaymentMethodShow = false" type="button"

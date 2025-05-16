@@ -30,7 +30,7 @@
 
                     <button class="w-full bg-[#447EF2] text-white py-2 rounded-md"
                         @click="goToComercio">
-                        {{ hasComercio ? 'Panel de Control del Comercio' : 'Crear Comercio' }}
+                        {{ hasComercio ? 'Panell de Control del Comerç' : 'Crear comerç' }}
                     </button>
 
                     <button class="w-full bg-[#447EF2] text-white py-2 rounded-md"

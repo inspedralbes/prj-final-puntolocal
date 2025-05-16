@@ -5,7 +5,7 @@
             <div class="flex flex-col !mx-4">
 
                 <div class="text-center mb-12">
-                    <h1 class="text-4xl font-bold text-gray-800">Sobre Nosaltres</h1>
+                    <h1 class="text-4xl font-bold text-gray-800">Sobre nosaltres</h1>
                     <p class="mt-4 text-lg text-gray-600">Conèix qui som i què fem</p>
                 </div>
                 <!-- Mission & Vision -->

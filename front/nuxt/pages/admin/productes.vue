@@ -112,7 +112,7 @@
                                         </div>
                                     </th>
                                     <th scope="col" class="p-4 text-xs font-medium text-left text-gray-500 uppercase ">
-                                        Nom de producte
+                                        Nom del producte
                                     </th>
                                     <th scope="col" class="p-4 text-xs font-medium text-left text-gray-500 uppercase ">
                                         Subcategoria
@@ -121,7 +121,7 @@
                                         Descripció
                                     </th>
                                     <th scope="col" class="p-4 text-xs font-medium text-left text-gray-500 uppercase ">
-                                        Precio
+                                        Preu
                                     </th>
                                     <th scope="col" class="p-4 text-xs font-medium text-left text-gray-500 uppercase ">
                                         Visible
@@ -144,8 +144,6 @@
                                         <div class="text-base font-semibold text-gray-900 ">
                                             {{ producto.nombre }}
                                         </div>
-                                        <div class="text-sm font-normal text-gray-500 ">Info de algo
-                                        </div>
                                     </td>
                                     <td class="p-4 text-base font-medium text-gray-900 whitespace-nowrap ">
                                         {{ producto.subcategoria }}</td>
@@ -154,12 +152,6 @@
                                         {{ producto.descripcion }}</td>
                                     <td class="p-4 text-base font-medium text-gray-900 whitespace-nowrap ">
                                         {{ producto.precio }}€</td>
-                                    <!-- <td
-                                        class="p-4 text-base font-medium text-gray-900 whitespace-nowrap ">
-                                        {{ producto.stock ? producto.stock : 'N/A' }}</td>
-                                    <td
-                                        class="p-4 text-base font-medium text-gray-900 whitespace-nowrap ">
-                                        {{ producto.descuento ? producto.descuento : 'No' }}</td> -->
                                     <td class="p-4 text-base font-medium text-gray-900 whitespace-nowrap ">
                                         <label class="relative inline-block">
                                             <input type="checkbox" @click="cambiarVisibilidad(producto.id)"
@@ -227,7 +219,7 @@
                         d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
                         clip-rule="evenodd"></path>
                 </svg>
-                <span class="sr-only">Close menu</span>
+                <span class="sr-only">Cerrar menu</span>
             </button>
             <form @submit.prevent="guardarProd">
                 <div class="space-y-4">
@@ -249,7 +241,7 @@
                         </select>
                     </div>
                     <div>
-                        <label for="price" class="block mb-2 text-sm font-medium text-gray-900 ">Precio</label>
+                        <label for="price" class="block mb-2 text-sm font-medium text-gray-900 ">Preu</label>
                         <input type="number" name="price" id="price"
                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
                             v-model="productoActual.precio" step="any" @input="handleInput" placeholder="100€" required>
@@ -261,14 +253,14 @@
                             v-model="productoActual.descuento" placeholder="5%">
                     </div>
                     <div>
-                        <label for="stock" class="block mb-2 text-sm font-medium text-gray-900 ">Stock</label>
+                        <label for="stock" class="block mb-2 text-sm font-medium text-gray-900 ">Estoc</label>
                         <input type="number" name="stock" id="stock"
                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5      "
                             v-model="productoActual.stock" placeholder="10">
                     </div>
                     <div>
                         <label for="description"
-                            class="block mb-2 text-sm font-medium text-gray-900 ">Descripción</label>
+                            class="block mb-2 text-sm font-medium text-gray-900 ">Descripció</label>
                         <textarea id="description" rows="4" required
                             class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-primary-500 focus:border-primary-500      "
                             placeholder="Camiseta blanca 100% algodón" v-model="productoActual.descripcion"></textarea>
@@ -323,16 +315,15 @@
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                         </svg>
-                        <h3 class="mt-5 mb-6 text-lg text-gray-500 ">Está seguro que desea eliminar el
-                            producto?</h3>
+                        <h3 class="mt-5 mb-6 text-lg text-gray-500 ">Està segur que desitja eliminar el producte?</h3>
                         <button type="button" @click="eliminarProducto(id_producto_eliminar)"
                             class="text-white bg-red-600 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-base inline-flex items-center px-3 py-2.5 text-center mr-2">
-                            Si, estoy seguro
+                            Si, estic segur
                         </button>
                         <button type="button" @click="toggleCard('eliminar')"
                             class="text-gray-900 bg-white hover:bg-gray-100 focus:ring-4 focus:ring-primary-300 border border-gray-200 font-medium inline-flex items-center rounded-lg text-base px-3 py-2.5 text-center"
                             data-modal-hide="delete-user-modal">
-                            No, cancelar
+                            No, cancel·lar
                         </button>
                     </div>
                 </div>
@@ -385,7 +376,7 @@
                                 </div>
                                 <div class="col-span-6 sm:col-span-3">
                                     <label for="precio"
-                                        class="block mb-2 text-sm font-medium text-gray-900 ">Precio</label>
+                                        class="block mb-2 text-sm font-medium text-gray-900 ">Preu</label>
                                     <input type="number" name="precio" id="precio"
                                         class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5      "
                                         v-model="productoNuevo.precio" step="any" @input="handleInput"
@@ -393,7 +384,7 @@
                                 </div>
                                 <div class="col-span-6 sm:col-span-3">
                                     <label for="stock"
-                                        class="block mb-2 text-sm font-medium text-gray-900 ">Stock</label>
+                                        class="block mb-2 text-sm font-medium text-gray-900 ">Estoc</label>
                                     <input type="number" name="stock" id="stock"
                                         class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5      "
                                         v-model="productoNuevo.stock" placeholder="10" required>
@@ -496,28 +487,6 @@ const productoNuevo = ref({
     'imagen': null,
 });
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 const id_producto_eliminar = ref();
 
 definePageMeta({
@@ -556,7 +525,7 @@ async function eliminarProducto(id) {
             toggleCard('eliminar');
         }
     } else {
-        // console.log('Error: ' + data.message);
+        console.log('Error: ' + data.message);
     }
 }
 
@@ -658,7 +627,6 @@ async function crearProducto() {
         toggleCard('crear');
         productoNuevo.value = result.data.producto;
         productoNuevo.value.subcategoria = result.data.producto.subcategoria.name;
-        // console.log("PRODUCTO NUEVO:", productoNuevo.value);
         productos.push(productoNuevo.value);
         productoNuevo.value = {
             'nombre': '',
@@ -748,13 +716,13 @@ async function handleCSVUpload(event) {
             } else {
                 Swal.fire({
                     icon: "error createProductoExcel",
-                    title: "Error el procesar el fitxer .csv",
+                    title: "Error al processar el fitxer .csv",
                 });
             }
         } catch (error) {
             Swal.fire({
                 icon: "error",
-                title: "Error el procesar el fitxer .csv",
+                title: "Error al processar el fitxer .csv",
             });
         }
     };
@@ -762,7 +730,7 @@ async function handleCSVUpload(event) {
     reader.onerror = function () {
         Swal.fire({
             icon: "error",
-            title: "Error al leer el archivo",
+            title: "Error en llegir l'arxiu",
         });
     };
 
@@ -825,11 +793,6 @@ const filteredProducts = computed(() => {
 onMounted(async () => {
     document.addEventListener('keydown', closeAll);
     subcategorias.value = await fetchSubcategorias(comercio?.value?.categoria_id);
-    // console.log(comercio?.value?.categoria_id);
-
-    // console.log('Comercio (toRaw):', toRaw(authStore.comercio)); // Muestra el objeto real
-    // º('Comercio (JSON):', JSON.stringify(authStore.comercio, null, 2)); // JSON legible
-    // console.log('Comercio (copia):', { ...authStore.comercio }); // Copia sin reactividad
 });
 
 onBeforeMount(async () => {

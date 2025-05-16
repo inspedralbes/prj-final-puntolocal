@@ -1,6 +1,6 @@
 <template>
     <div class="container mx-auto p-4">
-        <h1 class="text-2xl font-bold text-center mb-6 text-gray-900">Categorías</h1>
+        <h1 class="text-2xl font-bold text-center mb-6 text-gray-900">Categories</h1>
         <div v-if="loading" class="flex justify-center items-center h-40">
             <Loading />
         </div>
@@ -30,7 +30,7 @@
             const response = await $communicationManager.getCategorias();
             categorias.value = response;
         } catch (error) {
-            console.error("Error al obtener categorías", error);
+            console.error("Error al obtener categories", error);
         } finally {
             loading.value = false;
         }

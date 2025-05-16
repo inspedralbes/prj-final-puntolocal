@@ -59,19 +59,15 @@
                                     </th>
                                     <th scope="col"
                                         class="p-4 text-xs font-medium text-left text-gray-500 uppercase">
-                                        ID GENERAL
+                                        CLIENT
                                     </th>
                                     <th scope="col"
                                         class="p-4 text-xs font-medium text-left text-gray-500 uppercase">
-                                        CLIENTE
+                                        DATA
                                     </th>
                                     <th scope="col"
                                         class="p-4 text-xs font-medium text-left text-gray-500 uppercase">
-                                        FECHA
-                                    </th>
-                                    <th scope="col"
-                                        class="p-4 text-xs font-medium text-left text-gray-500 uppercase">
-                                        TIPO
+                                        TIPUS
                                     </th>
                                     <th scope="col"
                                         class="p-4 text-xs font-medium text-left text-gray-500 uppercase">
@@ -93,9 +89,6 @@
                                     <td
                                         class="p-4 text-base font-medium text-gray-900 whitespace-nowrap">
                                         #{{ order.id }}</td>
-                                    <td
-                                        class="p-4 text-base font-medium text-gray-900 whitespace-nowrap">
-                                        #{{ order.order_id }}</td>
                                     <td
                                         class="p-4 text-base font-medium text-gray-900 whitespace-nowrap">
                                         {{ order.order.cliente.name }} {{ formatApellido(order.order.cliente.apellidos)

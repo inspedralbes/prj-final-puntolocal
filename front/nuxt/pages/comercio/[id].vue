@@ -24,7 +24,7 @@
                         <span class="font-semibold text-gray-800 mr-2">📜 Descripció:</span> {{ comercio.descripcion }}
                     </p>
                     <p class="text-gray-600 items-center">
-                        <span class="font-semibold text-gray-800 mr-2">📍 Direcció:</span><br> {{ comercio.calle_num }}
+                        <span class="font-semibold text-gray-800 mr-2">📍 Adreça:</span><br> {{ comercio.calle_num }}
                     </p>
                     <p class="text-gray-600 items-center">
                         <span class="font-semibold text-gray-800 mr-2">📞 Telèfon: </span><br> {{ comercio.phone }}
@@ -106,7 +106,7 @@
                             </svg>
                         </button>
                     </div>
-                    <p class="font-light text-base mb-1">Indumentaria</p>
+                    <p class="font-light text-base mb-1">Indumentària</p>
                     <PuntuacionComp :rating="comercio.puntaje_medio" :customClass="'relative w-4 h-4'" />
                 </div>
             </div>

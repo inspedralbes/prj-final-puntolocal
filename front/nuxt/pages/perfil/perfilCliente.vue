@@ -185,7 +185,7 @@ onMounted(() => {
                     'w-full md:w-auto px-4 py-2 text-md font-medium rounded-lg transition-colors duration-200',
                     currentSection === 'personal' ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-600 hover:bg-blue-600 hover:text-white'
                 ]">
-                    Dades Personals
+                    Dades personals
                 </button>
                 <button @click="showSection('password')" :class="[
                     'w-full md:w-auto px-4 py-2 text-md font-medium rounded-lg transition-colors duration-200',
@@ -197,7 +197,7 @@ onMounted(() => {
                     'w-full md:w-auto px-4 py-2 text-md font-medium rounded-lg transition-colors duration-200',
                     currentSection === 'address' ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-600 hover:bg-blue-600 hover:text-white'
                 ]">
-                    Direcció
+                    Adreça
                 </button>
             </div>
 
@@ -220,7 +220,7 @@ onMounted(() => {
                                 </div>
                             </div>
                             <div class="w-full"><label
-                                    class="block text-md font-medium text-gray-700 mb-1">Llinatges</label>
+                                    class="block text-md font-medium text-gray-700 mb-1">Cognoms</label>
                                 <div class="relative">
                                     <div class="absolute inset-y-0 left-0 pl-3 flex items-center"><svg
                                             xmlns="http://www.w3.org/2000/svg" width="24" height="24"
@@ -271,7 +271,7 @@ onMounted(() => {
                         <button type="submit" class="w-full sm:w-auto px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg 
                 shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 
                 focus:ring-offset-2 transition duration-200" @click="updateDatosPersonales">
-                            Guardar Canvis
+                            Guardar canvis
                         </button>
                     </div>
                 </div>
@@ -280,7 +280,7 @@ onMounted(() => {
                     <div class="space-y-4">
                         <div class="w-full">
                             <label class="block text-md font-medium text-gray-700 mb-1">
-                                Contrasenya Actual
+                                Contrasenya actual
                             </label>
                             <div class="relative">
                                 <div class="absolute inset-y-0 left-0 pl-3 flex items-center"><svg
@@ -296,7 +296,7 @@ onMounted(() => {
                         </div>
                         <div class="w-full">
                             <label class="block text-md font-medium text-gray-700 mb-1">
-                                Nova Contrasenya
+                                Nova contrasenya
                             </label>
                             <div class="relative">
                                 <div class="absolute inset-y-0 left-0 pl-3 flex items-center"><svg
@@ -312,7 +312,7 @@ onMounted(() => {
                         </div>
                         <div class="w-full">
                             <label class="block text-md font-medium text-gray-700 mb-1">
-                                Confirmar Nova Contrasenya
+                                Confirmar nova contrasenya
                             </label>
                             <div class="relative">
                                 <div class="absolute inset-y-0 left-0 pl-3 flex items-center"><svg
@@ -331,14 +331,14 @@ onMounted(() => {
                         <button type="submit" class="w-full sm:w-auto px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg 
                 shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 
                 focus:ring-offset-2 transition duration-200" @click="changePassword">
-                            Canviar Contrasenya
+                            Canviar contrasenya
                         </button>
                     </div>
                 </div>
                 <div v-else-if="currentSection === 'address'" class="mx-3">
                     <!-- Contenido de Dirección -->
                     <div class="space-y-4">
-                        <div class="w-full"><label class="block text-md font-medium text-gray-700 mb-1">Direcció</label>
+                        <div class="w-full"><label class="block text-md font-medium text-gray-700 mb-1">Adreça</label>
                             <div class="relative">
                                 <div class="absolute inset-y-0 left-0 pl-3 flex items-center"><svg
                                         xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
@@ -393,7 +393,7 @@ onMounted(() => {
                         </div>
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                             <div class="w-full"><label class="block text-md font-medium text-gray-700 mb-1">Codi
-                                    Postal</label>
+                                    postal</label>
                                 <div class="relative">
                                     <div class="absolute inset-y-0 left-0 pl-3 flex items-center"><svg
                                             xmlns="http://www.w3.org/2000/svg" width="24" height="24"
@@ -409,7 +409,7 @@ onMounted(() => {
                             </div>
                             <div class="grid grid-cols-2 gap-4">
                                 <div class="w-full"><label class="block text-md font-medium text-gray-700 mb-1">Nº
-                                        Planta</label>
+                                        Pis</label>
                                     <div class="relative">
                                         <div class="absolute inset-y-0 left-0 pl-3 flex items-center"><svg
                                                 xmlns="http://www.w3.org/2000/svg" width="24" height="24"
@@ -454,7 +454,7 @@ onMounted(() => {
                         <button type="submit" class="w-full sm:w-auto px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg 
                 shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 
                 focus:ring-offset-2 transition duration-200" @click="updateDatosFacturacion">
-                            Guardar Canvis
+                            Guardar canvis
                         </button>
                     </div>
                 </div>

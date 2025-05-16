@@ -6,6 +6,22 @@ export default defineNuxtConfig({
     port: 5173,
   },
 
+  app: {
+    head: {
+      title: 'HolaBarri - Marketplace',
+      meta: [
+        { name:'description', content: 'El mejor marketplace del barrio'}
+      ],
+      link: [
+        {
+          rel: 'icon',
+          type: 'image/svg+xml',
+          href: '/favicon.svg'
+        }
+      ]
+    }
+  },
+
   vite: {
     optimizeDeps: {
       exclude: ['ol']
