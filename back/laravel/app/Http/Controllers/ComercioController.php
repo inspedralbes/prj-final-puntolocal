@@ -1,39 +1,41 @@
 <?php
 namespace App\Http\Controllers;
 
-    use App\Models\Comercio;
-    use App\Models\Producto;
-    use Carbon\Carbon;
-    use Date;
-    use Illuminate\Support\Str;
-    use Illuminate\Http\Request;
-    use Illuminate\Support\Facades\DB;
-    use App\Http\Controllers\Controller;
-    use Illuminate\Support\Facades\Mail;
-    use Illuminate\Support\Facades\Hash;
-    use Illuminate\Support\Facades\Storage;
-    use Illuminate\Support\Facades\Validator;
+use App\Models\Comercio;
+use App\Models\Producto;
+use Carbon\Carbon;
+use Date;
+use Illuminate\Support\Str;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Validator;
 
-    class ComercioController extends Controller {
-        public function RegistrarComercio(Request $request) {
-            $validator = Validator::make($request->all(), [
-                'nombre' => 'required|string|max:255',
-                'idUser' => 'required|integer',
-                'email' => 'required|email',
-                'phone' => 'required|string|max:15',
-                'street_address' => 'required|string|max:255',
-                'ciudad' => 'required|string|max:255',
-                'provincia' => 'required|string|max:255',
-                'codigo_postal' => 'required|integer',
-                'num_planta' => 'required|integer',
-                'num_puerta' => 'required|integer',
-                'descripcion' => 'required|string|max:500',
-                'categoria' => 'required|integer',
-                'gestion_stock' => 'required|integer',
-                'latitude' => 'required|numeric',
-                'longitude' => 'required|numeric',
-                'imagen' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048'
-            ]);
+class ComercioController extends Controller
+{
+    public function RegistrarComercio(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'nombre' => 'required|string|max:255',
+            'idUser' => 'required|integer',
+            'email' => 'required|email',
+            'phone' => 'required|string|max:15',
+            'street_address' => 'required|string|max:255',
+            'ciudad' => 'required|string|max:255',
+            'provincia' => 'required|string|max:255',
+            'codigo_postal' => 'required|integer',
+            'num_planta' => 'required|integer',
+            'num_puerta' => 'required|integer',
+            'descripcion' => 'required|string|max:500',
+            'categoria' => 'required|integer',
+            'gestion_stock' => 'required|integer',
+            'latitude' => 'required|numeric',
+            'longitude' => 'required|numeric',
+            'imagen' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048'
+        ]);
 
         if ($validator->fails()) {
             return response()->json([
@@ -74,6 +76,15 @@ namespace App\Http\Controllers;
             'longitude' => $request->longitude,
             'logo_path' => $logoPath,
             'imagen_local_path' => $imagenLocalPath,
+            'horario' => json_encode([ 
+                'dilluns' => '',
+                'dimarts' => '',
+                'dimecres' => '',
+                'dijous' => '',
+                'divendres' => '',
+                'dissabte' => '',
+                'diumenge' => ''
+            ]),
         ]);
 
         Mail::send('emails.nuevo_comercio', ['comercio' => $comercio], function ($message) {
@@ -129,40 +140,43 @@ namespace App\Http\Controllers;
     }
 
 
-        // CAMBIAR 2 FUNCIONES POR SEPARADO, GETINFOCOMERCIO QUE RECOJA TODA LA INFORMACIÓN DE LOS COMERCIOS Y OTRA QUE DEVUELVA TODOS LOS PRODUCTOS DEL COMERCIO
-        public function getComercio($id) {
-            $comercio = Comercio::find($id);
+    // CAMBIAR 2 FUNCIONES POR SEPARADO, GETINFOCOMERCIO QUE RECOJA TODA LA INFORMACIÓN DE LOS COMERCIOS Y OTRA QUE DEVUELVA TODOS LOS PRODUCTOS DEL COMERCIO
+    public function getComercio($id)
+    {
+        $comercio = Comercio::find($id);
 
-            if ($comercio == null) {
-                return response()->json([
-                    'error' => 'Comercio no encontrado'
-                ], 404);
-            }
-
-            $now = Carbon::now('Europe/Madrid');
-            $isOpen = false;
-            $day = strtolower($now->locale('ca')->isoFormat('dddd'));
-
-            $horario = json_decode($comercio->horario, true);
-            if (isset($horario[$day])) {
-                $horario = explode(' - ', $horario[$day]);
-                if (count($horario) === 2) {
-                    $horaApertura = Carbon::createFromFormat('H:i', $horario[0]);
-                    $horaCierre = Carbon::createFromFormat('H:i', $horario[1]);
-                    // dd($now, $horaApertura, $horaCierre);
-
-                    if($now->between($horaApertura, $horaCierre)) $isOpen = true;
-                }
-            }
-
+        if ($comercio == null) {
             return response()->json([
-                'comercio' => $comercio,
-                'isOpen' => $isOpen
-            ], 200);
+                'error' => 'Comercio no encontrado'
+            ], 404);
         }
 
-        public function getProductosComercio($id) {
-            $comercio = Comercio::find($id);
+        $now = Carbon::now('Europe/Madrid');
+        $isOpen = false;
+        $day = strtolower($now->locale('ca')->isoFormat('dddd'));
+
+        $horario = json_decode($comercio->horario, true);
+        if (isset($horario[$day])) {
+            $horario = explode(' - ', $horario[$day]);
+            if (count($horario) === 2) {
+                $horaApertura = Carbon::createFromFormat('H:i', $horario[0]);
+                $horaCierre = Carbon::createFromFormat('H:i', $horario[1]);
+                // dd($now, $horaApertura, $horaCierre);
+
+                if ($now->between($horaApertura, $horaCierre))
+                    $isOpen = true;
+            }
+        }
+
+        return response()->json([
+            'comercio' => $comercio,
+            'isOpen' => $isOpen
+        ], 200);
+    }
+
+    public function getProductosComercio($id)
+    {
+        $comercio = Comercio::find($id);
 
         if ($comercio == null) {
             return response()->json([
@@ -191,10 +205,10 @@ namespace App\Http\Controllers;
             ];
         });
 
-            return response()->json([
-                'productos' => $productosData,
-            ], 200);
-        }
+        return response()->json([
+            'productos' => $productosData,
+        ], 200);
+    }
 
     public function getLocations()
     {

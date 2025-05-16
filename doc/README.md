@@ -11,6 +11,7 @@ Aquest directori conté la documentació essencial del projecte **Holabarri**. L
 - 👉 [Document comercial d'Holabarri (2024-2025)](https://holabarri.cat/docs/comercial_2425_holabarri.pdf)  
 - 👉 [Presentació de funcionalitats d'Holabarri (2024-2025)](https://holabarri.cat/docs/resum_2425_holabarri.pdf)
 - 👉 [Manual d'usuari de com funciona l'aplicació per usuaris i administradors](https://holabarri.cat/docs/tecnica_2425_holabarri.pdf)
+- 👉 [Document sobre l'evolució del projecte amb el Tiga] (https://holabarri.cat/docs/planificacio_2425_holabarri.pdf)
 
 ---
 

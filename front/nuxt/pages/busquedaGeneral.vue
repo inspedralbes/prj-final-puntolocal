@@ -5,35 +5,29 @@
     <div v-else>
         <nav class="sticky top-[76px] z-50 flex justify-center w-full bg-white text-lg border-b border-gray-300">
             <div class="flex justify-around w-[60vw]">
-                <button class="border-b-2" :class="[
-                    'transition-all',
-                    currentSection === 'productos' ? 'text-black border-[#276BF2]' : 'text-gray-400 border-white'
-                ]" @click="showSection('productos'), getProductsBySearch()">
+                <button class="border-b-2 transition-all"
+                    :class="currentSection === 'productos' ? 'text-black border-[#276BF2]' : 'text-gray-400 border-white'"
+                    @click="showSection('productos'); getProductsBySearch()">
                     Productes
                 </button>
-                <button
-                    class="hover:text-black hover:border-b-2 hover:border-blue-500 text-gray-400 border-b-2 border-white transition-all"
+                <button class="border-b-2 transition-all"
+                    :class="currentSection === 'comercios' ? 'text-black border-[#276BF2]' : 'text-gray-400 border-white'"
                     @click="showSection('comercios'); getComerciosBySearch()">
                     Comerços
                 </button>
             </div>
         </nav>
+
         <div v-if="currentSection === 'productos'" class="p-5">
             <div v-if="Object.values(productos).length > 0" class="grid grid-cols-2 gap-4">
                 <div v-for="(product, index) in Object.values(productos)" :key="index"
-                    class="border rounded-xl overflow-hidden"
-                    @click="mostrarIdProducto(product.id)">
+                    class="border rounded-xl overflow-hidden" @click="mostrarIdProducto(product.id)">
                     <div class="flex flex-col">
                         <img :src="`${baseUrl}/storage/${product.imagen}`" class="h-[180px] w-full" />
                         <div class="flex flex-col p-2">
                             <p class="text-[15px]">{{ product.comercio }}</p>
                             <p class="text-[20px] mb-2 line-clamp-2 break-all">{{ product.nombre }}</p>
-                            <div class="flex items-center">
-                                <p class="text-sm font-medium">3.5</p>
-                                <PuntuacionComp :rating="3.5" class="mx-1" :customClass="'relative w-4 h-4'" />
-                                <p class="text-sm font-medium">(132)</p>
-                            </div>
-                            <p class="mt-3 text-xl flex">{{ product.precio }} <span class="text-base">€</span></p>
+                            <p class="mt-1 text-xl flex">{{ product.precio }} <span class="text-base">€</span></p>
                             <!-- <button @click="addToBasket(product)"
                                 class="pt-1 pb-1 pl-2 pr-2 mt-4 w-fit bg-[#276BF2] rounded-lg text-white">Afegir a la
                                 cistella</button> -->
@@ -76,7 +70,7 @@
                 </div>
             </div>
             <div v-else>
-                <p class="text-center text-lg mt-4">No hay coincidencias</p>
+                <p class="text-center text-lg mt-4">No hi ha coincidències</p>
             </div>
         </div>
     </div>
@@ -121,9 +115,10 @@ function showSection(section) {
 }
 
 function getNombreCategoria(categoria_id) {
-    if (!Array.isArray(categorias.value)) return 'Categoría no encontrada'; // Previene el error
+    console.log(categoria_id)
+    if (!Array.isArray(categorias.value)) return 'Categoria no trobada'; // Previene el error
     const categoria = categorias.value.find((c) => c.id === categoria_id);
-    return categoria ? categoria.name : 'Categoría no encontrada';
+    return categoria ? categoria.name : 'Categoria no trobada';
 }
 
 async function getProductsBySearch() {
@@ -150,7 +145,8 @@ async function getComerciosBySearch() {
 
 async function getCategorias() {
     const { $communicationManager } = useNuxtApp();
-    categorias.value = await $communicationManager.getCategorias();
+    const data = await $communicationManager.getCategorias();
+    categorias.value = data;
 }
 
 function getOpenState(horario) {
@@ -178,10 +174,10 @@ onMounted(() => {
     if (currentSection.value === 'productos') {
         getProductsBySearch();
     } else if (currentSection.value === 'comercios') {
-        getCategorias();
         getComerciosBySearch();
     }
     loading.value = false;
+    getCategorias();
 });
 
 // Observa cambios en `route.query.search`

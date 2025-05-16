@@ -4,7 +4,7 @@
     </div>
 
     <div v-else class="space-y-6 p-6">
-        <h1 class="text-2xl font-bold text-center text-gray-800 mb-6">Compras Realitzades</h1>
+        <h1 class="text-2xl font-bold text-center text-gray-800 mb-6">Compras realitzades</h1>
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div v-for="compra in compras" :key="compra.id"
@@ -12,7 +12,7 @@
 
                 <div class="flex items-center justify-between mb-4">
                     <p class="text-xl font-semibold text-gray-800">
-                        <strong>Data:</strong> {{ compra.created_at }}
+                        <strong>Data:</strong> {{ formatDate(compra.created_at) }}
                     </p>
                 </div>
 
@@ -26,7 +26,7 @@
 
                 <div class="mb-4">
                     <p class="text-lg text-gray-700">
-                        <strong>Preu Total:</strong> <span class="font-bold">{{ compra.total }} €</span>
+                        <strong>Preu total:</strong> <span class="font-bold">{{ compra.total }} €</span>
                     </p>
                 </div>
 
@@ -85,6 +85,13 @@
 
     function verDetalles(compraId) {
         router.push(`/perfil/compras/${compraId}`);
+    }
+
+    function formatDate(dateStr) {
+        if (!dateStr) return '';
+        const date = new Date(dateStr);
+        const options = { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' };
+        return date.toLocaleString('es-ES', options);
     }
 
     onMounted(fetchCompras);

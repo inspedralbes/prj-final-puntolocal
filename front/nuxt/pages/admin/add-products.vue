@@ -1,10 +1,10 @@
 <template>
     <div class="form-container">
-        <h2 class="form-title">Afegir Producte</h2>
+        <h2 class="form-title">Afegir producte</h2>
 
         <form @submit.prevent="submitForm" class="product-form">
             <div class="input-group">
-                <label for="nombre" class="label">Nom del Producte</label>
+                <label for="nombre" class="label">Nom del producte</label>
                 <input type="text" v-model="form.nombre" id="nombre" placeholder="Introdueix el nom del producte"
                     class="input-field" required />
             </div>
@@ -26,7 +26,7 @@
             </div>
 
             <div class="input-group">
-                <label for="imagenPrincipal" class="label">Imatge Principal</label>
+                <label for="imagenPrincipal" class="label">Imatge principal</label>
                 <input type="file" accept="image/*" @change="handleImageChange" id="imagenPrincipal" class="file-input" required />
                 <div v-if="form.imagen" class="image-preview">
                     <p class="preview-text">Vista prèvia de la imatge:</p>
@@ -48,7 +48,7 @@
 
             <div class="submit-btn-container">
                 <button type="submit" :disabled="!canSubmit" class="submit-btn">
-                    Guardar Producte
+                    Guardar producte
                 </button>
             </div>
         </form>

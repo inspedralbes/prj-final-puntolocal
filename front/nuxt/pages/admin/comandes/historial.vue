@@ -12,10 +12,32 @@
                     <div class="flex items-center mb-4 sm:mb-0">
                         <form class="sm:pr-3" action="#" method="GET">
                             <label for="products-search" class="sr-only">Buscar</label>
-                            <div class="relative w-48 mt-1 sm:w-64 xl:w-96">
-                                <input type="text" name="email" id="products-search"
-                                    class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5"
-                                    placeholder="Buscar comandes...">
+                            <div class="flex items-center relative w-48 mt-1 sm:w-64 xl:w-96">
+                                <div
+                                    class="relative w-full flex items-center shadow-sm rounded-lg overflow-hidden border border-gray-200 focus-within:ring-2 focus-within:ring-blue-400 focus-within:border-blue-400 transition duration-150">
+                                    <!-- Icono de búsqueda -->
+                                    <div class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none"
+                                            viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                                        </svg>
+                                    </div>
+                                    <!-- Input -->
+                                    <input v-model="searchTerm" type="text" name="search" id="order-search"
+                                        class="w-full py-3 pl-10 pr-10 text-gray-700 bg-white focus:outline-none placeholder-gray-400"
+                                        placeholder="Buscar comandes...">
+                                    <!-- Botón de limpiar -->
+                                    <button v-if="searchTerm" @click="clearSearch"
+                                        class="absolute right-0 h-full px-3 flex items-center justify-center text-red-500 hover:text-red-700 focus:outline-none transition duration-150">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" viewBox="0 0 20 20"
+                                            fill="currentColor">
+                                            <path fill-rule="evenodd"
+                                                d="M10 18a8 8 0 100-16 8 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+                                                clip-rule="evenodd" />
+                                        </svg>
+                                    </button>
+                                </div>
                             </div>
                         </form>
                         <div class="flex items-center w-full sm:justify-end">
@@ -37,19 +59,15 @@
                                     </th>
                                     <th scope="col"
                                         class="p-4 text-xs font-medium text-left text-gray-500 uppercase">
-                                        ID GENERAL
+                                        CLIENT
                                     </th>
                                     <th scope="col"
                                         class="p-4 text-xs font-medium text-left text-gray-500 uppercase">
-                                        CLIENTE
+                                        DATA
                                     </th>
                                     <th scope="col"
                                         class="p-4 text-xs font-medium text-left text-gray-500 uppercase">
-                                        FECHA
-                                    </th>
-                                    <th scope="col"
-                                        class="p-4 text-xs font-medium text-left text-gray-500 uppercase">
-                                        TIPO
+                                        TIPUS
                                     </th>
                                     <th scope="col"
                                         class="p-4 text-xs font-medium text-left text-gray-500 uppercase">
@@ -66,14 +84,11 @@
                                 </tr>
                             </thead>
                             <tbody class="bg-white divide-y divide-gray-200 ">
-                                <tr v-for="order in orders" class="hover:bg-gray-100"
+                                <tr v-for="order in filteredOrders" class="hover:bg-gray-100"
                                 :class="{ 'bg-green-100': order.estat_compra.id === 4, 'bg-red-100': order.estat_compra.id === 5, 'hover:bg-green-200': order.estat_compra.id === 4, 'hover:bg-red-200': order.estat_compra.id === 5 }">
                                     <td
                                         class="p-4 text-base font-medium text-gray-900 whitespace-nowrap">
                                         #{{ order.id }}</td>
-                                    <td
-                                        class="p-4 text-base font-medium text-gray-900 whitespace-nowrap">
-                                        #{{ order.order_id }}</td>
                                     <td
                                         class="p-4 text-base font-medium text-gray-900 whitespace-nowrap">
                                         {{ order.order.cliente.name }} {{ formatApellido(order.order.cliente.apellidos)
@@ -122,22 +137,6 @@
                                             </svg>
                                             Veure comanda
                                         </NuxtLink>
-                                        <!-- <button type="button" id="updateOrderEstat" :disabled="isDisabled(order.id)"
-                                            @click="guardarEstat(order.id)"
-                                            class="inline-flex items-center bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded disabled:opacity-50 disabled:cursor-not-allowed">
-                                            <svg class="w-4 h-4 mr-2" viewBox="0 0 24 24" fill="none"
-                                                xmlns="http://www.w3.org/2000/svg">
-                                                <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
-                                                <g id="SVGRepo_tracerCarrier" stroke-linecap="round"
-                                                    stroke-linejoin="round"></g>
-                                                <g id="SVGRepo_iconCarrier">
-                                                    <path fill-rule="evenodd" clip-rule="evenodd"
-                                                        d="M18.1716 1C18.702 1 19.2107 1.21071 19.5858 1.58579L22.4142 4.41421C22.7893 4.78929 23 5.29799 23 5.82843V20C23 21.6569 21.6569 23 20 23H4C2.34315 23 1 21.6569 1 20V4C1 2.34315 2.34315 1 4 1H18.1716ZM4 3C3.44772 3 3 3.44772 3 4V20C3 20.5523 3.44772 21 4 21L5 21L5 15C5 13.3431 6.34315 12 8 12L16 12C17.6569 12 19 13.3431 19 15V21H20C20.5523 21 21 20.5523 21 20V6.82843C21 6.29799 20.7893 5.78929 20.4142 5.41421L18.5858 3.58579C18.2107 3.21071 17.702 3 17.1716 3H17V5C17 6.65685 15.6569 8 14 8H10C8.34315 8 7 6.65685 7 5V3H4ZM17 21V15C17 14.4477 16.5523 14 16 14L8 14C7.44772 14 7 14.4477 7 15L7 21L17 21ZM9 3H15V5C15 5.55228 14.5523 6 14 6H10C9.44772 6 9 5.55228 9 5V3Z"
-                                                        fill="#ffffff"></path>
-                                                </g>
-                                            </svg>
-                                            Guardar
-                                        </button> -->
                                     </td>
                                 </tr>
                             </tbody>
@@ -191,6 +190,7 @@
 const { $communicationManager } = useNuxtApp();
 import socket from '~/socket';
 const auth = useAuthStore();
+const searchTerm = ref('');
 
 definePageMeta({
     layout: 'admin',
@@ -288,4 +288,22 @@ const closeAll = (e) => {
         backgroundShadow.value = false;
     }
 };
+
+const clearSearch = () => {
+    searchTerm.value = '';
+};
+
+function removeAccents(str) {
+    return str.normalize("NFD").replace(/[\u0300-\u036f]/g, '');
+}
+
+const filteredOrders = computed(() => {
+    if (!searchTerm.value) return orders.value;
+    const st = removeAccents(searchTerm.value.toLowerCase());
+    return orders.value.filter(order => {
+        const id = String(order.id).toLowerCase();
+        const clienteName = removeAccents(order.order?.cliente?.name?.toLowerCase() || '');
+        return id.includes(st) || clienteName.includes(st);
+    });
+});
 </script>

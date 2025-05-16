@@ -32,7 +32,7 @@ describe('Test de login', () => {
 
     it('S\'ha d\'iniciar sessió correctament', () => {
         cy.contains('Perfil').click();
-        cy.contains('Panel de Control del Comercio').click();
+        cy.contains('Panell de Control del Comerç').click();
 
         cy.viewport(Cypress.config('viewportWidth'), Cypress.config('viewportHeight'));
         if (Cypress.config('viewportWidth') < 1040) {

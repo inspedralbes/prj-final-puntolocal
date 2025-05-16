@@ -24,7 +24,7 @@
                         <span class="font-semibold text-gray-800 mr-2">📜 Descripció:</span> {{ comercio.descripcion }}
                     </p>
                     <p class="text-gray-600 items-center">
-                        <span class="font-semibold text-gray-800 mr-2">📍 Direcció:</span><br> {{ comercio.calle_num }}
+                        <span class="font-semibold text-gray-800 mr-2">📍 Adreça:</span><br> {{ comercio.calle_num }}
                     </p>
                     <p class="text-gray-600 items-center">
                         <span class="font-semibold text-gray-800 mr-2">📞 Telèfon: </span><br> {{ comercio.phone }}
@@ -48,8 +48,8 @@
         </div>
 
         <div class="bg-[#276BF2] w-full h-[20vh] rounded-b-3xl flex flex-col items-center relative mb-12">
-            <img v-if="comercio?.imagen_local_path" :src="`${baseUrl}/storage/${comercio?.imagen_local_path}`" alt="imagen del comercio"
-                        class="absolute z-0 w-full h-full opacity-80 object-cover rounded-b-3xl">
+            <img v-if="comercio?.imagen_local_path" :src="`${baseUrl}/storage/${comercio?.imagen_local_path}`"
+                alt="imagen del comercio" class="absolute z-0 w-full h-full opacity-80 object-cover rounded-b-3xl">
             <div class="flex justify-between items-center z-10 p-4 w-full">
                 <div class="bg-white rounded-full flex items-center justify-center p-2">
                     <svg @click="goBack" width="2em" height="2em" viewBox="0 0 24 24" fill="none"
@@ -66,8 +66,8 @@
                 <p class="font-semibold text-white text-xl">Perfil de comerç</p>
                 <div class="bg-white rounded-full flex items-center justify-center p-3"
                     @click="darLikeComercio(comercio.id)">
-                    <svg width="1.5em" height="1.5em" viewBox="0 0 24 24" fill="none" stroke="#000"
-                        stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                    <svg width="1.5em" height="1.5em" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round"
                         :class="isLiked ? 'fill-red-500 stroke-red-500' : 'fill-white stroke-red-500'">
                         <path
                             d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z">
@@ -106,14 +106,38 @@
                             </svg>
                         </button>
                     </div>
-                    <p class="font-light text-base mb-1">Indumentaria</p>
+                    <p class="font-light text-base mb-1">Indumentària</p>
                     <PuntuacionComp :rating="comercio.puntaje_medio" :customClass="'relative w-4 h-4'" />
                 </div>
             </div>
         </div>
         <div class="p-5">
-            <input class="px-5 py-2 w-full rounded-md border bg-gray-50 focus:outline-none focus:ring-0" type="text"
-                name="search" id="search" placeholder="Buscar productes...">
+            <div class="flex items-center mb-4 relative">
+                <div
+                    class="relative w-full flex items-center shadow-sm rounded-lg overflow-hidden border border-gray-200 focus-within:ring-2 focus-within:ring-blue-400 focus-within:border-blue-400 transition duration-150">
+                    <!-- Icono de búsqueda -->
+                    <div class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                            stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                        </svg>
+                    </div>
+                    <!-- Input -->
+                    <input v-model="searchTerm" @keyup.enter="searchComercio"
+                        class="w-full py-3 pl-10 pr-10 text-gray-700 bg-white focus:outline-none placeholder-gray-400"
+                        type="text" name="search" id="search" placeholder="Buscar productes..." />
+                    <!-- Botón de limpiar -->
+                    <button v-if="searchTerm" @click="clearSearch"
+                        class="absolute right-0 h-full px-3 flex items-center justify-center text-red-500 hover:text-red-700 focus:outline-none transition duration-150">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd"
+                                d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+                                clip-rule="evenodd" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
 
             <div id="subcategorias" v-if="subcategorias.length"
                 class="flex space-x-3 items-center overflow-x-auto mt-4">
@@ -133,7 +157,8 @@
 
             <div v-if="view === 'productos'">
                 <div id="productos" class="grid grid-cols-2 gap-4 mt-4">
-                    <productoComp v-for="(producto, index) in filteredProductos" :key="index"  :id="producto.producto_id.toString()" :productoId="producto.producto_id.toString()"
+                    <productoComp v-for="(producto, index) in filteredProductos" :key="index" :id="producto.producto_id"
+                        :productoId="producto.producto_id"
                         :img="producto.imagen ? `${baseUrl}/storage/${producto.imagen}` : `${baseUrl}/storage/productos/default-image.webp`"
                         :title="producto.nombre" :price="producto.precio" :customClass="'w-full'"
                         price-class="text-gray-900" @click="mostrarIdProducto(producto.producto_id)">
@@ -174,6 +199,7 @@ const view = ref('productos');
 const { $communicationManager } = useNuxtApp();
 const infoVisible = ref(false);
 const isLiked = ref(false);
+const searchTerm = ref('');
 
 const mostrarIdProducto = (id) => {
     console.log("ID del producto:", id);
@@ -184,7 +210,7 @@ const darLikeComercio = async (id) => {
     try {
         const response = await $communicationManager.darLikeComercio(id);
         console.log("Response:", response);
-        if(response.message) {
+        if (response.message) {
             authStore.toggleFavoritoComercio(id);
             toggleColor();
         }
@@ -242,7 +268,6 @@ const toggleView = (newView) => {
 
 const filteredProductos = computed(() => {
     if (selectedSubcategorias.value.length === 0) {
-        console.log(productos.value)
         return productos.value;
     }
     return productos.value.filter(producto =>
@@ -265,6 +290,37 @@ function toggleInfo() {
 
 const goBack = () => {
     router.back();
+};
+
+const searchComercio = async () => {
+    try {
+        const result = await $communicationManager.busquedaProductosDeComercio(route.params.id, searchTerm.value);
+        if (result) {
+            productos.value = result;
+        }
+    } catch (error) {
+        console.error("Error al buscar productos:", error);
+        productos.value = []; // Limpiar en caso de error
+    }
+};
+
+const clearSearch = async () => {
+    searchTerm.value = '';
+    isLoading.value = true;
+    try {
+        const response = await $communicationManager.getProductosComercio(route.params.id);
+        if (response && response.productos) {
+            Object.assign(productos.value, response.productos);
+            console.log("Productos después de limpiar búsqueda:", productos.value);
+        } else {
+            productos.value = [];
+        }
+    } catch (error) {
+        console.error("Error al limpiar búsqueda:", error);
+        productos.value = [];
+    } finally {
+        isLoading.value = false;
+    }
 };
 
 onMounted(async () => {

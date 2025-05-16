@@ -52,7 +52,7 @@
                                     <h3 class="font-medium text-gray-900 truncate  truncate">{{
                                         productoOrder.producto.nombre }}
                                     </h3>
-                                    <h4 class="font-small text-gray-900  truncate">Opciones de producto
+                                    <h4 class="font-small text-gray-900  truncate">Opcions de producte
                                     </h4>
                                 </div>
                             </div>
@@ -77,7 +77,7 @@
                                 Total de la comanda
                             </span>
                             <h3 class="text-base font-light  truncate">
-                                Desglose completo del importe de la comanda</h3>
+                                Desglossament complet de l'import de la comanda</h3>
                         </div>
                         <div class="flex mt-4">
                             <div class="w-full">
@@ -131,7 +131,7 @@
                 <div
                     class="p-4 mb-4 bg-white border border-gray-200 shadow-sm  sm:p-6">
                     <h3 class="flex items-center text-lg font-semibold text-gray-900 ">
-                        Informació del cliente
+                        Informació del client
                     </h3>
                     <div id="fullWidthTabContent" class="">
                         <div class="pt-2" id="faq" role="tabpanel" aria-labelledby="faq-tab">
@@ -202,7 +202,7 @@
                 <div v-if="actualOrder?.order?.tipo_envio?.id === 1"
                     class="p-4 mb-4 bg-white border border-gray-200 shadow-sm  sm:p-6">
                     <h3 class="flex items-center text-lg font-semibold text-gray-900 ">
-                        Direcció d'envio
+                        Adreça d'enviament
                     </h3>
                     <div id="fullWidthTabContent" class="">
                         <div class="pt-4" id="faq" role="tabpanel" aria-labelledby="faq-tab">
@@ -237,7 +237,7 @@
                                         </g>
                                     </svg>
                                 </span>
-                                {{ actualOrder?.order?.cliente?.numero_planta }}º planta, puerta
+                                {{ actualOrder?.order?.cliente?.numero_planta }}º pis, porta
                                 {{ actualOrder?.order?.cliente?.numero_puerta }}
                             </h3>
                             <h3 class="font-small py-1 text-gray-900  flex items-center truncate">
@@ -278,7 +278,7 @@
                             </h3>
                             <time class="mb-1 text-sm font-normal leading-none text-gray-400 ">
 
-                                Abril 2025
+                                Marzo 2025
                             </time>
                         </li>
                         <li class="mb-10 ml-4">
@@ -290,19 +290,7 @@
                                 Llest per a recollir
                             </h3>
                             <time class="mb-1 text-sm font-normal leading-none text-gray-400 ">
-                                Abril 2023
-                            </time>
-                        </li>
-                        <li class="mb-10 ml-4" v-if="actualOrder?.order?.tipo_envio?.id === 1">
-                            <div class="absolute w-3 h-3 rounded-full mt-1.5 -left-1.5 border border-white "
-                                :class="actualOrder?.estat_compra?.id >= 3 ? 'bg-[#276BF2]' : 'bg-gray-200'">
-                            </div>
-                            <h3 class="text-lg text-gray-900 "
-                                :class="actualOrder?.estat_compra?.id >= 3 ? 'font-semibold' : 'font-medium'">
-                                En repartiment
-                            </h3>
-                            <time class="mb-1 text-sm font-normal leading-none text-gray-400 ">
-                                Abril 2025
+                                Marzo 2025
                             </time>
                         </li>
                         <li class="ml-4">
@@ -314,7 +302,7 @@
                                 Lliurat
                             </h3>
                             <time class="mb-1 text-sm font-normal leading-none text-gray-400 ">
-                                Abril 2023
+                                Abril 2025
                             </time>
                         </li>
                     </ol>

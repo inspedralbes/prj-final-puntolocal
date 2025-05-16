@@ -30,7 +30,7 @@
             <slot />
         </main>
 
-        <footer class="sticky bottom-0 left-0 w-full bg-white py-2 border-t">
+        <footer class="sticky bottom-0 left-0 w-full h-[60px] bg-white py-2 border-t">
             <nav class="flex justify-around">
                 <NuxtLink to="/" class="flex flex-col items-center">
                     <svg width="1.5em" height="1.5em" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
@@ -59,7 +59,7 @@
                         Cistella</p>
                 </NuxtLink>
                 <NuxtLink to="/favoritos" class="flex flex-col items-center text-gray-300 hover:text-white">
-                    <svg width="1.5em" height="1.5em" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2"
+                    <svg width="1.5em" height="1.5em" viewBox="0 0 24 24" fill="none" :stroke="route.path.startsWith('/favoritos') ? '#276BF2' : '#000000'" stroke-width="2"
                         stroke-linecap="round" stroke-linejoin="round">
                         <path
                             d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z">
@@ -68,17 +68,16 @@
                     <p class="text-sm" :class="route.path === '/favoritos' ? 'text-[#276BF2]' : 'text-[#000000]'">
                         Favorits</p>
                 </NuxtLink>
-                <NuxtLink to="/perfil" class="flex flex-col items-center text-gray-300 hover:text-white">
-                    <svg class="w-6 h-6 mb-1" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                <NuxtLink to="/perfil" class="flex flex-col items-center">
+                    <svg width="1.5em" height="1.5em" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                         stroke="black">
                         <path
                             d="M5 21C5 17.134 8.13401 14 12 14C15.866 14 19 17.134 19 21M16 7C16 9.20914 14.2091 11 12 11C9.79086 11 8 9.20914 8 7C8 4.79086 9.79086 3 12 3C14.2091 3 16 4.79086 16 7Z"
-                            :stroke="route.path === '/perfil' ? '#276BF2' : '#000000'" stroke-width="2"
+                            :stroke="route.path.startsWith('/perfil') ? '#276BF2' : '#000000'" stroke-width="2"
                             stroke-linecap="round" stroke-linejoin="round">
                         </path>
                     </svg>
-                    <p class="text-sm" :class="route.path === '/perfil' ? 'text-[#276BF2]' : 'text-[#000000]'">Perfil
-                    </p>
+                    <p class="text-sm" :class="route.path.startsWith('/perfil') ? 'text-[#276BF2]' : 'text-[#000000]'">Perfil</p>
                 </NuxtLink>
             </nav>
         </footer>
