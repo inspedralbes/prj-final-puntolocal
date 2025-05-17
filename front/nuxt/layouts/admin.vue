@@ -27,7 +27,7 @@
                         </button>
                         <h2
                             class="text-xl font-bold leading-none text-gray-900 sm:text-2xl dark:text-white ml-2 md:mr-14">
-                            Panel de comerç</h2>
+                            Panell de comerç</h2>
                     </div>
                     <div class="flex items-center">
                         <!-- <button type="button" data-dropdown-toggle="notification-dropdown"
