@@ -95,16 +95,29 @@ class ComerciosTableSeeder extends Seeder
         ];
 
         $comercios_imagenes = [
-            "https://assets.bwbx.io/images/users/iqjWHBFdfxIU/iwRjCe.Ybyv8/v1/-1x-1.jpg",
-            "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRqnzB5y1yWvSZ4bohLsJE7C-VcGr2Bw8vxvQ&s",
-            "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTcCj1n1Ex-QJAUs9vJjiK8tV-Rp5Jjyp6jgw&s",
-            "https://media.richardmille.com/wp-content/uploads/2018/03/23170945/image2-v5-768x432.jpg?dpr=3&width=900",
-            "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSQ2lEk_U58JMJRo4yaiYb9xeYGQqC99XEVyw&s",
-            "https://static.nike.com/a/images/f_auto/92234393-1a90-400a-8491-4e40273435c7/image.jpeg",
-            "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTTiSLWtoW-aREAl7ybE54fydGJDvYJ3I00QQ&s",
-            "https://imgs.search.brave.com/Sna2nfvpYoOrxTUavXXHjg7gB9ubIJFJxyam53mLkUE/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly91cGxv/YWQud2lraW1lZGlh/Lm9yZy93aWtpcGVk/aWEvY29tbW9ucy8w/LzAxL01lcmNhZG9u/YV9OdWV2b19Nb2Rl/bG9fZGVfVGllbmRh/Mi5qcGc",
-            "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTqN1JaXDK6v0BGksvpRj3hKsfaHRBpRq4r3w&s",
-            "https://imgs.search.brave.com/3maiqiPBNh_4XthVPHHBrOyHuyP9rQxkw5m_4CJZ00Q/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly91cGxv/YWQud2lraW1lZGlh/Lm9yZy93aWtpcGVk/aWEvY29tbW9ucy8y/LzIyL1B1bGxfYW5k/X2JlYXJfc3RvcmUu/anBn"
+            'https://assets.bwbx.io/images/users/iqjWHBFdfxIU/iwRjCe.Ybyv8/v1/-1x-1.jpg',
+            'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRqnzB5y1yWvSZ4bohLsJE7C-VcGr2Bw8vxvQ&s',
+            'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTcCj1n1Ex-QJAUs9vJjiK8tV-Rp5Jjyp6jgw&s',
+            'https://media.richardmille.com/wp-content/uploads/2018/03/23170945/image2-v5-768x432.jpg?dpr=3&width=900',
+            'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSQ2lEk_U58JMJRo4yaiYb9xeYGQqC99XEVyw&s',
+            'https://static.nike.com/a/images/f_auto/92234393-1a90-400a-8491-4e40273435c7/image.jpeg',
+            'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTTiSLWtoW-aREAl7ybE54fydGJDvYJ3I00QQ&s',
+            'https://imgs.search.brave.com/Sna2nfvpYoOrxTUavXXHjg7gB9ubIJFJxyam53mLkUE/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly91cGxv/YWQud2lraW1lZGlh/Lm9yZy93aWtpcGVk/aWEvY29tbW9ucy8w/LzAxL01lcmNhZG9u/YV9OdWV2b19Nb2Rl/bG9fZGVfVGllbmRh/Mi5qcGc',
+            'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTqN1JaXDK6v0BGksvpRj3hKsfaHRBpRq4r3w&s',
+            'https://imgs.search.brave.com/3maiqiPBNh_4XthVPHHBrOyHuyP9rQxkw5m_4CJZ00Q/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly91cGxv/YWQud2lraW1lZGlh/Lm9yZy93aWtpcGVk/aWEvY29tbW9ucy8y/LzIyL1B1bGxfYW5k/X2JlYXJfc3RvcmUu/anBn'
+        ];
+
+        $comercios_logos = [
+            'https://static.vecteezy.com/system/resources/previews/014/030/655/non_2x/luxury-boutique-logo-templates-vector.jpg',
+            'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQOHnkGb0ShhLnVLv6VP3bEiSFZ29PzDtsGhA&s',
+            'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTi__DcKQamc7vNYoNEcqvfRs40x30ptMxvAw&s',
+            'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTMLDLt9eEQhRLoduUgEvBM_JvD2aorjobgeg&s',
+            'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRMIx9DnMxrARLVtLmoLNl6d45wD4dZ5QHzng&s',
+            'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTHFlh3n0gYfwzFRJjiuuA6BB7xIpIEAuyc1g&s',
+            'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ_NyCc1s_UvA235_s0oqMs56ddbxy9io8sSg&s',
+            'https://img.freepik.com/vector-premium/diseno-logotipo-minimalista-nueva-marca-moda-llamada-chic-elementos-elegantes-elegantes-desarrollar-logotipo-minimista-marca-accesorios-chic-diseno-logotipio-vectorial-moderno-minimalista-simple_538213-49684.jpg',
+            'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQkV-0lX9SrB-NAV0kC7WdT-fPOExgAmLYkLg&s',
+            'https://static.vecteezy.com/system/resources/previews/002/219/879/non_2x/logo-natural-cosmetics-icon-isolated-on-a-white-background-flat-style-vector.jpg'
         ];
 
         for ($i = 0; $i < 10; $i++) {

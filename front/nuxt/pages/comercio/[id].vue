@@ -48,9 +48,9 @@
         </div>
 
         <div class="bg-[#276BF2] w-full h-[20vh] rounded-b-3xl flex flex-col items-center relative mb-12">
-            <img v-if="comercio?.imagen_local_path" :src="`${baseUrl}/storage/${comercio?.imagen_local_path}`"
+            <img v-if="comercio?.imagen_local_path" :src="comercio?.imagen_local_path"
                 alt="imagen del comercio" class="absolute z-0 w-full h-full opacity-80 object-cover rounded-b-3xl">
-            <div class="flex justify-between items-center z-10 p-4 w-full">
+            <div class="flex justify-between items-center z-10 p-4 w-full" style="background: linear-gradient(180deg, rgba(39,107,242,0.85) 50%, rgba(39,107,242,0.0) 100%);">
                 <div class="bg-white rounded-full flex items-center justify-center p-2">
                     <svg @click="goBack" width="2em" height="2em" viewBox="0 0 24 24" fill="none"
                         xmlns="http://www.w3.org/2000/svg">
@@ -63,7 +63,7 @@
                         </g>
                     </svg>
                 </div>
-                <p class="font-semibold text-white text-xl">Perfil de comerç</p>
+                <p class="font-semibold text-white text-xl drop-shadow-md">Perfil de comerç</p>
                 <div class="bg-white rounded-full flex items-center justify-center p-3"
                     @click="darLikeComercio(comercio.id)">
                     <svg width="1.5em" height="1.5em" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2"
@@ -78,7 +78,7 @@
             </div>
             <div class="w-[85vw] bg-white border rounded-md absolute bottom-[-50px] flex items-center p-2">
                 <div class="w-[80px] h-[80px] border border-gray-400 rounded-md bg-gray-100 mr-2 overflow-hidden">
-                    <svg v-if="comercio?.logo_path" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <svg v-if="!comercio?.logo_path" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
                         <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
                         <g id="SVGRepo_iconCarrier">
