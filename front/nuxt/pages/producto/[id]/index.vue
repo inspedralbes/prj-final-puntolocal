@@ -1,5 +1,33 @@
 <template>
-    <div class="min-h-screen bg-gray-100 flex flex-col text-gray-900 transition-colors duration-300">
+    <div v-if="loading" class="min-h-screen bg-gray-100">
+        <div class="animate-pulse bg-white px-4 h-[70px] py-2 border-b flex items-center justify-between">
+            <div class="w-8 h-8 bg-gray-300 rounded"></div>
+            <div class="w-1/2 h-5 bg-gray-300 rounded"></div>
+            <div class="w-8 h-8 bg-gray-300 rounded"></div>
+        </div>
+        <div class="bg-white">
+            <div class="h-[400px] w-full bg-gray-200"></div>
+            <div class="p-4 space-y-3">
+                <div class="h-6 bg-gray-200 w-full rounded"></div>
+                <div class="h-4 bg-gray-200 w-3/4 rounded"></div>
+                <div class="h-4 w-1/2 bg-gray-200 rounded"></div>
+                <div class="h-28 bg-gray-200 w-full rounded"></div>
+            </div>
+        </div>
+        <div class="bg-white px-4 py-3 mt-4">
+            <div class="h-6 w-1/3 bg-gray-200 rounded mb-2"></div>
+            <div class="space-y-3">
+                <div v-for="n in 5" :key="n" class="flex space-x-3 pt-2 border-t border-gray-200">
+                    <div class="w-10 h-10 bg-gray-200 rounded-full"></div>
+                    <div class="flex-1 space-y-2">
+                        <div class="h-4 bg-gray-200 w-1/2 rounded"></div>
+                        <div class="h-4 bg-gray-200 w-full rounded"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div v-else class="min-h-screen bg-gray-100 flex flex-col text-gray-900 transition-colors duration-300">
         <div id="header" class="w-full z-50 flex items-center justify-between p-4 bg-white fixed top-0 border-b">
 
             <!-- Botón de retroceso -->
@@ -189,6 +217,7 @@ const textCistella = ref('');
 const buttonRef = ref(null)
 const clicked = ref(false);
 const reviews = ref([]);
+const loading = ref(true);
 
 import { useRuntimeConfig } from "#imports";
 const config = useRuntimeConfig();
@@ -278,9 +307,11 @@ function showMoreReviews() {
     router.push(`/producto/${producto.value.id}/ratings`);
 }
 
-onMounted(() => {
-    fetchProducto();
-    fetchReviews();
+onMounted(async () => {
+    loading.value = true;
+    await fetchProducto();
+    await fetchReviews();
+    loading.value = false;
 });
 </script>
 

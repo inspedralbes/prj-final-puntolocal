@@ -29,7 +29,9 @@ definePageMeta({
 import { reactive } from 'vue';
 import { useNuxtApp } from '#app';
 import { useAuthStore } from '@/stores/authStore';
+import { useToast } from '@/composables/useToast.js';
 
+const { toast } = useToast()
 const authStore = useAuthStore();
 const days = ['dilluns', 'dimarts', 'dimecres', 'dijous', 'divendres', 'dissabte', 'diumenge'];
 const horario = reactive({
@@ -50,7 +52,11 @@ async function saveSchedule() {
             { horario }, 
             authStore.comercio.id
         );
-        alert(response ? 'Horario guardado exitosamente' : 'Error');
+        if(response){
+            toast("Horari guardat exitosament", "success");
+        }else{
+            toast("Error al guardar", "error");
+        }
     } catch (e) {
         console.error(e);
         alert('Error al guardar el horario');
