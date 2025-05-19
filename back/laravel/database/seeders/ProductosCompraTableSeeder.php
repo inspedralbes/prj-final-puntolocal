@@ -20,7 +20,7 @@ class ProductosCompraTableSeeder extends Seeder
 
         for ($i=0; $i <$cantidad; $i++) { 
             DB::table("producto_orders")->insert([
-                "order_comercio_id" => ($i % 20) + 1,
+                "order_comercio_id" => $faker->numberBetween(1, 10),
                 "producto_id" => $faker->numberBetween(1,30),
                 "cantidad" => $faker->numberBetween(1,10),
                 "precio" => $faker->randomFloat(2, 5, 100),
