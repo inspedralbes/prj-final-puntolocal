@@ -15,9 +15,9 @@
             $this->call(CategoriasTableSeeder::class);
             $this->call(SubcategoriasTableSeeder::class);
             $this->call(ComerciosTableSeeder::class);
-            // $this->call(ComerciosSantAntoniTableSeeder::class);
+            $this->call(ComerciosSantAntoniTableSeeder::class);
             $this->call(ProductosTableSeeder::class);
-            // $this->call(ProductosSantAntoniTableSeeder::class);
+            $this->call(ProductosSantAntoniTableSeeder::class);
             $this->call(ProvinciasTableSeeder::class);
             $this->call(CiudadesTableSeeder::class);
 
