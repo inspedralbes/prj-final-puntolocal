@@ -1,7 +1,29 @@
 <template>
-    <loading v-if="isLoading" />
+    <!-- Skeleton section -->
+    <div v-if="isLoading" class="animate-pulse p-4 space-y-4">
+        <div class="bg-gray-200 w-full h-[20vh] rounded-b-3xl"></div>
+        <div class="flex items-center justify-center">
+            <div class="w-[85vw] bg-gray-200 rounded-md h-[50px] mt-4"></div>
+        </div>
+        <!-- <div class="flex items-center mt-4">
+            <div class="w-full h-11 bg-gray-200 rounded-md"></div>
+        </div> -->
+        <div class="flex space-x-2 overflow-auto gap-1 px-2">
+            <div v-for="n in 5" :key="n" class="w-24 h-[62px] bg-gray-200 rounded-xl shadow-sm animate-pulse"></div>
+        </div>
+        <div class="grid grid-cols-2 gap-4 mt-4">
+            <div class="h-40 bg-gray-200 rounded-md"></div>
+            <div class="h-40 bg-gray-200 rounded-md"></div>
+            <div class="h-40 bg-gray-200 rounded-md"></div>
+            <div class="h-40 bg-gray-200 rounded-md"></div>
+            <div class="h-40 bg-gray-200 rounded-md"></div>
+            <div class="h-40 bg-gray-200 rounded-md"></div>
+            <div class="h-40 bg-gray-200 rounded-md"></div>
+            <div class="h-40 bg-gray-200 rounded-md"></div> 
+        </div>
+    </div>
 
-    <div v-if="comercio">
+    <div v-else-if="comercio">
         <div v-if="infoVisible" class="flex items-center justify-center fixed inset-0 z-40">
             <div class="bg-gray-900/50 fixed inset-0 z-40"></div>
             <div class="w-[80vw] max-w-lg bg-white rounded-2xl shadow-xl p-6 z-50 absolute">
