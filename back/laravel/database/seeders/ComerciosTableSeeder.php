@@ -148,7 +148,7 @@ class ComerciosTableSeeder extends Seeder
                 'latitude' => $comercios_latitudes[$i],
                 'longitude' => $comercios_longitudes[$i],
                 'ubicacion_verified_at' => now(),
-                'logo_path' => json_encode([$faker->imageUrl()]),
+                'logo_path' => json_encode([$comercios_logos[$i]]),
                 'imagen_local_path' => json_encode($comercios_imagenes[$i]),
             ]);
         }
