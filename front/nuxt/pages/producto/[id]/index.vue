@@ -55,6 +55,7 @@
             <div id="imgs" class="h-[400px] w-full max-w-[900px] mx-auto overflow-hidden">
                 <img :src="producto?.imagen ? `${baseUrl}/storage/${producto.imagen}` : `${baseUrl}/storage/productos/default-image.webp`"
                     alt="Imagen del producto" class="h-full w-full object-contain" />
+
             </div>
 
             <div id="infoAdicional" class="p-4 flex flex-col flex-grow">
@@ -121,7 +122,8 @@
                         <div v-for="(review, idx) in reviews" :key="review.id" class="bg-white p-4 max-w-md">
                             <div class="flex justify-between mb-2">
                                 <div class="flex items-center">
-                                    <div class="flex items-center justify-center bg-gray-200 rounded-full w-[40px] h-[40px] mr-2">
+                                    <div
+                                        class="flex items-center justify-center bg-gray-200 rounded-full w-[40px] h-[40px] mr-2">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22"
                                             fill="currentColor" class="bi bi-person-fill" viewBox="0 0 16 16">
                                             <path
@@ -144,7 +146,8 @@
                         </div>
                     </div>
                     <div class="flex justify-center">
-                        <button v-if="reviews && reviews.length > 4" @click="showMoreReviews" class="px-4 py-2 text-md border-2 rounded-lg">
+                        <button v-if="reviews && reviews.length > 4" @click="showMoreReviews"
+                            class="px-4 py-2 text-md border-2 rounded-lg">
                             Veure totes les resenyes
                         </button>
                     </div>
