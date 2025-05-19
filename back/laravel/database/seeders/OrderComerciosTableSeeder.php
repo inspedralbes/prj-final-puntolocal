@@ -17,11 +17,12 @@ class OrderComerciosTableSeeder extends Seeder
         $faker = Faker::create();
         
         $cantidad = 10;
+        $comercioIds = DB::table('comercios')->pluck('id')->toArray();
 
         for ($i = 0; $i < $cantidad; $i++) {
             DB::table("order_comercios")->insert([
-                'order_id' => $faker->numberBetween(1,20),
-                'comercio_id' => $faker->numberBetween(11,20),
+                'order_id' => $faker->numberBetween(1,9),
+                'comercio_id' => $faker->randomElement($comercioIds),
                 'subtotal' => $faker->randomFloat(2, 5, 1000),
                 'estat' => $faker->numberBetween(1,5),
                 'created_at' => $faker->dateTimeBetween('-10 days', 'now'),
