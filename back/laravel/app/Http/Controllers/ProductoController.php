@@ -164,6 +164,7 @@ class ProductoController extends Controller
             "comercio" => $producto->comercio,
             "logo_path" => $producto->comercio->logo_path,
             "precio" => $producto->precio,
+            "imagen" => $producto->imagen,
             "stock" => $producto->stock,
             "visible" => $producto->visible,
             "puntaje_medio" => $producto->comercio->puntaje_medio,
