@@ -1,4 +1,5 @@
 <?php
+
 namespace Database\Seeders;
 
 use App\Models\Comercio;
@@ -109,7 +110,7 @@ class ComerciosTableSeeder extends Seeder
         for ($i = 0; $i < 10; $i++) {
             DB::table('comercios')->insert([
                 'nombre' => $comercios[$i],
-                'idUser' => 1,
+                'idUser' => $i + 1,
                 'phone' => "603" . $faker->numberBetween(100000, 999999),
                 'email' => $comercios_email[$i],
                 'calle_num' => $comercios_calles[$i],
