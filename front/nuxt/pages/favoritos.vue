@@ -17,40 +17,32 @@
         </div>
         <div v-else>
             <div class="flex justify-center my-4">
-                <button
-                    @click="mostrarProductos = true"
-                    :class="{'bg-[#447EF2] text-white': mostrarProductos, 'bg-gray-200 text-gray-700': !mostrarProductos}"
+                <button @click="mostrarProductos = true"
+                    :class="{ 'bg-[#447EF2] text-white': mostrarProductos, 'bg-gray-200 text-gray-700': !mostrarProductos }"
                     class="px-4 py-2 rounded-l-lg focus:outline-none transition-colors duration-200">
                     Productes
                 </button>
-                <button
-                    @click="mostrarProductos = false"
-                    :class="{'bg-[#447EF2] text-white': !mostrarProductos, 'bg-gray-200 text-gray-700': mostrarProductos}"
+                <button @click="mostrarProductos = false"
+                    :class="{ 'bg-[#447EF2] text-white': !mostrarProductos, 'bg-gray-200 text-gray-700': mostrarProductos }"
                     class="px-4 py-2 rounded-r-lg focus:outline-none transition-colors duration-200">
                     Comerços
                 </button>
             </div>
 
             <!-- Productos Favoritos -->
-            <div v-if="mostrarProductos" class="grid grid-cols-1 md:grid-cols-2 m-3 gap-2">
-                <div v-for="(producto, index) in favoritos" :key="producto.id"
-                    class="bg-white rounded-lg shadow-md overflow-hidden" @click="navigateTo(`/producto/${producto.id}`)">
-                    <img :src="`${baseUrl}/storage/${producto.imagen}`" :alt="producto.nombre"
-                        class="w-full h-32 object-cover">
-                    <div class="p-3">
-                        <h3 class="font-medium text-gray-800 text-sm line-clamp-2 break-all">{{ producto.nombre }}</h3>
-                        <p class="text-gray-500 text-xs mt-1 line-clamp-2 break-all">{{ producto.descripcion }}</p>
-                        <div class="flex justify-between items-center mt-3">
-                            <span class="font-semibold text-sm">{{ producto.precio }}€</span>
-                            <span @click.stop="toggleFavoritos(producto?.id)">
-                                <svg width="1.2em" height="1.2em" viewBox="0 0 24 24" fill="#ea4823" stroke="#ea4823"
-                                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                                    style="position: relative; top: 5px; margin-left: 5px; margin-right: 5px;">
-                                    <path
-                                        d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z">
-                                    </path>
-                                </svg>
-                            </span>
+            <div v-if="mostrarProductos" class="p-5">
+                <div class="grid grid-cols-2 gap-4">
+                    <div v-for="(producto, index) in favoritos" :key="producto.id"
+                        class="border rounded-xl overflow-hidden" @click="navigateTo(`/producto/${producto.id}`)">
+                        <div class="flex flex-col">
+                            <img :src="`${baseUrl}/storage/${producto.imagen}`" class="h-[180px] w-full" />
+                            <div class="flex flex-col p-2">
+                                <p class="text-[15px]">{{ producto.comercio }}</p>
+                                <p class="text-[20px] mb-2 truncate break-words" style="word-break: break-word;">{{
+                                    producto.nombre }}</p>
+                                <p class="mt-1 text-xl flex">{{ producto.precio }} <span class="text-base">€</span>
+                                </p>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -58,19 +50,22 @@
 
             <!-- Comercios Favoritos -->
             <div v-else class="grid grid-cols-1 md:grid-cols-2 m-3 gap-2">
-                <div v-for="(comercio, index) in comerciosFavoritos" :key="comercio.id" @click="navigateTo(`/comercio/${comercio.comercio.id}`)"
+                <div v-for="(comercio, index) in comerciosFavoritos" :key="comercio.id"
+                    @click="navigateTo(`/comercio/${comercio.comercio.id}`)"
                     class="bg-white rounded-lg shadow-md overflow-hidden">
-                    <div >
-                        <img :src="`${baseUrl}/storage/${comercio.comercio.imagen_local_path}`"  :alt="comercio.comercio.nombre"
-                            class="w-full h-32 object-cover">
+                    <div>
+                        <img :src="`${baseUrl}/storage/${comercio.comercio.imagen_local_path}`"
+                            :alt="comercio.comercio.nombre" class="w-full h-32 object-cover">
                         <div class="p-3">
-                            <h3 class="font-medium text-gray-800 text-sm line-clamp-2 break-all">{{ comercio.comercio.nombre }}</h3>
-                            <p class="text-gray-500 text-xs mt-1 line-clamp-2 break-all">{{ comercio.comercio.descripcion }}</p>
+                            <h3 class="font-medium text-gray-800 text-sm line-clamp-2 break-all">{{
+                                comercio.comercio.nombre }}</h3>
+                            <p class="text-gray-500 text-xs mt-1 line-clamp-2 break-all">{{
+                                comercio.comercio.descripcion }}</p>
                             <div class="flex justify-between items-center mt-3">
                                 <span class="font-semibold text-sm">{{ comercio.comercio.ciudad }}</span>
                                 <span @click.stop="toggleFavoritosComercio(comercio?.comercio?.id)">
-                                    <svg width="1.2em" height="1.2em" viewBox="0 0 24 24" fill="#ea4823" stroke="#ea4823"
-                                        stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                    <svg width="1.2em" height="1.2em" viewBox="0 0 24 24" fill="#ea4823"
+                                        stroke="#ea4823" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
                                         style="position: relative; top: 5px; margin-left: 5px; margin-right: 5px; margin-bottom: 7px;">
                                         <path
                                             d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z">
@@ -151,7 +146,7 @@ async function toggleFavoritosComercio(comercioID) {
         const response = await $communicationManager.darLikeComercio(comercioID);
 
         if (response) {
-            authStore.toggleFavoritoComercio(comercioID) 
+            authStore.toggleFavoritoComercio(comercioID)
             const index = comerciosFavoritos.findIndex(comercio => comercio.comercio_id === comercioID);
             if (index !== -1) {
                 comerciosFavoritos.splice(index, 1);
@@ -181,11 +176,11 @@ async function getFavoritos() {
     const response = await $communicationManager.getFavoritosInfo(authStore.user.id);
 
     if (!response) {
-        // console.log('Error al obtenir les dades')
         return;
     }
-    Object.assign(favoritos, response);
 
+    Object.assign(favoritos, response);
+    console.log(favoritos)
 }
 
 onMounted(async () => {
