@@ -94,7 +94,7 @@
                                         fill="#FFFFFF"></path>
                                 </g>
                             </svg>
-                            <img v-else :src="`${baseUrl}/storage/${producto?.logo_path}`"
+                            <img v-else :src="`${producto?.logo_path}`"
                                 class="w-full h-[120px] object-cover" />
                         </div>
                         <div class="p-2 text-gray-600">
