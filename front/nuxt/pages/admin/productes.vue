@@ -274,7 +274,8 @@
                         <div v-if="productoActual.imagen" class="image-preview">
                             <p class="text-white">Vista prèvia de la imatge:</p>
                             <div class="image-container">
-                                <img :src="productoNuevo.imagen" alt="Vista prèvia" class="image-thumbnail" />
+                                <img :src="typeof productoActual.imagen === 'string' ? `${baseUrl}/storage/${productoActual.imagen}` : productoActual.imagen.url"
+                                    alt="Vista prèvia" class="image-thumbnail" />
                             </div>
                         </div>
                     </div>
@@ -453,6 +454,10 @@
 const { $communicationManager } = useNuxtApp();
 import Swal from 'sweetalert2';
 import { useAuthStore } from '../../stores/authStore';
+import { useRuntimeConfig } from "#imports";
+
+const config = useRuntimeConfig();
+const baseUrl = config.public.apiBaseUrl;
 
 const searchTerm = ref('');
 const authStore = useAuthStore();
@@ -584,6 +589,7 @@ async function editarProd(id) {
     toggleCard('editar');
     const data = await $communicationManager.infoProducto(id);
     productoActual.value = data;
+    console.log(productoActual.value);
 }
 
 async function guardarProd() {

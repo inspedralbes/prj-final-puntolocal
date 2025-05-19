@@ -48,9 +48,10 @@
         </div>
 
         <div class="bg-[#276BF2] w-full h-[20vh] rounded-b-3xl flex flex-col items-center relative mb-12">
-            <img v-if="comercio?.imagen_local_path" :src="comercio?.imagen_local_path"
-                alt="imagen del comercio" class="absolute z-0 w-full h-full opacity-80 object-cover rounded-b-3xl">
-            <div class="flex justify-between items-center z-10 p-4 w-full" style="background: linear-gradient(180deg, rgba(39,107,242,0.85) 50%, rgba(39,107,242,0.0) 100%);">
+            <img v-if="comercio?.imagen_local_path" :src="comercio?.imagen_local_path" alt="imagen del comercio"
+                class="absolute z-0 w-full h-full opacity-80 object-cover rounded-b-3xl">
+            <div class="flex justify-between items-center z-10 p-4 w-full"
+                style="background: linear-gradient(180deg, rgba(39,107,242,0.85) 50%, rgba(39,107,242,0.0) 100%);">
                 <div class="bg-white rounded-full flex items-center justify-center p-2">
                     <svg @click="goBack" width="2em" height="2em" viewBox="0 0 24 24" fill="none"
                         xmlns="http://www.w3.org/2000/svg">
@@ -140,20 +141,18 @@
             </div>
 
             <div id="subcategorias" v-if="subcategorias.length"
-                class="flex space-x-3 items-center overflow-x-auto mt-4">
+                class="flex space-x-3 overflow-x-auto mt-6 pb-2 scrollbar-hide">
                 <div v-for="subcategoria in subcategorias" :key="subcategoria.id"
-                    @click="toggleSubcategoria(subcategoria)"
-                    :class="selectedSubcategorias.includes(subcategoria.id) ? 'bg-gray-100 text-white font-semibold' : 'text-gray-700'"
-                    class="flex flex-col items-center justify-between cursor-pointer h-[110px] rounded-md">
-                    <div class="w-[4em] h-[4em] rounded-full p-2 border bg-gray-50 overflow-hidden">
-                        <!-- <img :src="categoria.imagenes" alt="imgCategoria"> -->
-                    </div>
-                    <p
-                        class="flex items-center justify-center text-center mt-1 text-sm font-medium text-gray-800 flex-grow">
-                        {{ subcategoria.name }}
-                    </p>
+                    @click="toggleSubcategoria(subcategoria)" :class="[
+                        'min-w-[100px] px-4 py-3 text-center rounded-xl shadow-sm cursor-pointer transition-all duration-200 select-none',
+                        selectedSubcategorias.includes(subcategoria.id)
+                            ? 'bg-[#276BF2] text-white font-semibold'
+                            : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                    ]">
+                    <p class="text-sm truncate">{{ subcategoria.name }}</p>
                 </div>
             </div>
+
 
             <div v-if="view === 'productos'">
                 <div id="productos" class="grid grid-cols-2 gap-4 mt-4">
