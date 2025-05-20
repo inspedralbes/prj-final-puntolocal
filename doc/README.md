@@ -12,7 +12,7 @@ Aquest directori conté la documentació essencial del projecte **Holabarri**. L
 - 👉 [Presentació de funcionalitats d'Holabarri (2024-2025)](https://holabarri.cat/docs/resum_2425_holabarri.pdf)
 - 👉 [Manual d'usuari de com funciona l'aplicació per usuaris i administradors](https://holabarri.cat/docs/tecnica_2425_holabarri.pdf)
 - 👉 [Document sobre l'evolució del projecte amb el Taiga](https://holabarri.cat/docs/planificacio_2425_holabarri.pdf)
-- 👉 [Penpot/Wireframes]([https://holabarri.cat/docs/planificacio_2425_holabarri.pdf](https://design.penpot.app/#/view?file-id=96c4bd8e-df43-800f-8005-9d60dfdbab89&page-id=96c4bd8e-df43-800f-8005-9d60dfdbab8a&section=interactions&index=0&share-id=8233eca0-468b-80cb-8005-a12107191a0d))
+- 👉 [Penpot/Wireframes](https://design.penpot.app/#/view?file-id=96c4bd8e-df43-800f-8005-9d60dfdbab89&page-id=96c4bd8e-df43-800f-8005-9d60dfdbab8a&section=interactions&index=0&share-id=8233eca0-468b-80cb-8005-a12107191a0d)
 
 ---
 
