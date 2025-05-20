@@ -37,7 +37,8 @@
                         <img :src="`${baseUrl}/storage/${product.imagen}`" class="h-[180px] w-full" />
                         <div class="flex flex-col p-2">
                             <p class="text-[15px]">{{ product.comercio }}</p>
-                            <p class="text-[20px] mb-2 truncate break-words" style="word-break: break-word;">{{ product.nombre }}</p>
+                            <p class="text-[20px] mb-2 truncate break-words" style="word-break: break-word;">{{
+                                product.nombre }}</p>
                             <p class="mt-1 text-xl flex">{{ product.precio }} <span class="text-base">€</span></p>
                         </div>
                     </div>
@@ -52,8 +53,9 @@
                 <div v-for="(comercio, index) in Object.values(comercios)" :key="index"
                     @click="navigateTo('comercio/' + comercio.id)"
                     class="relative border rounded-xl m-4 overflow-hidden">
-                    <img :src="`${baseUrl}/storage/${comercio.imagen_local_path}`"
-                        class="w-full h-[250px] object-cover" />
+                    <img :src="comercio.imagen_local_path.startsWith('http')
+                            ? comercio.imagen_local_path
+                            : `${baseUrl}/storage/${comercio.imagen_local_path}`" class="w-full h-[250px] object-cover" />
                     <div class="absolute bottom-0 left-0 w-full bg-gray-200 bg-opacity-70 p-4 h-fit">
 
                         <p class="text-center">{{ comercio.nombre }}</p>

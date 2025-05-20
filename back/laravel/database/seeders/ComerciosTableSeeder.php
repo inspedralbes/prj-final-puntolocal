@@ -115,9 +115,9 @@ class ComerciosTableSeeder extends Seeder
             'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRMIx9DnMxrARLVtLmoLNl6d45wD4dZ5QHzng&s',
             'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTHFlh3n0gYfwzFRJjiuuA6BB7xIpIEAuyc1g&s',
             'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ_NyCc1s_UvA235_s0oqMs56ddbxy9io8sSg&s',
-            'https://img.freepik.com/vector-premium/diseno-logotipo-minimalista-nueva-marca-moda-llamada-chic-elementos-elegantes-elegantes-desarrollar-logotipo-minimista-marca-accesorios-chic-diseno-logotipio-vectorial-moderno-minimalista-simple_538213-49684.jpg',
+            'https://www.accesorioslachic.com/cdn/shop/files/12556_Mesa_de_trabajo_1.png?v=1706300444',
             'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQkV-0lX9SrB-NAV0kC7WdT-fPOExgAmLYkLg&s',
-            'https://static.vecteezy.com/system/resources/previews/002/219/879/non_2x/logo-natural-cosmetics-icon-isolated-on-a-white-background-flat-style-vector.jpg'
+            'https://img.freepik.com/vector-premium/logotipo-productos-naturales_1222-729.jpg'
         ];
 
         for ($i = 0; $i < 10; $i++) {

@@ -54,8 +54,13 @@
                     @click="navigateTo(`/comercio/${comercio.comercio.id}`)"
                     class="bg-white rounded-lg shadow-md overflow-hidden">
                     <div>
-                        <img :src="`${baseUrl}/storage/${comercio.comercio.imagen_local_path}`"
-                            :alt="comercio.comercio.nombre" class="w-full h-32 object-cover">
+                        <img
+                            :src="comercio.comercio.imagen_local_path.startsWith('http') 
+                                ? comercio.comercio.imagen_local_path 
+                                : `${baseUrl}/storage/${comercio.comercio.imagen_local_path}`"
+                            :alt="comercio.comercio.nombre"
+                            class="w-full h-32 object-cover"
+                        >
                         <div class="p-3">
                             <h3 class="font-medium text-gray-800 text-sm line-clamp-2 break-all">{{
                                 comercio.comercio.nombre }}</h3>

@@ -338,6 +338,10 @@
 <script setup>
 import { useRoute, useRouter } from 'vue-router';
 const { $communicationManager } = useNuxtApp();
+import { useRuntimeConfig } from "#imports";
+
+const config = useRuntimeConfig();
+const baseUrl = config.public.apiBaseUrl;
 
 definePageMeta({
     layout: 'admin',

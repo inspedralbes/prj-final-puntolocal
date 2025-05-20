@@ -71,7 +71,7 @@
                         :key="producto.producto_id">
                         <div class="flex justify-between">
                             <section class="flex gap-3">
-                                <img :src="producto.image || '#'" alt="" width="50px" height="50px"
+                                <img :src="`${baseUrl}/storage/${producto.imagen}` || '#'" alt="" width="50px" height="50px"
                                     class="rounded-md border">
                                 <div>
                                     <p>{{ producto.nombre }}</p>
@@ -219,6 +219,10 @@ import { Chart } from 'chart.js/auto';
 import { useAuthStore } from '@/stores/authStore';
 import Loading from '@/components/loading.vue';
 import PuntuacionComp from '~/components/PuntuacionComp.vue';
+import { useRuntimeConfig } from "#imports";
+
+const config = useRuntimeConfig();
+const baseUrl = config.public.apiBaseUrl;
 
 definePageMeta({
     layout: 'admin',
