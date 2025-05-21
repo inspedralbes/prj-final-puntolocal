@@ -11,7 +11,8 @@ Aquest directori conté la documentació essencial del projecte **Holabarri**. L
 - 👉 [Document comercial d'Holabarri (2024-2025)](https://holabarri.cat/docs/comercial_2425_holabarri.pdf)  
 - 👉 [Presentació de funcionalitats d'Holabarri (2024-2025)](https://holabarri.cat/docs/resum_2425_holabarri.pdf)
 - 👉 [Manual d'usuari de com funciona l'aplicació per usuaris i administradors](https://holabarri.cat/docs/tecnica_2425_holabarri.pdf)
-- 👉 [Document sobre l'evolució del projecte amb el Tiga] (https://holabarri.cat/docs/planificacio_2425_holabarri.pdf)
+- 👉 [Document sobre l'evolució del projecte amb el Taiga](https://holabarri.cat/docs/planificacio_2425_holabarri.pdf)
+- 👉 [Penpot/Wireframes](https://design.penpot.app/#/view?file-id=96c4bd8e-df43-800f-8005-9d60dfdbab89&page-id=96c4bd8e-df43-800f-8005-9d60dfdbab8a&section=interactions&index=0&share-id=8233eca0-468b-80cb-8005-a12107191a0d)
 
 ---
 
@@ -57,4 +58,4 @@ A continuació es detallen els punts mínims que cal cobrir en aquest document o
 
 ### 🚀 Instruccions de desplegament
 
-El desplegament del projecte es realitza mitjançant **GitHub Actions**, que automatitza la pujada del codi a la branca `dev`. Aquesta branca representa l'entorn de desenvolupament i qualsevol `push` o `pull request` pot desencadenar workflows automàtics definits al fitxer `Ghactions.md`.
+El desplegament del projecte es realitza mitjançant **GitHub Actions**, que automatitza la pujada del codi a la branca `main`. La branca `dev` representa l'entorn de desenvolupament i qualsevol canvi s'ha de testar en aquesta branca abans de fer merge a `main`.
