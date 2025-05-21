@@ -81,8 +81,12 @@
 
         <div class="bg-white rounded-b-md mb-4 mt-[65px]">
             <div id="imgs" class="h-[400px] w-full max-w-[900px] mx-auto overflow-hidden">
-                <img :src="producto?.imagen ? `${baseUrl}/storage/${producto.imagen}` : `${baseUrl}/storage/productos/default-image.webp`"
-                    alt="Imagen del producto" class="h-full w-full object-contain" />
+                <img :src="producto?.imagen
+                        ? (producto.imagen.startsWith('http')
+                            ? producto.imagen
+                            : `${baseUrl}/storage/${producto.imagen}`)
+                        : `${baseUrl}/storage/productos/default-image.webp`
+                    " alt="Imatge del producte" class="h-full w-full object-contain" />
 
             </div>
 
@@ -122,8 +126,7 @@
                                         fill="#FFFFFF"></path>
                                 </g>
                             </svg>
-                            <img v-else :src="`${producto?.logo_path}`"
-                                class="w-full h-[120px] object-cover" />
+                            <img v-else :src="`${producto?.logo_path}`" class="w-full h-[120px] object-cover" />
                         </div>
                         <div class="p-2 text-gray-600">
                             <p class="text-xl text-black">{{ producto?.comercio?.nombre }}</p>
