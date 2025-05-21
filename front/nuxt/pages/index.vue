@@ -165,7 +165,7 @@ async function fetchComerciosCercanos(lat, lon) {
         const idsComercios = response.comercios.map(comercio => comercio.id);
         const idsComerciosString = idsComercios.join(',');
 
-        getProductosCercanos(idsComerciosString);
+        await getProductosCercanos(idsComerciosString);
     } catch (error) {
         console.error("Error al obtener comercios cercanos", error);
     }
