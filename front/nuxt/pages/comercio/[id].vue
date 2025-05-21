@@ -19,7 +19,7 @@
             <div class="h-40 bg-gray-200 rounded-md"></div>
             <div class="h-40 bg-gray-200 rounded-md"></div>
             <div class="h-40 bg-gray-200 rounded-md"></div>
-            <div class="h-40 bg-gray-200 rounded-md"></div> 
+            <div class="h-40 bg-gray-200 rounded-md"></div>
         </div>
     </div>
 
@@ -70,7 +70,9 @@
         </div>
 
         <div class="bg-[#276BF2] w-full h-[20vh] rounded-b-3xl flex flex-col items-center relative mb-12">
-            <img v-if="comercio?.imagen_local_path" :src="comercio?.imagen_local_path" alt="imagen del comercio"
+            <img v-if="comercio?.imagen_local_path" :src="comercio.imagen_local_path.startsWith('http')
+                ? comercio.imagen_local_path
+                : `${baseUrl}/storage/${comercio.imagen_local_path}`" alt="imagen del comercio"
                 class="absolute z-0 w-full h-full opacity-80 object-cover rounded-b-3xl">
             <div class="flex justify-between items-center z-10 p-4 w-full"
                 style="background: linear-gradient(180deg, rgba(39,107,242,0.85) 50%, rgba(39,107,242,0.0) 100%);">
