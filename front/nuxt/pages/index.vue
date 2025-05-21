@@ -136,11 +136,7 @@ onMounted(async () => {
 });
 
 async function checkLocationPermission() {
-    if (localStorage.getItem("locationPermission") === "granted") {
         await getLocation();
-    } else {
-        requestLocationPermission();
-    }
 }
 
 async function getLocation() {
