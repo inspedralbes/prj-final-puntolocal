@@ -112,7 +112,9 @@
                                 fill="#FFFFFF"></path>
                         </g>
                     </svg>
-                    <img v-else :src="`${comercio?.logo_path}`" alt="imagen del comercio"
+                    <img v-else :src="comercio.logo_path.startsWith('http')
+                        ? comercio.logo_path
+                        : `${baseUrl}/storage/${comercio.logo_path}`" alt="imagen del comercio"
                         class="w-full h-full object-cover">
                 </div>
                 <div class="h-full flex-grow">
